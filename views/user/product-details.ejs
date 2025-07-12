@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Kaizen Street Shop Details</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/kaizenicon.svg">
+    <!-- in your <head> (or layout EJS) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/easyzoom/2.5.0/easyzoom.css"/>
+
+
+    <!-- Template CSS -->
+    <link rel="stylesheet" href="/css/main.css?v=3.4">
+</head>
+
+<body>
+    <style>
+        .banner-img {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            height: 400px;
+            margin: 50px auto;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .anime-bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            filter: brightness(0.7) saturate(1.2);
+        }
+
+         .anime-bg-image {
+            background-image: url('https://i.pinimg.com/736x/c0/2d/46/c02d46dda745e0fc91c7bea6db4355b2.jpg');
+        }
+        */
+
+        
+
+        /* Alternative: Use a local image from your server */
+        /*
+        .anime-bg-image {
+            background-image: url('./images/anime-bg.jpg');
+        }
+        */
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                135deg,
+                rgba(102, 126, 234, 0.8) 0%,
+                rgba(118, 75, 162, 0.7) 50%,
+                rgba(240, 147, 251, 0.8) 100%
+            );
+            backdrop-filter: blur(1px);
+            z-index: 2;
+        }
+
+        .aesthetic-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: float-particles 8s infinite linear;
+        }
+
+        .particle:nth-child(1) { left: 10%; animation-delay: 0s; animation-duration: 8s; }
+        .particle:nth-child(2) { left: 20%; animation-delay: 2s; animation-duration: 10s; }
+        .particle:nth-child(3) { left: 30%; animation-delay: 4s; animation-duration: 12s; }
+        .particle:nth-child(4) { left: 40%; animation-delay: 1s; animation-duration: 9s; }
+        .particle:nth-child(5) { left: 50%; animation-delay: 3s; animation-duration: 11s; }
+        .particle:nth-child(6) { left: 60%; animation-delay: 5s; animation-duration: 7s; }
+        .particle:nth-child(7) { left: 70%; animation-delay: 2.5s; animation-duration: 8.5s; }
+        .particle:nth-child(8) { left: 80%; animation-delay: 4.5s; animation-duration: 10.5s; }
+        .particle:nth-child(9) { left: 90%; animation-delay: 1.5s; animation-duration: 9.5s; }
+
+        @keyframes float-particles {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+         .banner-text {
+            position: relative;
+            z-index: 10;
+            padding: 40px 50px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: white;
+            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+        }
+
+        .banner-text h4 {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.95;
+            color: #ffeaa7;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .banner-text h2 {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            max-width: 600px;
+            background: linear-gradient(45deg, #ffffff, #ffeaa7, #ff7675);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: none;
+        }
+
+        .anime-stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 4;
+        }
+
+        .star {
+            position: absolute;
+            color: white;
+            font-size: 16px;
+            opacity: 0.8;
+            animation: twinkle 3s infinite;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .star:nth-child(1) { top: 15%; left: 20%; animation-delay: 0s; }
+        .star:nth-child(2) { top: 25%; left: 80%; animation-delay: 1s; }
+        .star:nth-child(3) { top: 70%; left: 15%; animation-delay: 2s; }
+        .star:nth-child(4) { top: 60%; left: 85%; animation-delay: 1.5s; }
+        .star:nth-child(5) { top: 40%; left: 90%; animation-delay: 0.5s; }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.3); }
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .banner-text {
+                padding: 30px 25px;
+            }
+            
+            .banner-text h2 {
+                font-size: 32px;
+            }
+        }
+
+         /* PC/Desktop specific background sizing */
+        @media (min-width: 1024px) {
+            .anime-bg-image {
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: center;
+            }
+            
+            /* Alternative: Use background-size: 100% 100% to fill exactly */
+            .anime-bg-image.fill-exact {
+                background-size: 100% 100%;
+            }
+            
+            /* Alternative: Use background-size: cover but with better positioning */
+            .anime-bg-image.cover-better {
+                background-size: cover;
+                background-position: center top;
+            }
+        }
+
+         @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(1deg); }
+            50% { transform: translateY(-5px) rotate(-1deg); }
+            75% { transform: translateY(-15px) rotate(0.5deg); }
+        }
+
+        /* Floating anime elements */
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .floating-element {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.3;
+            animation: floatAround 15s linear infinite;
+        }
+
+        .floating-element:nth-child(1) {
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-element:nth-child(2) {
+            top: 60%;
+            right: 15%;
+            animation-delay: 5s;
+        }
+
+        .floating-element:nth-child(3) {
+            bottom: 30%;
+            left: 20%;
+            animation-delay: 10s;
+        }
+
+        @keyframes floatAround {
+            0% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
+            25% { transform: translateY(-20px) rotate(90deg); opacity: 0.6; }
+            50% { transform: translateY(-10px) rotate(180deg); opacity: 0.4; }
+            75% { transform: translateY(-30px) rotate(270deg); opacity: 0.5; }
+            100% { transform: translateY(0px) rotate(360deg); opacity: 0.3; }
+        }
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+      
+    </style>
+    <div class="modal fade custom-modal" id="quickViewModal" tabindex="-1" aria-labelledby="quickViewModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12 col-xs-12">
+                            <div class="detail-gallery">
+                                <span class="zoom-icon"><i class="fi-rs-search"></i></span>
+                                <div class="product-image-slider">
+                                    <figure class="border-radius-10">
+                                        <img src="/imgs/shop/product-16-2.jpg" alt="product image">
+                                    </figure>
+                                    <figure class="border-radius-10">
+                                        <img src="/imgs/shop/product-16-1.jpg" alt="product image">
+                                    </figure>
+                                    <figure class="border-radius-10">
+                                        <img src="/imgs/shop/product-16-3.jpg" alt="product image">
+                                    </figure>
+                                    <figure class="border-radius-10">
+                                        <img src="/imgs/shop/product-16-4.jpg" alt="product image">
+                                    </figure>
+                                    <figure class="border-radius-10">
+                                        <img src="/imgs/shop/product-16-5.jpg" alt="product image">
+                                    </figure>
+                                    <figure class="border-radius-10">
+                                        <img src="/imgs/shop/product-16-6.jpg" alt="product image">
+                                    </figure>
+                                    <figure class="border-radius-10">
+                                        <img src="/imgs/shop/product-16-7.jpg" alt="product image">
+                                    </figure>
+                                </div>
+                                <div class="slider-nav-thumbnails pl-15 pr-15">
+                                    <div><img src="/imgs/shop/thumbnail-3.jpg" alt="product image"></div>
+                                    <div><img src="/imgs/shop/thumbnail-4.jpg" alt="product image"></div>
+                                    <div><img src="/imgs/shop/thumbnail-5.jpg" alt="product image"></div>
+                                    <div><img src="/imgs/shop/thumbnail-6.jpg" alt="product image"></div>
+                                    <div><img src="/imgs/shop/thumbnail-7.jpg" alt="product image"></div>
+                                    <div><img src="/imgs/shop/thumbnail-8.jpg" alt="product image"></div>
+                                    <div><img src="/imgs/shop/thumbnail-9.jpg" alt="product image"></div>
+                                </div>
+                            </div>
+                            <div class="social-icons single-share">
+                                <ul class="text-grey-5 d-inline-block">
+                                    <li><strong class="mr-10">Share this:</strong></li>
+                                    <li class="social-facebook"><a href="#"><img
+                                                src="/imgs/theme/icons/icon-facebook.svg" alt=""></a></li>
+                                    <li class="social-twitter"> <a href="#"><img
+                                                src="/imgs/theme/icons/icon-twitter.svg" alt=""></a></li>
+                                    <li class="social-instagram"><a href="#"><img
+                                                src="/imgs/theme/icons/icon-instagram.svg" alt=""></a></li>
+                                    <li class="social-linkedin"><a href="#"><img
+                                                src="/imgs/theme/icons/icon-pinterest.svg" alt=""></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12 col-xs-12">
+                            <div class="detail-info">
+                                <h3 class="title-detail mt-30">Colorful Pattern Shirts HD450</h3>
+                                <div class="product-detail-rating">
+                                    <div class="pro-details-brand">
+                                        <span> Brands: <a href="shop-grid-right.html">Bootstrap</a></span>
+                                    </div>
+                                    <div class="product-rate-cover text-end">
+                                        <div class="product-rate d-inline-block">
+                                            <div class="product-rating" style="width:90%">
+                                            </div>
+                                        </div>
+                                        <span class="font-small ml-5 text-muted"> (25 reviews)</span>
+                                    </div>
+                                </div>
+                                <div class="clearfix product-price-cover">
+                                    <div class="product-price primary-color float-left">
+                                        <ins><span class="text-brand">$120.00</span></ins>
+                                        <ins><span class="old-price font-md ml-15">$200.00</span></ins>
+                                        <span class="save-price  font-md color3 ml-15">25% Off</span>
+                                    </div>
+                                </div>
+                                <div class="bt-1 border-color-1 mt-15 mb-15"></div>
+                                <div class="short-desc mb-30">
+                                    <p class="font-sm">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquam
+                                        rem officia, corrupti reiciendis minima nisi modi,!</p>
+                                </div>
+
+                                <div class="attr-detail attr-color mb-15">
+                                    <strong class="mr-10">Color</strong>
+                                    <ul class="list-filter color-filter">
+                                        <li><a href="#" data-color="Red"><span class="product-color-red"></span></a>
+                                        </li>
+                                        <li><a href="#" data-color="Yellow"><span
+                                                    class="product-color-yellow"></span></a></li>
+                                        <li class="active"><a href="#" data-color="White"><span
+                                                    class="product-color-white"></span></a></li>
+                                        <li><a href="#" data-color="Orange"><span
+                                                    class="product-color-orange"></span></a></li>
+                                        <li><a href="#" data-color="Cyan"><span class="product-color-cyan"></span></a>
+                                        </li>
+                                        <li><a href="#" data-color="Green"><span class="product-color-green"></span></a>
+                                        </li>
+                                        <li><a href="#" data-color="Purple"><span
+                                                    class="product-color-purple"></span></a></li>
+                                    </ul>
+                                </div>
+                                <div class="attr-detail attr-size">
+                                    <strong class="mr-10">Size</strong>
+                                    <ul class="list-filter size-filter font-small">
+                                        <li><a href="#">S</a></li>
+                                        <li class="active"><a href="#">M</a></li>
+                                        <li><a href="#">L</a></li>
+                                        <li><a href="#">XL</a></li>
+                                        <li><a href="#">XXL</a></li>
+                                    </ul>
+                                </div>
+                                <div class="bt-1 border-color-1 mt-30 mb-30"></div>
+                                <div class="detail-extralink">
+                                    <div class="detail-qty border radius">
+                                        <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
+                                        <span class="qty-val">1</span>
+                                        <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
+                                    </div>
+                                    <div class="product-extra-link2">
+                                        <button type="submit" class="button button-add-to-cart">Add to cart</button>
+                                        <a aria-label="Add To Wishlist" class="action-btn hover-up"
+                                            href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
+                                        <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i
+                                                class="fi-rs-shuffle"></i></a>
+                                    </div>
+                                </div>
+                                <ul class="product-meta font-xs color-grey mt-50">
+                                    <li class="mb-5">SKU: <a href="#">FWM15VKT</a></li>
+                                    <li class="mb-5">Tags: <a href="#" rel="tag">Cloth</a>, <a href="#"
+                                            rel="tag">Women</a>, <a href="#" rel="tag">Dress</a> </li>
+                                    <li>Availability:<span class="in-stock text-success ml-5">8 Items In Stock</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <header class="header-area header-style-1 header-height-2">
+        <div class="header-top header-top-ptb-1 d-none d-lg-block">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-xl-3 col-lg-4">
+                    </div>
+                    <div class="col-xl-6 col-lg-4">
+                        <div class="text-center">
+                            <div id="news-flash" class="d-inline-block">
+                                <ul>
+                                    <li>Get great stuffs up to 50% off<a href="shop-grid-right.html">View details</a>
+                                    </li>
+                                    <li>Supper Value Deals - Save more with coupons</li>
+                                    <li>Trendy animes, save up 35% off today <a href="shop-grid-right.html">Shop now</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-4">
+                        <div class="header-info header-info-right">
+                            <% if (user) { %>
+                                <div class="dropdown">
+                                    <a href="#" class="sign-in-link">
+                                        <%= user.name %>
+                                    </a>
+                                    <div class="dropdown-content">
+                                        <a href="/userProfile">Profile</a>
+                                        <a href="/logout">Logout</a>
+                                    </div>
+                                </div>
+                                <% } else { %>
+                                    <ul>
+                                        <li>
+                                            <i class="fi-rs-user"></i>
+                                            <a href="/login">Log In</a>
+                                        </li>
+                                    </ul>
+                                    <% } %>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
+            <div class="container">
+                <div class="header-wrap">
+                    <div class="logo logo-width-1">
+                        <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+                    </div>
+                    <div class="header-right">
+                        <div class="search-style-2">
+                            <div class="search-wrapper">
+                                <form class="search-form" action="/shop" method="GET">
+                                    <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <circle cx="11" cy="11" r="8"></circle>
+                                        <path d="m21 21-4.35-4.35"></path>
+                                    </svg>
+                                    <input type="text" class="search-input" placeholder="Search for items..."
+                                        name="search" id="searchInput" autocomplete="off">
+                                    <button type="9" class="search-button" aria-label="Search">
+                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path d="m9 18 6-6-6-6" />
+                                        </svg>
+                                    </button>
+                                    <button type="button" id="clear-search" class="search-clear"
+                                        aria-label="Clear search" onclick="document.getElementById('searchInput').value = '' 
+            " style="background:none;border:none;font-size:20px;cursor:pointer;position:absolute;right:60px;top:50%;transform:translateY(-50%);padding:0;margin:0;line-height:1;color:#555;">&times;</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="header-action-right">
+                            <div class="header-action-2">
+                                <div class="header-action-icon-2">
+                                    <a href="shop-wishlist.html">
+                                        <img class="svgInject" alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
+                                        <span class="pro-count blue">4</span>
+                                    </a>
+                                </div>
+                                <div class="header-action-icon-2">
+                                    <a class="mini-cart-icon" href="shop-cart.html">
+                                        <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
+                                        <span class="pro-count blue">2</span>
+                                    </a>
+                                    <div class="cart-dropdown-wrap cart-dropdown-hm2">
+                                        <ul>
+                                            <li>
+                                                <div class="shopping-cart-img">
+                                                    <a href="shop-product-right.html"><img alt="Evara"
+                                                            src="/imgs/shop/thumbnail-3.jpg"></a>
+                                                </div>
+                                                <div class="shopping-cart-title">
+                                                    <h4><a href="shop-product-right.html">Daisy Casual Bag</a></h4>
+                                                    <h4><span>1 × </span>$800.00</h4>
+                                                </div>
+                                                <div class="shopping-cart-delete">
+                                                    <a href="#"><i class="fi-rs-cross-small"></i></a>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="shopping-cart-img">
+                                                    <a href="shop-product-right.html"><img alt="Evara"
+                                                            src="/imgs/shop/thumbnail-2.jpg"></a>
+                                                </div>
+                                                <div class="shopping-cart-title">
+                                                    <h4><a href="shop-product-right.html">Corduroy Shirts</a></h4>
+                                                    <h4><span>1 × </span>$3200.00</h4>
+                                                </div>
+                                                <div class="shopping-cart-delete">
+                                                    <a href="#"><i class="fi-rs-cross-small"></i></a>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <div class="shopping-cart-footer">
+                                            <div class="shopping-cart-total">
+                                                <h4>Total <span>$4000.00</span></h4>
+                                            </div>
+                                            <div class="shopping-cart-button">
+                                                <a href="shop-cart.html" class="outline">View cart</a>
+                                                <a href="shop-checkout.html">Checkout</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-bottom header-bottom-bg-color sticky-bar">
+            <div class="container">
+                <div class="header-wrap header-space-between position-relative">
+                    <div class="logo logo-width-1 d-block d-lg-none">
+                        <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+                    </div>
+                    <div class="header-nav d-none d-lg-flex">
+
+                        <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
+                            <nav>
+                                <ul>
+                                    <li><a href="/">Home</a></li>
+                                    <li><a  class='active' href="/shop">Shop</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <p class="mobile-promotion">Happy <span class="text-brand">Mother's Day</span>. Big Sale Up to 40%
+                    </p>
+                    <div class="header-action-right d-block d-lg-none">
+                        <div class="header-action-2">
+                            <div class="header-action-icon-2">
+                                <a href="shop-wishlist.html">
+                                    <img alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
+                                    <span class="pro-count white">4</span>
+                                </a>
+                            </div>
+                            <div class="header-action-icon-2">
+                                <a class="mini-cart-icon" href="shop-cart.html">
+                                    <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
+                                    <span class="pro-count white">2</span>
+                                </a>
+                                <div class="cart-dropdown-wrap cart-dropdown-hm2">
+                                    <ul>
+                                        <li>
+                                            <div class="shopping-cart-img">
+                                                <a href="shop-product-right.html"><img alt="Evara"
+                                                        src="/imgs/shop/thumbnail-3.jpg"></a>
+                                            </div>
+                                            <div class="shopping-cart-title">
+                                                <h4><a href="shop-product-right.html">Plain Striola Shirts</a></h4>
+                                                <h3><span>1 × </span>$800.00</h3>
+                                            </div>
+                                            <div class="shopping-cart-delete">
+                                                <a href="#"><i class="fi-rs-cross-small"></i></a>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="shopping-cart-img">
+                                                <a href="shop-product-right.html"><img alt="Evara"
+                                                        src="/imgs/shop/thumbnail-4.jpg"></a>
+                                            </div>
+                                            <div class="shopping-cart-title">
+                                                <h4><a href="shop-product-right.html">Macbook Pro 2022</a></h4>
+                                                <h3><span>1 × </span>$3500.00</h3>
+                                            </div>
+                                            <div class="shopping-cart-delete">
+                                                <a href="#"><i class="fi-rs-cross-small"></i></a>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <div class="shopping-cart-footer">
+                                        <div class="shopping-cart-total">
+                                            <h4>Total <span>$383.00</span></h4>
+                                        </div>
+                                        <div class="shopping-cart-button">
+                                            <a href="shop-cart.html">View cart</a>
+                                            <a href="shop-checkout.html">Checkout</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="header-action-icon-2 d-block d-lg-none">
+                                <div class="burger-icon burger-icon-white">
+                                    <span class="burger-icon-top"></span>
+                                    <span class="burger-icon-mid"></span>
+                                    <span class="burger-icon-bottom"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="mobile-header-active mobile-header-wrapper-style">
+        <div class="mobile-header-wrapper-inner">
+            <div class="mobile-header-top">
+                <div class="mobile-header-logo">
+                    <a href="/"><img src="/imgs/theme/logo.svg" alt="logo"></a>
+                </div>
+                <div class="mobile-menu-close close-style-wrap close-style-position-inherit">
+                    <button class="close-style search-close">
+                        <i class="icon-top"></i>
+                        <i class="icon-bottom"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="mobile-header-content-area">
+                <div class="mobile-search search-style-3 mobile-header-border">
+                    <form action="#">
+                        <input type="text" placeholder="Search for items…">
+                        <button type="submit"><i class="fi-rs-search"></i></button>
+                    </form>
+                </div>
+                <div class="mobile-menu-wrap mobile-header-border">
+                    <!-- mobile menu start -->
+                    <nav>
+                        <ul class="mobile-menu">
+                            <li class="menu-item-has-children"><span class="menu-expand"></span><a
+                                    href="index.html">Home</a>
+                            </li>
+                            <li class="menu-item-has-children"><span class="menu-expand"></span><a
+                                    href="shop-grid-right.html">shop</a>
+                                <ul class="dropdown">
+                                    <li><a href="shop-grid-right.html">Shop Grid – Right Sidebar</a></li>
+                                    <li><a href="shop-grid-left.html">Shop Grid – Left Sidebar</a></li>
+                                    <li><a href="shop-list-right.html">Shop List – Right Sidebar</a></li>
+                                    <li><a href="shop-list-left.html">Shop List – Left Sidebar</a></li>
+                                    <li><a href="shop-fullwidth.html">Shop - Wide</a></li>
+                                    <li class="menu-item-has-children"><span class="menu-expand"></span><a
+                                            href="#">Single Product</a>
+                                        <ul class="dropdown">
+                                            <li><a href="shop-product-right.html">Product – Right Sidebar</a></li>
+                                            <li><a href="shop-product-left.html">Product – Left Sidebar</a></li>
+                                            <li><a href="shop-product-full.html">Product – No sidebar</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="shop-filter.html">Shop – Filter</a></li>
+                                    <li><a href="shop-wishlist.html">Shop – Wishlist</a></li>
+                                    <li><a href="shop-cart.html">Shop – Cart</a></li>
+                                    <li><a href="shop-checkout.html">Shop – Checkout</a></li>
+                                    <li><a href="shop-compare.html">Shop – Compare</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                    <!-- mobile menu end -->
+                </div>
+                <div class="mobile-header-info-wrap mobile-header-border">
+                    <div class="single-mobile-header-info">
+                        <a href="page-login-register.html">Log In / Sign Up </a>
+                    </div>
+                </div>
+                <div class="mobile-social-icon">
+                    <h5 class="mb-15 text-grey-4">Follow Us</h5>
+                    <a href="#"><img src="/imgs/theme/icons/icon-facebook.svg" alt=""></a>
+                    <a href="#"><img src="/imgs/theme/icons/icon-twitter.svg" alt=""></a>
+                    <a href="#"><img src="/imgs/theme/icons/icon-instagram.svg" alt=""></a>
+                    <a href="#"><img src="/imgs/theme/icons/icon-pinterest.svg" alt=""></a>
+                    <a href="#"><img src="/imgs/theme/icons/icon-youtube.svg" alt=""></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <main class="main">
+         <div class="anime-elements">
+        <div class="sakura">🌸</div>
+        <div class="sakura">🌸</div>
+        <div class="sakura">🌸</div>
+        <div class="sakura">🌸</div>
+         <div class="sakura">🌸</div>
+          <div class="sakura">🌸</div>
+          <div class="sakura">🌸</div>
+          <div class="sakura">🌸</div>
+        <div class="kanji-float">化</div>
+        <div class="kanji-float">革</div>
+    </div>
+        <div class="page-header breadcrumb-wrap">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="/" rel="nofollow">Home</a>
+                    <span></span> Shop
+                    <span></span> Product
+                </div>
+            </div>
+        </div>
+        <section class="mt-50 mb-50">
+            <div class="container">
+                <div class="row mb-50">
+  <div class="col-md-6 col-sm-12 col-xs-12">
+    <div class="detail-gallery">
+      <span class="zoom-icon"><i class="fi-rs-search"></i></span>
+    
+    <div class="product-image-slider">
+                                        <% product.productImage.forEach((img, index) => { %>
+                                            <div class="zoom-container" style="position: relative;">
+                                                <img src="<%= img %>" alt="product image <%= index+1 %>" class="zoom-image" style="width: 100%; height: auto;">
+
+                                            </div>
+                                        <% }); %>
+                                    </div>
+     
+       <div class="slider-nav-thumbnails pl-15 pr-15">
+                                        <% product.productImage.forEach((img, index) => { %>
+                                            <div>
+                                                <img src="<%= img %>" alt="product thumbnail <%= index+1 %>" style="width: 100%; object-fit: cover;">
+                                            </div>
+                                        <% }); %>
+                                    </div>
+    </div>
+    
+  </div>
+  <div class="col-md-6 col-sm-12 col-xs-12">
+    <div class="detail-info">
+      <h2 class="title-detail"><%= product.productName %></h2>
+      <div class="product-detail-rating">
+         <div class="pro-details-brand">
+  <span> Category: <a href="/shop?category=<%= product.categoryName %>"><%= product.categoryName %></a></span>
+</div>
+        <div class="product-rate-cover text-end">
+        
+        </div>
+      </div>
+    <div class="clearfix product-price-cover">
+  <div class="product-price primary-color float-left">
+    <ins><span class="text-brand">₹<%= product.discountPrice.toFixed(2) %></span></ins>
+
+    <% if (product.regularPrice && product.regularPrice > product.discountPrice) { %>
+      <ins>
+        <span class="old-price font-md ml-15">₹<%= product.regularPrice.toFixed(2) %></span>
+      </ins>
+      <span class="save-price font-md color3 ml-15">
+        <%= product.discountPercentage %>% Off
+      </span>
+    <% } %>
+  </div>
+</div>
+
+
+      <div class="bt-1 border-color-1 mt-15 mb-15"></div>
+      <div class="short-desc mb-30">
+      </div>
+      <div class="product_sort_info font-xs mb-30">
+      </div>
+      <div class="attr-detail attr-size">
+        <strong class="mr-10">Size</strong>
+        <ul class="list-filter size-filter font-small">
+          <% ['S', 'M', 'L', 'XL', 'XXL'].forEach(size => { %>
+            <li class="<%= selectedSize === size ? 'active' : '' %>">
+              <a href="#"><%= size %></a>
+            </li>
+          <% }) %>
+        </ul>
+      </div>
+      <div class="bt-1 border-color-1 mt-30 mb-30">
+          <p>Availability:<span class="in-stock text-success ml-5">select a size</span></p>
+      </div>
+      <div class="detail-extralink">
+        <div class="product-extra-link2">
+          <button type="submit" class="button button-add-to-cart" style="margin-bottom: 20px;">Add to cart</button>
+        </div>
+      </div>
+    </div>
+   
+  </div>
+</div>
+
+                            <div class="row">
+                                <div class="col-lg-10 m-auto entry-main-content">
+                                    <h2 class="section-title style-1 mb-30">Description</h2>
+                                    <div class="description mb-50">
+                                        <p>
+                                            <%= product.description %>
+                                        </p>
+                                        <h4 class="mt-30" style="font-size: medium;">Specifications</h4>
+                                        <ul class="product-more-infor mt-30">
+                                            <% if (product.specifications) { %>
+                                                <% product.specifications.split(/\r?\n/).forEach(spec=> { %>
+                                                    <li>
+                                                        <%= spec.trim() %>
+                                                    </li>
+                                                    <% }) %>
+                                                        <% } else { %>
+                                                            <li>No specifications provided.</li>
+                                                            <% } %>
+                                        </ul>
+                                    
+                                    
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="social-icons single-share">
+                                        <ul class="text-grey-5 d-inline-block">
+                                            <li><strong class="mr-10">Share this:</strong></li>
+                                            <li class="social-facebook"><a href="#"><img src="/imgs/theme/icons/icon-facebook.svg" alt=""></a></li>
+                                            <li class="social-twitter"> <a href="#"><img src="/imgs/theme/icons/icon-twitter.svg" alt=""></a></li>
+                                            <li class="social-instagram"><a href="#"><img src="/imgs/theme/icons/icon-instagram.svg" alt=""></a></li>
+                                            <li class="social-linkedin"><a href="#"><img src="/imgs/theme/icons/icon-pinterest.svg" alt=""></a></li>
+                                        </ul>
+                                    </div>
+                            <div class="row mt-60">
+  <div class="col-12">
+    <h3 class="section-title style-1 mb-30">Related products</h3>
+  </div>
+  <div class="col-12">
+    <div class="row related-products">
+      <% relatedProducts.forEach(p => { %>
+        <div class="col-lg-3 col-md-4 col-12 col-sm-6">
+          <div class="product-cart-wrap small hover-up">
+            <div class="product-img-action-wrap">
+              <div class="product-img product-img-zoom">
+                <a href="/shop/product/<%= p._id %>">
+                  <img class="default-img" src="<%= p.productImage[0] %>" alt="<%= p.productName %>">
+                  <% if (p.productImage[1]) { %>
+                    <img class="hover-img" src="<%= p.productImage[1] %>" alt="<%= p.productName %> hover">
+                  <% } %>
+                </a>
+              </div>
+              <div class="product-action-1">
+                <a aria-label="Add To Wishlist" class="action-btn small hover-up" href="#">
+                  <i class="fi-rs-heart"></i>
+                </a>
+              </div>
+              <% if (p.discountPercentage > 50) { %>
+                <div class="product-badges product-badges-position product-badges-mrg">
+                  <span class="hot">Hot</span>
+                </div>
+              <% } else if (p.discountPercentage > 0) { %>
+                <div class="product-badges product-badges-position product-badges-mrg">
+                  <span class="sale">Sale</span>
+                </div>
+              <% } else { %>
+                <div class="product-badges product-badges-position product-badges-mrg">
+                  <span class="best">Best Sell</span>
+                </div>
+              <% } %>
+            </div>
+            <div class="product-content-wrap">
+            <h2><a href="/shop/product/<%= p._id %>">
+                    <%= p.productName %>
+                </a></h2>
+            <div class="product-category-link m-2">
+                <span>Category: </span>
+                <a href="/shop?category=<%= product.categoryName %>" class="text-brand fw-bold">
+                    <%= product.categoryName %>
+                </a>
+            </div>
+              <div class="product-price">
+                <span>₹<%= p.discountPrice %></span>
+                <% if (p.discountPercentage > 0) { %>
+                  <span class="old-price">₹<%= p.regularPrice %></span>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+</div>
+
+                           <div class="banner-img banner-big wow fadeIn f-none animated mt-50">
+        <div class="anime-bg-image"></div>
+        <div class="overlay"></div>
+        <div class="aesthetic-particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+        <div class="anime-stars">
+            <div class="star">✨</div>
+            <div class="star">⭐</div>
+            <div class="star">✨</div>
+            <div class="star">⭐</div>
+            <div class="star">✨</div>
+        </div>
+        <div class="aesthetic-frame"></div>
+        <div class="banner-text">
+            <h4 class="mb-15 mt-40">街改 Explore the Anime culture</h4><br>
+            <h1 class="fw-600 mb-20">Kaizen your Style,<br>transform your confidence</h1>
+        </div>
+    </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer class="main">
+        <section class="section-padding footer-mid">
+            <div class="container pt-15 pb-20">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="widget-about font-md mb-md-5 mb-lg-0">
+                            <div class="logo logo-width-1 wow fadeIn animated">
+                                <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+                            </div>
+                            <h5 class="mt-20 mb-10 fw-600 text-grey-4 wow fadeIn animated">Contact</h5>
+                            <p class="wow fadeIn animated">
+                                <strong>Address: </strong>562 Wellington Road, Street 32, San Francisco
+                            </p>
+                            <p class="wow fadeIn animated">
+                                <strong>Phone: </strong>+01 2222 365 /(+91) 01 2345 6789
+                            </p>
+                            <p class="wow fadeIn animated">
+                                <strong>Hours: </strong>10:00 - 18:00, Mon - Sat
+                            </p>
+                            <h5 class="mb-10 mt-30 fw-600 text-grey-4 wow fadeIn animated">Follow Us</h5>
+                            <div class="mobile-social-icon wow fadeIn animated mb-sm-5 mb-md-0">
+                                <a href="#"><img src="/imgs/theme/icons/icon-facebook.svg" alt=""></a>
+                                <a href="#"><img src="/imgs/theme/icons/icon-twitter.svg" alt=""></a>
+                                <a href="#"><img src="/imgs/theme/icons/icon-instagram.svg" alt=""></a>
+                                <a href="#"><img src="/imgs/theme/icons/icon-pinterest.svg" alt=""></a>
+                                <a href="#"><img src="/imgs/theme/icons/icon-youtube.svg" alt=""></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-3">
+                        <h5 class="widget-title wow fadeIn animated">About</h5>
+                        <ul class="footer-list wow fadeIn animated mb-sm-5 mb-md-0">
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Delivery Information</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms &amp; Conditions</a></li>
+                            <li><a href="#">Contact Us</a></li>
+                            <li><a href="#">Support Center</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2  col-md-3">
+                        <h5 class="widget-title wow fadeIn animated">My Account</h5>
+                        <ul class="footer-list wow fadeIn animated">
+                            <li><a href="#">Sign In</a></li>
+                            <li><a href="#">View Cart</a></li>
+                            <li><a href="#">My Wishlist</a></li>
+                            <li><a href="#">Track My Order</a></li>
+                            <li><a href="#">Help</a></li>
+                            <li><a href="#">Order</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-4">
+                        <h5 class="widget-title wow fadeIn animated">Install App</h5>
+                        <div class="row">
+                            <div class="col-md-8 col-lg-12">
+                                <p class="wow fadeIn animated">From App Store or Google Play</p>
+                                <div class="download-app wow fadeIn animated">
+                                    <a href="#" class="hover-up mb-sm-4 mb-lg-0"><img class="active"
+                                            src="/imgs/theme/app-store.jpg" alt=""></a>
+                                    <a href="#" class="hover-up"><img src="/imgs/theme/google-play.jpg"
+                                            alt=""></a>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-12 mt-md-3 mt-lg-0">
+                                <p class="mb-20 wow fadeIn animated">Secured Payment Gateways</p>
+                                <img class="wow fadeIn animated" src="/imgs/theme/payment-method.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="container pb-20 wow fadeIn animated">
+            <div class="row">
+                <div class="col-12 mb-20">
+                    <div class="footer-bottom"></div>
+                </div>
+                <div class="col-lg-6">
+                    <p class="float-md-left font-sm text-muted mb-0">&copy; 2025,<strong
+                            class="text-brand">Kaizen Street</strong></p>
+                </div>
+                <div class="col-lg-6">
+                    <p class="text-lg-end text-start font-sm text-muted mb-0"> All rights reserved </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Preloader Start -->
+    <div id="preloader-active">
+        <div class="preloader d-flex align-items-center justify-content-center">
+            <div class="preloader-inner position-relative">
+                <div class="text-center">
+                    <h5 class="mb-5">Now Loading</h5>
+                    <div class="loader">
+                        <div class="bar bar1"></div>
+                        <div class="bar bar2"></div>
+                        <div class="bar bar3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Vendor JS-->
+    <script src="/js/vendor/modernizr-3.6.0.min.js"></script>
+    <script src="/js/vendor/jquery-3.6.0.min.js"></script>
+    <script src="/js/vendor/jquery-migrate-3.3.0.min.js"></script>
+    <script src="/js/vendor/bootstrap.bundle.min.js"></script>
+    <script src="/js/plugins/slick.js"></script>
+    <script src="/js/plugins/jquery.syotimer.min.js"></script>
+    <script src="/js/plugins/wow.js"></script>
+    <script src="/js/plugins/jquery-ui.js"></script>
+    <script src="/js/plugins/perfect-scrollbar.js"></script>
+    <script src="/js/plugins/magnific-popup.js"></script>
+    <script src="/js/plugins/select2.min.js"></script>
+    <script src="/js/plugins/waypoints.js"></script>
+    <script src="/js/plugins/counterup.js"></script>
+    <script src="/js/plugins/jquery.countdown.min.js"></script>
+    <script src="/js/plugins/images-loaded.js"></script>
+    <script src="/js/plugins/isotope.js"></script>
+    <script src="/js/plugins/scrollup.js"></script>
+    <script src="/js/plugins/jquery.vticker-min.js"></script>
+    <script src="/js/plugins/jquery.theia.sticky.js"></script>
+    <script src="/js/plugins/jquery.elevatezoom.js"></script>
+    <!-- Template  JS -->
+    <script src="/js/main.js?v=3.4"></script>
+    <script src="/js/shop.js?v=3.4"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/easyzoom/2.5.0/easyzoom.js"></script>
+
+  <script>
+    $(document).ready(function() {
+    $('.product-image-slider').slick({
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: false,
+        fade: true,
+        asNavFor: '.slider-nav-thumbnails'
+    });
+    $('.slider-nav-thumbnails').slick({
+        slidesToShow: 4,
+        slidesToScroll: 1,
+        asNavFor: '.product-image-slider',
+        dots: false,
+        focusOnSelect: true
+    });
+});
+  </script>
+
+</body>
+
+</html>

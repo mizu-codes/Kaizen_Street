@@ -1,0 +1,302 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Shoestore Dashboard</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="assets2/imgs/theme/favicon.svg">
+    <!-- Template CSS -->
+    <link href="/assets2/css/main.css" rel="stylesheet"/>
+</head>
+
+    <main class="main-wrap">
+        <header class="main-header navbar">
+            <div class="col-search">
+                <form class="searchform">
+                    <div class="input-group">
+                        <input list="search_terms" type="text" class="form-control" placeholder="Search term">
+                        <button class="btn btn-light bg" type="button"> <i class="material-icons md-search"></i></button>
+                    </div>
+                    <datalist id="search_terms">
+                        <option value="Products">
+                        <option value="New orders">
+                        <option value="Apple iphone">
+                        <option value="Ahmed Hassan">
+                    </datalist>
+                </form>
+            </div>
+            <div class="col-nav">
+                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i class="material-icons md-apps"></i> </button>
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link btn-icon" href="#">
+                            <i class="material-icons md-notifications animation-shake"></i>
+                            <span class="badge rounded-pill">3</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
+                    </li>
+                    <li class="dropdown nav-item">
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownLanguage" aria-expanded="false"><i class="material-icons md-public"></i></a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLanguage">
+                            <a class="dropdown-item text-brand" href="#"><img src="assets2/imgs/theme/flag-us.png" alt="English">English</a>
+                            <a class="dropdown-item" href="#"><img src="assets2/imgs/theme/flag-fr.png" alt="Français">Français</a>
+                            <a class="dropdown-item" href="#"><img src="assets2/imgs/theme/flag-jp.png" alt="Français">日本語</a>
+                            <a class="dropdown-item" href="#"><img src="assets2/imgs/theme/flag-cn.png" alt="Français">中国人</a>
+                        </div>
+                    </li>
+                    <li class="dropdown nav-item">
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false"> <img class="img-xs rounded-circle" src="assets2/imgs/people/avatar2.jpg" alt="User"></a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                            <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit Profile</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account Settings</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-account_balance_wallet"></i>Wallet</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item text-danger" href="#"><i class="material-icons md-exit_to_app"></i>Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Categories </h2>
+                    <p>Add, edit or delete a category</p>
+                </div>
+                <div>
+                    <input type="text" placeholder="Search Categories" class="form-control bg-white">
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <form method="post" action="/admin/addCategory" onsubmit="return handleFormSubmit(event)">
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Name</label>
+                                    <input type="text" name="name" placeholder="Type here" class="form-control" id="product_name" />
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Visibility</label>
+                                    <select class="form-select" name="visibility Status" id="visibility">
+                                        <option>List</option>
+                                        <option>Unlist</option>
+                                    </select>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Description</label>
+                                    <textarea placeholder="Type here" name="description" id="descriptionId" class="form-control"></textarea>
+                                </div>
+                                <div class="d-grid">
+                                    <button class="btn btn-primary">Create category</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <!-- <th class="text-center">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" value="" />
+                                                </div>
+                                            </th> -->
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Status</th>
+                                            <th>Date</th>
+                                            <!-- <th>Sl.no</th> -->
+                                            <th><div class="d-flex justify-content-end pe-5">Action</div></th>
+                                            <th>Edit</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        <%cat.reverse().forEach((category,index)=>{%>
+                                        <tr>
+                                            <!-- <td class="text-center">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" value="" />
+                                                </div>
+                                            </td> -->
+                                            <td><category class="_id"></category></td>
+                                            <td><%=category.name%></td>
+                                            <td class="text-start"> 
+                                                <%if(category.isListed){%>
+                                                <span 
+                                                class="badge rounded-pill alert-success"
+                                                style="width: 60px;"
+                                                >Listed
+                                                </span>
+                                                <%}else{%>
+
+                                                <span
+                                                class="badge rounded-pill alert-danger"
+                                                style="width: 60px;"
+                                                >Unlisted
+                                                </span>
+                                                <%}%>
+                                            </td>
+                                            <td><%= new Date(category.createdAt).toISOString().split('T')[0] %></td>
+                                            <!-- <td>1</td> -->
+                                            <td class="text-start">
+                                                <%if(category.isListed){%>
+                                                    <a href="/admin/unlistCategory?id=<%=category._id%>" class="btn btn-danger" style="width: 100px; text-decoration: none; color: white;">
+                                                        Unlist
+                                                        </a>
+                                               
+                                                <%}else{%>
+                                                    <a href="/admin/listCategory?id=<%=category._id%>" class="btn btn-success" style="width: 100px; text-decoration: none; color: white;">
+                                                        List
+                                                        </a>
+                                                <%}%>
+                                            </td>
+                                            <td><a class="dropdown-item" href="#">Edit info</a></td>
+                                        </tr>                
+                                        <%})%>
+                            
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div> <!-- .col// -->
+                    </div> <!-- .row // -->
+                </div> <!-- card body .// -->
+            </div> <!-- card .// -->
+
+            <div class="pagination-container">
+                <% if (currentPage > 1) { %>
+                    <a href="?page=<%= currentPage - 1 %>">&laquo; Previous</a>
+                <% } %>
+            
+                <% for (let i = 1; i <= totalPages; i++) { %>
+                    <% if (i === currentPage) { %>
+                        <span class="currentPage"><%= i %></span>
+                    <% } else { %>
+                        <a href="?page=<%= i %>"><%= i %></a>
+                    <% } %>
+                <% } %>
+            
+                <% if (currentPage < totalPages) { %>
+                    <a href="?page=<%= currentPage + 1 %>">Next &raquo;</a>
+                <% } %>
+            </div>
+            
+            
+        </section> <!-- content-main end// -->
+
+        <script>
+
+            function handleFormSubmit(event){
+
+                event.preventDefault();
+                if(!validateForm()){
+                    return 
+                }
+                const name = document.getElementsByName("name")[0].value;
+                const description = document.getElementById("descriptionId").value;
+
+                fetch('/admin/addCategory',{
+                    method:'POST',
+                    headers:{
+                        'content-type':'application/json'
+                    },
+                    body:JSON.stringify({name,description})
+                })
+                .then(response=>{
+                    if(!response.ok){
+                        return response.json().then(err =>{
+                            throw  new Error(err.error);
+                        })
+                    }
+                    return response.json();
+                })
+                .then(data=>{
+                    location.reload();
+                })
+                .catch(error=>{
+                    if(error.message === "Category already exists"){
+                        Swal.fire({
+
+                            icon:'error',
+                            title:'Oops',
+                            text:'Category already exists'
+                        })
+                    }else{
+                        Swal.fire({
+                            icon:"error",
+                            title:"Oops",
+                            text:"An error occured while adding the category",
+                        });
+                    }
+                });
+            }
+
+            function validateForm (){
+                clearErrorMessages();
+                const name = document.getElementsByName('name')[0].value.trim();
+                const description = document.getElementById('descriptionId').value.trim();
+                isValid = true;
+
+                if(name===""){
+                    displayErrorMessage("name-error","please enter a name");
+                    isValid = false
+                }else if(!/^[a-zA-Z\s]+$/.test(name)){
+                    displayErrorMessage("name-error","Category name should contain only alphabetic characters");
+                    isValid = false;
+                }
+                if(description===""){
+                    displayErrorMessage("description-error","Please enter a description");
+                    isValid = false;
+                }
+                return isValid;
+            }
+
+
+            function displayErrorMessage(elementId,message){
+                var errorElement = document.getElementById(elementId);
+                errorElement.innerText = message;
+                errorElement.style.display = "block";
+            }
+
+            function clearErrorMessages(){
+                const errorElements = document.getElementsByClassName("error-message");
+                Array.from(errorElements).forEach((element)=>{
+                    element.innerText = "";
+                    element.style.display="none";
+                });
+            }
+
+
+
+        </script>
+           <footer class="main-footer font-xs">
+            <div class="row pb-30 pt-15">
+                <div class="col-sm-6">
+                    <script>
+                    document.write(new Date().getFullYear())
+                    </script> Shoestore.
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-sm-end">
+                        All rights reserved
+                    </div>
+                </div>
+            </div>
+        </footer>
+

@@ -1,0 +1,174 @@
+<div class="modal fade" id="cropModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Crop Image</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="crop-container">
+                    <img id="cropImage" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelCrop">
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-primary" id="cropAndSave">
+                    Crop & Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="main-footer font-xs text-center py-3">
+    <div>&copy;
+        <script>document.write(new Date().getFullYear())</script> Kaizen Street. All rights reserved.
+    </div>
+</footer>
+</main>
+
+<script src="/assets2/js/vendors/jquery-3.6.0.min.js"></script>
+<script src="/assets2/js/vendors/bootstrap.bundle.min.js"></script>
+<script src="/assets/js/main.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js" integrity="sha512-..."
+    crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        let cropper, currentSlot;
+
+        window.triggerFile = i => {
+            document.getElementById(`fileInput${i}`).click();
+        };
+
+        window.loadCropper = (e, i) => {
+            currentSlot = i;
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const imgEl = document.getElementById('cropImage');
+            imgEl.src = URL.createObjectURL(file);
+
+            const modalEl = document.getElementById('cropModal');
+            const bsModal = new bootstrap.Modal(modalEl);
+            bsModal.show();
+
+            modalEl.addEventListener('shown.bs.modal', () => {
+                if (cropper) cropper.destroy();
+                cropper = new Cropper(imgEl, {
+                    aspectRatio: 1,
+                    viewMode: 1,
+                    autoCropArea: 1,
+                });
+            }, { once: true });
+        };
+
+        document.getElementById('cancelCrop').addEventListener('click', () => {
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+        });
+
+        document.getElementById('cropAndSave').addEventListener('click', () => {
+            if (!cropper || currentSlot == null) return;
+
+            cropper.getCroppedCanvas({ width: 800, height: 800 }).toBlob(blob => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const dataURL = reader.result;
+
+                   
+                    document.getElementById(`croppedImage${currentSlot}`).value = dataURL;
+
+                  
+                    const slot = document.getElementById(`slot-${currentSlot}`);
+                    const img = slot.querySelector('img');
+                    img.src = dataURL;
+                    slot.classList.add('has-image');
+                    slot.querySelector('button').style.display = 'none';
+
+                    updateState();
+                    bootstrap.Modal.getInstance(document.getElementById('cropModal')).hide();
+                };
+                reader.readAsDataURL(blob);
+
+                cropper.destroy();
+                cropper = null;
+            }, 'image/jpeg', 0.85);
+        });
+
+         
+    const addForm   = document.getElementById('productAddForm');
+    const submitBtn = document.getElementById('submitBtn');
+
+    if (!addForm || !submitBtn) {
+      console.error('Form or submit button not found! Make sure IDs match.');
+      return;
+    }
+
+         function updateState() {
+    const allImages = [0,1,2].every(i =>
+      !!document.getElementById(`croppedImage${i}`).value
+    );
+
+   
+    const fields = ['productName','regularPrice','stock','size','status','category'];
+    const allFields = fields.every(id =>
+      document.getElementById(id).value.trim() !== ''
+    );
+    const ok = allImages && allFields;
+    submitBtn.disabled = !ok;
+    document.getElementById('img-error').style.display = allImages ? 'none' : 'block';
+  }
+
+ 
+  document.querySelectorAll('input, select, textarea').forEach(el => {
+    el.addEventListener('input', updateState);
+    el.addEventListener('change', updateState);
+  });
+  
+  updateState()
+
+  addForm.addEventListener('submit',(e)=>{
+    if(submitBtn.disabled){
+        console.warn('Duplicate submit blocked');
+        e.preventDefault();
+        return;
+    }
+
+    submitBtn.disabled=true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Submitting…';
+
+  })
+    });
+
+  
+  const regInput = document.getElementById('regularPrice');
+  const offInput = document.getElementById('productOffer');
+  const discHidden = document.getElementById('discountPrice');
+  const submitBtn = document.getElementById('submitBtn');
+
+  function recalc() {
+    const base = parseFloat(regInput.value) || 0;
+    const pct  = parseFloat(offInput.value) || 0;
+    
+    const clamped = Math.min(Math.max(pct, 0), 100);
+    
+    const discounted = base * (1 - clamped/100);
+    discHidden.value = discounted.toFixed(2);
+
+   
+    submitBtn.disabled = !(base > 0 && clamped >= 0);
+  }
+  
+  regInput.addEventListener('input', recalc);
+  offInput.addEventListener('input', recalc);
+
+
+  recalc();
+</script>
+</body>
+
+</html>

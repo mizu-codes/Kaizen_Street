@@ -1,0 +1,328 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Kaizen Category Management</title>
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" type="image/x-icon" href="/assets2/imgs/theme/kaizenicon.svg">
+  <link href="/assets2/css/main.css" rel="stylesheet" type="text/css" />
+
+  <style>
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    .table-custom th {
+      background: linear-gradient(90deg, #6c63ff, #8f94fb);
+      color: #fff;
+      border: none;
+    }
+
+    .table-custom tbody tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    .pagination .page-link {
+      color: #6c63ff;
+      border-radius: 8px;
+      border: 1px solid #6c63ff;
+      margin: 0 4px;
+      transition: 0.3s ease;
+    }
+
+    .pagination .page-link:hover {
+      background-color: #6c63ff;
+      color: white;
+    }
+
+    .pagination .page-item.active .page-link {
+      background-color: #6c63ff;
+      border-color: #6c63ff;
+      color: white;
+    }
+
+    .pagination .page-item.disabled .page-link {
+      color: #aaa;
+      border-color: #ddd;
+      background-color: #f9f9f9;
+    }
+
+    .btn-sm {
+      font-size: 0.75rem;
+      padding: 0.15rem 0.65rem;
+    }
+  </style>
+</head>
+
+<body>
+
+  <aside class="navbar-aside" id="offcanvas_aside">
+    <div class="aside-top">
+      <a href="/admin" class="brand-wrap">
+        <img src="/assets2/imgs/theme/kaizenlogoo.svg" class="logo" alt="Kaizen Dashboard">
+      </a>
+      <div>
+        <button class="btn btn-icon btn-aside-minimize">
+          <i class="text-muted material-icons md-menu_open"></i>
+        </button>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu-aside">
+        <li class="menu-item">
+          <a class="menu-link" href="/admin">
+            <i class="icon material-icons md-home"></i>
+            <span class="text">Dashboard</span>
+          </a>
+        </li>
+        <li class="menu-item active">
+          <a class="menu-link" href="/admin/user">
+            <i class="icon material-icons md-person"></i>
+            <span class="text">Category</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main class="main-wrap">
+    <header class="main-header navbar">
+      <div class="col-search mb-3">
+        <form class="searchform d-flex" action="/admin/category" method="GET">
+          <input type="text" name="q" value="<%= q %>" class="form-control" placeholder="Search categories" />
+          <button class="btn btn-light ms-2" type="submit">
+            <i class="material-icons md-search"></i>
+          </button>
+          <% if (q.trim()) { %>
+            <a href="/admin/category" class="btn btn-outline-secondary ms-2" style="font-size:1rem;">Clear</a>
+            <% } %>
+        </form>
+      </div>
+      <div class="col-nav">
+        <ul class="nav">
+          <li class="dropdown nav-item">
+            <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount">
+              <img class="img-xs rounded-circle" src="/assets2/imgs/people/avatar2.jpg" alt="Admin">
+            </a>
+            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+              <a class="dropdown-item text-danger" href="/admin/logout">
+                <i class="material-icons md-exit_to_app"></i>Logout
+              </a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </header>
+
+    <section class="content-main">
+      <div class="content-header d-flex justify-content-between align-items-center mb-4">
+        <h2 class="content-title card-title">Category Management</h2>
+      </div>
+
+      <!-- Add New Category Card -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Add New Category</h5>
+          <form action="/admin/addCategory?q=<%= q %>&page=<%= page %>" method="POST" class="row g-3 align-items-end">
+            <div class="col-md-4">
+              <label class="form-label">Category Name</label>
+              <input type="text" name="categoryName" class="form-control" placeholder="Enter category name" required />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Description</label>
+              <input type="text" name="categoryDescription" class="form-control" placeholder="Enter description"
+                required />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Status</label>
+              <select name="status" class="form-select" required>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Offer</label>
+              <select name="offerId" class="form-select">
+                <option value="">No Offer</option>
+                <% offers.forEach(offer=>{ %>
+                  <option value="<%= offer._id %>">
+                    <%= offer.title %>
+                  </option>
+                  <% }) %>
+              </select>
+            </div>
+            <div class="d-flex justify-content-center">
+              <button type="submit" class="btn btn-primary btn-sm">
+                <i class="material-icons md-add_box mt-1" style="font-size:1.2rem;"></i>
+                <span style="font-size:0.85rem;">Add</span>
+              </button>
+            </div>
+          </form>
+          <div class="row justify-content-center mb-4">
+            <div class="col-12 col-md-4">
+              <% if (message) { %>
+                <div class="alert alert-success text-center text-nowrap mt-2" style="font-size:0.75rem;">
+                  <%= message %>
+                </div>
+                <% } %>
+                  <% if (error) { %>
+                    <div class="alert alert-danger text-center text-nowrap mt-2" style="font-size:0.75rem;">
+                      <%= error %>
+                    </div>
+                    <% } %>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- All Categories Table -->
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">All Categories</h4>
+          <div class="table-wrap">
+            <table class="table table-custom align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th>Status</th>
+                  <th>Listed</th>
+                  <th>Offer</th>
+                  <th>Created At</th>
+                  <th class="text-end">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if (categories.length===0) { %>
+                  <tr>
+                    <td colspan="8" class="text-center text-warning py-3">No categories found.</td>
+                  </tr>
+                  <% } else { %>
+                    <% categories.forEach((cat, i)=>{ %>
+                      <tr id="view-<%= cat._id %>">
+                        <td>
+                          <%= skip + i + 1 %>
+                        </td>
+                        <td>
+                          <%= cat.categoryName %>
+                        </td>
+                        <td>
+                          <%= cat.categoryDescription %>
+                        </td>
+                        <td>
+                          <%= cat.status %>
+                        </td>
+                        <td>
+                          <%= cat.isListed ? 'Yes' : 'No' %>
+                        </td>
+                        <td>
+                          <%= cat.offerId ? cat.offerId.title : '—' %>
+                        </td>
+                        <td>
+                          <%= new Date(cat.createdAt).toLocaleDateString() %>
+                        </td>
+                        <td class="text-end">
+                          <button type="button" class="btn btn-sm btn-outline-primary me-1"
+                            onclick="toggleEdit('<%= cat._id %>')">Edit</button>
+                          <form action="/admin/toggleList/<%= cat._id %>?q=<%= q %>&page=<%= page %>" method="POST"
+                            class="d-inline">
+                            <% if (cat.isListed) { %>
+                              <button type="submit" class="btn btn-sm btn-outline-danger">Block</button>
+                              <% } else { %>
+                                <button type="submit" class="btn btn-sm btn-outline-success">Unblock</button>
+                                <% } %>
+                          </form>
+                        </td>
+                      </tr>
+                      <tr id="edit-<%= cat._id %>" style="display:none;">
+                        <td>
+                          <%= skip + i + 1 %>
+                        </td>
+                        <td><input form="edit-<%= cat._id %>-form" type="text" name="categoryName"
+                            value="<%= cat.categoryName %>" class="form-control form-control-sm" required /></td>
+                        <td><input form="edit-<%= cat._id %>-form" type="text" name="categoryDescription"
+                            value="<%= cat.categoryDescription %>" class="form-control form-control-sm" required /></td>
+                        <td><select form="edit-<%= cat._id %>-form" name="status" class="form-select form-select-sm">
+                            <option value="active" <%=cat.status==='active' ? 'selected' :''%>>Active</option>
+                            <option value="inactive" <%=cat.status==='inactive' ? 'selected' :''%>>Inactive</option>
+                          </select></td>
+                        <td><input form="edit-<%= cat._id %>-form" type="checkbox" name="isListed"
+                            class="form-check-input" <%=cat.isListed? 'checked' :''%>/></td>
+                        <td><select form="edit-<%= cat._id %>-form" name="offerId" class="form-select form-select-sm">
+                            <option value="">No Offer</option>
+                            <% offers.forEach(offer=>{ %><option value="<%= offer._id %>" <%=cat.offerId &&
+                                cat.offerId._id.toString()===offer._id.toString()? 'selected' :''%>><%= offer.title %>
+                              </option>
+                              <% }) %>
+                          </select></td>
+                        <td></td>
+                        <td class="text-end">
+                          <div class="d-flex justify-content-end align-items-center gap-2">
+                            <form id="edit-<%= cat._id %>-form"
+                              action="/admin/editCategory/<%= cat._id %>?q=<%= q %>&page=<%= page %>" method="POST">
+                              <button type="submit" class="btn btn-sm btn-success py-1 px-2">Save</button></form><button
+                              type="button" class="btn btn-sm btn-outline-secondary py-1 px-2"
+                              onclick="toggleEdit('<%= cat._id %>')">Cancel</button>
+                          </div>
+                        </td>
+                      </tr>
+                      <% }) %>
+                        <% } %>
+              </tbody>
+            </table>
+          </div>
+
+          <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center mt-4">
+              <% if (page> 1) { %>
+                <li class="page-item"><a class="page-link"
+                    href="/admin/category?q=<%= q %>&page=<%= page-1 %>&limit=<%= limit %>">Prev</a></li>
+                <% } else { %>
+                  <li class="page-item disabled"><span class="page-link">Prev</span></li>
+                  <% } %>
+                    <% for (let p=1; p <=totalPages; p++) { %>
+                      <li class="page-item <%= p===page?'active':''%>"><a class="page-link"
+                          href="/admin/category?q=<%= q %>&page=<%= p %>&limit=<%= limit %>">
+                          <%= p %>
+                        </a></li>
+                      <% } %>
+                        <% if (page < totalPages) { %>
+                          <li class="page-item"><a class="page-link"
+                              href="/admin/category?q=<%= q %>&page=<%= page+1 %>&limit=<%= limit %>">Next</a></li>
+                          <% } else { %>
+                            <li class="page-item disabled"><span class="page-link">Next</span></li>
+                            <% } %>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </section>
+    <footer class="main-footer font-xs text-center py-3">
+      <div>&copy;
+        <script>document.write(new Date().getFullYear())</script> Kaizen Street. All rights reserved.
+      </div>
+    </footer>
+  </main>
+
+
+
+
+  <script src="/assets2/js/vendors/jquery-3.6.0.min.js"></script>
+  <script src="/assets2/js/vendors/bootstrap.bundle.min.js"></script>
+  <script src="/assets2/js/main.js"></script>
+  <script>
+    function toggleEdit(id) {
+      const viewRow = document.getElementById(`view-${id}`);
+      const editRow = document.getElementById(`edit-${id}`);
+      if (!viewRow || !editRow) return;
+      viewRow.style.display = viewRow.style.display === 'none' ? '' : 'none';
+      editRow.style.display = editRow.style.display === 'none' ? '' : 'none';
+    }
+  </script>
+</body>
+
+</html>
