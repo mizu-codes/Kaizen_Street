@@ -43,8 +43,17 @@ const userSchema = new Schema({
         unique: true,
         sparse: true
     },
-    profilePicture: {
+    avatarUrl: {
         type: String,
+        default: ''
+    },
+    avatarPublicId: {
+         type: String,
+         default: ''
+    },
+    phone: {
+        type: String,
+        trim: true,
         default: ''
     },
     searchHistory: [{

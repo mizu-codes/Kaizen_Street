@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -7,111 +8,197 @@
   <title>User Profile</title>
   <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/kaizenicon.svg">
   <link rel="stylesheet" href="/css/main.css?v=3.4">
- 
+
   <style>
-    .profile-layout { 
-      display: flex; 
-      gap: 2rem; 
-      margin: 2rem 0; 
-      position: relative;
+    /* Container and Layout */
+    .profile-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 15px;
     }
-  
+
+    .profile-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 2rem;
+      margin: 2rem 0;
+      align-items: start;
+    }
+
+    /* Mobile Sidebar Toggle */
     .mobile-sidebar-toggle {
       display: none;
       background: #3BB77E;
       color: white;
       border: none;
-      padding: 0.75rem 1rem;
+      padding: 0.875rem 1.25rem;
       border-radius: 8px;
       margin-bottom: 1rem;
       font-weight: 500;
       cursor: pointer;
       width: 100%;
-      text-align: left;
       align-items: center;
       justify-content: space-between;
+      transition: background 0.3s ease;
     }
-    
+
+    .mobile-sidebar-toggle:hover {
+      background: #2d8f5c;
+    }
+
     .mobile-sidebar-toggle i {
       margin-right: 0.5rem;
     }
-    
+
     .mobile-sidebar-toggle .toggle-icon {
       transition: transform 0.3s ease;
     }
-    
+
     .mobile-sidebar-toggle.active .toggle-icon {
       transform: rotate(180deg);
     }
-    
+
+    /* Sidebar Styles */
     .profile-sidebar {
-      flex: 0 0 240px;
       background: #fff;
       border: 1px solid #e0e4e8;
-      border-radius: 8px;
+      border-radius: 12px;
       overflow: hidden;
-      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      position: sticky;
+      top: 20px;
+      height: fit-content;
     }
-    
+
     .profile-sidebar h4 {
       margin: 0;
-      padding: 1rem;
-      background: #f0f4f7;
+      padding: 1.25rem;
+      background: linear-gradient(135deg, #f8fffe 0%, #f0f9f6 100%);
       color: #3BB77E;
       font-weight: 600;
       border-bottom: 1px solid #e0e4e8;
+      font-size: 1.1rem;
     }
-    
+
     .profile-sidebar ul {
       list-style: none;
       margin: 0;
-      padding: 0;
+      padding: 0.5rem 0;
     }
-    
+
     .profile-sidebar li {
-      border-bottom: 1px solid #e0e4e8;
+      margin: 0 0.5rem 0.25rem 0.5rem;
     }
-    
+
+    .profile-sidebar li:last-child {
+      margin-bottom: 0.5rem;
+    }
+
     .profile-sidebar a {
       display: flex;
       align-items: center;
-      padding: 0.75rem 1rem;
+      padding: 0.875rem 1rem;
       color: #4a5568;
       text-decoration: none;
       font-weight: 500;
-      transition: background 0.2s;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      position: relative;
     }
-    
-    .profile-sidebar a:hover,
+
+    .profile-sidebar a:hover {
+      background: #e6fffa;
+      color: #3BB77E;
+      transform: translateX(2px);
+    }
+
     .profile-sidebar a.active {
       background: #e6fffa;
       color: #3BB77E;
+      font-weight: 600;
     }
-    
+
+    .profile-sidebar a.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: #3BB77E;
+      border-radius: 0 2px 2px 0;
+    }
+
     .profile-sidebar i {
       margin-right: 0.75rem;
       font-size: 1.1rem;
+      width: 20px;
+      text-align: center;
     }
-    
-    /* Avatar styles */
+
+    /* Profile Content */
+    .profile-content {
+      background: #fff;
+      border: 1px solid #e0e4e8;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+    }
+
+    .profile-header {
+      background: linear-gradient(135deg, #f8fffe 0%, #f0f9f6 100%);
+      padding: 1rem;
+      border-bottom: 1px solid #e0e4e8;
+    }
+
+    .profile-body {
+      padding: 1rem;
+    }
+
+    .profile-section {
+      margin-bottom: 2.5rem;
+    }
+
+    .profile-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .profile-section h3 {
+      color: #3BB77E;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid #e0e4e8;
+      display: flex;
+      align-items: center;
+      font-size: 1.25rem;
+    }
+
+    .profile-section h3 i {
+      margin-right: 0.75rem;
+      font-size: 1.3rem;
+    }
+
+    /* Avatar Styles */
     .profile-avatar-container {
       position: relative;
       display: inline-block;
     }
-    
+
     .profile-avatar {
       width: 120px;
       height: 120px;
       border-radius: 50%;
       object-fit: cover;
       border: 4px solid #e0e4e8;
-      transition: border-color 0.3s;
+      transition: all 0.3s ease;
     }
-    
+
     .profile-avatar:hover {
       border-color: #3BB77E;
+      transform: scale(1.02);
     }
-    
+
     .avatar-upload-btn {
       position: absolute;
       bottom: 0;
@@ -126,692 +213,770 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-      transition: background 0.3s;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
     }
-    
+
     .avatar-upload-btn:hover {
       background: #2d8f5c;
+      transform: scale(1.1);
     }
-    
-    /* Profile content improvements */
-    .profile-content {
-      flex: 1;
-      background: #fff;
-      border: 1px solid #e0e4e8;
+
+    /* Profile Info */
+    .profile-info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 1.5rem;
+    }
+
+    .profile-info-section {
+      background: #f8fffe;
       border-radius: 8px;
-      padding: 2rem;
-      min-width: 0; /* Prevent flex item from overflowing */
+      padding: 1.5rem;
+      border: 1px solid #e0e4e8;
     }
-    
-    .profile-section {
-      margin-bottom: 2rem;
-    }
-    
-    .profile-section h3 {
-      color: #3BB77E;
-      font-weight: 600;
-      margin-bottom: 1.5rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 2px solid #e0e4e8;
-    }
-    
-    .profile-section h3 i {
-      margin-right: 0.5rem;
-    }
-    
+
     .profile-info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 1rem;
       padding: 0.75rem 0;
-      border-bottom: 1px solid #f0f4f7;
+      border-bottom: 1px solid #e9ecef;
     }
-    
+
+    .profile-info-row:last-child {
+      margin-bottom: 0;
+      border-bottom: none;
+    }
+
     .profile-info-label {
       font-weight: 600;
       color: #4a5568;
+      min-width: 100px;
     }
-    
+
     .profile-info-value {
       color: #2d3748;
+      font-weight: 500;
     }
-    
+
+    /* Stats */
     .profile-stats {
-      display: flex;
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-    
-    .stat-item {
-      text-align: center;
-      padding: 1rem;
-      background: #f0f4f7;
-      border-radius: 8px;
-      min-width: 80px;
-      flex: 1;
-    }
-    
-    .stat-number {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #3BB77E;
-    }
-    
-    .stat-label {
-      font-size: 0.875rem;
-      color: #4a5568;
-      margin-top: 0.25rem;
-    }
-    
-    .action-buttons {
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
       gap: 1rem;
       margin-top: 1.5rem;
     }
-    
-    .hover-shadow {
-      transition: box-shadow 0.3s ease;
+
+    .stat-item {
+      text-align: center;
+      padding: 0.5rem;
+      background: #f8fffe;
+      border: 1px solid #e0e4e8;
+      border-radius: 12px;
+      transition: all 0.3s ease;
     }
-    
-    .hover-shadow:hover {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+
+    .stat-item:hover {
       transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
-    
-    /* Responsive breakpoints */
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #3BB77E;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      color: #4a5568;
+      font-weight: 500;
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .action-buttons .btn {
+      flex: 1;
+      min-width: 150px;
+    }
+
+    /* Welcome Section */
+    .welcome-section {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .welcome-section h1 {
+      color: #2d3748;
+      font-size: 2rem;
+      margin-top: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .welcome-section .subtitle {
+      color: #4a5568;
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+    }
+
+    .edit-btn {
+      width: fit-content;
+      max-width: 160px;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-left: 20rem;
+    }
+
+
+    /* Responsive Design */
     @media (max-width: 991px) {
       .profile-layout {
-        flex-direction: column;
-        gap: 0;
+        grid-template-columns: 1fr;
+        gap: 1rem;
       }
-      
+
+
+      .edit-btn {
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+      }
+
+
       .mobile-sidebar-toggle {
         display: flex;
       }
-      
+
       .profile-sidebar {
-        flex: none;
-        width: 100%;
-        margin-bottom: 1rem;
+        position: static;
         max-height: 0;
         overflow: hidden;
         opacity: 0;
         transform: translateY(-10px);
+        transition: all 0.3s ease;
         border: none;
         background: transparent;
+        box-shadow: none;
       }
-      
+
       .profile-sidebar.show {
-        max-height: 500px;
+        max-height: 600px;
         opacity: 1;
         transform: translateY(0);
         border: 1px solid #e0e4e8;
         background: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
       }
-      
+
       .profile-sidebar h4 {
         display: none;
       }
-      
+
       .profile-sidebar ul {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         gap: 0.5rem;
         padding: 1rem;
       }
-      
+
       .profile-sidebar li {
+        margin: 0;
         border: 1px solid #e0e4e8;
         border-radius: 8px;
-        border-bottom: 1px solid #e0e4e8;
       }
-      
+
       .profile-sidebar a {
         padding: 1rem;
-        border-radius: 8px;
         text-align: center;
         flex-direction: column;
         gap: 0.5rem;
       }
-      
-      .profile-sidebar i {
+
+      .profile-sidebar a i {
         margin-right: 0;
         font-size: 1.5rem;
       }
+
+      .profile-sidebar a.active::before {
+        display: none;
+      }
     }
-    
+
     @media (max-width: 768px) {
+      .profile-container {
+        padding: 0 10px;
+      }
+
       .profile-layout {
         margin: 1rem 0;
       }
-      
-      .profile-content {
+
+      .profile-header,
+      .profile-body {
         padding: 1.5rem;
       }
-      
+
+      .profile-info-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
       .profile-avatar {
         width: 100px;
         height: 100px;
       }
-      
+
       .avatar-upload-btn {
         width: 32px;
         height: 32px;
       }
-      
+
       .profile-stats {
-        flex-direction: column;
-        gap: 0.5rem;
+        grid-template-columns: repeat(2, 1fr);
       }
-      
-      .stat-item {
-        padding: 0.75rem;
-      }
-      
+
       .action-buttons {
         flex-direction: column;
       }
-      
+
+      .action-buttons .btn {
+        min-width: auto;
+      }
+
       .profile-sidebar ul {
         grid-template-columns: 1fr;
       }
-      
-      .profile-info-row.row {
-        flex-direction: column;
-      }
-      
-      .profile-info-row .col-sm-3,
-      .profile-info-row .col-sm-9 {
-        width: 100%;
-        padding: 0;
-      }
-      
-      .profile-info-label {
-        margin-bottom: 0.25rem;
+
+      .welcome-section h1 {
+        font-size: 1.5rem;
       }
     }
-    
+
     @media (max-width: 480px) {
-      .profile-content {
+
+      .profile-header,
+      .profile-body {
         padding: 1rem;
       }
-      
+
       .profile-section h3 {
-        font-size: 1.25rem;
+        font-size: 1.1rem;
       }
-      
+
       .profile-avatar {
         width: 80px;
         height: 80px;
       }
-      
+
       .avatar-upload-btn {
         width: 28px;
         height: 28px;
       }
-      
+
       .stat-number {
-        font-size: 1.25rem;
+        font-size: 1.5rem;
       }
-      
+
+      .quick-actions-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-stats {
+        grid-template-columns: 1fr;
+      }
+
       .profile-sidebar a {
         padding: 0.75rem;
       }
-      
+
       .profile-sidebar i {
         font-size: 1.25rem;
+      }
+
+      .welcome-section h1 {
+        font-size: 1.3rem;
+      }
+
+      .welcome-section .subtitle {
+        font-size: 1rem;
       }
     }
   </style>
 </head>
+
 <body>
 
-    <header class="header-area header-style-1 header-height-2">
-        <div class="header-top header-top-ptb-1 d-none d-lg-block">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-xl-3 col-lg-4">
-                        <div class="header-info">
-                        </div>
-                    </div>
-                    <div class="col-xl-6 col-lg-4">
-                        <div class="text-center">
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4">
-                        <div class="header-info header-info-right">
-    <% if (user) { %>
-      <div class="dropdown">
-        <a href="#" class="sign-in-link"><%= user.name %></a>
-        <div class="dropdown-content">
-          <a href="/userProfile">Profile</a>
-          <a href="/logout">Logout</a>
+  <header class="header-area header-style-1 header-height-2">
+    <div class="header-top header-top-ptb-1 d-none d-lg-block">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-xl-3 col-lg-4">
+            <div class="header-info">
+            </div>
+          </div>
+          <div class="col-xl-6 col-lg-4">
+            <div class="text-center">
+            </div>
+          </div>
+          <div class="col-xl-3 col-lg-4">
+            <div class="header-info header-info-right">
+              <% if (user) { %>
+                <div class="dropdown">
+                  <a href="#" class="sign-in-link">
+                    <%= user.name %>
+                  </a>
+                  <div class="dropdown-content">
+                    <a href="/userProfile">Profile</a>
+                    <a href="/logout">Logout</a>
+                  </div>
+                </div>
+                <% } else { %>
+                  <ul>
+                    <li>
+                      <i class="fi-rs-user"></i>
+                      <a href="/login">Log In</a>
+                    </li>
+                  </ul>
+                  <% } %>
+            </div>
+          </div>
         </div>
       </div>
-    <% } else { %>
-      <ul>
-        <li>
-          <i class="fi-rs-user"></i>
-          <a href="/login">Log In</a>
-        </li>
-      </ul>
-    <% } %>
-  </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
-            <div class="container">
-                <div class="header-wrap">
-                    <div class="logo logo-width-1">
-                        <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
-                    </div>
-                    <div class="header-right">
-                         <div class="search-style-2"></div>
-                                    <div class="header-action-right">
-                                        <div class="header-action-2">
-                                            <div class="header-action-icon-2">
-                                                <a href="shop-wishlist.html">
-                                                    <img class="svgInject" alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
-                                                    <span class="pro-count blue">4</span>
-                                                </a>
-                                            </div>
-                                            <div class="header-action-icon-2">
-                                                <a class="mini-cart-icon" href="shop-cart.html">
-                                                    <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
-                                                    <span class="pro-count blue">2</span>
-                                                </a>
-                                                <div class="cart-dropdown-wrap cart-dropdown-hm2">
-                                                    <ul>
-                                                        <li>                   <div class="shopping-cart-img">
-                                                    <a href="shop-product-right.html"><img alt="Evara" src="/imgs/shop/thumbnail-3.jpg"></a>
-                                                </div>
-                                                <div class="shopping-cart-title">
-                                                    <h4><a href="shop-product-right.html">Daisy Casual Bag</a></h4>
-                                                    <h4><span>1 × </span>$800.00</h4>
-                                                </div>
-                                                <div class="shopping-cart-delete">
-                                                    <a href="#"><i class="fi-rs-cross-small"></i></a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="shopping-cart-img">
-                                                    <a href="shop-product-right.html"><img alt="Evara" src="/imgs/shop/thumbnail-2.jpg"></a>
-                                                </div>
-                                                <div class="shopping-cart-title">
-                                                    <h4><a href="shop-product-right.html">Corduroy Shirts</a></h4>
-                                                    <h4><span>1 × </span>$3200.00</h4>
-                                                </div>
-                                                <div class="shopping-cart-delete">
-                                                    <a href="#"><i class="fi-rs-cross-small"></i></a>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                        <div class="shopping-cart-footer">
-                                            <div class="shopping-cart-total">
-                                                <h4>Total <span>$4000.00</span></h4>
-                                            </div>
-                                            <div class="shopping-cart-button">
-                                                <a href="shop-cart.html" class="outline">View cart</a>
-                                                <a href="shop-checkout.html">Checkout</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="header-bottom header-bottom-bg-color sticky-bar">
-            <div class="container">
-                <div class="header-wrap header-space-between position-relative">
-                    <div class="logo logo-width-1 d-block d-lg-none">
-                        <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
-                    </div>
-                        <div class="header-nav d-none d-lg-flex">
-                        <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
-                            <nav>
-                                <ul>
-                                    <li><a href="/">Home</a></li>
-                                    <li><a href="/shop">Shop</a></li>
-                                </ul>
-                            </nav>
-                        </div>
-                    </div>
-                    <div class="header-action-right d-block d-lg-none">
-                        <div class="header-action-2">
-                            <div class="header-action-icon-2">
-                                <a href="shop-wishlist.html">
-                                    <img alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
-                                    <span class="pro-count white">4</span>
-                                </a>
-                            </div>
-                            <div class="header-action-icon-2">
-                                <a class="mini-cart-icon" href="shop-cart.html">
-                                    <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
-                                    <span class="pro-count white">2</span>
-                                </a>
-                                <div class="cart-dropdown-wrap cart-dropdown-hm2">
-                                    <ul>
-                                        <li>
-                                            <div class="shopping-cart-img">
-                                                <a href="shop-product-right.html"><img alt="Evara" src="/imgs/shop/thumbnail-3.jpg"></a>
-                                            </div>
-                                            <div class="shopping-cart-title">
-                                                <h4><a href="shop-product-right.html">Plain Striola Shirts</a></h4>
-                                                <h3><span>1 × </span>$800.00</h3>
-                                            </div>
-                                            <div class="shopping-cart-delete">
-                                                <a href="#"><i class="fi-rs-cross-small"></i></a>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="shopping-cart-img">
-                                                <a href="shop-product-right.html"><img alt="Evara" src="/imgs/shop/thumbnail-4.jpg"></a>
-                                            </div>
-                                            <div class="shopping-cart-title">
-                                                <h4><a href="shop-product-right.html">Macbook Pro 2022</a></h4>
-                                                <h3><span>1 × </span>$3500.00</h3>
-                                            </div>
-                                            <div class="shopping-cart-delete">
-                                                <a href="#"><i class="fi-rs-cross-small"></i></a>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                    <div class="shopping-cart-footer">
-                                        <div class="shopping-cart-total">
-                                            <h4>Total <span>$383.00</span></h4>
-                                        </div>
-                                        <div class="shopping-cart-button">
-                                            <a href="shop-cart.html">View cart</a>
-                                            <a href="shop-checkout.html">Checkout</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="header-action-icon-2 d-block d-lg-none">
-                                <div class="burger-icon burger-icon-white">
-                                    <span class="burger-icon-top"></span>
-                                    <span class="burger-icon-mid"></span>
-                                    <span class="burger-icon-bottom"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <div class="page-header breadcrumb-wrap">
-        <div class="container">
-            <div class="breadcrumb" aria-label="Breadcrumb navigation">
-                 <a href="/" rel="nofollow">Home</a>
-                    <span></span> User Profile
-            </div>
-        </div>
     </div>
-    
-  
-  <div class="container profile-layout">
-    <button class="mobile-sidebar-toggle" onclick="toggleSidebar()">
-      <span>
-        <i class="fi-rs-menu"></i>
-        My Account Menu
-      </span>
-      <i class="fi-rs-angle-down toggle-icon"></i>
-    </button>
-  
-    <aside class="profile-sidebar" id="profileSidebar">
-      <h4>My Account</h4>
-      <ul>
-        <li>
-          <a href="/userProfile" class="active">
-            <i class="fi-rs-user"></i> My Profile
-          </a>
-        </li>
-        <li>
-          <a href="/orders">
-            <i class="fi-rs-shopping-bag"></i> My Orders
-          </a>
-        </li>
-        <li>
-          <a href="/profile/addresses">
-            <i class="fi-rs-marker"></i> My Addresses
-          </a>
-        </li>
-        <li>
-          <a href="/wallet">
-            <i class="fi-rs-credit-card"></i> My Wallet
-          </a>
-        </li>
-        <li>
-          <a href="/profile/security">
-            <i class="fi-rs-shield-check"></i> Security Settings
-          </a>
-        </li>
-        <li>
-          <a href="/logout">
-            <i class="fi-rs-sign-out"></i> Logout
-          </a>
-        </li>
-      </ul>
-    </aside>
-   
-    <main class="profile-content">
-      <div class="profile-section">
-        <h3><i class="fi-rs-user"></i> Personal Information</h3>
-        
-        <div class="profile-header">
-          <div class="row align-items-center">
-            <div class="col-md-3 text-center">
-              <div class="profile-avatar-container">
-                <img
-                  src="<%= user.avatarUrl || '/images/default-avatar.png' %>"
-                  alt="Profile Image"
-                  class="profile-avatar"
-                />
-                <form
-                  action="/profile/avatar"
-                  method="POST"
-                  enctype="multipart/form-data"
-                  style="display: inline-block;"
-                >
-                  <input
-                    type="file"
-                    name="avatar"
-                    accept="image/*"
-                    id="avatarInput"
-                    style="display: none;"
-                    onchange="this.form.submit()"
-                  />
-                  <button 
-                    type="button" 
-                    class="avatar-upload-btn"
-                    onclick="document.getElementById('avatarInput').click()"
-                    title="Change profile photo"
-                  >
-                    <i class="fi-rs-camera"></i>
-                  </button>
-                </form>
+    <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
+      <div class="container">
+        <div class="header-wrap">
+          <div class="logo logo-width-1">
+            <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+          </div>
+          <div class="header-right">
+            <div class="search-style-2"></div>
+            <div class="header-action-right">
+              <div class="header-action-2">
+                <div class="header-action-icon-2">
+                  <a href="shop-wishlist.html">
+                    <img class="svgInject" alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
+                    <span class="pro-count blue">4</span>
+                  </a>
+                </div>
+                <div class="header-action-icon-2">
+                  <a class="mini-cart-icon" href="shop-cart.html">
+                    <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
+                    <span class="pro-count blue">2</span>
+                  </a>
+                  <div class="cart-dropdown-wrap cart-dropdown-hm2">
+                    <ul>
+                      <li>
+                        <div class="shopping-cart-img">
+                          <a href="shop-product-right.html"><img alt="Evara" src="/imgs/shop/thumbnail-3.jpg"></a>
+                        </div>
+                        <div class="shopping-cart-title">
+                          <h4><a href="shop-product-right.html">Daisy Casual Bag</a></h4>
+                          <h4><span>1 × </span>$800.00</h4>
+                        </div>
+                        <div class="shopping-cart-delete">
+                          <a href="#"><i class="fi-rs-cross-small"></i></a>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="shopping-cart-img">
+                          <a href="shop-product-right.html"><img alt="Evara" src="/imgs/shop/thumbnail-2.jpg"></a>
+                        </div>
+                        <div class="shopping-cart-title">
+                          <h4><a href="shop-product-right.html">Corduroy Shirts</a></h4>
+                          <h4><span>1 × </span>$3200.00</h4>
+                        </div>
+                        <div class="shopping-cart-delete">
+                          <a href="#"><i class="fi-rs-cross-small"></i></a>
+                        </div>
+                      </li>
+                    </ul>
+                    <div class="shopping-cart-footer">
+                      <div class="shopping-cart-total">
+                        <h4>Total <span>$4000.00</span></h4>
+                      </div>
+                      <div class="shopping-cart-button">
+                        <a href="shop-cart.html" class="outline">View cart</a>
+                        <a href="shop-checkout.html">Checkout</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="col-md-9">
-              <h1 class="mb-1">Welcome, <%= user.name %>!</h1>
-              <p class="text-muted mb-3">Manage your profile, addresses, and orders</p>
-              
-              <div class="row">
-                <div class="col-md-8">
-                  <div class="profile-info-row row">
-                    <div class="col-sm-3 profile-info-label">Name:</div>
-                    <div class="col-sm-9 profile-info-value"><%= user.name %></div>
-                  </div>
-                  <div class="profile-info-row row">
-                    <div class="col-sm-3 profile-info-label">Email:</div>
-                    <div class="col-sm-9 profile-info-value"><%= user.email %></div>
-                  </div>
-                  <div class="profile-info-row row">
-                    <div class="col-sm-3 profile-info-label">Joined Date:</div>
-                    <div class="col-sm-9 profile-info-value"><%= user.createdAt ? user.createdAt.toLocaleDateString() : 'Recently' %></div>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="profile-stats">
-                    <div class="stat-item">
-                      <div class="stat-number"><%= user.orders ? user.orders.length : 0 %></div>
-                      <div class="stat-label">Orders</div>
-                    </div>
-                    <div class="stat-item">
-                      <div class="stat-number"><%= user.addresses ? user.addresses.length : 0 %></div>
-                      <div class="stat-label">Addresses</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="action-buttons">
-                <a href="/profile/edit" class="btn btn-outline-primary">
-                  <i class="fi-rs-edit"></i> Edit Profile
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="header-bottom header-bottom-bg-color sticky-bar">
+      <div class="container">
+        <div class="header-wrap header-space-between position-relative">
+          <div class="logo logo-width-1 d-block d-lg-none">
+            <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+          </div>
+          <div class="header-nav d-none d-lg-flex">
+            <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
+              <nav>
+                <ul>
+                  <li><a href="/">Home</a></li>
+                  <li><a href="/shop">Shop</a></li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+          <div class="header-action-right d-block d-lg-none">
+            <div class="header-action-2">
+              <div class="header-action-icon-2">
+                <a href="shop-wishlist.html">
+                  <img alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
+                  <span class="pro-count white">4</span>
                 </a>
               </div>
+              <div class="header-action-icon-2">
+                <a class="mini-cart-icon" href="shop-cart.html">
+                  <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
+                  <span class="pro-count white">2</span>
+                </a>
+                <div class="cart-dropdown-wrap cart-dropdown-hm2">
+                  <ul>
+                    <li>
+                      <div class="shopping-cart-img">
+                        <a href="shop-product-right.html"><img alt="Evara" src="/imgs/shop/thumbnail-3.jpg"></a>
+                      </div>
+                      <div class="shopping-cart-title">
+                        <h4><a href="shop-product-right.html">Plain Striola Shirts</a></h4>
+                        <h3><span>1 × </span>$800.00</h3>
+                      </div>
+                      <div class="shopping-cart-delete">
+                        <a href="#"><i class="fi-rs-cross-small"></i></a>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="shopping-cart-img">
+                        <a href="shop-product-right.html"><img alt="Evara" src="/imgs/shop/thumbnail-4.jpg"></a>
+                      </div>
+                      <div class="shopping-cart-title">
+                        <h4><a href="shop-product-right.html">Macbook Pro 2022</a></h4>
+                        <h3><span>1 × </span>$3500.00</h3>
+                      </div>
+                      <div class="shopping-cart-delete">
+                        <a href="#"><i class="fi-rs-cross-small"></i></a>
+                      </div>
+                    </li>
+                  </ul>
+                  <div class="shopping-cart-footer">
+                    <div class="shopping-cart-total">
+                      <h4>Total <span>$383.00</span></h4>
+                    </div>
+                    <div class="shopping-cart-button">
+                      <a href="shop-cart.html">View cart</a>
+                      <a href="shop-checkout.html">Checkout</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="header-action-icon-2 d-block d-lg-none">
+                <div class="burger-icon burger-icon-white">
+                  <span class="burger-icon-top"></span>
+                  <span class="burger-icon-mid"></span>
+                  <span class="burger-icon-bottom"></span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-     
-      <div class="profile-section">
-        <h3><i class="fi-rs-settings"></i> Quick Actions</h3>
-        <div class="row">
-          <div class="col-md-3">
-            <a href="/orders" class="d-block text-center p-3 border rounded hover-shadow text-decoration-none">
-              <i class="fi-rs-shopping-bag text-primary mb-2" style="font-size: 2rem;"></i>
-              <div class="fw-600">View Orders</div>
-              <small class="text-muted">Track your purchases</small>
-            </a>
-          </div>
-          <div class="col-md-3">
-            <a href="/profile/addresses" class="d-block text-center p-3 border rounded hover-shadow text-decoration-none">
-              <i class="fi-rs-marker text-success mb-2" style="font-size: 2rem;"></i>
-              <div class="fw-600">Manage Addresses</div>
-              <small class="text-muted">Update delivery info</small>
-            </a>
-          </div>
-          <div class="col-md-3">
-            <a href="/wallet" class="d-block text-center p-3 border rounded hover-shadow text-decoration-none">
-              <i class="fi-rs-credit-card text-warning mb-2" style="font-size: 2rem;"></i>
-              <div class="fw-600">My Wallet</div>
-              <small class="text-muted">Payment methods</small>
-            </a>
-          </div>
-          <div class="col-md-3">
-            <a href="/profile/security" class="d-block text-center p-3 border rounded hover-shadow text-decoration-none">
-              <i class="fi-rs-shield-check text-info mb-2" style="font-size: 2rem;"></i>
-              <div class="fw-600">Security</div>
-              <small class="text-muted">Privacy settings</small>
-            </a>
-          </div>
-        </div>
+    </div>
+  </header>
+
+  <div class="page-header breadcrumb-wrap">
+    <div class="container">
+      <div class="breadcrumb" aria-label="Breadcrumb navigation">
+        <a href="/" rel="nofollow">Home</a>
+        <span></span> User Profile
       </div>
-    </main>
+    </div>
   </div>
 
-   <footer class="main">
-        <section class="newsletter p-30 text-white wow fadeIn animated">
-              <div class="floating-elements">
-                <div class="floating-element">桜</div>
-                <div class="floating-element">桜</div>
-                <div class="floating-element">⚡</div>
-                <div class="floating-element">🌸</div>
+  <div class="profile-container">
+    <div class="profile-layout">
+      <button class="mobile-sidebar-toggle" onclick="toggleSidebar()">
+        <span>
+          <i class="fi-rs-menu"></i>
+          My Account Menu
+        </span>
+        <i class="fi-rs-angle-down toggle-icon"></i>
+      </button>
+
+      <aside class="profile-sidebar" id="profileSidebar">
+        <h4>My Account</h4>
+        <ul>
+          <li>
+            <a href="/userProfile" class="active">
+              <i class="fi-rs-user"></i> My Profile
+            </a>
+          </li>
+          <li>
+            <a href="/orders">
+              <i class="fi-rs-shopping-bag"></i> My Orders
+            </a>
+          </li>
+          <li>
+            <a href="/profile/addresses">
+              <i class="fi-rs-marker"></i> My Addresses
+            </a>
+          </li>
+          <li>
+            <a href="/wallet">
+              <i class="fi-rs-credit-card"></i> My Wallet
+            </a>
+          </li>
+          <li>
+            <a href="/profile/security">
+              <i class="fi-rs-shield-check"></i> Security Settings
+            </a>
+          </li>
+          <li>
+            <a href="/logout">
+              <i class="fi-rs-sign-out"></i> Logout
+            </a>
+          </li>
+        </ul>
+      </aside>
+
+      <main class="profile-content">
+        <div class="profile-header">
+          <div class="welcome-section">
+            <div class="profile-avatar-container">
+              <img src="<%= user.avatarUrl || '/imgs/theme/profileAvatar.png' %>" alt="Profile Image"
+                class="profile-avatar" />
             </div>
-        </section>
-        <section class="section-padding footer-mid">
-            <div class="container pt-15 pb-20">
-                <div class="row">
-                    <div class="col-lg-4 col-md-6">
-                        <div class="widget-about font-md mb-md-5 mb-lg-0">
-                            <div class="logo logo-width-1 wow fadeIn animated">
-                                <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
-                            </div>
-                            <h5 class="mt-20 mb-10 fw-600 text-grey-4 wow fadeIn animated">Contact</h5>
-                            <p class="wow fadeIn animated">
-                                <strong>Address: </strong>562 Wellington Road, Street 32, San Francisco
-                            </p>
-                            <p class="wow fadeIn animated">
-                                <strong>Phone: </strong>+01 2222 365 /(+91) 01 2345 6789
-                            </p>
-                            <p class="wow fadeIn animated">
-                                <strong>Hours: </strong>10:00 - 18:00, Mon - Sat
-                            </p>
-                            <h5 class="mb-10 mt-30 fw-600 text-grey-4 wow fadeIn animated">Follow Us</h5>
-                            <div class="mobile-social-icon wow fadeIn animated mb-sm-5 mb-md-0">
-                                <a href="#"><img src="/imgs/theme/icons/icon-facebook.svg" alt=""></a>
-                                <a href="#"><img src="/imgs/theme/icons/icon-twitter.svg" alt=""></a>
-                                <a href="#"><img src="/imgs/theme/icons/icon-instagram.svg" alt=""></a>
-                                <a href="#"><img src="/imgs/theme/icons/icon-pinterest.svg" alt=""></a>
-                                <a href="#"><img src="/imgs/theme/icons/icon-youtube.svg" alt=""></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-md-3">
-                        <h5 class="widget-title wow fadeIn animated">About</h5>
-                        <ul class="footer-list wow fadeIn animated mb-sm-5 mb-md-0">
-                            <li><a href="#">About Us</a></li>
-                            <li><a href="#">Delivery Information</a></li>
-                            <li><a href="#">Privacy Policy</a></li>
-                            <li><a href="#">Terms &amp; Conditions</a></li>
-                            <li><a href="#">Contact Us</a></li>
-                            <li><a href="#">Support Center</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-lg-2  col-md-3">
-                        <h5 class="widget-title wow fadeIn animated">My Account</h5>
-                        <ul class="footer-list wow fadeIn animated">
-                            <li><a href="#">Sign In</a></li>
-                            <li><a href="#">View Cart</a></li>
-                            <li><a href="#">My Wishlist</a></li>
-                            <li><a href="#">Track My Order</a></li>
-                            <li><a href="#">Help</a></li>
-                            <li><a href="#">Order</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-lg-4">
-                        <h5 class="widget-title wow fadeIn animated">Install App</h5>
-                        <div class="row">
-                            <div class="col-md-8 col-lg-12">
-                                <p class="wow fadeIn animated">From App Store or Google Play</p>
-                                <div class="download-app wow fadeIn animated">
-                                    <a href="#" class="hover-up mb-sm-4 mb-lg-0"><img class="active" src="/imgs/theme/app-store.jpg" alt=""></a>
-                                    <a href="#" class="hover-up"><img src="/imgs/theme/google-play.jpg" alt=""></a>
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-lg-12 mt-md-3 mt-lg-0">
-                                <p class="mb-20 wow fadeIn animated">Secured Payment Gateways</p>
-                                <img class="wow fadeIn animated" src="/imgs/theme/payment-method.png" alt="">
-                            </div>
-                        </div>
-                    </div>
+
+            <h1>Welcome, <%= user.name %>!</h1>
+            <p class="subtitle">Manage your profile, addresses, and orders</p>
+
+            <div class="profile-stats">
+              <div class="stat-item">
+                <div class="stat-number">
+                  <%= user.orders ? user.orders.length : 0 %>
                 </div>
+                <div class="stat-label">Orders</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-number">
+                  <%= user.addresses ? user.addresses.length : 0 %>
+                </div>
+                <div class="stat-label">Addresses</div>
+              </div>
             </div>
-        </section>
-        <div class="container pb-20 wow fadeIn animated">
-            <div class="row">
-                <div class="col-12 mb-20">
-                    <div class="footer-bottom"></div>
-                </div>
-                <div class="col-lg-6">
-                    <p class="float-md-left font-sm text-muted mb-0">&copy; 2025, <strong class="text-brand">Kaizen Street</strong>
-                </div>
-                <div class="col-lg-6">
-                    <p class="text-lg-end text-start font-sm text-muted mb-0">All rights reserved</p>
-                </div>
-            </div>
+          </div>
         </div>
-    </footer>
+
+        <div class="profile-body">
+          <div class="profile-section">
+            <h3><i class="fi-rs-user"></i> Personal Information</h3>
+
+            <div class="profile-info-grid">
+              <div class="profile-info-section">
+                <h4 style="color: #3BB77E; margin-bottom: 1rem;">Basic Details</h4>
+                <div class="profile-info-row">
+                  <span class="profile-info-label">Full Name:</span>
+                  <span class="profile-info-value">
+                    <%= user.name %>
+                  </span>
+                </div>
+                <div class="profile-info-row">
+                  <span class="profile-info-label">Email:</span>
+                  <span class="profile-info-value">
+                    <%= user.email %>
+                  </span>
+                </div>
+                <div class="profile-info-row">
+                  <span class="profile-info-label">Phone:</span>
+                  <span class="profile-info-value">
+                    <%= user.phone || 'Not provided' %>
+                  </span>
+                </div>
+              </div>
+
+              <div class="profile-info-section">
+                <h4 style="color: #3BB77E; margin-bottom: 1rem;">Account Details</h4>
+                <div class="profile-info-row">
+                  <span class="profile-info-label">Member Since:</span>
+                  <span class="profile-info-value">
+                    <%= user.createdAt ? user.createdAt.toLocaleDateString() : 'Recently' %>
+                  </span>
+                </div>
+                <div class="profile-info-row">
+                  <span class="profile-info-label">Account Status:</span>
+                  <span class="profile-info-value" style="color: #3BB77E; font-weight: 600;">Active</span>
+                </div>
+                <div class="profile-info-row">
+                  <span class="profile-info-label">Verification:</span>
+                  <span class="profile-info-value" style="color: #3BB77E; font-weight: 600;">
+                    <i class="fi-rs-shield-check"></i> Verified
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="action-buttons">
+              <a href="/profile/edit" class="btn btn-outline-primary edit-btn">
+                <i class="fi-rs-edit"></i> Edit Profile
+              </a>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+
+  <footer class="main">
+    <section class="newsletter p-30 text-white wow fadeIn animated">
+      <div class="floating-elements">
+        <div class="floating-element">桜</div>
+        <div class="floating-element">桜</div>
+        <div class="floating-element">⚡</div>
+        <div class="floating-element">🌸</div>
+      </div>
+    </section>
+    <section class="section-padding footer-mid">
+      <div class="container pt-15 pb-20">
+        <div class="row">
+          <div class="col-lg-4 col-md-6">
+            <div class="widget-about font-md mb-md-5 mb-lg-0">
+              <div class="logo logo-width-1 wow fadeIn animated">
+                <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+              </div>
+              <h5 class="mt-20 mb-10 fw-600 text-grey-4 wow fadeIn animated">Contact</h5>
+              <p class="wow fadeIn animated">
+                <strong>Address: </strong>562 Wellington Road, Street 32, San Francisco
+              </p>
+              <p class="wow fadeIn animated">
+                <strong>Phone: </strong>+01 2222 365 /(+91) 01 2345 6789
+              </p>
+              <p class="wow fadeIn animated">
+                <strong>Hours: </strong>10:00 - 18:00, Mon - Sat
+              </p>
+              <h5 class="mb-10 mt-30 fw-600 text-grey-4 wow fadeIn animated">Follow Us</h5>
+              <div class="mobile-social-icon wow fadeIn animated mb-sm-5 mb-md-0">
+                <a href="#"><img src="/imgs/theme/icons/icon-facebook.svg" alt=""></a>
+                <a href="#"><img src="/imgs/theme/icons/icon-twitter.svg" alt=""></a>
+                <a href="#"><img src="/imgs/theme/icons/icon-instagram.svg" alt=""></a>
+                <a href="#"><img src="/imgs/theme/icons/icon-pinterest.svg" alt=""></a>
+                <a href="#"><img src="/imgs/theme/icons/icon-youtube.svg" alt=""></a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-3">
+            <h5 class="widget-title wow fadeIn animated">About</h5>
+            <ul class="footer-list wow fadeIn animated mb-sm-5 mb-md-0">
+              <li><a href="#">About Us</a></li>
+              <li><a href="#">Delivery Information</a></li>
+              <li><a href="#">Privacy Policy</a></li>
+              <li><a href="#">Terms &amp; Conditions</a></li>
+              <li><a href="#">Contact Us</a></li>
+              <li><a href="#">Support Center</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-2  col-md-3">
+            <h5 class="widget-title wow fadeIn animated">My Account</h5>
+            <ul class="footer-list wow fadeIn animated">
+              <li><a href="#">Sign In</a></li>
+              <li><a href="#">View Cart</a></li>
+              <li><a href="#">My Wishlist</a></li>
+              <li><a href="#">Track My Order</a></li>
+              <li><a href="#">Help</a></li>
+              <li><a href="#">Order</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-4">
+            <h5 class="widget-title wow fadeIn animated">Install App</h5>
+            <div class="row">
+              <div class="col-md-8 col-lg-12">
+                <p class="wow fadeIn animated">From App Store or Google Play</p>
+                <div class="download-app wow fadeIn animated">
+                  <a href="#" class="hover-up mb-sm-4 mb-lg-0"><img class="active" src="/imgs/theme/app-store.jpg"
+                      alt=""></a>
+                  <a href="#" class="hover-up"><img src="/imgs/theme/google-play.jpg" alt=""></a>
+                </div>
+              </div>
+              <div class="col-md-4 col-lg-12 mt-md-3 mt-lg-0">
+                <p class="mb-20 wow fadeIn animated">Secured Payment Gateways</p>
+                <img class="wow fadeIn animated" src="/imgs/theme/payment-method.png" alt="">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="container pb-20 wow fadeIn animated">
+      <div class="row">
+        <div class="col-12 mb-20">
+          <div class="footer-bottom"></div>
+        </div>
+        <div class="col-lg-6">
+          <p class="float-md-left font-sm text-muted mb-0">&copy; 2025, <strong class="text-brand">Kaizen
+              Street</strong>
+        </div>
+        <div class="col-lg-6">
+          <p class="text-lg-end text-start font-sm text-muted mb-0">All rights reserved</p>
+        </div>
+      </div>
+    </div>
+  </footer>
 
   <script src="/js/jquery.min.js"></script>
   <script src="/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById('profileSidebar');
+      const toggle = document.querySelector('.mobile-sidebar-toggle');
+
+      sidebar.classList.toggle('show');
+      toggle.classList.toggle('active');
+    }
+
+    document.addEventListener('click', function (event) {
+      const sidebar = document.getElementById('profileSidebar');
+      const toggle = document.querySelector('.mobile-sidebar-toggle');
+
+      if (window.innerWidth <= 991 &&
+        !sidebar.contains(event.target) &&
+        !toggle.contains(event.target) &&
+        sidebar.classList.contains('show')) {
+        sidebar.classList.remove('show');
+        toggle.classList.remove('active');
+      }
+    });
+
+    window.addEventListener('resize', function () {
+      const sidebar = document.getElementById('profileSidebar');
+      const toggle = document.querySelector('.mobile-sidebar-toggle');
+
+      if (window.innerWidth > 991) {
+        sidebar.classList.remove('show');
+        toggle.classList.remove('active');
+      }
+    });
+  </script>
 </body>
+
 </html>

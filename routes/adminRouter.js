@@ -3,7 +3,9 @@ const router = express.Router();
 const adminController = require('../controllers/admin/adminController');
 const customerController = require('../controllers/admin/customerController');
 const categoryController= require('../controllers/admin/categoryController');
-const productController= require('../controllers/admin/productController');
+const addController  = require('../controllers/admin/product/addController');
+const listController = require('../controllers/admin/product/listController');
+const editController = require('../controllers/admin/product/editController');
 const { userAuth, adminAuth } = require('../middlewares/auth');
 
 router.get('/page-error', adminController.pageError)
@@ -22,11 +24,11 @@ router.post('/editCategory/:id',adminAuth, categoryController.editCategory)
 router.post('/deleteCategory/:id',adminAuth,categoryController.deleteCategory)
 router.post('/toggleList/:id', adminAuth, categoryController.toggleList);
 
-router.get('/addProducts',adminAuth,productController.getProductAddPage);
-router.post('/addProducts', adminAuth, productController.addNewProduct);
-router.get('/products', adminAuth, productController.listProducts);
-router.post('/products/block/:id',adminAuth, productController.toggleBlockProduct);
-router.post('/products/edit/:id', adminAuth, productController.updateProduct);
+router.get('/addProducts',adminAuth,addController.getProductAddPage);
+router.post('/addProducts', adminAuth, addController.addNewProduct);
+router.get('/products', adminAuth, listController.listProducts);
+router.post('/products/block/:id',adminAuth, listController.toggleBlockProduct);
+router.post('/products/edit/:id', adminAuth, editController.updateProduct);
 
 
 module.exports = router;

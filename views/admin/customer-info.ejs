@@ -8,6 +8,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/x-icon" href="/assets2/imgs/theme/kaizenicon.svg">
     <link href="/assets2/css/main.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+
     <style>
         .content-header .btn-add {
             background-color: #6c63ff;
@@ -57,10 +62,7 @@
             background-color: #f9f9f9;
         }
     </style>
-</head>
 
-<body>
-    
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
             <a href="/admin" class="brand-wrap">
@@ -164,20 +166,23 @@
                                                 </td>
                                                 <td>
                                                     <% if (cust.isBlocked) { %>
-                                                        <a href="/admin/user/unblock/<%= cust._id %>"
-                                                            class="btn btn-sm btn-outline-success"
-                                                            onclick="return confirm('Unblock this user?')">Unblock</a>
+                                                        <a href="#" data-url="/admin/user/unblock/<%= cust._id %>"
+                                                            class="btn btn-sm btn-outline-success btn-unblock">
+                                                            Unblock
+                                                        </a>
                                                         <% } else { %>
-                                                            <a href="/admin/user/block/<%= cust._id %>"
-                                                                class="btn btn-sm btn-outline-warning"
-                                                                onclick="return confirm('Block this user?')">Block</a>
+                                                            <a href="#" data-url="/admin/user/block/<%= cust._id %>"
+                                                                class="btn btn-sm btn-outline-warning btn-block">
+                                                                Block
+                                                            </a>
                                                             <% } %>
                                                 </td>
                                             </tr>
                                             <% }) %>
                                                 <% if (!customers.length) { %>
                                                     <tr>
-                                                        <td colspan="5" class="text-center text-warning py-4">No customers found.
+                                                        <td colspan="5" class="text-center text-warning py-4">No
+                                                            customers found.
                                                         </td>
                                                     </tr>
                                                     <% } %>
@@ -242,6 +247,48 @@
     <script src="/assets2/js/vendors/jquery-3.6.0.min.js"></script>
     <script src="/assets2/js/vendors/bootstrap.bundle.min.js"></script>
     <script src="/assets2/js/main.js"></script>
+
+    <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    function confirmAction(selector, title, text, icon) {
+      document.querySelectorAll(selector).forEach(el => {
+        el.addEventListener('click', e => {
+          e.preventDefault();
+          const url = el.getAttribute('data-url');
+          Swal.fire({
+            title: title,
+            text: text,
+            icon: icon,
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#aaa',
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location = url;
+            }
+          });
+        });
+      });
+    }
+   
+    confirmAction(
+      '.btn-block',
+      'Are you sure?',
+      'This will block the user.',
+      'warning'
+    );
+
+    confirmAction(
+      '.btn-unblock',
+      'Unblock this user?',
+      'They will regain access.',
+      'question'
+    );
+  });
+</script>
+
 </body>
 
 </html>
