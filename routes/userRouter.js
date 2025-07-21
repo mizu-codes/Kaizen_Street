@@ -47,5 +47,8 @@ router.get('/profile/edit', userAuth, profileController.updateProfile);
 router.post('/profile/update', userAuth, upload.single('avatar'), profileController.saveProfile);
 router.post('/profile/verify-otp', userAuth, profileController.verifyProfileOtp);
 
+router.get('/profile/security',userAuth,profileController.securityProfile);
+router.post('/profile/security',userAuth,profileController.updatePassword);
+
 module.exports = router;
 
