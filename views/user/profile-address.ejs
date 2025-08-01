@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Address Management</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/kaizenicon.svg">
+    <link rel="stylesheet" href="/css/main.css?v=3.4">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+</head>
+
+<body>
+    <style>
+        .main-content {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            border-bottom: 1px solid #f0f0f0;
+            background: linear-gradient(135deg, #e8f4f2 0%, #ddf0e8 100%);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .profile-header h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #253D4E;
+            margin: 0;
+        }
+
+        .profile-header h3 i {
+            color: #3BB77E;
+            font-size: 1.75rem;
+        }
+
+        .btn-add-address {
+            display: flex;
+            align-items: center;
+            background: #2ea368;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .btn-add-address:hover {
+            background: #059669;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(59, 183, 126, 0.4);
+        }
+
+        .btn-add-address i {
+            margin-right: 6px;
+            color: white;
+            font-size: 1.3rem;
+        }
+
+        .btn-add-address:active {
+            transform: translateY(0);
+        }
+
+        .profile-body {
+            padding: 2rem;
+        }
+
+        .addresses-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .address-card {
+            background: white;
+            border: 2px solid #f0f0f0;
+            border-radius: 12px;
+            padding: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 80px;
+        }
+
+        .address-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, #3BB77E, #2ea368);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .address-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .address-card:hover {
+            border-color: #3BB77E;
+            box-shadow: 0 4px 15px rgba(59, 183, 126, 0.15);
+            transform: translateX(4px);
+        }
+
+        .address-main-content {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex: 1;
+        }
+
+        .address-type {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            min-width: 120px;
+        }
+
+        .address-type i {
+            color: #3BB77E;
+            font-size: 1.4rem;
+            background: rgba(59, 183, 126, 0.1);
+            padding: 0.5rem;
+            border-radius: 10px;
+        }
+
+        .address-type-text {
+            font-weight: 600;
+            color: #253D4E;
+            text-transform: capitalize;
+            font-size: 0.9rem;
+        }
+
+        .default-badge {
+            background: linear-gradient(135deg, #3BB77E 0%, #2ea368 100%);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 0.5rem;
+        }
+
+        .address-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .address-details h4 {
+            color: #253D4E;
+            margin-bottom: 0.25rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .address-text {
+            color: #666;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .address-phone {
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+
+        .address-phone i {
+            color: #3BB77E;
+            font-size: 1rem;
+        }
+
+        .address-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .btn-set-default {
+            background: transparent;
+            border: 2px solid #3BB77E;
+            color: #3BB77E;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .btn-set-default:hover {
+            background: #3BB77E;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .btn-set-default:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .address-action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-action {
+            background: white;
+            border: 2px solid #f0f0f0;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn-action.edit {
+            color: #3BB77E;
+        }
+
+        .btn-action.edit:hover {
+            background: #3BB77E;
+            color: white;
+            border-color: #3BB77E;
+            transform: scale(1.05);
+        }
+
+        .btn-action.delete {
+            color: #ff4757;
+        }
+
+        .btn-action.delete:hover {
+            background: #ff4757;
+            color: white;
+            border-color: #ff4757;
+            transform: scale(1.05);
+        }
+
+        /* No addresses state */
+        .no-addresses {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 20px;
+            border: 2px dashed #e0e0e0;
+        }
+
+        .no-addresses-icon {
+            font-size: 5rem;
+            color: #d0d0d0;
+            margin-bottom: 1.5rem;
+        }
+
+        .no-addresses h4 {
+            color: #253D4E;
+            margin-bottom: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .no-addresses p {
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-add-first-address {
+            background: linear-gradient(135deg, #3BB77E 0%, #2ea368 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 4px 15px rgba(59, 183, 126, 0.3);
+        }
+
+        .btn-add-first-address:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(59, 183, 126, 0.4);
+        }
+
+        /* Modal styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: translateY(-30px) scale(0.95);
+            transition: all 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 2rem 1rem;
+            border-bottom: 2px solid #f8f9fa;
+        }
+
+        .modal-header h4 {
+            margin: 0;
+            color: #253D4E;
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: #f8f9fa;
+            border: none;
+            font-size: 1.4rem;
+            cursor: pointer;
+            color: #666;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: #ff4757;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .modal-body {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .delete-icon {
+            font-size: 4rem;
+            color: #ff4757;
+            margin-bottom: 1.5rem;
+            background: rgba(255, 71, 87, 0.1);
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+
+        .swal-responsive {
+            width: 90% !important;
+            max-width: 340px !important;
+            padding: 1.2rem !important;
+            border-radius: 10px;
+            font-size: 0.95rem;
+        }
+
+        .modal-body p {
+            color: #666;
+            line-height: 1.7;
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 2rem 2rem;
+            justify-content: flex-end;
+        }
+
+        .btn-cancel {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            color: #666;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .btn-cancel:hover {
+            background: #e9ecef;
+            border-color: #ccc;
+            transform: translateY(-1px);
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, #ff4757 0%, #ff3838 100%);
+            border: 2px solid #ff4757;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .btn-delete:hover {
+            background: linear-gradient(135deg, #ff3838 0%, #ff2929 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
+        }
+
+        .btn-delete:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .main-layout {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .address-card {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+                padding: 1.25rem;
+            }
+
+            .address-main-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .address-type {
+                min-width: auto;
+            }
+
+            .address-actions {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .modal-content {
+                margin: 1rem;
+                width: calc(100% - 2rem);
+            }
+
+            .modal-actions {
+                flex-direction: column;
+            }
+
+            .modal-actions button {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+
+            .btn-add-address {
+                justify-content: center;
+            }
+        }
+    </style>
+
+    <header class="header-area header-style-1 header-height-2">
+        <div class="header-top header-top-ptb-1 d-none d-lg-block">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-xl-3 col-lg-4">
+                        <div class="header-info">
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-4">
+                        <div class="text-center">
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-4">
+                        <div class="header-info header-info-right">
+                            <% if (user) { %>
+                                <div class="dropdown">
+                                    <a href="#" class="sign-in-link">
+                                        <%= user.name %>
+                                    </a>
+                                    <div class="dropdown-content">
+                                        <a href="/userProfile">Profile</a>
+                                        <a href="/logout">Logout</a>
+                                    </div>
+                                </div>
+                                <% } else { %>
+                                    <ul>
+                                        <li>
+                                            <i class="fi-rs-user"></i>
+                                            <a href="/login">Log In</a>
+                                        </li>
+                                    </ul>
+                                    <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
+            <div class="container">
+                <div class="header-wrap">
+                    <div class="logo logo-width-1">
+                        <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+                    </div>
+                    <div class="header-right">
+                        <div class="search-style-2"></div>
+                        <div class="header-action-right">
+                            <div class="header-action-2">
+                                <div class="header-action-icon-2">
+                                    <a href="shop-wishlist.html">
+                                        <img class="svgInject" alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
+                                        <span class="pro-count blue">4</span>
+                                    </a>
+                                </div>
+                                <div class="header-action-icon-2">
+                                    <a class="mini-cart-icon" href="shop-cart.html">
+                                        <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
+                                        <span class="pro-count blue">2</span>
+                                    </a>
+                                    <div class="cart-dropdown-wrap cart-dropdown-hm2">
+                                        <ul>
+                                            <li>
+                                                <div class="shopping-cart-img">
+                                                    <a href="shop-product-right.html"><img alt="Evara"
+                                                            src="/imgs/shop/thumbnail-3.jpg"></a>
+                                                </div>
+                                                <div class="shopping-cart-title">
+                                                    <h4><a href="shop-product-right.html">Daisy Casual Bag</a></h4>
+                                                    <h4><span>1 × </span>$800.00</h4>
+                                                </div>
+                                                <div class="shopping-cart-delete">
+                                                    <a href="#"><i class="fi-rs-cross-small"></i></a>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="shopping-cart-img">
+                                                    <a href="shop-product-right.html"><img alt="Evara"
+                                                            src="/imgs/shop/thumbnail-2.jpg"></a>
+                                                </div>
+                                                <div class="shopping-cart-title">
+                                                    <h4><a href="shop-product-right.html">Corduroy Shirts</a></h4>
+                                                    <h4><span>1 × </span>$3200.00</h4>
+                                                </div>
+                                                <div class="shopping-cart-delete">
+                                                    <a href="#"><i class="fi-rs-cross-small"></i></a>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <div class="shopping-cart-footer">
+                                            <div class="shopping-cart-total">
+                                                <h4>Total <span>$4000.00</span></h4>
+                                            </div>
+                                            <div class="shopping-cart-button">
+                                                <a href="shop-cart.html" class="outline">View cart</a>
+                                                <a href="shop-checkout.html">Checkout</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-bottom header-bottom-bg-color sticky-bar">
+            <div class="container">
+                <div class="header-wrap header-space-between position-relative">
+                    <div class="logo logo-width-1 d-block d-lg-none">
+                        <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+                    </div>
+                    <div class="header-nav d-none d-lg-flex">
+                        <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
+                            <nav>
+                                <ul>
+                                    <li><a href="/">Home</a></li>
+                                    <li><a href="/shop">Shop</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="header-action-right d-block d-lg-none">
+                        <div class="header-action-2">
+                            <div class="header-action-icon-2">
+                                <a href="shop-wishlist.html">
+                                    <img alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
+                                    <span class="pro-count white">4</span>
+                                </a>
+                            </div>
+                            <div class="header-action-icon-2">
+                                <a class="mini-cart-icon" href="shop-cart.html">
+                                    <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
+                                    <span class="pro-count white">2</span>
+                                </a>
+                                <div class="cart-dropdown-wrap cart-dropdown-hm2">
+                                    <ul>
+                                        <li>
+                                            <div class="shopping-cart-img">
+                                                <a href="shop-product-right.html"><img alt="Evara"
+                                                        src="/imgs/shop/thumbnail-3.jpg"></a>
+                                            </div>
+                                            <div class="shopping-cart-title">
+                                                <h4><a href="shop-product-right.html">Plain Striola Shirts</a></h4>
+                                                <h3><span>1 × </span>$800.00</h3>
+                                            </div>
+                                            <div class="shopping-cart-delete">
+                                                <a href="#"><i class="fi-rs-cross-small"></i></a>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="shopping-cart-img">
+                                                <a href="shop-product-right.html"><img alt="Evara"
+                                                        src="/imgs/shop/thumbnail-4.jpg"></a>
+                                            </div>
+                                            <div class="shopping-cart-title">
+                                                <h4><a href="shop-product-right.html">Macbook Pro 2022</a></h4>
+                                                <h3><span>1 × </span>$3500.00</h3>
+                                            </div>
+                                            <div class="shopping-cart-delete">
+                                                <a href="#"><i class="fi-rs-cross-small"></i></a>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <div class="shopping-cart-footer">
+                                        <div class="shopping-cart-total">
+                                            <h4>Total <span>$383.00</span></h4>
+                                        </div>
+                                        <div class="shopping-cart-button">
+                                            <a href="shop-cart.html">View cart</a>
+                                            <a href="shop-checkout.html">Checkout</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="header-action-icon-2 d-block d-lg-none">
+                                <div class="burger-icon burger-icon-white">
+                                    <span class="burger-icon-top"></span>
+                                    <span class="burger-icon-mid"></span>
+                                    <span class="burger-icon-bottom"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-header breadcrumb-wrap">
+        <div class="container">
+            <div class="breadcrumb" aria-label="Breadcrumb navigation">
+                <a href="/" rel="nofollow">Home</a>
+                <span></span> User Profile
+                <span></span> My Addresses
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-container">
+        <div class="profile-layout">
+            <button class="mobile-sidebar-toggle" onclick="toggleSidebar()">
+                <span>
+                    <i class="fi-rs-menu"></i>
+                    My Account Menu
+                </span>
+                <i class="fi-rs-angle-down toggle-icon"></i>
+            </button>
+
+            <aside class="profile-sidebar" id="profileSidebar">
+                <h4>My Account</h4>
+                <ul>
+                    <li>
+                        <a href="/userProfile">
+                            <i class="fi-rs-user"></i> My Profile
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/orders">
+                            <i class="fi-rs-shopping-bag"></i> My Orders
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/profile/addresses" class="active">
+                            <i class="fi-rs-marker"></i> My Addresses
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/wallet">
+                            <i class="fi-rs-credit-card"></i> My Wallet
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/profile/security">
+                            <i class="fi-rs-shield-check"></i> Security Settings
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/logout">
+                            <i class="fi-rs-sign-out"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </aside>
+
+            <main class="main-content">
+                <div class="profile-header">
+                    <h3><i class="ri-map-pin-fill"></i> Manage Addresses</h3>
+                    <a href="/profile/add-address" class="btn-add-address">
+                        <i class="ri-add-line"></i> Add New Address
+                    </a>
+                </div>
+
+                <div class="profile-body">
+                    <div class="addresses-section">
+                        <% if (addresses.length===0) { %>
+                            <div class="no-addresses">
+                                <div class="no-addresses-icon">
+                                    <i class="ri-map-pin-line"></i>
+                                </div>
+                                <h4>No addresses added yet</h4>
+                                <p>Add your first address to make checkout faster and easier.</p>
+                            </div>
+                            <% } else { %>
+                                <div class="addresses-grid">
+                                    <% addresses.forEach(address=> { %>
+                                        <div class="address-card" data-address-id="<%= address._id %>">
+                                            <div class="address-main-content">
+                                                <div class="address-type">
+                                                    <i
+                                                        class="ri-<%= address.addressType === 'home' ? 'home-fill' : address.addressType === 'work' ? 'building-fill' : 'map-pin-fill' %>"></i>
+                                                    <div>
+                                                        <span class="address-type-text">
+                                                            <%= address.addressType.charAt(0).toUpperCase() +
+                                                                address.addressType.slice(1) %>
+                                                        </span>
+                                                        <% if (address.isDefault) { %>
+                                                            <span class="default-badge">Default</span>
+                                                            <% } %>
+                                                    </div>
+                                                </div>
+
+                                                <div class="address-details">
+                                                    <h4>
+                                                        <%= address.userName %>
+                                                    </h4>
+                                                    <p class="address-text">
+                                                        <%= address.houseNo %>, <%= address.locality %>,
+                                                                <% if (address.landmark) { %>
+                                                                    <%= address.landmark %>,<% } %>
+                                                                            <%= address.city %>, <%= address.state %> -
+                                                                                    <%= address.pincode %>
+                                                    </p>
+                                                    <p class="address-phone">
+                                                        <i class="ri-phone-line"></i> +91 <%= address.phoneNumber %>
+                                                    </p>
+                                                    <% if (address.altPhoneNumber) { %>
+                                                        <p class="address-phone">
+                                                            <i class="ri-phone-line"></i> Alt: +91 <%=
+                                                                address.altPhoneNumber %>
+                                                        </p>
+                                                        <% } %>
+                                                </div>
+                                            </div>
+
+                                            <div class="address-actions">
+                                                <% if (!address.isDefault) { %>
+                                                    <button class="btn-set-default"
+                                                        onclick="setDefaultAddress('<%= address._id %>')">
+                                                        Set as Default
+                                                    </button>
+                                                    <% } %>
+                                                        <div class="address-action-buttons">
+                                                            <button class="btn-action edit"
+                                                                onclick="editAddress('<%= address._id %>')"
+                                                                title="Edit">
+                                                                <i class="ri-edit-line"></i>
+                                                            </button>
+                                                            <button class="btn-action delete"
+                                                                onclick="deleteAddress('<%= address._id %>')"
+                                                                title="Delete">
+                                                                <i class="ri-delete-bin-line"></i>
+                                                            </button>
+                                                        </div>
+                                            </div>
+                                        </div>
+                                        <% }) %>
+                                </div>
+                                <% } %>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal-content delete-modal">
+            <div class="modal-header">
+                <h4>Delete Address</h4>
+                <button class="modal-close" onclick="closeDeleteModal()">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="delete-icon">
+                    <i class="ri-delete-bin-line"></i>
+                </div>
+                <p>Are you sure you want to delete this address? This action cannot be undone.</p>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-cancel" onclick="closeDeleteModal()">Cancel</button>
+                <button type="button" class="btn-delete" id="confirmDeleteBtn">
+                    <span id="deleteButtonText">Delete Address</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="main">
+        <section class="newsletter p-30 text-white wow fadeIn animated">
+            <div class="floating-elements">
+                <div class="floating-element">桜</div>
+                <div class="floating-element">桜</div>
+                <div class="floating-element">⚡</div>
+                <div class="floating-element">🌸</div>
+            </div>
+        </section>
+        <section class="section-padding footer-mid">
+            <div class="container pt-15 pb-20">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="widget-about font-md mb-md-5 mb-lg-0">
+                            <div class="logo logo-width-1 wow fadeIn animated">
+                                <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+                            </div>
+                            <h5 class="mt-20 mb-10 fw-600 text-grey-4 wow fadeIn animated">Contact</h5>
+                            <p class="wow fadeIn animated">
+                                <strong>Address: </strong>562 Wellington Road, Street 32, San Francisco
+                            </p>
+                            <p class="wow fadeIn animated">
+                                <strong>Phone: </strong>+01 2222 365 /(+91) 01 2345 6789
+                            </p>
+                            <p class="wow fadeIn animated">
+                                <strong>Hours: </strong>10:00 - 18:00, Mon - Sat
+                            </p>
+                            <h5 class="mb-10 mt-30 fw-600 text-grey-4 wow fadeIn animated">Follow Us</h5>
+                            <div class="mobile-social-icon wow fadeIn animated mb-sm-5 mb-md-0">
+                                <a href="#"><img src="/imgs/theme/icons/icon-facebook.svg" alt=""></a>
+                                <a href="#"><img src="/imgs/theme/icons/icon-twitter.svg" alt=""></a>
+                                <a href="#"><img src="/imgs/theme/icons/icon-instagram.svg" alt=""></a>
+                                <a href="#"><img src="/imgs/theme/icons/icon-pinterest.svg" alt=""></a>
+                                <a href="#"><img src="/imgs/theme/icons/icon-youtube.svg" alt=""></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-3">
+                        <h5 class="widget-title wow fadeIn animated">About</h5>
+                        <ul class="footer-list wow fadeIn animated mb-sm-5 mb-md-0">
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Delivery Information</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms &amp; Conditions</a></li>
+                            <li><a href="#">Contact Us</a></li>
+                            <li><a href="#">Support Center</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2  col-md-3">
+                        <h5 class="widget-title wow fadeIn animated">My Account</h5>
+                        <ul class="footer-list wow fadeIn animated">
+                            <li><a href="#">Sign In</a></li>
+                            <li><a href="#">View Cart</a></li>
+                            <li><a href="#">My Wishlist</a></li>
+                            <li><a href="#">Track My Order</a></li>
+                            <li><a href="#">Help</a></li>
+                            <li><a href="#">Order</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-4">
+                        <h5 class="widget-title wow fadeIn animated">Install App</h5>
+                        <div class="row">
+                            <div class="col-md-8 col-lg-12">
+                                <p class="wow fadeIn animated">From App Store or Google Play</p>
+                                <div class="download-app wow fadeIn animated">
+                                    <a href="#" class="hover-up mb-sm-4 mb-lg-0"><img class="active"
+                                            src="/imgs/theme/app-store.jpg" alt=""></a>
+                                    <a href="#" class="hover-up"><img src="/imgs/theme/google-play.jpg" alt=""></a>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-12 mt-md-3 mt-lg-0">
+                                <p class="mb-20 wow fadeIn animated">Secured Payment Gateways</p>
+                                <img class="wow fadeIn animated" src="/imgs/theme/payment-method.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="container pb-20 wow fadeIn animated">
+            <div class="row">
+                <div class="col-12 mb-20">
+                    <div class="footer-bottom"></div>
+                </div>
+                <div class="col-lg-6">
+                    <p class="float-md-left font-sm text-muted mb-0">&copy; 2025, <strong class="text-brand">Kaizen
+                            Street</strong>
+                </div>
+                <div class="col-lg-6">
+                    <p class="text-lg-end text-start font-sm text-muted mb-0">All rights reserved</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('profileSidebar');
+            const toggle = document.querySelector('.mobile-sidebar-toggle');
+
+            sidebar.classList.toggle('show');
+            toggle.classList.toggle('active');
+        }
+
+        document.addEventListener('click', function (event) {
+            const sidebar = document.getElementById('profileSidebar');
+            const toggle = document.querySelector('.mobile-sidebar-toggle');
+
+            if (window.innerWidth <= 991 &&
+                !sidebar.contains(event.target) &&
+                !toggle.contains(event.target) &&
+                sidebar.classList.contains('show')) {
+                sidebar.classList.remove('show');
+                toggle.classList.remove('active');
+            }
+        });
+
+        window.addEventListener('resize', function () {
+            const sidebar = document.getElementById('profileSidebar');
+            const toggle = document.querySelector('.mobile-sidebar-toggle');
+
+            if (window.innerWidth > 991) {
+                sidebar.classList.remove('show');
+                toggle.classList.remove('active');
+            }
+        });
+
+        async function setDefaultAddress(id) {
+            try {
+                const res = await fetch(`/profile/address/set-default/${id}`, {
+                    method: 'PATCH',
+                    headers: { 'Accept': 'application/json' }
+                });
+                const json = await res.json();
+                if (json.success) {
+                    window.location.reload();
+                } else {
+                    console.error('Failed to set default');
+                }
+            } catch (err) {
+                console.error('Network error', err);
+            }
+        }
+
+        async function deleteAddress(id) {
+            const { value: shouldDelete } = await Swal.fire({
+                title: 'Are you sure?',
+                text: "This will permanently delete the address.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it',
+                cancelButtonText: 'Cancel',
+                confirmButtonColor: '#d9534f',
+                cancelButtonColor: '#6c757d',
+                background: '#ffffff',
+                iconColor: '#d9534f',
+                customClass: {
+                    popup: 'swal-responsive'
+                }
+            });
+
+
+            if (!shouldDelete) {
+                return;
+            }
+
+            try {
+                const res = await fetch(`/profile/address/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Accept': 'application/json' }
+                });
+                const json = await res.json();
+
+                if (json.success) {
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'Deleted!',
+                        text: 'Your address has been removed.',
+                        timer: 1400,
+                        showConfirmButton: false,
+                        timerProgressBar: true,
+                        customClass: {
+                            popup: 'swal-responsive'
+                        }
+                    });
+                    document.querySelector(`[data-address-id="${id}"]`).remove();
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: json.message || 'Could not delete address.'
+                    });
+                }
+            } catch (err) {
+                console.error('Delete failed', err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Network Error',
+                    text: 'Please try again later.'
+                });
+            }
+        }
+
+        async function editAddress(id) {
+            try {
+                const res = await fetch(`/profile/edit-address/${id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (res.ok) {
+                    window.location.href = `/profile/edit-address/${id}`;
+                } else {
+                    const data = await res.json();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Not Found',
+                        text: data.message || 'Address not found'
+                    });
+                }
+
+            } catch (err) {
+                console.error('Failed to load address for edit', err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Something went wrong while trying to edit.'
+                });
+            }
+        }
+
+    </script>
+</body>
+
+</html>

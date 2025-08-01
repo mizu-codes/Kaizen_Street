@@ -12,18 +12,29 @@ const updateProduct = async (req, res) => {
       discountPercent,
       discountPrice,
       productOffer,
-      stock,
-      size,
       status,
       category,
       specifications
     } = req.body;
 
+    const stock = {
+  S: Number(req.body.stock_S || 0),
+  M: Number(req.body.stock_M || 0),
+  L: Number(req.body.stock_L || 0),
+  XL: Number(req.body.stock_XL || 0),
+  XXL: Number(req.body.stock_XXL || 0)
+};
+
+// Create size array from stock object (only non-zero)
+const size = Object.entries(stock)
+  .filter(([_, qty]) => qty > 0)
+  .map(([s]) => s);
+
     console.log('Update request for product:', id);
     console.log('Full req.body keys:', Object.keys(req.body));
 
-    if (!productName || !description || !regularPrice || !discountPrice || !stock || !size || !status || !category ) {
-      throw new Error('Please fill all required fields');
+    if (!productName || !description || !regularPrice || !discountPrice || !status || !category || size.length===0) {
+      throw new Error('Please fill all required fields and set at least one size with stock');
     }
 
     const product = await Product.findById(id);

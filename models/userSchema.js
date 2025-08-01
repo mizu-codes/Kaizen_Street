@@ -11,12 +11,6 @@ const userSchema = new Schema({
         required: true,
         unique: true,
     },
-    // phoneNumber: {
-    //     type: String,
-    //     required: false,
-    //     unique: true,
-    //     sparse: true
-    // },
     googleId: {
         type: String,
         unique: true,
@@ -34,10 +28,10 @@ const userSchema = new Schema({
         type: Boolean,
         default: false
     },
-    cart: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Cart'
-    }],
+      cart: {
+    type: Schema.Types.ObjectId,
+    ref: 'Cart'
+  },
     referalCode: {
         type: String,
         unique: true,

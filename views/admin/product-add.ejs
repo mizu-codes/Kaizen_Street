@@ -215,24 +215,18 @@
         
         <input type="hidden" name="discountPrice" id="discountPrice">
 
-        <div class="row">
-          <div class="col-md-6 mb-3">
-            <label for="stock" class="form-label">Stock</label>
-            <input type="number" class="form-control" id="stock" name="stock"
-                   placeholder="Enter stock limit" required>
-          </div>
-          <div class="col-md-6 mb-3">
-            <label for="size" class="form-label">Size</label>
-            <select class="form-select" id="size" name="size" required>
-              <option value="">Select Size</option>
-              <option value="S">S</option>
-              <option value="M">M</option>
-              <option value="L">L</option>
-              <option value="XL">XL</option>
-              <option value="XXL">XXL</option>
-            </select>
-          </div>
-        </div>
+        <div class="mb-3">
+  <label class="form-label">Stock by Size</label>
+  <div class="row">
+    <% ['S', 'M', 'L', 'XL', 'XXL'].forEach(size => { %>
+      <div class="col-md-2">
+        <label><%= size %></label>
+        <input type="number" name="stock_<%= size %>" id="stock_<%= size %>" class="form-control" min="0" value="0">
+      </div>
+    <% }) %>
+  </div>
+</div>
+
         <div class="mb-3">
           <label for="status" class="form-label">Status</label>
           <select class="form-select" id="status" name="status" required>

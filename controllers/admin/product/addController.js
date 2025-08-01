@@ -33,17 +33,29 @@ const addNewProduct = async (req, res) => {
       discountPercent,
       discountPrice,
       productOffer,
-      stock,
-      size,
       status,
       category,
       specifications,
       images
     } = req.body;
 
+    // Build stock object
+const stock = {
+  S: Number(req.body.stock_S || 0),
+  M: Number(req.body.stock_M || 0),
+  L: Number(req.body.stock_L || 0),
+  XL: Number(req.body.stock_XL || 0),
+  XXL: Number(req.body.stock_XXL || 0)
+};
+
+// Extract sizes that have stock > 0
+const size = Object.entries(stock)
+  .filter(([_, qty]) => qty > 0)
+  .map(([s]) => s);
+
     const categories = await Category.find({ isListed: true }).lean();
 
-    if (!productName || !regularPrice || !discountPrice || !stock || !size || !status || !category) {
+    if (!productName || !regularPrice || !discountPrice || !status || !category || size.length === 0) {
       req.flash('error', 'Please fill all required fields.');
       return res.render('product-add', {
         title: 'Add New Product',

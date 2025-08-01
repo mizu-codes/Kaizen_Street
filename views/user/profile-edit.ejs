@@ -72,7 +72,7 @@
         .profile-sidebar h4 {
             margin: 0;
             padding: 1.25rem;
-            background: linear-gradient(135deg, #f8fffe 0%, #f0f9f6 100%);
+          background: linear-gradient(135deg, #e8f4f2 0%, #ddf0e8 100%);
             color: #3BB77E;
             font-weight: 600;
             border-bottom: 1px solid #e0e4e8;
@@ -145,8 +145,8 @@
         }
 
         .profile-header {
-            background: linear-gradient(135deg, #f8fffe 0%, #f0f9f6 100%);
-            padding: 0.2rem;
+             background: linear-gradient(135deg, #e8f4f2 0%, #ddf0e8 100%);
+            padding: 0.1rem;
             border-bottom: 1px solid #e0e4e8;
         }
 
@@ -164,13 +164,13 @@
             margin-bottom: 1.5rem;
             padding-bottom: 0.75rem;
             border-bottom: 2px solid #e0e4e8;
-            display: flex;
+            gap: 10px;
             font-size: 1.25rem;
         }
 
         .profile-section h3 i {
-            margin-right: 0.75rem;
-            font-size: 1.3rem;
+            margin-right: 0.2rem;
+            font-size: 1.2rem;
         }
 
         .profile-avatar-container {
@@ -989,7 +989,7 @@
 
                             <div class="form-group">
                                 <label for="phone" class="form-label">Phone Number</label>
-                                <input type="tel" id="phone" name="phone" class="form-input phone-input"
+                                <input type="tel" name="phone" class="form-input phone-input"
                                     value="<%= user.phone || '' %>" placeholder="Enter your phone number" />
                             </div>
 
@@ -1118,9 +1118,7 @@
             </div>
         </div>
     </footer>
-
-    <script src="/js/jquery.min.js"></script>
-    <script src="/js/bootstrap.bundle.min.js"></script>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 

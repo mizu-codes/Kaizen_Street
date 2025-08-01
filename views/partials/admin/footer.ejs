@@ -79,10 +79,10 @@
                 reader.onload = () => {
                     const dataURL = reader.result;
 
-                   
+
                     document.getElementById(`croppedImage${currentSlot}`).value = dataURL;
 
-                  
+
                     const slot = document.getElementById(`slot-${currentSlot}`);
                     const img = slot.querySelector('img');
                     img.src = dataURL;
@@ -99,75 +99,79 @@
             }, 'image/jpeg', 0.85);
         });
 
-         
-    const addForm   = document.getElementById('productAddForm');
-    const submitBtn = document.getElementById('submitBtn');
 
-    if (!addForm || !submitBtn) {
-      console.error('Form or submit button not found! Make sure IDs match.');
-      return;
-    }
+        const addForm = document.getElementById('productAddForm');
+        const submitBtn = document.getElementById('submitBtn');
 
-         function updateState() {
-    const allImages = [0,1,2].every(i =>
-      !!document.getElementById(`croppedImage${i}`).value
-    );
+        if (!addForm || !submitBtn) {
+            console.error('Form or submit button not found! Make sure IDs match.');
+            return;
+        }
 
-   
-    const fields = ['productName','regularPrice','stock','size','status','category'];
-    const allFields = fields.every(id =>
-      document.getElementById(id).value.trim() !== ''
-    );
-    const ok = allImages && allFields;
-    submitBtn.disabled = !ok;
-    document.getElementById('img-error').style.display = allImages ? 'none' : 'block';
-  }
+        function updateState() {
+            const allImages = [0, 1, 2].every(i =>
+                !!document.getElementById(`croppedImage${i}`).value
+            );
 
- 
-  document.querySelectorAll('input, select, textarea').forEach(el => {
-    el.addEventListener('input', updateState);
-    el.addEventListener('change', updateState);
-  });
-  
-  updateState()
 
-  addForm.addEventListener('submit',(e)=>{
-    if(submitBtn.disabled){
-        console.warn('Duplicate submit blocked');
-        e.preventDefault();
-        return;
-    }
+            const fields = ['productName', 'regularPrice', 'status', 'category'];
+            const sizeFields = ['S', 'M', 'L', 'XL', 'XXL'].map(s => document.getElementById(`stock_${s}`));
+            const oneSizeHasStock = sizeFields.some(input => parseInt(input.value) > 0);
 
-    submitBtn.disabled=true;
-    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Submitting…';
+            const allFields = fields.every(id =>
+                document.getElementById(id).value.trim() !== ''
+            );
 
-  })
+            const ok = allImages && allFields && oneSizeHasStock;
+            submitBtn.disabled = !ok;
+            document.getElementById('img-error').style.display = allImages ? 'none' : 'block';
+        }
+
+
+        document.querySelectorAll('input, select, textarea').forEach(el => {
+            el.addEventListener('input', updateState);
+            el.addEventListener('change', updateState);
+        });
+
+        updateState()
+
+        addForm.addEventListener('submit', (e) => {
+            if (submitBtn.disabled) {
+                console.warn('Duplicate submit blocked');
+                e.preventDefault();
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Submitting…';
+
+        })
     });
 
-  
-  const regInput = document.getElementById('regularPrice');
-  const offInput = document.getElementById('productOffer');
-  const discHidden = document.getElementById('discountPrice');
-  const submitBtn = document.getElementById('submitBtn');
 
-  function recalc() {
-    const base = parseFloat(regInput.value) || 0;
-    const pct  = parseFloat(offInput.value) || 0;
-    
-    const clamped = Math.min(Math.max(pct, 0), 100);
-    
-    const discounted = base * (1 - clamped/100);
-    discHidden.value = discounted.toFixed(2);
+    const regInput = document.getElementById('regularPrice');
+    const offInput = document.getElementById('productOffer');
+    const discHidden = document.getElementById('discountPrice');
+    const submitBtn = document.getElementById('submitBtn');
 
-   
-    submitBtn.disabled = !(base > 0 && clamped >= 0);
-  }
-  
-  regInput.addEventListener('input', recalc);
-  offInput.addEventListener('input', recalc);
+    function recalc() {
+        const base = parseFloat(regInput.value) || 0;
+        const pct = parseFloat(offInput.value) || 0;
+
+        const clamped = Math.min(Math.max(pct, 0), 100);
+
+        const discounted = base * (1 - clamped / 100);
+        discHidden.value = discounted.toFixed(2);
 
 
-  recalc();
+        submitBtn.disabled = !(base > 0 && clamped >= 0);
+    }
+
+    regInput.addEventListener('input', recalc);
+    offInput.addEventListener('input', recalc);
+
+
+    recalc();
 </script>
 </body>
 

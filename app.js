@@ -4,29 +4,31 @@ const path = require('path');
 const loadUserData = require('./middlewares/userMiddleware');
 const userRouter = require('./routes/userRouter');
 const adminRouter = require('./routes/adminRouter');
+const Cart = require('./models/cartSchema');
+const Wishlist=require('./models/wishlistSchema');
 const env = require('dotenv').config();
 const session = require('express-session');
-const flash   = require('connect-flash'); 
-const passport=require('./config/passport');
-const db = require('./config/db')
+const flash = require('connect-flash');
+const passport = require('./config/passport');
+const db = require('./config/db');
 db()
 
 app.use(express.json({ limit: '50mb' }))
 app.use(express.urlencoded({ extended: true, limit: '50mb' }))
 
 app.use((req, res, next) => {
-    res.set('cache-control', 'no-store')
-    next();
+  res.set('cache-control', 'no-store')
+  next();
 })
 app.use(session({
-       secret: process.env.SESSION_SECRET || 'mySecret',
-    resave: false,
-    saveUninitialized:true,
-    cookie:{
-        secure: false,
-        httpOnly: true,
-        maxAge:72*60*60*1000
-    }
+  secret: process.env.SESSION_SECRET || 'mySecret',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    secure: false,
+    httpOnly: true,
+    maxAge: 72 * 60 * 60 * 1000
+  }
 }))
 
 app.use(flash());
@@ -36,17 +38,42 @@ app.use(passport.session());
 
 app.use(loadUserData);
 
-app.set('view engine','ejs')
-app.set('views',[path.join(__dirname,'views/user'),path.join(__dirname,'views/admin')])
+app.set('view engine', 'ejs')
+app.set('views', [path.join(__dirname, 'views/user'), path.join(__dirname, 'views/admin')])
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/',userRouter);
-app.use('/admin',adminRouter);
+app.use(async (req, res, next) => {
+  let count = 0;
+  if (req.session.userId) {
+    const cart = await Cart.findOne({ userId: req.session.userId });
+    if (cart) {
+      count = cart.items.reduce((sum, item) => sum + item.quantity, 0);
+    }
+  }
+  res.locals.cartItemCount = count;
+  next();
+});
+
+app.use(async (req, res, next) => {
+  let count = 0;
+  if (req.session.userId) {
+    const wishlist = await Wishlist.findOne({ userId: req.session.userId });
+    if (wishlist) {
+      count = wishlist.items.length;
+    }
+  }
+  res.locals.wishlistItemCount = count;
+  next();
+});
+
+
+app.use('/', userRouter);
+app.use('/admin', adminRouter);
 
 app.use('/admin/products', adminRouter);
 
 app.put('/products/:id', (req, res) => {
-    console.log('Request body:', req.body);
+  console.log('Request body:', req.body);
 });
 
 app.use((err, req, res, next) => {
@@ -62,7 +89,7 @@ app.get('/signup', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-  res.render('login'); 
+  res.render('login');
 });
 
 app.use((req, res, next) => {
@@ -70,9 +97,9 @@ app.use((req, res, next) => {
   next();
 });
 
-const PORT=3000 || process.env.PORT;
-app.listen(PORT,()=>{
-console.log(`server running on ${PORT}`)
+const PORT = 3000 || process.env.PORT;
+app.listen(PORT, () => {
+  console.log(`server running on ${PORT}`)
 })
 
 module.exports = app;

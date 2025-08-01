@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/kaizenicon.svg">
+    <link rel="stylesheet" href="/css/main.css?v=3.4">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        .swal2-popup.swal-responsive {
+            color: #333 !important;
+            border: 2px solid rgba(0, 0, 0, 0.1) !important;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+            backdrop-filter: blur(10px) !important;
+        }
+
+        .swal2-title {
+            color: #e74c3c !important;
+            font-weight: 600 !important;
+            text-shadow: none !important;
+        }
+
+        .swal2-content {
+            color: #666 !important;
+        }
+
+        .swal2-confirm {
+            background: #3BB77E !important;
+            border: none !important;
+            border-radius: 8px !important;
+            padding: 12px 30px !important;
+            font-weight: 600 !important;
+            color: white !important;
+            box-shadow: 0 4px 15px rgba(59, 183, 126, 0.3) !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .swal2-confirm:hover {
+            background: #2a9d5f !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 6px 20px rgba(59, 183, 126, 0.4) !important;
+        }
+
+        .swal2-icon.swal2-error {
+            border-color: #e74c3c !important;
+            color: #e74c3c !important;
+        }
+
+        .swal2-icon.swal2-error .swal2-x-mark {
+            color: #e74c3c !important;
+        }
+
+        .swal-responsive {
+            width: 90% !important;
+            max-width: 320px !important;
+            padding: 1.2rem !important;
+            border-radius: 10px;
+            font-size: 0.95rem;
+        }
+
+        .checkout-container {
+            background: white;
+            min-height: 100vh;
+            padding: 40px 0;
+        }
+
+        .checkout-header {
+            text-align: left;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #f1f3f4;
+            padding-bottom: 20px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        /* MODIFIED - Smaller checkout title and subtitle aligned to left */
+        .checkout-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .checkout-subtitle {
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .checkout-content {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e9ecef;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Address Management Styles */
+        .main-content {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .profile-header h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #253D4E;
+            margin: 0;
+        }
+
+        .profile-header h3 i {
+            font-size: 1.75rem;
+        }
+
+        .btn-add-address {
+            display: flex;
+            align-items: center;
+            background: #2ea368;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .btn-add-address:hover {
+            background: #059669;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(59, 183, 126, 0.4);
+        }
+
+        .btn-add-address i {
+            margin-right: 6px;
+            color: white;
+            font-size: 1.3rem;
+        }
+
+        .btn-add-address:active {
+            transform: translateY(0);
+        }
+
+        .profile-body {
+            padding: 2rem;
+        }
+
+        .addresses-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .address-card {
+            background: white;
+            border: 2px solid #f0f0f0;
+            border-radius: 12px;
+            padding: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 80px;
+        }
+
+        .address-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, #3BB77E, #2ea368);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .address-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .address-card:hover {
+            border-color: #3BB77E;
+            box-shadow: 0 4px 15px rgba(59, 183, 126, 0.15);
+            transform: translateX(4px);
+        }
+
+        .address-main-content {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex: 1;
+        }
+
+        .address-type {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            min-width: 120px;
+        }
+
+        .address-type i {
+            color: #3BB77E;
+            font-size: 1.4rem;
+            background: rgba(59, 183, 126, 0.1);
+            padding: 0.5rem;
+            border-radius: 10px;
+        }
+
+        .address-type-text {
+            font-weight: 600;
+            color: #253D4E;
+            text-transform: capitalize;
+            font-size: 0.9rem;
+        }
+
+        .default-badge {
+            background: linear-gradient(135deg, #3BB77E 0%, #2ea368 100%);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 0.5rem;
+        }
+
+        .address-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .address-details h4 {
+            color: #253D4E;
+            margin-bottom: 0.25rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .address-text {
+            color: #666;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .address-phone {
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+
+        .address-phone i {
+            color: #3BB77E;
+            font-size: 1rem;
+        }
+
+        .address-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .btn-set-default {
+            background: transparent;
+            border: 2px solid #3BB77E;
+            color: #3BB77E;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .btn-set-default:hover {
+            background: #3BB77E;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .btn-set-default:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .address-action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-action {
+            background: white;
+            border: 2px solid #f0f0f0;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn-action.edit {
+            color: #3BB77E;
+        }
+
+        .btn-action.edit:hover {
+            background: #3BB77E;
+            color: white;
+            border-color: #3BB77E;
+            transform: scale(1.05);
+        }
+
+        .btn-action.delete {
+            color: #ff4757;
+        }
+
+        .btn-action.delete:hover {
+            background: #ff4757;
+            color: white;
+            border-color: #ff4757;
+            transform: scale(1.05);
+        }
+
+        /* No addresses state */
+        .no-addresses {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 20px;
+            border: 2px dashed #e0e0e0;
+        }
+
+        .no-addresses-icon {
+            font-size: 5rem;
+            color: #d0d0d0;
+            margin-bottom: 1.5rem;
+        }
+
+        .no-addresses h4 {
+            color: #253D4E;
+            margin-bottom: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .no-addresses p {
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-add-first-address {
+            background: linear-gradient(135deg, #3BB77E 0%, #2ea368 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 4px 15px rgba(59, 183, 126, 0.3);
+        }
+
+        .btn-add-first-address:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(59, 183, 126, 0.4);
+        }
+
+        /* Order Items Section */
+        .order-item {
+            display: grid;
+            grid-template-columns: 80px 1fr auto;
+            gap: 15px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .order-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-item-image {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            aspect-ratio: 1;
+        }
+
+        .order-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .order-item-details {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .order-item-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 5px;
+        }
+
+        .order-item-quantity {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .order-item-price {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .original-price {
+            color: #999;
+            text-decoration: line-through;
+            font-size: 0.9rem;
+        }
+
+        .current-price {
+            color: #1a1a1a;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .discount-badge {
+            background: #088178;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .order-item-total {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .item-subtotal {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        /* NEW - Payment Methods Section */
+        .payment-methods {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e9ecef;
+        }
+
+        .payment-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .payment-title i {
+            color: #ff1744;
+            font-size: 1.5rem;
+        }
+
+        .payment-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .payment-option {
+            background: white;
+            border: 2px solid #f0f0f0;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .payment-option:hover {
+            border-color: #ff1744;
+            box-shadow: 0 4px 15px rgba(255, 23, 68, 0.1);
+        }
+
+        .payment-option input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            margin: 0;
+            accent-color: #ff1744;
+        }
+
+        .payment-option-content {
+            flex: 1;
+        }
+
+        .payment-option-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 5px;
+        }
+
+        .payment-option-desc {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .payment-option-icon {
+            color: #ff1744;
+            font-size: 1.8rem;
+            background: rgba(255, 23, 68, 0.1);
+            padding: 10px;
+            border-radius: 10px;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        /* Order Summary Styles - MODIFIED */
+        .order-summary {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e9ecef;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        /* MODIFIED - Progress steps moved to order summary */
+        .progress-steps {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 25px;
+            gap: 6px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            color: #666;
+            font-weight: 500;
+            padding: 6px 10px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            font-size: 0.75rem;
+        }
+
+        .step-icon {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 6px;
+            font-size: 0.65rem;
+        }
+
+        .step.active {
+            background: linear-gradient(135deg, #ff1744 0%, #f50057 50%, #c51162 100%);
+            color: white;
+        }
+
+        .step.active .step-icon {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .step.completed {
+            background: #28a745;
+            color: white;
+        }
+
+        .step.completed .step-icon {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .step.inactive {
+            background: #e9ecef;
+            color: #666;
+        }
+
+        .step.inactive .step-icon {
+            background: #dee2e6;
+            color: #6c757d;
+        }
+
+        .step-arrow {
+            color: #ccc;
+            margin: 0 4px;
+            font-size: 0.8rem;
+        }
+
+        .summary-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f3f4;
+            color: #666;
+        }
+
+        .summary-item:last-of-type {
+            border-bottom: none;
+        }
+
+        .summary-value {
+            font-weight: 600;
+        }
+
+        .summary-value.free {
+            color: #28a745;
+        }
+
+        .summary-value.discount {
+            color: #088178;
+        }
+
+        .total-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #e9ecef;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .total-label {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        .total-amount {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        .place-order-btn {
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(135deg, #ff1744 0%, #f50057 50%, #c51162 100%);
+            color: white;
+            border: none;
+            border-radius: 22px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
+        }
+
+        .place-order-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 23, 68, 0.3);
+        }
+
+        .place-order-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .checkout-content {
+                grid-template-columns: 1fr 340px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .address-card {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+                padding: 1.25rem;
+            }
+
+            .address-main-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .address-type {
+                min-width: auto;
+            }
+
+            .address-actions {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .btn-add-address {
+                justify-content: center;
+            }
+
+            .checkout-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .checkout-container {
+                padding: 20px 0;
+            }
+
+            .checkout-title {
+                font-size: 1.3rem;
+            }
+
+            .order-item {
+                grid-template-columns: 70px 1fr;
+                gap: 12px;
+            }
+
+            .order-item-total {
+                grid-column: 1 / -1;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 10px;
+            }
+
+            .order-summary {
+                position: relative;
+                top: auto;
+            }
+
+            .payment-options {
+                gap: 12px;
+            }
+
+            .payment-option {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .checkout-content {
+                padding: 0 15px;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .order-item {
+                padding: 15px;
+            }
+
+            .order-summary {
+                padding: 20px;
+            }
+
+            .payment-methods {
+                padding: 20px;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <header class="header-area header-style-1 header-height-2">
+        <div class="header-top header-top-ptb-1 d-none d-lg-block">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-xl-3 col-lg-4">
+                        <div class="header-info">
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-4">
+                        <div class="text-center">
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-4">
+                        <div class="header-info header-info-right">
+                            <% if (user) { %>
+                                <div class="dropdown">
+                                    <a href="#" class="sign-in-link">
+                                        <%= user.name %>
+                                    </a>
+                                    <div class="dropdown-content">
+                                        <a href="/userProfile">Profile</a>
+                                        <a href="/logout">Logout</a>
+                                    </div>
+                                </div>
+                                <% } else { %>
+                                    <ul>
+                                        <li>
+                                            <i class="fi-rs-user"></i>
+                                            <a href="/login">Log In</a>
+                                        </li>
+                                    </ul>
+                                    <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
+            <div class="container">
+                <div class="header-wrap">
+                    <div class="logo logo-width-1">
+                        <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+                    </div>
+                    <div class="header-right">
+                        <div class="search-style-2"></div>
+                        <div class="header-action-right">
+                            <div class="header-action-2">
+                                <div class="header-action-icon-2">
+                                    <a href="/wishlist">
+                                        <img class="svgInject" alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
+                                        <span id="wishlistItemCount" class="pro-count blue">
+                                            <%= typeof locals.wishlistItemCount !=='undefined' ?
+                                                locals.wishlistItemCount : 0 %>
+                                        </span>
+                                    </a>
+                                </div>
+                                <div class="header-action-icon-2">
+                                    <a class="mini-cart-icon" href="/cart">
+                                        <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
+                                        <span id="cartItemCount" class="pro-count blue">
+                                            <%= typeof locals.cartItemCount !=='undefined' ? locals.cartItemCount : 0 %>
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-bottom header-bottom-bg-color sticky-bar">
+            <div class="container">
+                <div class="header-wrap header-space-between position-relative">
+                    <div class="logo logo-width-1 d-block d-lg-none">
+                        <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+                    </div>
+                    <div class="header-nav d-none d-lg-flex">
+                        <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
+                            <nav>
+                                <ul>
+                                    <li><a href="/">Home</a></li>
+                                    <li><a href="/shop">Shop</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="header-action-right d-block d-lg-none">
+                        <div class="header-action-2">
+                            <div class="header-action-icon-2">
+                                <a href="/wishlist">
+                                    <img alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
+                                    <span id="wishlistItemCount" class="pro-count blue">
+                                        <%= typeof locals.wishlistItemCount !=='undefined' ? locals.wishlistItemCount :
+                                            0 %>
+                                    </span>
+                                </a>
+                            </div>
+                            <div class="header-action-icon-2">
+                                <a class="mini-cart-icon" href="/cart">
+                                    <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
+                                    <span id="cartItemCount" class="pro-count blue">
+                                        <%= typeof locals.cartItemCount !=='undefined' ? locals.cartItemCount : 0 %>
+                                    </span>
+                                </a>
+                            </div>
+                            <div class="header-action-icon-2 d-block d-lg-none">
+                                <div class="burger-icon burger-icon-white">
+                                    <span class="burger-icon-top"></span>
+                                    <span class="burger-icon-mid"></span>
+                                    <span class="burger-icon-bottom"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-header breadcrumb-wrap">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="/" rel="nofollow">Home</a>
+                <span></span> Shop
+                <span></span> Product
+                <span></span> Cart
+                <span></span> Checkout
+            </div>
+        </div>
+    </div>
+
+    <div class="checkout-container">
+
+        <div class="checkout-content">
+            <div class="main-content"> <!-- Header -->
+                <div class="section">
+
+                    <div class="checkout-header">
+                        <h1 class="checkout-title">Complete Your Order</h1>
+                        <p class="checkout-subtitle">Review your delivery details and finalize your purchase</p>
+                    </div>
+
+                    <div class="profile-header">
+                        <h3><i class="ri-map-pin-fill"></i> Delivery Address</h3>
+                        <a href="/profile/add-address" class="btn-add-address">
+                            <i class="ri-add-line"></i> Add New Address
+                        </a>
+                    </div>
+
+                    <div class="addresses-section">
+                        <% if (addresses.length===0) { %>
+                            <div class="no-addresses">
+                                <div class="no-addresses-icon">
+                                    <i class="ri-map-pin-line"></i>
+                                </div>
+                                <h4>No addresses added yet</h4>
+                                <p>Add your first address to make checkout faster and easier.</p>
+                            </div>
+                            <% } else { %>
+                                <div class="addresses-grid">
+                                    <% addresses.forEach(address=> { %>
+                                        <div class="address-card" data-address-id="<%= address._id %>"
+                                            data-default="<%= address.isDefault %>">
+
+                                            <div class="address-main-content">
+                                                <div class="address-type">
+                                                    <i
+                                                        class="ri-<%= address.addressType === 'home' ? 'home-fill' : address.addressType === 'work' ? 'building-fill' : 'map-pin-fill' %>"></i>
+                                                    <div>
+                                                        <span class="address-type-text">
+                                                            <%= address.addressType.charAt(0).toUpperCase() +
+                                                                address.addressType.slice(1) %>
+                                                        </span>
+                                                        <% if (address.isDefault) { %>
+                                                            <span class="default-badge">Default</span>
+                                                            <% } %>
+                                                    </div>
+                                                </div>
+
+                                                <div class="address-details">
+                                                    <h4>
+                                                        <%= address.userName %>
+                                                    </h4>
+                                                    <p class="address-text">
+                                                        <%= address.houseNo %>, <%= address.locality %>,
+                                                                <% if (address.landmark) { %>
+                                                                    <%= address.landmark %>,<% } %>
+                                                                            <%= address.city %>, <%= address.state %> -
+                                                                                    <%= address.pincode %>
+                                                    </p>
+                                                    <p class="address-phone">
+                                                        <i class="ri-phone-line"></i> +91 <%= address.phoneNumber %>
+                                                    </p>
+                                                    <% if (address.altPhoneNumber) { %>
+                                                        <p class="address-phone">
+                                                            <i class="ri-phone-line"></i> Alt: +91 <%=
+                                                                address.altPhoneNumber %>
+                                                        </p>
+                                                        <% } %>
+                                                </div>
+                                            </div>
+
+                                            <div class="address-actions">
+                                                <% if (!address.isDefault) { %>
+                                                    <button class="btn-set-default"
+                                                        onclick="setDefaultAddress('<%= address._id %>')">
+                                                        Set as Default
+                                                    </button>
+                                                    <% } %>
+                                                        <div class="address-action-buttons">
+                                                            <button class="btn-action edit"
+                                                                onclick="editAddress('<%= address._id %>')"
+                                                                title="Edit">
+                                                                <i class="ri-edit-line"></i>
+                                                            </button>
+                                                            <button class="btn-action delete"
+                                                                onclick="deleteAddress('<%= address._id %>')"
+                                                                title="Delete">
+                                                                <i class="ri-delete-bin-line"></i>
+                                                            </button>
+                                                        </div>
+                                            </div>
+                                        </div>
+                                        <% }) %>
+                                </div>
+                                <% } %>
+                    </div>
+                </div>
+
+                <!-- Order Items Section -->
+                <div class="section">
+                    <h2 class="section-title">
+                        Order Items (<%= cart.items.length %> items)
+                    </h2>
+                    <% if (!cart.items || cart.items.length===0) { %>
+                        <div class="empty-cart">
+                            <div class="empty-cart-icon">🛒</div>
+                            <h3>No items to checkout</h3>
+                            <p>Your cart is empty. Add some items to continue.</p>
+                        </div>
+                        <% } else { %>
+                            <% cart.items.forEach(item=> { %>
+                                <div class="order-item">
+                                    <div class="order-item-image">
+                                        <img src="<%= item.image %>" alt="<%= item.name %>"
+                                            onerror="this.src='/imgs/theme/placeholder.jpg'">
+                                    </div>
+                                    <div class="order-item-details">
+                                        <div class="order-item-name">
+                                            <%= item.name %>
+                                        </div>
+                                        <div class="order-item-quantity">Quantity: <%= item.quantity %>
+                                        </div>
+                                        <div class="order-item-price">
+                                            <% if (item.originalPrice && item.originalPrice> item.price) { %>
+                                                <span class="original-price">₹<%= item.originalPrice %></span>
+                                                <span class="discount-badge">
+                                                    <%= Math.round(((item.originalPrice -
+                                                        item.price)/item.originalPrice)*100) %>% OFF
+                                                </span>
+                                                <% } %>
+                                                    <span class="current-price">₹<%= item.price %></span>
+                                        </div>
+                                    </div>
+                                    <div class="order-item-total">
+                                        <div class="item-subtotal">₹<%= item.subtotal %>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% }) %>
+                                    <% } %>
+                </div>
+
+                <!-- Payment Methods Section - ADD THIS -->
+                <div class="section payment-methods">
+                    <h2 class="payment-title">
+                        <i class="ri-secure-payment-line"></i>
+                        Choose Payment Method
+                    </h2>
+
+                    <div class="payment-options">
+                        <% ['razorpay','wallet','cod'].forEach(method=> { %>
+                            <label class="payment-option">
+                                <input type="radio" name="payment" value="<%= method %>" <%=method==='cod' ? 'checked'
+                                    : '' %>
+                                >
+                                <div class="payment-option-icon">
+                                    <% if (method==='razorpay' ) { %><i class="ri-bank-card-line"></i>
+                                        <% } %>
+                                            <% if (method==='wallet' ) { %><i class="ri-wallet-3-line"></i>
+                                                <% } %>
+                                                    <% if (method==='cod' ) { %><i class="ri-hand-coin-line"></i>
+                                                        <% } %>
+                                </div>
+                                <div class="payment-option-content">
+                                    <div class="payment-option-title">
+                                        <%= method==='razorpay' ? 'Razorpay' : method==='wallet' ? 'Wallet'
+                                            : 'Cash on Delivery' %>
+                                    </div>
+                                    <div class="payment-option-desc">
+                                        <%= method==='razorpay' ? 'Pay securely with cards, UPI, and more' :
+                                            method==='wallet' ? 'Use your digital wallet balance'
+                                            : 'Pay when your order arrives' %>
+                                    </div>
+                                </div>
+                            </label>
+                            <% }) %>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <!-- Progress steps - ADD THIS at the top of order summary -->
+                <div class="progress-steps">
+                    <div class="step completed">
+                        <div class="step-icon">✓</div>
+                        Cart
+                    </div>
+                    <div class="step-arrow">›</div>
+                    <div class="step active">
+                        <div class="step-icon">2</div>
+                        Payment
+                    </div>
+                </div>
+                <h2 class="summary-title">Order Summary</h2>
+                <% if (cart.items && cart.items.length> 0) { %>
+                    <% cart.items.forEach(item=> { %>
+                        <div class="summary-item">
+                            <span>
+                                <%= item.quantity %>× <%= item.name.length> 20 ? item.name.substring(0,20)+'...' :
+                                        item.name %>
+                            </span>
+                            <span class="summary-value">₹<%= item.subtotal %></span>
+                        </div>
+                        <% }) %>
+                            <% if (cart.discount> 0) { %>
+                                <div class="summary-item">
+                                    <span>Discount</span>
+                                    <span class="summary-value discount">-₹<%= cart.discount %></span>
+                                </div>
+                                <% } %>
+                                    <div class="summary-item">
+                                        <span>Delivery Charges</span>
+                                        <span class="summary-value free">Free</span>
+                                    </div>
+                                    <div class="summary-item">
+                                        <span>Platform Fee</span>
+                                        <span class="summary-value">₹0</span>
+                                    </div>
+                                    <div class="total-section">
+                                        <div class="total-row">
+                                            <div class="total-label">Total Amount</div>
+                                            <div class="total-amount">₹<%= cart.total %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="place-order-btn" id="placeOrderBtn"
+                                        onclick="placeOrder()" <%=(!addresses || addresses.length===0) ? 'disabled' : ''
+                                        %>>
+                                        <%= (!addresses || addresses.length===0) ? 'Add Address to Continue'
+                                            : 'Place Order' %>
+                                    </button>
+                                    <% } else { %>
+                                        <div style="text-align:center;padding:40px 20px;color:#666;">
+                                            <div style="font-size:3rem;margin-bottom:15px;opacity:0.5;">📋</div>
+                                            <p>No items to checkout</p>
+                                        </div>
+                                        <% } %>
+            </div>
+        </div>
+    </div>
+
+    <footer class="main">
+        <section class="newsletter p-30 text-white wow fadeIn animated">
+            <div class="floating-elements">
+                <div class="floating-element">桜</div>
+                <div class="floating-element">桜</div>
+                <div class="floating-element">⚡</div>
+                <div class="floating-element">🌸</div>
+            </div>
+        </section>
+        <section class="section-padding footer-mid">
+            <div class="container pt-15 pb-20">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="widget-about font-md mb-md-5 mb-lg-0">
+                            <div class="logo logo-width-1 wow fadeIn animated">
+                                <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+                            </div>
+                            <h5 class="mt-20 mb-10 fw-600 text-grey-4 wow fadeIn animated">Contact</h5>
+                            <p class="wow fadeIn animated">
+                                <strong>Address: </strong>562 Wellington Road, Street 32, San Francisco
+                            </p>
+                            <p class="wow fadeIn animated">
+                                <strong>Phone: </strong>+01 2222 365 /(+91) 01 2345 6789
+                            </p>
+                            <p class="wow fadeIn animated">
+                                <strong>Hours: </strong>10:00 - 18:00, Mon - Sat
+                            </p>
+                            <h5 class="mb-10 mt-30 fw-600 text-grey-4 wow fadeIn animated">Follow Us</h5>
+                            <div class="mobile-social-icon wow fadeIn animated mb-sm-5 mb-md-0">
+                                <a href="#"><img src="/imgs/theme/icons/icon-facebook.svg" alt=""></a>
+                                <a href="#"><img src="/imgs/theme/icons/icon-twitter.svg" alt=""></a>
+                                <a href="#"><img src="/imgs/theme/icons/icon-instagram.svg" alt=""></a>
+                                <a href="#"><img src="/imgs/theme/icons/icon-pinterest.svg" alt=""></a>
+                                <a href="#"><img src="/imgs/theme/icons/icon-youtube.svg" alt=""></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-3">
+                        <h5 class="widget-title wow fadeIn animated">About</h5>
+                        <ul class="footer-list wow fadeIn animated mb-sm-5 mb-md-0">
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Delivery Information</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms &amp; Conditions</a></li>
+                            <li><a href="#">Contact Us</a></li>
+                            <li><a href="#">Support Center</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2  col-md-3">
+                        <h5 class="widget-title wow fadeIn animated">My Account</h5>
+                        <ul class="footer-list wow fadeIn animated">
+                            <li><a href="#">Sign In</a></li>
+                            <li><a href="#">View Cart</a></li>
+                            <li><a href="#">My Wishlist</a></li>
+                            <li><a href="#">Track My Order</a></li>
+                            <li><a href="#">Help</a></li>
+                            <li><a href="#">Order</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-4">
+                        <h5 class="widget-title wow fadeIn animated">Install App</h5>
+                        <div class="row">
+                            <div class="col-md-8 col-lg-12">
+                                <p class="wow fadeIn animated">From App Store or Google Play</p>
+                                <div class="download-app wow fadeIn animated">
+                                    <a href="#" class="hover-up mb-sm-4 mb-lg-0"><img class="active"
+                                            src="/imgs/theme/app-store.jpg" alt=""></a>
+                                    <a href="#" class="hover-up"><img src="/imgs/theme/google-play.jpg" alt=""></a>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-12 mt-md-3 mt-lg-0">
+                                <p class="mb-20 wow fadeIn animated">Secured Payment Gateways</p>
+                                <img class="wow fadeIn animated" src="/imgs/theme/payment-method.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="container pb-20 wow fadeIn animated">
+            <div class="row">
+                <div class="col-12 mb-20">
+                    <div class="footer-bottom"></div>
+                </div>
+                <div class="col-lg-6">
+                    <p class="float-md-left font-sm text-muted mb-0">&copy; 2025, <strong class="text-brand">Kaizen
+                            Street</strong>
+                </div>
+                <div class="col-lg-6">
+                    <p class="text-lg-end text-start font-sm text-muted mb-0">All rights reserved</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/js/wishlist-count-updater.js"></script>
+    <script src="/js/cart-count-updater.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+
+        async function placeOrder() {
+            const swalOpts = {
+                customClass: { popup: 'swal-responsive' }
+            };
+
+            const paymentInput = document.querySelector('input[name="payment"]:checked');
+            if (!paymentInput) {
+                return Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please select a payment method.',
+                    ...swalOpts
+                });
+            }
+            const paymentMethod = paymentInput.value;
+
+            const defaultCard = document.querySelector('.address-card[data-default="true"]');
+            if (!defaultCard) {
+                return Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please set a default address to continue.',
+                    ...swalOpts
+                });
+            }
+            const addressId = defaultCard.dataset.addressId;
+
+
+            if (paymentMethod === 'cod') {
+                try {
+                    const res = await fetch('/checkout/place-order', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ addressId, paymentMethod })
+                    });
+                    const data = await res.json();
+
+                    if (res.ok && data.success) {
+                        await Swal.fire({
+                            icon: 'success',
+                            title: 'Order Placed!',
+                            showConfirmButton: false,
+                            timer: 1500,
+                            ...swalOpts
+                        });
+                        window.location.href = `/checkout/order-success/${data.orderId}`;
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: data.message || 'Failed to place order.',
+                            ...swalOpts
+                        });
+                    }
+                } catch (err) {
+                    console.error(err);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Something went wrong. Try again.',
+                        ...swalOpts
+                    });
+                }
+                return;
+            }
+
+            if (paymentMethod === 'razorpay') {
+                return Swal.fire({
+                    icon: 'info',
+                    title: 'Info',
+                    text: 'Razorpay payment flow not yet implemented.',
+                    ...swalOpts
+                });
+            }
+
+            if (paymentMethod === 'wallet') {
+                return Swal.fire({
+                    icon: 'info',
+                    title: 'Info',
+                    text: 'Wallet payment flow not yet implemented.',
+                    ...swalOpts
+                });
+            }
+        }
+
+
+
+        async function setDefaultAddress(id) {
+            try {
+                const res = await fetch(`/checkout/set-default/${id}`, {
+                    method: 'PATCH',
+                    headers: { 'Accept': 'application/json' }
+                });
+                const json = await res.json();
+                if (json.success) {
+                    window.location.reload();
+                } else {
+                    console.error('Failed to set default');
+                }
+            } catch (err) {
+                console.error('Network error', err);
+            }
+        }
+
+        async function deleteAddress(id) {
+            const { value: shouldDelete } = await Swal.fire({
+                title: 'Are you sure?',
+                text: "This will permanently delete the address.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it',
+                cancelButtonText: 'Cancel',
+                confirmButtonColor: '#d9534f',
+                cancelButtonColor: '#6c757d',
+                background: '#ffffff',
+                iconColor: '#d9534f',
+                customClass: {
+                    popup: 'swal-responsive'
+                }
+            });
+
+
+            if (!shouldDelete) {
+                return;
+            }
+
+            try {
+                const res = await fetch(`/checkout/address/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Accept': 'application/json' }
+                });
+                const json = await res.json();
+
+                if (json.success) {
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'Deleted!',
+                        text: 'Your address has been removed.',
+                        timer: 1400,
+                        showConfirmButton: false,
+                        timerProgressBar: true,
+                        customClass: {
+                            popup: 'swal-responsive'
+                        }
+                    });
+                    document.querySelector(`[data-address-id="${id}"]`).remove();
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: json.message || 'Could not delete address.'
+                    });
+                }
+            } catch (err) {
+                console.error('Delete failed', err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Network Error',
+                    text: 'Please try again later.'
+                });
+            }
+        }
+
+
+        async function editAddress(id) {
+            try {
+                const res = await fetch(`/checkout/edit-address/${id}?from=checkout`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (res.ok) {
+                    window.location.href = `/checkout/edit-address/${id}?from=checkout`;
+                } else {
+                    const data = await res.json();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Not Found',
+                        text: data.message || 'Address not found'
+                    });
+                }
+
+            } catch (err) {
+                console.error('Failed to load address for edit', err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Something went wrong while trying to edit.'
+                });
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>

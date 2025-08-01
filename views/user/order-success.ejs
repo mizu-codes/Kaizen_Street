@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/kaizenicon.svg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: white;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .status-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .congratulations {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff1744 0%, #f50057 50%, #c51162 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+        }
+
+        .order-info {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .order-status {
+            font-size: 18px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .delivery-date {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 16px;
+            margin-top: 8px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            display: inline-block;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff1744 0%, #f50057 50%, #c51162 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #e91e63 0%, #ad1457 50%, #880e4f 100%);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: #ff1744;
+            border: 2px solid #ff1744;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #ff1744 0%, #f50057 50%, #c51162 100%);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .image-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                padding: 20px;
+            }
+
+            .congratulations {
+                font-size: 28px;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="content">
+            <div>
+                <div class="status-title">Order status</div>
+                <h1 class="congratulations">Congratulations..!</h1>
+            </div>
+
+            <div class="order-info">
+                <div class="order-status">Your order is placed</div>
+                <div class="delivery-date">Item will be delivered on 20th August 2025</div>
+            </div>
+
+            <div class="buttons">
+                <a href="/shop" class="btn btn-primary">Continue Shopping</a>
+                <a href="/profile/orders" class="btn btn-secondary">View orders</a>
+            </div>
+        </div>
+
+
+        <div class="image-section text-center">
+            <img src="/imgs/anime/order-success.png" alt="Order Success" class="img-fluid" style="max-width: 300px;">
+        </div>
+
+    </div>
+    <script>
+        window.history.pushState(null, '', window.location.href);
+
+        window.addEventListener('popstate', function () {
+            window.location.replace('/pageNotFound');
+        });
+    </script>
+
+</body>
+
+</html>

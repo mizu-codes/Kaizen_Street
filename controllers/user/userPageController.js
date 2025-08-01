@@ -1,14 +1,25 @@
-const User = require('../../models/userSchema'); 
+const User = require('../../models/userSchema');
 const Product = require('../../models/productSchema');
 const Category = require('../../models/categorySchema');
+const Cart = require('../../models/cartSchema');
+const Wishlist = require('../../models/wishlistSchema');
 
 const loadHomepage = async (req, res) => {
     try {
+
+        const userId = req.session.userId;
+
         const categories = await Category.find({ isListed: true });
         let productData = await Product.find({
             isBlocked: false,
             category: { $in: categories.map(category => category._id) },
-            stock: { $gt: 0 }
+            $or: [
+                { "stock.S": { $gt: 0 } },
+                { "stock.M": { $gt: 0 } },
+                { "stock.L": { $gt: 0 } },
+                { "stock.XL": { $gt: 0 } },
+                { "stock.XXL": { $gt: 0 } }
+            ]
         }).populate({
             path: 'category',
             select: 'categoryName',
@@ -18,19 +29,26 @@ const loadHomepage = async (req, res) => {
         productData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         productData = productData.slice(0, 4);
 
-        return res.render('home', { products: productData, categories });
+        let wishlistIds = [];
+
+        if (userId) {
+            const wishlist = await Wishlist.findOne({ userId }).lean();
+            if (wishlist?.items) {
+                wishlistIds = wishlist.items.map(item => item.productId.toString());
+            }
+        }
+
+        return res.render('home', { products: productData, categories, wishlistIds });
     } catch (error) {
         console.log('Home page load error:', error);
         return res.status(500).send('Server error');
     }
 };
 
-
-
-
-
 const loadShoppingPage = async (req, res) => {
     try {
+
+        const userId = req.session.userId;
 
         const perPage = 6;
         const page = Math.max(parseInt(req.query.page) || 1, 1);
@@ -41,7 +59,26 @@ const loadShoppingPage = async (req, res) => {
         const minPrice = parseFloat(req.query.minPrice) || 0;
         const maxPrice = parseFloat(req.query.maxPrice) || 5000;
 
-        const filter = { isBlocked: false, stock: { $gt: 0 } };
+        let wishlistIds = [];
+
+        if (userId) {
+            const wishlist = await Wishlist.findOne({ userId }).lean();
+            if (wishlist?.items) {
+                wishlistIds = wishlist.items.map(item => item.productId.toString());
+            }
+        }
+
+        const filter = {
+            isBlocked: false,
+            $or: [
+                { "stock.S": { $gt: 0 } },
+                { "stock.M": { $gt: 0 } },
+                { "stock.L": { $gt: 0 } },
+                { "stock.XL": { $gt: 0 } },
+                { "stock.XXL": { $gt: 0 } }
+            ]
+        };
+
         if (search.length) { filter.productName = { $regex: search, $options: 'i' }; }
         if (category) filter.category = category;
 
@@ -59,7 +96,18 @@ const loadShoppingPage = async (req, res) => {
         }
 
         const priceRange = await Product.aggregate([
-            { $match: { isBlocked: false, stock: { $gt: 0 } } },
+            {
+                $match: {
+                    isBlocked: false,
+                    $or: [
+                        { "stock.S": { $gt: 0 } },
+                        { "stock.M": { $gt: 0 } },
+                        { "stock.L": { $gt: 0 } },
+                        { "stock.XL": { $gt: 0 } },
+                        { "stock.XXL": { $gt: 0 } }
+                    ]
+                }
+            },
             {
                 $group: {
                     _id: null,
@@ -104,7 +152,8 @@ const loadShoppingPage = async (req, res) => {
                 sort: sortOption,
                 minPrice: req.query.minPrice || '',
                 maxPrice: req.query.maxPrice || ''
-            }
+            },
+            wishlistIds
         });
     } catch (error) {
         console.error('Shope page error:', error);
@@ -112,13 +161,34 @@ const loadShoppingPage = async (req, res) => {
     }
 };
 
-
 const loadProductDetails = async (req, res) => {
     try {
+        const userId = req.session.userId;
         const productId = req.params.productId;
 
-        const productDoc = await Product.findById(productId).populate('category');
-        if (!productDoc || productDoc.isBlocked) {
+        const productDoc = await Product.findOne({
+            _id: productId,
+            isBlocked: false,
+            status: 'active',
+            $or: [
+                { "stock.S": { $gt: 0 } },
+                { "stock.M": { $gt: 0 } },
+                { "stock.L": { $gt: 0 } },
+                { "stock.XL": { $gt: 0 } },
+                { "stock.XXL": { $gt: 0 } }
+            ]
+        }).populate('category');
+
+
+        if (!productDoc) {
+            return res.status(404).render('page-404', { message: 'Product not found' });
+        }
+
+        if (productDoc.isBlocked) {
+            return res.status(404).render('page-404', { message: 'Product not found' });
+        }
+
+        if (productDoc.category && productDoc.category.isBlocked) {
             return res.status(404).render('page-404', { message: 'Product not found' });
         }
 
@@ -132,10 +202,8 @@ const loadProductDetails = async (req, res) => {
             category: productDoc.category._id,
             _id: { $ne: productDoc._id },
             isBlocked: false,
-            status: 'active',
-            stock: { $gt: 0 }
+            status: 'active'
         }).sort({ createdAt: -1 }).lean();
-
 
         const relatedProducts = relatedDocs.map(p => {
             const discountPercent = p.regularPrice > p.discountPrice
@@ -161,15 +229,35 @@ const loadProductDetails = async (req, res) => {
             discountPercentage,
             description: productDoc.description,
             specifications: productDoc.specifications || '',
-            size: productDoc.size,
+            size: productDoc.size || [],
+            stock: productDoc.stock || {},
             productImage: productDoc.productImage.slice(0, 5)
         };
+
+        let cartCount = 0;
+        if (userId) {
+            const cart = await Cart.findOne({ userId });
+            if (cart && cart.items.length) {
+                cartCount = cart.items.reduce((sum, item) => sum + item.quantity, 0);
+            }
+        }
+
+        let wishlistIds = [];
+        if (userId) {
+            const wishlistDoc = await Wishlist.findOne({ userId }).lean();
+            if (wishlistDoc?.items) {
+                wishlistIds = wishlistDoc.items.map(i => i.productId.toString());
+            }
+        }
 
         return res.render('product-details', {
             product,
             relatedProducts,
             pageTitle: product.productName,
-            selectedSize: product.size
+            selectedSize: null,
+            cartItemCount: cartCount,
+            wishlistIds,             
+            isInWishlist: wishlistIds.includes(product._id.toString())
         });
 
     } catch (err) {
@@ -179,8 +267,7 @@ const loadProductDetails = async (req, res) => {
 };
 
 
-
-module.exports={
+module.exports = {
     loadHomepage,
     loadShoppingPage,
     loadProductDetails,

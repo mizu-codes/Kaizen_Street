@@ -25,7 +25,8 @@ const addressSchema = new Schema({
     },
     landmark: {
         type: String,
-        required: true
+        required: false,
+        trim:true
     },
     state: {
         type: String,
@@ -41,13 +42,18 @@ const addressSchema = new Schema({
     },
     altPhoneNumber: {
         type: String,
-        required: true
+        required: false,
+        trim:true
     },
     addressType: {
         type: String,
-        enum: ['home', 'work'],
+        enum: ['home', 'work','other'],
         required: true
-    }
+    },
+    isDefault: {
+    type: Boolean,
+    default: false   
+  }
 }, {
     timestamps: true
 })

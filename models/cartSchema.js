@@ -7,11 +7,6 @@ const cartItemSchema = new Schema({
         ref: 'Product',
         required: true
     },
-    variantId: {
-        type: Schema.Types.ObjectId,
-        ref: 'Variant',
-        required: true
-    },
     quantity: {
         type: Number,
         required: true,
@@ -23,25 +18,15 @@ const cartItemSchema = new Schema({
         required: true,
         min: 0
     },
-    totalPrice: {
-        type: Number,
-        required: true,
-        min: 0
-    },
-    status: {
+    size: {
         type: String,
-        enum: ['placed', 'purchased', 'canceled'],
-        default: 'placed'
-    },
-    cancellationReason: {
-        type: String,
-        default: 'none'
+        enum: ['S', 'M', 'L', 'XL', 'XXL'],
+        required: true
     }
 }, {
     _id: true,
     timestamps: false
 });
-
 
 const cartSchema = new Schema({
     userId: {

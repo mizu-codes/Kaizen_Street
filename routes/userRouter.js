@@ -2,7 +2,10 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const upload = require('../middlewares/multer');
-const profileController = require('../controllers/user/profileController')
+const profileController = require('../controllers/user/profileController');
+const cartController = require('../controllers/user/cartController');
+const wishlistController = require('../controllers/user/wishlistController');
+const checkoutController = require('../controllers/user/checkoutController');
 const { userAuth } = require('../middlewares/auth');
 
 const errorController = require('../controllers/user/errorController');
@@ -14,8 +17,8 @@ router.get('/pageNotFound', errorController.pageNotFound);
 
 router.get('/', userPageController.loadHomepage);
 router.get('/shop', userPageController.loadShoppingPage);
-router.get('/products/:productId', userPageController.loadProductDetails);
-router.get('/shop/product/:productId', userPageController.loadProductDetails);
+router.get('/products/:productId', userAuth, userPageController.loadProductDetails);
+router.get('/shop/product/:productId', userAuth, userPageController.loadProductDetails);
 
 router.get('/signup', authController.loadSignup);
 router.post('/signup', authController.signup);
@@ -47,8 +50,34 @@ router.get('/profile/edit', userAuth, profileController.updateProfile);
 router.post('/profile/update', userAuth, upload.single('avatar'), profileController.saveProfile);
 router.post('/profile/verify-otp', userAuth, profileController.verifyProfileOtp);
 
-router.get('/profile/security',userAuth,profileController.securityProfile);
-router.post('/profile/security',userAuth,profileController.updatePassword);
+router.get('/profile/security', userAuth, profileController.securityProfile);
+router.post('/profile/security', userAuth, profileController.updatePassword);
+
+router.get('/profile/addresses', userAuth, profileController.addressPage);
+router.get('/profile/add-address', userAuth, profileController.addAddress);
+router.post('/profile/add-address', userAuth, profileController.createAddress);
+router.patch('/profile/address/set-default/:id', userAuth, profileController.setDefaultAddress);
+router.delete('/profile/address/:id', userAuth, profileController.deleteAddress);
+router.get('/profile/edit-address/:id', userAuth, profileController.editAddressPage);
+router.patch('/profile/edit-address/:id', userAuth, profileController.updateAddress);
+
+router.get('/cart', userAuth, cartController.loadCartPage);
+router.post('/cart/add/:productId', userAuth, cartController.addToCart);
+router.post('/cart/update-quantity', userAuth, cartController.updateQuantity);
+router.delete('/cart/delete-quantity', userAuth, cartController.deleteQuantity);
+
+router.get('/wishlist', userAuth, wishlistController.loadWishlistPage);
+router.post('/wishlist/add/:productId', userAuth, wishlistController.addToWishlist);
+router.delete('/wishlist/delete/:productId', userAuth, wishlistController.removeFromWishlist);
+
+router.get('/checkout/place-order',userAuth,checkoutController.loadCheckoutPage);
+router.post('/checkout/place-order', userAuth, checkoutController.placeOrder);
+router.get('/checkout/order-success/:orderId', userAuth, checkoutController.orderSuccessPage);
+router.patch('/checkout/set-default/:id', userAuth, checkoutController.setDefaultAddress);
+router.delete('/checkout/address/:id', userAuth, checkoutController.deleteAddress);
+router.get('/checkout/edit-address/:id', userAuth, checkoutController.editAddressPage);
+router.patch('/checkout/edit-address/:id', userAuth, checkoutController.updateAddress);
+
 
 module.exports = router;
 

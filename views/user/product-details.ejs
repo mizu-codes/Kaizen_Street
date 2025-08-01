@@ -11,19 +11,65 @@
     <meta property="og:type" content="">
     <meta property="og:url" content="">
     <meta property="og:image" content="">
-    <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/kaizenicon.svg">
-    <!-- in your <head> (or layout EJS) -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/easyzoom/2.5.0/easyzoom.css"/>
-
-
-    <!-- Template CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/easyzoom/2.5.0/easyzoom.css" />
     <link rel="stylesheet" href="/css/main.css?v=3.4">
 </head>
 
 <body>
     <style>
+        .swal2-popup.swal-responsive {
+            color: #333 !important;
+            border: 2px solid rgba(0, 0, 0, 0.1) !important;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+            backdrop-filter: blur(10px) !important;
+        }
+
+        .swal2-title {
+            color: #e74c3c !important;
+            font-weight: 600 !important;
+            text-shadow: none !important;
+        }
+
+        .swal2-content {
+            color: #666 !important;
+        }
+
+        .swal2-confirm {
+            background: #3BB77E !important;
+            border: none !important;
+            border-radius: 8px !important;
+            padding: 12px 30px !important;
+            font-weight: 600 !important;
+            color: white !important;
+            box-shadow: 0 4px 15px rgba(59, 183, 126, 0.3) !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .swal2-confirm:hover {
+            background: #2a9d5f !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 6px 20px rgba(59, 183, 126, 0.4) !important;
+        }
+
+        .swal2-icon.swal2-error {
+            border-color: #e74c3c !important;
+            color: #e74c3c !important;
+        }
+
+        .swal2-icon.swal2-error .swal2-x-mark {
+            color: #e74c3c !important;
+        }
+
+        .swal-responsive {
+            width: 90% !important;
+            max-width: 320px !important;
+            padding: 1.2rem !important;
+            border-radius: 10px;
+            font-size: 0.95rem;
+        }
+
         .banner-img {
             position: relative;
             width: 100%;
@@ -47,13 +93,11 @@
             filter: brightness(0.7) saturate(1.2);
         }
 
-         .anime-bg-image {
+        .anime-bg-image {
             background-image: url('https://i.pinimg.com/736x/c0/2d/46/c02d46dda745e0fc91c7bea6db4355b2.jpg');
         }
+
         */
-
-        
-
         /* Alternative: Use a local image from your server */
         /*
         .anime-bg-image {
@@ -67,12 +111,10 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(
-                135deg,
-                rgba(102, 126, 234, 0.8) 0%,
-                rgba(118, 75, 162, 0.7) 50%,
-                rgba(240, 147, 251, 0.8) 100%
-            );
+            background: linear-gradient(135deg,
+                    rgba(102, 126, 234, 0.8) 0%,
+                    rgba(118, 75, 162, 0.7) 50%,
+                    rgba(240, 147, 251, 0.8) 100%);
             backdrop-filter: blur(1px);
             z-index: 2;
         }
@@ -96,34 +138,81 @@
             animation: float-particles 8s infinite linear;
         }
 
-        .particle:nth-child(1) { left: 10%; animation-delay: 0s; animation-duration: 8s; }
-        .particle:nth-child(2) { left: 20%; animation-delay: 2s; animation-duration: 10s; }
-        .particle:nth-child(3) { left: 30%; animation-delay: 4s; animation-duration: 12s; }
-        .particle:nth-child(4) { left: 40%; animation-delay: 1s; animation-duration: 9s; }
-        .particle:nth-child(5) { left: 50%; animation-delay: 3s; animation-duration: 11s; }
-        .particle:nth-child(6) { left: 60%; animation-delay: 5s; animation-duration: 7s; }
-        .particle:nth-child(7) { left: 70%; animation-delay: 2.5s; animation-duration: 8.5s; }
-        .particle:nth-child(8) { left: 80%; animation-delay: 4.5s; animation-duration: 10.5s; }
-        .particle:nth-child(9) { left: 90%; animation-delay: 1.5s; animation-duration: 9.5s; }
+        .particle:nth-child(1) {
+            left: 10%;
+            animation-delay: 0s;
+            animation-duration: 8s;
+        }
+
+        .particle:nth-child(2) {
+            left: 20%;
+            animation-delay: 2s;
+            animation-duration: 10s;
+        }
+
+        .particle:nth-child(3) {
+            left: 30%;
+            animation-delay: 4s;
+            animation-duration: 12s;
+        }
+
+        .particle:nth-child(4) {
+            left: 40%;
+            animation-delay: 1s;
+            animation-duration: 9s;
+        }
+
+        .particle:nth-child(5) {
+            left: 50%;
+            animation-delay: 3s;
+            animation-duration: 11s;
+        }
+
+        .particle:nth-child(6) {
+            left: 60%;
+            animation-delay: 5s;
+            animation-duration: 7s;
+        }
+
+        .particle:nth-child(7) {
+            left: 70%;
+            animation-delay: 2.5s;
+            animation-duration: 8.5s;
+        }
+
+        .particle:nth-child(8) {
+            left: 80%;
+            animation-delay: 4.5s;
+            animation-duration: 10.5s;
+        }
+
+        .particle:nth-child(9) {
+            left: 90%;
+            animation-delay: 1.5s;
+            animation-duration: 9.5s;
+        }
 
         @keyframes float-particles {
             0% {
                 transform: translateY(100vh) rotate(0deg);
                 opacity: 0;
             }
+
             10% {
                 opacity: 1;
             }
+
             90% {
                 opacity: 1;
             }
+
             100% {
                 transform: translateY(-100px) rotate(360deg);
                 opacity: 0;
             }
         }
 
-         .banner-text {
+        .banner-text {
             position: relative;
             z-index: 10;
             padding: 40px 50px;
@@ -178,41 +267,74 @@
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
 
-        .star:nth-child(1) { top: 15%; left: 20%; animation-delay: 0s; }
-        .star:nth-child(2) { top: 25%; left: 80%; animation-delay: 1s; }
-        .star:nth-child(3) { top: 70%; left: 15%; animation-delay: 2s; }
-        .star:nth-child(4) { top: 60%; left: 85%; animation-delay: 1.5s; }
-        .star:nth-child(5) { top: 40%; left: 90%; animation-delay: 0.5s; }
+        .star:nth-child(1) {
+            top: 15%;
+            left: 20%;
+            animation-delay: 0s;
+        }
+
+        .star:nth-child(2) {
+            top: 25%;
+            left: 80%;
+            animation-delay: 1s;
+        }
+
+        .star:nth-child(3) {
+            top: 70%;
+            left: 15%;
+            animation-delay: 2s;
+        }
+
+        .star:nth-child(4) {
+            top: 60%;
+            left: 85%;
+            animation-delay: 1.5s;
+        }
+
+        .star:nth-child(5) {
+            top: 40%;
+            left: 90%;
+            animation-delay: 0.5s;
+        }
 
         @keyframes twinkle {
-            0%, 100% { opacity: 0.4; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.3); }
+
+            0%,
+            100% {
+                opacity: 0.4;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.3);
+            }
         }
-        
+
         /* Responsive design */
         @media (max-width: 768px) {
             .banner-text {
                 padding: 30px 25px;
             }
-            
+
             .banner-text h2 {
                 font-size: 32px;
             }
         }
 
-         /* PC/Desktop specific background sizing */
+        /* PC/Desktop specific background sizing */
         @media (min-width: 1024px) {
             .anime-bg-image {
                 background-size: contain;
                 background-repeat: no-repeat;
                 background-position: center;
             }
-            
+
             /* Alternative: Use background-size: 100% 100% to fill exactly */
             .anime-bg-image.fill-exact {
                 background-size: 100% 100%;
             }
-            
+
             /* Alternative: Use background-size: cover but with better positioning */
             .anime-bg-image.cover-better {
                 background-size: cover;
@@ -220,11 +342,24 @@
             }
         }
 
-         @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            25% { transform: translateY(-10px) rotate(1deg); }
-            50% { transform: translateY(-5px) rotate(-1deg); }
-            75% { transform: translateY(-15px) rotate(0.5deg); }
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            25% {
+                transform: translateY(-10px) rotate(1deg);
+            }
+
+            50% {
+                transform: translateY(-5px) rotate(-1deg);
+            }
+
+            75% {
+                transform: translateY(-15px) rotate(0.5deg);
+            }
         }
 
         /* Floating anime elements */
@@ -264,167 +399,44 @@
         }
 
         @keyframes floatAround {
-            0% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
-            25% { transform: translateY(-20px) rotate(90deg); opacity: 0.6; }
-            50% { transform: translateY(-10px) rotate(180deg); opacity: 0.4; }
-            75% { transform: translateY(-30px) rotate(270deg); opacity: 0.5; }
-            100% { transform: translateY(0px) rotate(360deg); opacity: 0.3; }
-        }
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-      
-    </style>
-    <div class="modal fade custom-modal" id="quickViewModal" tabindex="-1" aria-labelledby="quickViewModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6 col-sm-12 col-xs-12">
-                            <div class="detail-gallery">
-                                <span class="zoom-icon"><i class="fi-rs-search"></i></span>
-                                <div class="product-image-slider">
-                                    <figure class="border-radius-10">
-                                        <img src="/imgs/shop/product-16-2.jpg" alt="product image">
-                                    </figure>
-                                    <figure class="border-radius-10">
-                                        <img src="/imgs/shop/product-16-1.jpg" alt="product image">
-                                    </figure>
-                                    <figure class="border-radius-10">
-                                        <img src="/imgs/shop/product-16-3.jpg" alt="product image">
-                                    </figure>
-                                    <figure class="border-radius-10">
-                                        <img src="/imgs/shop/product-16-4.jpg" alt="product image">
-                                    </figure>
-                                    <figure class="border-radius-10">
-                                        <img src="/imgs/shop/product-16-5.jpg" alt="product image">
-                                    </figure>
-                                    <figure class="border-radius-10">
-                                        <img src="/imgs/shop/product-16-6.jpg" alt="product image">
-                                    </figure>
-                                    <figure class="border-radius-10">
-                                        <img src="/imgs/shop/product-16-7.jpg" alt="product image">
-                                    </figure>
-                                </div>
-                                <div class="slider-nav-thumbnails pl-15 pr-15">
-                                    <div><img src="/imgs/shop/thumbnail-3.jpg" alt="product image"></div>
-                                    <div><img src="/imgs/shop/thumbnail-4.jpg" alt="product image"></div>
-                                    <div><img src="/imgs/shop/thumbnail-5.jpg" alt="product image"></div>
-                                    <div><img src="/imgs/shop/thumbnail-6.jpg" alt="product image"></div>
-                                    <div><img src="/imgs/shop/thumbnail-7.jpg" alt="product image"></div>
-                                    <div><img src="/imgs/shop/thumbnail-8.jpg" alt="product image"></div>
-                                    <div><img src="/imgs/shop/thumbnail-9.jpg" alt="product image"></div>
-                                </div>
-                            </div>
-                            <div class="social-icons single-share">
-                                <ul class="text-grey-5 d-inline-block">
-                                    <li><strong class="mr-10">Share this:</strong></li>
-                                    <li class="social-facebook"><a href="#"><img
-                                                src="/imgs/theme/icons/icon-facebook.svg" alt=""></a></li>
-                                    <li class="social-twitter"> <a href="#"><img
-                                                src="/imgs/theme/icons/icon-twitter.svg" alt=""></a></li>
-                                    <li class="social-instagram"><a href="#"><img
-                                                src="/imgs/theme/icons/icon-instagram.svg" alt=""></a></li>
-                                    <li class="social-linkedin"><a href="#"><img
-                                                src="/imgs/theme/icons/icon-pinterest.svg" alt=""></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-12 col-xs-12">
-                            <div class="detail-info">
-                                <h3 class="title-detail mt-30">Colorful Pattern Shirts HD450</h3>
-                                <div class="product-detail-rating">
-                                    <div class="pro-details-brand">
-                                        <span> Brands: <a href="shop-grid-right.html">Bootstrap</a></span>
-                                    </div>
-                                    <div class="product-rate-cover text-end">
-                                        <div class="product-rate d-inline-block">
-                                            <div class="product-rating" style="width:90%">
-                                            </div>
-                                        </div>
-                                        <span class="font-small ml-5 text-muted"> (25 reviews)</span>
-                                    </div>
-                                </div>
-                                <div class="clearfix product-price-cover">
-                                    <div class="product-price primary-color float-left">
-                                        <ins><span class="text-brand">$120.00</span></ins>
-                                        <ins><span class="old-price font-md ml-15">$200.00</span></ins>
-                                        <span class="save-price  font-md color3 ml-15">25% Off</span>
-                                    </div>
-                                </div>
-                                <div class="bt-1 border-color-1 mt-15 mb-15"></div>
-                                <div class="short-desc mb-30">
-                                    <p class="font-sm">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquam
-                                        rem officia, corrupti reiciendis minima nisi modi,!</p>
-                                </div>
+            0% {
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0.3;
+            }
 
-                                <div class="attr-detail attr-color mb-15">
-                                    <strong class="mr-10">Color</strong>
-                                    <ul class="list-filter color-filter">
-                                        <li><a href="#" data-color="Red"><span class="product-color-red"></span></a>
-                                        </li>
-                                        <li><a href="#" data-color="Yellow"><span
-                                                    class="product-color-yellow"></span></a></li>
-                                        <li class="active"><a href="#" data-color="White"><span
-                                                    class="product-color-white"></span></a></li>
-                                        <li><a href="#" data-color="Orange"><span
-                                                    class="product-color-orange"></span></a></li>
-                                        <li><a href="#" data-color="Cyan"><span class="product-color-cyan"></span></a>
-                                        </li>
-                                        <li><a href="#" data-color="Green"><span class="product-color-green"></span></a>
-                                        </li>
-                                        <li><a href="#" data-color="Purple"><span
-                                                    class="product-color-purple"></span></a></li>
-                                    </ul>
-                                </div>
-                                <div class="attr-detail attr-size">
-                                    <strong class="mr-10">Size</strong>
-                                    <ul class="list-filter size-filter font-small">
-                                        <li><a href="#">S</a></li>
-                                        <li class="active"><a href="#">M</a></li>
-                                        <li><a href="#">L</a></li>
-                                        <li><a href="#">XL</a></li>
-                                        <li><a href="#">XXL</a></li>
-                                    </ul>
-                                </div>
-                                <div class="bt-1 border-color-1 mt-30 mb-30"></div>
-                                <div class="detail-extralink">
-                                    <div class="detail-qty border radius">
-                                        <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
-                                        <span class="qty-val">1</span>
-                                        <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
-                                    </div>
-                                    <div class="product-extra-link2">
-                                        <button type="submit" class="button button-add-to-cart">Add to cart</button>
-                                        <a aria-label="Add To Wishlist" class="action-btn hover-up"
-                                            href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
-                                        <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i
-                                                class="fi-rs-shuffle"></i></a>
-                                    </div>
-                                </div>
-                                <ul class="product-meta font-xs color-grey mt-50">
-                                    <li class="mb-5">SKU: <a href="#">FWM15VKT</a></li>
-                                    <li class="mb-5">Tags: <a href="#" rel="tag">Cloth</a>, <a href="#"
-                                            rel="tag">Women</a>, <a href="#" rel="tag">Dress</a> </li>
-                                    <li>Availability:<span class="in-stock text-success ml-5">8 Items In Stock</span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+            25% {
+                transform: translateY(-20px) rotate(90deg);
+                opacity: 0.6;
+            }
+
+            50% {
+                transform: translateY(-10px) rotate(180deg);
+                opacity: 0.4;
+            }
+
+            75% {
+                transform: translateY(-30px) rotate(270deg);
+                opacity: 0.5;
+            }
+
+            100% {
+                transform: translateY(0px) rotate(360deg);
+                opacity: 0.3;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 
     <header class="header-area header-style-1 header-height-2">
         <div class="header-top header-top-ptb-1 d-none d-lg-block">
@@ -505,55 +517,16 @@
                         <div class="header-action-right">
                             <div class="header-action-2">
                                 <div class="header-action-icon-2">
-                                    <a href="shop-wishlist.html">
+                                    <a href="/wishlist">
                                         <img class="svgInject" alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
-                                        <span class="pro-count blue">4</span>
+                                         <span id="wishlistItemCount" class="pro-count blue"><%= wishlistItemCount %></span>
                                     </a>
                                 </div>
                                 <div class="header-action-icon-2">
-                                    <a class="mini-cart-icon" href="shop-cart.html">
+                                    <a class="mini-cart-icon" href="/cart">
                                         <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
-                                        <span class="pro-count blue">2</span>
+                                        <span id="cartItemCount" class="pro-count blue"><%= cartItemCount %></span>
                                     </a>
-                                    <div class="cart-dropdown-wrap cart-dropdown-hm2">
-                                        <ul>
-                                            <li>
-                                                <div class="shopping-cart-img">
-                                                    <a href="shop-product-right.html"><img alt="Evara"
-                                                            src="/imgs/shop/thumbnail-3.jpg"></a>
-                                                </div>
-                                                <div class="shopping-cart-title">
-                                                    <h4><a href="shop-product-right.html">Daisy Casual Bag</a></h4>
-                                                    <h4><span>1 × </span>$800.00</h4>
-                                                </div>
-                                                <div class="shopping-cart-delete">
-                                                    <a href="#"><i class="fi-rs-cross-small"></i></a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="shopping-cart-img">
-                                                    <a href="shop-product-right.html"><img alt="Evara"
-                                                            src="/imgs/shop/thumbnail-2.jpg"></a>
-                                                </div>
-                                                <div class="shopping-cart-title">
-                                                    <h4><a href="shop-product-right.html">Corduroy Shirts</a></h4>
-                                                    <h4><span>1 × </span>$3200.00</h4>
-                                                </div>
-                                                <div class="shopping-cart-delete">
-                                                    <a href="#"><i class="fi-rs-cross-small"></i></a>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                        <div class="shopping-cart-footer">
-                                            <div class="shopping-cart-total">
-                                                <h4>Total <span>$4000.00</span></h4>
-                                            </div>
-                                            <div class="shopping-cart-button">
-                                                <a href="shop-cart.html" class="outline">View cart</a>
-                                                <a href="shop-checkout.html">Checkout</a>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -573,65 +546,24 @@
                             <nav>
                                 <ul>
                                     <li><a href="/">Home</a></li>
-                                    <li><a  class='active' href="/shop">Shop</a></li>
+                                    <li><a class='active' href="/shop">Shop</a></li>
                                 </ul>
                             </nav>
                         </div>
                     </div>
-                    <p class="mobile-promotion">Happy <span class="text-brand">Mother's Day</span>. Big Sale Up to 40%
-                    </p>
                     <div class="header-action-right d-block d-lg-none">
                         <div class="header-action-2">
                             <div class="header-action-icon-2">
-                                <a href="shop-wishlist.html">
+                                <a href="/wishlist">
                                     <img alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
-                                    <span class="pro-count white">4</span>
+                                     <span id="wishlistItemCount" class="pro-count blue"><%= wishlistItemCount %></span>
                                 </a>
                             </div>
                             <div class="header-action-icon-2">
-                                <a class="mini-cart-icon" href="shop-cart.html">
+                                <a class="mini-cart-icon" href="/cart">
                                     <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
-                                    <span class="pro-count white">2</span>
+                                      <span id="cartItemCount" class="pro-count blue"><%= cartItemCount %></span>
                                 </a>
-                                <div class="cart-dropdown-wrap cart-dropdown-hm2">
-                                    <ul>
-                                        <li>
-                                            <div class="shopping-cart-img">
-                                                <a href="shop-product-right.html"><img alt="Evara"
-                                                        src="/imgs/shop/thumbnail-3.jpg"></a>
-                                            </div>
-                                            <div class="shopping-cart-title">
-                                                <h4><a href="shop-product-right.html">Plain Striola Shirts</a></h4>
-                                                <h3><span>1 × </span>$800.00</h3>
-                                            </div>
-                                            <div class="shopping-cart-delete">
-                                                <a href="#"><i class="fi-rs-cross-small"></i></a>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="shopping-cart-img">
-                                                <a href="shop-product-right.html"><img alt="Evara"
-                                                        src="/imgs/shop/thumbnail-4.jpg"></a>
-                                            </div>
-                                            <div class="shopping-cart-title">
-                                                <h4><a href="shop-product-right.html">Macbook Pro 2022</a></h4>
-                                                <h3><span>1 × </span>$3500.00</h3>
-                                            </div>
-                                            <div class="shopping-cart-delete">
-                                                <a href="#"><i class="fi-rs-cross-small"></i></a>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                    <div class="shopping-cart-footer">
-                                        <div class="shopping-cart-total">
-                                            <h4>Total <span>$383.00</span></h4>
-                                        </div>
-                                        <div class="shopping-cart-button">
-                                            <a href="shop-cart.html">View cart</a>
-                                            <a href="shop-checkout.html">Checkout</a>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                             <div class="header-action-icon-2 d-block d-lg-none">
                                 <div class="burger-icon burger-icon-white">
@@ -675,30 +607,9 @@
                             </li>
                             <li class="menu-item-has-children"><span class="menu-expand"></span><a
                                     href="shop-grid-right.html">shop</a>
-                                <ul class="dropdown">
-                                    <li><a href="shop-grid-right.html">Shop Grid – Right Sidebar</a></li>
-                                    <li><a href="shop-grid-left.html">Shop Grid – Left Sidebar</a></li>
-                                    <li><a href="shop-list-right.html">Shop List – Right Sidebar</a></li>
-                                    <li><a href="shop-list-left.html">Shop List – Left Sidebar</a></li>
-                                    <li><a href="shop-fullwidth.html">Shop - Wide</a></li>
-                                    <li class="menu-item-has-children"><span class="menu-expand"></span><a
-                                            href="#">Single Product</a>
-                                        <ul class="dropdown">
-                                            <li><a href="shop-product-right.html">Product – Right Sidebar</a></li>
-                                            <li><a href="shop-product-left.html">Product – Left Sidebar</a></li>
-                                            <li><a href="shop-product-full.html">Product – No sidebar</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="shop-filter.html">Shop – Filter</a></li>
-                                    <li><a href="shop-wishlist.html">Shop – Wishlist</a></li>
-                                    <li><a href="shop-cart.html">Shop – Cart</a></li>
-                                    <li><a href="shop-checkout.html">Shop – Checkout</a></li>
-                                    <li><a href="shop-compare.html">Shop – Compare</a></li>
-                                </ul>
                             </li>
                         </ul>
                     </nav>
-                    <!-- mobile menu end -->
                 </div>
                 <div class="mobile-header-info-wrap mobile-header-border">
                     <div class="single-mobile-header-info">
@@ -717,18 +628,18 @@
         </div>
     </div>
     <main class="main">
-         <div class="anime-elements">
-        <div class="sakura">🌸</div>
-        <div class="sakura">🌸</div>
-        <div class="sakura">🌸</div>
-        <div class="sakura">🌸</div>
-         <div class="sakura">🌸</div>
-          <div class="sakura">🌸</div>
-          <div class="sakura">🌸</div>
-          <div class="sakura">🌸</div>
-        <div class="kanji-float">化</div>
-        <div class="kanji-float">革</div>
-    </div>
+        <div class="anime-elements">
+            <div class="sakura">🌸</div>
+            <div class="sakura">🌸</div>
+            <div class="sakura">🌸</div>
+            <div class="sakura">🌸</div>
+            <div class="sakura">🌸</div>
+            <div class="sakura">🌸</div>
+            <div class="sakura">🌸</div>
+            <div class="sakura">🌸</div>
+            <div class="kanji-float">化</div>
+            <div class="kanji-float">革</div>
+        </div>
         <div class="page-header breadcrumb-wrap">
             <div class="container">
                 <div class="breadcrumb">
@@ -741,208 +652,236 @@
         <section class="mt-50 mb-50">
             <div class="container">
                 <div class="row mb-50">
-  <div class="col-md-6 col-sm-12 col-xs-12">
-    <div class="detail-gallery">
-      <span class="zoom-icon"><i class="fi-rs-search"></i></span>
-    
-    <div class="product-image-slider">
-                                        <% product.productImage.forEach((img, index) => { %>
-                                            <div class="zoom-container" style="position: relative;">
-                                                <img src="<%= img %>" alt="product image <%= index+1 %>" class="zoom-image" style="width: 100%; height: auto;">
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                        <div class="detail-gallery">
+                            <span class="zoom-icon"><i class="fi-rs-search"></i></span>
 
-                                            </div>
-                                        <% }); %>
+                            <div class="product-image-slider">
+                                <% product.productImage.forEach((img, index)=> { %>
+                                    <div class="zoom-container" style="position: relative;">
+                                        <img src="<%= img %>" alt="product image <%= index+1 %>" class="zoom-image"
+                                            style="width: 100%; height: auto;">
+
                                     </div>
-     
-       <div class="slider-nav-thumbnails pl-15 pr-15">
-                                        <% product.productImage.forEach((img, index) => { %>
-                                            <div>
-                                                <img src="<%= img %>" alt="product thumbnail <%= index+1 %>" style="width: 100%; object-fit: cover;">
-                                            </div>
-                                        <% }); %>
+                                    <% }); %>
+                            </div>
+
+                            <div class="slider-nav-thumbnails pl-15 pr-15">
+                                <% product.productImage.forEach((img, index)=> { %>
+                                    <div>
+                                        <img src="<%= img %>" alt="product thumbnail <%= index+1 %>"
+                                            style="width: 100%; object-fit: cover;">
                                     </div>
-    </div>
-    
-  </div>
-  <div class="col-md-6 col-sm-12 col-xs-12">
-    <div class="detail-info">
-      <h2 class="title-detail"><%= product.productName %></h2>
-      <div class="product-detail-rating">
-         <div class="pro-details-brand">
-  <span> Category: <a href="/shop?category=<%= product.categoryName %>"><%= product.categoryName %></a></span>
-</div>
-        <div class="product-rate-cover text-end">
-        
-        </div>
-      </div>
-    <div class="clearfix product-price-cover">
-  <div class="product-price primary-color float-left">
-    <ins><span class="text-brand">₹<%= product.discountPrice.toFixed(2) %></span></ins>
+                                    <% }); %>
+                            </div>
+                        </div>
 
-    <% if (product.regularPrice && product.regularPrice > product.discountPrice) { %>
-      <ins>
-        <span class="old-price font-md ml-15">₹<%= product.regularPrice.toFixed(2) %></span>
-      </ins>
-      <span class="save-price font-md color3 ml-15">
-        <%= product.discountPercentage %>% Off
-      </span>
-    <% } %>
-  </div>
-</div>
+                    </div>
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                        <div class="detail-info">
+                            <h2 class="title-detail">
+                                <%= product.productName %>
+                            </h2>
+                            <div class="product-detail-rating">
+                                <div class="pro-details-brand">
+                                    <span> Category: <a href="/shop?category=<%= product.categoryName %>">
+                                            <%= product.categoryName %>
+                                        </a></span>
+                                </div>
+                                <div class="product-rate-cover text-end">
 
-
-      <div class="bt-1 border-color-1 mt-15 mb-15"></div>
-      <div class="short-desc mb-30">
-      </div>
-      <div class="product_sort_info font-xs mb-30">
-      </div>
-      <div class="attr-detail attr-size">
-        <strong class="mr-10">Size</strong>
-        <ul class="list-filter size-filter font-small">
-          <% ['S', 'M', 'L', 'XL', 'XXL'].forEach(size => { %>
-            <li class="<%= selectedSize === size ? 'active' : '' %>">
-              <a href="#"><%= size %></a>
-            </li>
-          <% }) %>
-        </ul>
-      </div>
-      <div class="bt-1 border-color-1 mt-30 mb-30">
-          <p>Availability:<span class="in-stock text-success ml-5">select a size</span></p>
-      </div>
-      <div class="detail-extralink">
-        <div class="product-extra-link2">
-          <button type="submit" class="button button-add-to-cart" style="margin-bottom: 20px;">Add to cart</button>
-        </div>
-      </div>
-    </div>
-   
-  </div>
-</div>
-
-                            <div class="row">
-                                <div class="col-lg-10 m-auto entry-main-content">
-                                    <h2 class="section-title style-1 mb-30">Description</h2>
-                                    <div class="description mb-50">
-                                        <p>
-                                            <%= product.description %>
-                                        </p>
-                                        <h4 class="mt-30" style="font-size: medium;">Specifications</h4>
-                                        <ul class="product-more-infor mt-30">
-                                            <% if (product.specifications) { %>
-                                                <% product.specifications.split(/\r?\n/).forEach(spec=> { %>
-                                                    <li>
-                                                        <%= spec.trim() %>
-                                                    </li>
-                                                    <% }) %>
-                                                        <% } else { %>
-                                                            <li>No specifications provided.</li>
-                                                            <% } %>
-                                        </ul>
-                                    
-                                    
-                                    </div>
                                 </div>
                             </div>
-                            <div class="social-icons single-share">
-                                        <ul class="text-grey-5 d-inline-block">
-                                            <li><strong class="mr-10">Share this:</strong></li>
-                                            <li class="social-facebook"><a href="#"><img src="/imgs/theme/icons/icon-facebook.svg" alt=""></a></li>
-                                            <li class="social-twitter"> <a href="#"><img src="/imgs/theme/icons/icon-twitter.svg" alt=""></a></li>
-                                            <li class="social-instagram"><a href="#"><img src="/imgs/theme/icons/icon-instagram.svg" alt=""></a></li>
-                                            <li class="social-linkedin"><a href="#"><img src="/imgs/theme/icons/icon-pinterest.svg" alt=""></a></li>
-                                        </ul>
-                                    </div>
-                            <div class="row mt-60">
-  <div class="col-12">
-    <h3 class="section-title style-1 mb-30">Related products</h3>
-  </div>
-  <div class="col-12">
-    <div class="row related-products">
-      <% relatedProducts.forEach(p => { %>
-        <div class="col-lg-3 col-md-4 col-12 col-sm-6">
-          <div class="product-cart-wrap small hover-up">
-            <div class="product-img-action-wrap">
-              <div class="product-img product-img-zoom">
-                <a href="/shop/product/<%= p._id %>">
-                  <img class="default-img" src="<%= p.productImage[0] %>" alt="<%= p.productName %>">
-                  <% if (p.productImage[1]) { %>
-                    <img class="hover-img" src="<%= p.productImage[1] %>" alt="<%= p.productName %> hover">
-                  <% } %>
-                </a>
-              </div>
-              <div class="product-action-1">
-                <a aria-label="Add To Wishlist" class="action-btn small hover-up" href="#">
-                  <i class="fi-rs-heart"></i>
-                </a>
-              </div>
-              <% if (p.discountPercentage > 50) { %>
-                <div class="product-badges product-badges-position product-badges-mrg">
-                  <span class="hot">Hot</span>
-                </div>
-              <% } else if (p.discountPercentage > 0) { %>
-                <div class="product-badges product-badges-position product-badges-mrg">
-                  <span class="sale">Sale</span>
-                </div>
-              <% } else { %>
-                <div class="product-badges product-badges-position product-badges-mrg">
-                  <span class="best">Best Sell</span>
-                </div>
-              <% } %>
-            </div>
-            <div class="product-content-wrap">
-            <h2><a href="/shop/product/<%= p._id %>">
-                    <%= p.productName %>
-                </a></h2>
-            <div class="product-category-link m-2">
-                <span>Category: </span>
-                <a href="/shop?category=<%= product.categoryName %>" class="text-brand fw-bold">
-                    <%= product.categoryName %>
-                </a>
-            </div>
-              <div class="product-price">
-                <span>₹<%= p.discountPrice %></span>
-                <% if (p.discountPercentage > 0) { %>
-                  <span class="old-price">₹<%= p.regularPrice %></span>
-                <% } %>
-              </div>
-            </div>
-          </div>
-        </div>
-      <% }); %>
-    </div>
-  </div>
-</div>
+                            <div class="clearfix product-price-cover">
+                                <div class="product-price primary-color float-left">
+                                    <ins><span class="text-brand">₹<%= product.discountPrice.toFixed(2) %></span></ins>
 
-                           <div class="banner-img banner-big wow fadeIn f-none animated mt-50">
-        <div class="anime-bg-image"></div>
-        <div class="overlay"></div>
-        <div class="aesthetic-particles">
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-        </div>
-        <div class="anime-stars">
-            <div class="star">✨</div>
-            <div class="star">⭐</div>
-            <div class="star">✨</div>
-            <div class="star">⭐</div>
-            <div class="star">✨</div>
-        </div>
-        <div class="aesthetic-frame"></div>
-        <div class="banner-text">
-            <h4 class="mb-15 mt-40">街改 Explore the Anime culture</h4><br>
-            <h1 class="fw-600 mb-20">Kaizen your Style,<br>transform your confidence</h1>
-        </div>
-    </div>
+                                    <% if (product.regularPrice && product.regularPrice> product.discountPrice) { %>
+                                        <ins>
+                                            <span class="old-price font-md ml-15">₹<%= product.regularPrice.toFixed(2)
+                                                    %></span>
+                                        </ins>
+                                        <span class="save-price font-md color3 ml-15">
+                                            <%= product.discountPercentage %>% Off
+                                        </span>
+                                        <% } %>
+                                </div>
+                            </div>
+                            <div class="bt-1 border-color-1 mt-15 mb-15"></div>
+                            <form id="addToCartForm">
+                                <div class="attr-detail attr-size">
+                                    <strong class="mr-10">Size</strong>
+                                    <ul class="list-filter size-filter font-small" id="sizeSelector">
+                                        <% product.size.forEach(size=> { %>
+                                            <li><a href="#" data-size="<%= size %>">
+                                                    <%= size %>
+                                                </a></li>
+                                            <% }) %>
+                                    </ul>
+                                    <input type="hidden" id="selectedSize" name="size">
+                                </div>
+
+                                <div class="bt-1 border-color-1 mt-30 mb-30">
+                                    <p>
+                                        Availability:
+                                        <span class="in-stock text-success ml-5" id="availabilityText">
+                                            Select a size
+                                        </span>
+                                    </p>
+                                </div>
+
+                                <div class="detail-extralink">
+                                    <div class="product-extra-link2">
+                                        <button type="submit" class="button button-add-to-cart"
+                                            style="margin-bottom: 20px;">
+                                            Add to cart
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-lg-10 m-auto entry-main-content">
+                        <h2 class="section-title style-1 mb-30">Description</h2>
+                        <div class="description mb-50">
+                            <p>
+                                <%= product.description %>
+                            </p>
+                            <h4 class="mt-30" style="font-size: medium;">Specifications</h4>
+                            <ul class="product-more-infor mt-30">
+                                <% if (product.specifications) { %>
+                                    <% product.specifications.split(/\r?\n/).forEach(spec=> { %>
+                                        <li>
+                                            <%= spec.trim() %>
+                                        </li>
+                                        <% }) %>
+                                            <% } else { %>
+                                                <li>No specifications provided.</li>
+                                                <% } %>
+                            </ul>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="social-icons single-share">
+                    <ul class="text-grey-5 d-inline-block">
+                        <li><strong class="mr-10">Share this:</strong></li>
+                        <li class="social-facebook"><a href="#"><img src="/imgs/theme/icons/icon-facebook.svg"
+                                    alt=""></a></li>
+                        <li class="social-twitter"> <a href="#"><img src="/imgs/theme/icons/icon-twitter.svg"
+                                    alt=""></a></li>
+                        <li class="social-instagram"><a href="#"><img src="/imgs/theme/icons/icon-instagram.svg"
+                                    alt=""></a></li>
+                        <li class="social-linkedin"><a href="#"><img src="/imgs/theme/icons/icon-pinterest.svg"
+                                    alt=""></a></li>
+                    </ul>
+                </div>
+                <div class="row mt-60">
+                    <div class="col-12">
+                        <h3 class="section-title style-1 mb-30">Related products</h3>
+                    </div>
+                    <div class="col-12">
+                        <div class="row related-products">
+                            <% relatedProducts.forEach(p=> { %>
+                                <div class="col-lg-3 col-md-4 col-12 col-sm-6">
+                                    <div class="product-cart-wrap small hover-up">
+                                        <div class="product-img-action-wrap">
+                                            <div class="product-img product-img-zoom">
+                                                <a href="/shop/product/<%= p._id %>">
+                                                    <img class="default-img" src="<%= p.productImage[0] %>"
+                                                        alt="<%= p.productName %>">
+                                                    <% if (p.productImage[1]) { %>
+                                                        <img class="hover-img" src="<%= p.productImage[1] %>"
+                                                            alt="<%= p.productName %> hover">
+                                                        <% } %>
+                                                </a>
+                                            </div>
+                                            <div class="product-action-1">
+              <a 
+                href="javascript:void(0);" 
+                aria-label="Add To Wishlist"
+                class="action-btn small hover-up add-to-wishlist-btn"
+                data-product-id="<%= p._id %>"
+                <%= wishlistIds.includes(p._id.toString()) ? 'aria-disabled="true" class="added"' : '' %>
+              >
+                <i class="fi-rs-heart"></i>
+              </a>
+            </div>
+                                            <% if (p.discountPercentage> 50) { %>
+                                                <div class="product-badges product-badges-position product-badges-mrg">
+                                                    <span class="hot">Hot</span>
+                                                </div>
+                                                <% } else if (p.discountPercentage> 0) { %>
+                                                    <div
+                                                        class="product-badges product-badges-position product-badges-mrg">
+                                                        <span class="sale">Sale</span>
+                                                    </div>
+                                                    <% } else { %>
+                                                        <div
+                                                            class="product-badges product-badges-position product-badges-mrg">
+                                                            <span class="best">Best Sell</span>
+                                                        </div>
+                                                        <% } %>
+                                        </div>
+                                        <div class="product-content-wrap">
+                                            <h2><a href="/shop/product/<%= p._id %>">
+                                                    <%= p.productName %>
+                                                </a></h2>
+                                            <div class="product-category-link m-2">
+                                                <span>Category: </span>
+                                                <a href="/shop?category=<%= p.categoryName %>"
+                                                    class="text-brand fw-bold">
+                                                    <%= p.categoryName %>
+                                                </a>
+                                            </div>
+                                            <div class="product-price">
+                                                <span>₹<%= p.discountPrice %></span>
+                                                <% if (p.discountPercentage> 0) { %>
+                                                    <span class="old-price">₹<%= p.regularPrice %></span>
+                                                    <% } %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% }); %>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="banner-img banner-big wow fadeIn f-none animated mt-50">
+                    <div class="anime-bg-image"></div>
+                    <div class="overlay"></div>
+                    <div class="aesthetic-particles">
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                        <div class="particle"></div>
+                    </div>
+                    <div class="anime-stars">
+                        <div class="star">✨</div>
+                        <div class="star">⭐</div>
+                        <div class="star">✨</div>
+                        <div class="star">⭐</div>
+                        <div class="star">✨</div>
+                    </div>
+                    <div class="aesthetic-frame"></div>
+                    <div class="banner-text">
+                        <h4 class="mb-15 mt-40">街改 Explore the Anime culture</h4><br>
+                        <h1 class="fw-600 mb-20">Kaizen your Style,<br>transform your confidence</h1>
+                    </div>
+                </div>
+            </div>
+            </div>
+            </div>
             </div>
         </section>
     </main>
@@ -1005,8 +944,7 @@
                                 <div class="download-app wow fadeIn animated">
                                     <a href="#" class="hover-up mb-sm-4 mb-lg-0"><img class="active"
                                             src="/imgs/theme/app-store.jpg" alt=""></a>
-                                    <a href="#" class="hover-up"><img src="/imgs/theme/google-play.jpg"
-                                            alt=""></a>
+                                    <a href="#" class="hover-up"><img src="/imgs/theme/google-play.jpg" alt=""></a>
                                 </div>
                             </div>
                             <div class="col-md-4 col-lg-12 mt-md-3 mt-lg-0">
@@ -1024,8 +962,8 @@
                     <div class="footer-bottom"></div>
                 </div>
                 <div class="col-lg-6">
-                    <p class="float-md-left font-sm text-muted mb-0">&copy; 2025,<strong
-                            class="text-brand">Kaizen Street</strong></p>
+                    <p class="float-md-left font-sm text-muted mb-0">&copy; 2025,<strong class="text-brand">Kaizen
+                            Street</strong></p>
                 </div>
                 <div class="col-lg-6">
                     <p class="text-lg-end text-start font-sm text-muted mb-0"> All rights reserved </p>
@@ -1033,7 +971,7 @@
             </div>
         </div>
     </footer>
-    <!-- Preloader Start -->
+
     <div id="preloader-active">
         <div class="preloader d-flex align-items-center justify-content-center">
             <div class="preloader-inner position-relative">
@@ -1048,7 +986,7 @@
             </div>
         </div>
     </div>
-    <!-- Vendor JS-->
+
     <script src="/js/vendor/modernizr-3.6.0.min.js"></script>
     <script src="/js/vendor/jquery-3.6.0.min.js"></script>
     <script src="/js/vendor/jquery-migrate-3.3.0.min.js"></script>
@@ -1069,32 +1007,203 @@
     <script src="/js/plugins/jquery.vticker-min.js"></script>
     <script src="/js/plugins/jquery.theia.sticky.js"></script>
     <script src="/js/plugins/jquery.elevatezoom.js"></script>
-    <!-- Template  JS -->
+
     <script src="/js/main.js?v=3.4"></script>
     <script src="/js/shop.js?v=3.4"></script>
+    <script src="/js/wishlist-count-updater.js"></script>
+    <script src="/js/cart-count-updater.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/easyzoom/2.5.0/easyzoom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/easyzoom/2.5.0/easyzoom.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-  <script>
-    $(document).ready(function() {
-    $('.product-image-slider').slick({
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        arrows: false,
-        fade: true,
-        asNavFor: '.slider-nav-thumbnails'
+    
+
+
+    <script>
+        $(document).ready(function () {
+            $('.product-image-slider').slick({
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                arrows: false,
+                fade: true,
+                asNavFor: '.slider-nav-thumbnails'
+            });
+            $('.slider-nav-thumbnails').slick({
+                slidesToShow: 4,
+                slidesToScroll: 1,
+                asNavFor: '.product-image-slider',
+                dots: false,
+                focusOnSelect: true
+            });
+        });
+
+        $(function () {
+            let productStock = {};
+            try {
+                productStock = JSON.parse(`<%- JSON.stringify(product.stock || {}) %>`);
+
+            } catch (error) {
+                console.error('JSON parse failed:', error);
+            }
+
+            let selectedSize = null;
+
+            const $sizeLinks = $('#sizeSelector a');
+            const $avail = $('#availabilityText');
+            const $submitBtn = $('#addToCartForm button[type=submit]');
+
+            $submitBtn.prop('disabled', true);
+
+            $sizeLinks.on('click', function (e) {
+                e.preventDefault();
+                selectedSize = $(this).data('size');
+                $('#selectedSize').val(selectedSize);
+
+                $('#sizeSelector li').removeClass('active');
+                $(this).parent().addClass('active');
+
+                const qty = productStock[selectedSize] || 0;
+                if (qty > 0) {
+                    $avail.text(`Only ${qty} left in stock`)
+                        .removeClass('text-danger text-warning')
+                        .addClass('text-success');
+                    $submitBtn.prop('disabled', false).text('Add to cart');
+                } else {
+                    $avail.text('Out of stock')
+                        .removeClass('text-success text-warning')
+                        .addClass('text-danger');
+                    $submitBtn.prop('disabled', true).text('Add to cart');
+                }
+            });
+
+            $('#addToCartForm').on('submit', async function (e) {
+                e.preventDefault();
+
+                if ((productStock[selectedSize] || 0) < 1) {
+                    return Swal.fire({
+                        icon: 'error',
+                        title: 'Out of Stock!',
+                        text: 'This size is currently out of stock.',
+                        customClass: {
+                            popup: 'swal-responsive'
+                        }
+                    });
+                }
+
+                $submitBtn.prop('disabled', true)
+                    .html('<span class="spinner-border spinner-border-sm" role="status"></span> Adding...');
+
+                const productId = "<%= product._id %>";
+
+                try {
+                    const res = await fetch(`/cart/add/${productId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        credentials: 'include',
+                        body: JSON.stringify({ size: selectedSize })
+                    });
+
+                    const data = await res.json();
+                    console.log('🎯 Add‐to‐Cart response:', data);
+
+                    if (!res.ok) throw new Error(data.message || `HTTP ${res.status}`);
+
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'Added to cart!',
+                        text: data.message || 'Product added successfully.',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        customClass: {
+                            popup: 'swal-responsive'
+                        }
+                    });
+
+                    $submitBtn.prop('disabled', false).text('Add to cart');
+
+                    console.log('🎯 Dispatching cart:updated with', data.cartCount);
+
+                    document.dispatchEvent(new CustomEvent('cart:updated', {
+  detail: { count: data.cartCount }
+}));
+
+                } catch (error) {
+                    console.error('Add to cart error:', error);
+                    await Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: error.message || 'Could not add to cart. Please try again.',
+                        customClass: {
+                            popup: 'swal-responsive'
+                        }
+                    });
+                    $submitBtn.prop('disabled', false).text('Add to cart');
+                }
+            })
+        });
+    </script>
+
+    <script>
+  // Wait for the DOM so you’re guaranteed .add-to-wishlist-btn exists
+  document.addEventListener('DOMContentLoaded', () => {
+    // 1) Attach click handlers
+    document.querySelectorAll('.add-to-wishlist-btn').forEach(btn => {
+      btn.addEventListener('click', async function (e) {
+        e.preventDefault();
+
+        const productId = this.dataset.productId;
+
+        try {
+          const res = await fetch(`/wishlist/add/${productId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({})
+          });
+          const data = await res.json();
+
+          if (res.ok) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Added to Wishlist!',
+              showConfirmButton: false,
+              timer: 1200,
+              customClass: { popup: 'swal-responsive' }
+            });
+
+            // 2) Dispatch updated count
+            document.dispatchEvent(new CustomEvent('wishlist:updated', {
+              detail: { count: data.itemCount }
+            }));
+
+            // 3) Disable/toggle styling so the user knows it’s added
+            btn.classList.add('added');
+            btn.setAttribute('aria-disabled', 'true');
+          } else {
+            Swal.fire('Oops!', data.message, 'error');
+          }
+
+        } catch (err) {
+          console.error(err);
+          Swal.fire('Error', 'Server error', 'error');
+        }
+      });
     });
-    $('.slider-nav-thumbnails').slick({
-        slidesToShow: 4,
-        slidesToScroll: 1,
-        asNavFor: '.product-image-slider',
-        dots: false,
-        focusOnSelect: true
+
+    // 4) Listen for count updates and patch the badge
+    document.addEventListener('wishlist:updated', (e) => {
+      const el = document.getElementById('wishlistItemCount');
+      if (el && e.detail && typeof e.detail.count === 'number') {
+        el.textContent = e.detail.count;
+      }
     });
-});
-  </script>
+  });
+</script>
+
 
 </body>
 

@@ -42,14 +42,16 @@ const productSchema = new Schema({
         required: true
     },
     stock: {
-        type: Number,
-        required: true,
-        min: 1
+        S: { type: Number, default: 0 },
+        M: { type: Number, default: 0 },
+        L: { type: Number, default: 0 },
+        XL: { type: Number, default: 0 },
+        XXL: { type: Number, default: 0 }
     },
     size: {
-        type: String,
-        required: true,
-        enum: ['S', 'M', 'L', 'XL','XXL']
+        type: [String],
+        enum: ['S', 'M', 'L', 'XL', 'XXL'],
+        required: true
     },
     specifications: {
         type: String,
