@@ -1,5 +1,6 @@
 const User = require('../../models/userSchema');
 const Address = require('../../models/addressSchema');
+const Order = require('../../models/orderSchema');
 const bcrypt = require('bcrypt');
 const cloudinary = require('../../middlewares/cloudinary');
 const { sendVerificationEmail } = require('../../utils/emailUtils');
@@ -12,6 +13,8 @@ const userProfile = async (req, res) => {
       return res.redirect('/login');
     }
 
+    const orderCount   = await Order.countDocuments({ user: userId });
+    const addressCount = await Address.countDocuments({ userId: userId });
     const userData = await User.findById(userId);
     if (!userData) {
       req.session.destroy();
@@ -20,6 +23,8 @@ const userProfile = async (req, res) => {
 
     res.render('profile', {
       user: userData,
+      orderCount,
+      addressCount
     });
   } catch (error) {
     console.error('Error retrieving profile data:', error);

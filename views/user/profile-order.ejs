@@ -5,186 +5,485 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Security Settings</title>
+    <title>User Profile</title>
     <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/kaizenicon.svg">
     <link rel="stylesheet" href="/css/main.css?v=3.4">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
-
-
 </head>
+<style>
+    .main-content {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+    }
+
+    .profile-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 30px;
+        border-bottom: 1px solid #f0f0f0;
+        background: linear-gradient(135deg, #e8f4f2 0%, #ddf0e8 100%);
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .profile-header h3 {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #253D4E;
+        margin: 0;
+    }
+
+    .profile-header h3 i {
+        color: #3BB77E;
+        font-size: 1.75rem;
+    }
+
+    .search-bar {
+        position: relative;
+        width: 260px;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 8px 36px 8px 12px;
+        border: 1px solid #ccc;
+        border-radius: 999px;
+        font-size: 0.95rem;
+        transition: border-color 0.3s;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: #3BB77E;
+    }
+
+    .btn-search-order,
+    .btn-clear-search {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        font-size: 1.1rem;
+        color: #555;
+        transition: color 0.3s;
+    }
+
+    .btn-clear-search {
+        right: 8px;
+    }
+
+    .btn-search-order {
+        right: 45px;
+    }
+
+    .btn-clear-search:hover,
+    .btn-search-order:hover {
+        color: #3BB77E;
+    }
+
+    /* Orders Grid */
+    .orders-grid {
+        display: grid;
+        gap: 1.5rem;
+    }
+
+    .order-card {
+        background: #fff;
+        border: 1px solid #e0e4e8;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .order-card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .order-header {
+        background: black;
+        color: white;
+        padding: 1.0rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .order-id-section {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .order-id {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: black;
+    }
+
+    .order-date {
+        opacity: 0.9;
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+        color: #088178;
+    }
+
+    .order-status {
+        padding: 0.2rem 0.6rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+    }
+
+    .status-placed {
+        background: #ffc107;
+        color: #856404;
+    }
+
+    .status-processing {
+        background: #17a2b8;
+        color: white;
+    }
+
+    .status-shipped {
+        background: #6f42c1;
+        color: white;
+    }
+
+    .status-delivered {
+        background: #28a745;
+        color: white;
+    }
+
+    .status-cancelled {
+        background: #dc3545;
+        color: white;
+    }
+
+    .order-body {
+        padding: 0.8rem;
+    }
+
+    /* Order Items */
+    .order-items {
+        margin-bottom: 1.5rem;
+    }
+
+    .order-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        border: 1px solid #e0e4e8;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        background: #f8fffe;
+        transition: all 0.3s ease;
+    }
+
+    .order-item:hover {
+        border-color: #3BB77E;
+        background: rgba(59, 183, 126, 0.02);
+    }
+
+    .item-image {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 2px solid #e0e4e8;
+    }
+
+    .item-details {
+        flex: 1;
+    }
+
+    .item-name {
+        font-weight: 600;
+        color: #253D4E;
+        margin-bottom: 0.25rem;
+        font-size: 1rem;
+    }
+
+    .item-meta {
+        color: #7e7e7e;
+        font-size: 0.9rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .item-price {
+        font-weight: 600;
+        color: #3BB77E;
+        font-size: 1.1rem;
+    }
+
+    .item-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    /* Order Summary */
+    .order-summary {
+        background: #f8fffe;
+        border: 1px solid #e0e4e8;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        color: #4a5568;
+    }
+
+    .summary-row:last-child {
+        margin-bottom: 0;
+    }
+
+    .summary-row.total {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: #253D4E;
+        padding-top: 0.5rem;
+    }
+
+    /* Order Actions */
+    .order-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-track-order {
+        background: #3BB77E;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-track-order:hover {
+        background: #2d8f5c;
+        transform: translateY(-1px);
+    }
+
+    .no-orders {
+        text-align: center;
+        padding: 5rem 3rem;
+        background: linear-gradient(135deg, #f8fffe 0%, #f0f9f6 100%);
+        border: 2px solid #e8f5e8;
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(59, 183, 126, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .no-orders::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(59, 183, 126, 0.03) 0%, transparent 70%);
+        pointer-events: none;
+    }
+
+    .no-orders .icon-container {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 2rem;
+    }
+
+    .no-orders .icon-container::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 120px;
+        height: 120px;
+        background: rgba(59, 183, 126, 0.1);
+        border-radius: 50%;
+        z-index: 0;
+    }
+
+    .no-orders i {
+        font-size: 4.5rem;
+        color: #3BB77E;
+        margin-bottom: 0;
+        position: relative;
+        z-index: 1;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+
+        0%,
+        100% {
+            transform: translateY(0px);
+        }
+
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+
+    .no-orders h3 {
+        color: #253D4E;
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+        font-weight: 600;
+        text-align: center !important;
+        width: 100%;
+        display: block;
+        margin-top: 1.7rem;
+    }
+
+    .no-orders p {
+        color: #7e8a98;
+        margin-bottom: 2.5rem;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .btn-shop-now {
+        background: linear-gradient(135deg, #088178 0%, #066b62 100%);
+        color: white;
+        text-decoration: none;
+        padding: 0.5rem 1.2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.8rem;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 20px rgba(8, 129, 120, 0.3);
+        border: none;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-shop-now::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.6s;
+    }
+
+    .btn-shop-now:hover::before {
+        left: 100%;
+    }
+
+    .btn-shop-now:hover {
+        background: linear-gradient(135deg, #066b62 0%, #055550 100%);
+        color: white;
+        text-decoration: none;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(8, 129, 120, 0.4);
+    }
+
+    .btn-shop-now:active {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 20px rgba(8, 129, 120, 0.3);
+    }
+
+    .btn-shop-now i {
+        font-size: 1.2rem;
+        animation: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .no-orders {
+            padding: 3rem 1.5rem;
+            border-radius: 16px;
+        }
+
+        .no-orders h3 {
+            font-size: 1.5rem;
+        }
+
+        .no-orders p {
+            font-size: 1rem;
+        }
+
+        .btn-shop-now {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+        }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+
+        .profile-header,
+        .profile-body {
+            padding: 1.5rem;
+        }
+
+        .order-header {
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: center;
+        }
+
+        .order-item {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .item-image {
+            width: 100px;
+            height: 100px;
+        }
+
+        .order-actions {
+            flex-direction: column;
+        }
+
+        .search-controls {
+            position: static;
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .search-input {
+            padding: 12px 16px;
+        }
+    }
+</style>
 
 <body>
-    <style>
-        .change-password-section {
-            max-width: 500px;
-            margin: 0 auto;
-            background-color: #fff;
-            padding: 2rem;
-            border-radius: 16px;
-
-            /* Strong, visible shadow */
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-        }
-
-
-        .password-form .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .password-input-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
-        .password-input-wrapper input {
-            width: 100%;
-            padding: 0.75rem 2.5rem 0.75rem 1rem;
-            font-size: 1rem;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-        }
-
-        .password-input-wrapper i {
-            position: absolute;
-            right: 1rem;
-            color: #888;
-            cursor: pointer;
-            font-size: 1.1rem;
-        }
-
-        .password-input-wrapper i:hover {
-            color: #3BB77E;
-        }
-
-        .btn-update {
-            background: linear-gradient(90deg, #FF416C, #FF4B2B);
-            border: none;
-            padding: 0.75rem 2rem;
-            font-size: 1rem;
-            font-weight: bold;
-            color: #fff;
-            border-radius: 8px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255, 65, 108, 0.3);
-            transition: background 0.3s ease;
-            display: inline-block;
-            /* fit content */
-            margin: 0 auto;
-            /* center it */
-        }
-
-        .btn-update:hover {
-            background: linear-gradient(90deg, #ff4b2b, #ff416c);
-        }
-
-        .form-actions {
-            display: flex;
-            justify-content: center;
-            margin-top: 1.5rem;
-        }
-
-        .error-message {
-            color: #e74c3c;
-            /* bright red */
-            font-size: 0.875rem;
-            /* 14px */
-            margin-top: 0.25rem;
-            display: block;
-            min-height: 1em;
-            /* reserve space */
-        }
-
-        .spinner {
-            width: 16px;
-            height: 16px;
-            border: 2px solid #ffffff;
-            border-top: 2px solid transparent;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 8px;
-            display: inline-block;
-        }
-
-          .google-login-info {
-            text-align: center;
-            padding: 76px;
-        }
-
-        .google-icon {
-            width: 64px;
-            height: 64px;
-            margin-bottom: 24px;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-        }
-
-        .google-login-info h3 {
-            font-size: 24px;
-            font-weight: 500;
-            color: #202124;
-            margin-bottom: 12px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        }
-
-        .google-login-info p {
-            font-size: 16px;
-            color: #5f6368;
-            line-height: 1.5;
-            margin-bottom: 32px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        }
-
-        .btn-back {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 12px 24px;
-            background: rgb(8, 129, 120);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            transition: all 0.2s ease;
-            border: none;
-            cursor: pointer;
-            min-width: 140px;
-        }
-
-         .btn-back:hover {
-            background: rgb(6, 102, 95);
-            transform: translateY(-1px);
-            color: white;
-        }
-
-        .btn-back:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 8px rgba(26, 115, 232, 0.2);
-        }
-
-        /* Google Icon SVG */
-        .google-icon-svg {
-            width: 64px;
-            height: 64px;
-            margin-bottom: 24px;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        .btn-update:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-        }
-    </style>
 
     <header class="header-area header-style-1 header-height-2">
         <div class="header-top header-top-ptb-1 d-none d-lg-block">
@@ -386,7 +685,7 @@
             <div class="breadcrumb" aria-label="Breadcrumb navigation">
                 <a href="/" rel="nofollow">Home</a>
                 <span></span> User Profile
-                <span></span> Security settings
+                <span></span> My Orders
             </div>
         </div>
     </div>
@@ -410,7 +709,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/orders">
+                        <a href="/orders" class="active">
                             <i class="fi-rs-shopping-bag"></i> My Orders
                         </a>
                     </li>
@@ -425,7 +724,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/profile/security" class="active">
+                        <a href="/profile/security">
                             <i class="fi-rs-shield-check"></i> Security Settings
                         </a>
                     </li>
@@ -436,68 +735,118 @@
                     </li>
                 </ul>
             </aside>
-
+            
             <main class="profile-content">
-                <% if (isGoogleUser) { %>
-                    <div class="google-login-info">
-        <!-- Google Icon SVG -->
-        <svg class="google-icon-svg" viewBox="0 0 24 24">
-            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-        </svg>
-        
-        <h3>You're logged in with Google</h3>
-        <p>Password changes are not applicable for Google login users.</p>
-        <a href="/userProfile" class="btn-back">Back to Profile</a>
-    </div>
-                    <% } else { %>
-                        <div class="profile-header">
-                            <h3><i class="ri-lock-password-fill"></i> Change Your Password</h3>
-                        </div>
+                <div class="profile-header">
+                    <h3><i class="fi-rs-shopping-bag"></i> My Orders</h3>
+                    <form method="GET" action="/orders" class="search-section">
+                        <div class="search-bar">
+                            <input type="text" class="search-input" id="searchInput" name="q"
+                                placeholder="Search orders…" value="<%= typeof q !== 'undefined' && q ? q : '' %>" />
 
-                        <div class="profile-body">
-                            <div class="change-password-section">
-                                <form class="password-form" novalidate>
-                                    <div class="form-group password-toggle-group">
-                                        <label for="currentPassword">Current Password</label>
-                                        <div class="password-input-wrapper">
-                                            <input type="password" id="currentPassword" name="currentPassword" required>
-                                            <i class="fi-rs-eye" onclick="togglePassword('currentPassword', this)"></i>
-                                        </div>
-                                        <span class="error-message" id="currentPasswordError"></span>
-                                    </div>
+                            <div class="btn-search-order" title="Search" role="button"
+                                onclick="this.closest('form').submit()">
+                                <i class="fi-rs-search"></i>
+                            </div>
 
-                                    <div class="form-group password-toggle-group">
-                                        <label for="newPassword">New Password</label>
-                                        <div class="password-input-wrapper">
-                                            <input type="password" id="newPassword" name="newPassword" required>
-                                            <i class="fi-rs-eye" onclick="togglePassword('newPassword', this)"></i>
-                                        </div>
-                                        <span class="error-message" id="newPasswordError"></span>
-                                    </div>
-
-                                    <div class="form-group password-toggle-group">
-                                        <label for="confirmPassword">Confirm New Password</label>
-                                        <div class="password-input-wrapper">
-                                            <input type="password" id="confirmPassword" name="confirmPassword" required>
-                                            <i class="fi-rs-eye" onclick="togglePassword('confirmPassword', this)"></i>
-                                        </div>
-                                        <span class="error-message" id="confirmPasswordError"></span>
-                                    </div>
-
-                                    <div class="form-actions">
-                                        <button type="submit" class="btn-update" id="updateButton">
-                                            <span id="buttonText">Update Password</span>
-                                        </button>
-                                    </div>
-                                </form>
+                            <div class="btn-clear-search" id="clearBtn" title="Clear search" role="button"
+                                onclick="document.getElementById('searchInput').value=''; this.closest('form').submit();">
+                                <i class="fi-rs-cross"></i>
                             </div>
                         </div>
-                        <% } %>
-            </main>
+                    </form>
 
+
+
+                </div>
+
+                <div class="profile-body">
+
+                    <div class="profile-section">
+                        <div class="orders-grid" id="ordersGrid">
+                            <% if (orders && orders.length> 0) { %>
+                                <% orders.forEach(order=> { %>
+                                    <div class="order-card" data-order-id="<%= order._id %>"
+                                        data-status="<%= order.status.toLowerCase() %>">
+                                        
+                                        <div class="order-body">
+                                            <div class="order-id-section">
+                                                <div class="order-id">
+                                                    <i class="fi-rs-receipt"></i>
+                                                    Order #<%= order._id.toString().slice(-8).toUpperCase() %>
+                                                </div>
+                                                <div class="order-date">
+                                                    <i class="fi-rs-calendar"></i>
+                                                    Placed on
+                                                    <% if (order.createdAt) { %>
+                                                        <%= order.createdAt.toLocaleString('en-US', { year: 'numeric' ,
+                                                            month: 'long' , day: 'numeric' , hour: '2-digit' ,
+                                                            minute: '2-digit' , hour12: true }) %>
+                                                            <% } else { %>
+                                                                Recently
+                                                                <% } %>
+                                                </div>
+
+                                            </div>
+                                            <div class="order-items">
+                                                <% order.items.forEach((item, index)=> { %>
+                                                    <div class="order-item" data-item-id="<%= item._id %>">
+                                                        <img src="<%= item.image || '/imgs/placeholder.jpg' %>"
+                                                            alt="<%= item.name %>" class="item-image"
+                                                            onerror="this.src='/imgs/placeholder.jpg'">
+
+                                                        <div class="item-details">
+                                                            <div class="item-name">
+                                                                <%= item.name %>
+                                                            </div>
+                                                            <div class="item-meta">
+                                                                <span><i class="fi-rs-resize"></i> Size: <%= item.size
+                                                                        || 'Standard' %></span> |
+                                                                <span><i class="fi-rs-box"></i> Qty: <%= item.quantity
+                                                                        %></span>
+                                                            </div>
+                                                            <div class="item-price">₹<%= item.price %> × <%=
+                                                                        item.quantity %> = ₹<%= item.subtotal %>
+                                                            </div>
+                                                        </div>
+                                                        <div class="order-actions">
+                                                            <button class="btn-track-order"
+                                                                onclick="redirectToOrderDetails('<%= order._id %>')">
+                                                                <i class="fi-rs-document"></i> View Order
+                                                            </button>
+                                                        </div>
+                                                        <div
+                                                            class="order-status status-<%= order.status.toLowerCase() %>">
+                                                            <%= order.status %>
+                                                        </div>
+                                                        <div class="summary-row total">
+                                                            <span>Total:</span>
+                                                            <span>₹<%= order.totalAmount %></span>
+                                                        </div>
+                                                    </div>
+                                                    <% }); %>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <% }); %>
+                                        <% } else { %>
+                                            <div class="no-orders">
+                                                <div class="icon-container">
+                                                    <i class="fas fa-shopping-bag"></i>
+                                                </div>
+                                                <h3>No Orders Found</h3>
+                                                <p>You haven't placed any orders yet. Start shopping to see your orders
+                                                    here!</p>
+                                                <a href="/shop" class="btn-shop-now">
+                                                    <i class="fas fa-shopping-cart"></i> Start Shopping
+                                                </a>
+                                            </div>
+                                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            </main>
         </div>
     </div>
 
@@ -602,11 +951,9 @@
     <script src="/js/wishlist-count-updater.js"></script>
     <script src="/js/cart-count-updater.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-
-         function toggleSidebar() {
+        function toggleSidebar() {
             const sidebar = document.getElementById('profileSidebar');
             const toggle = document.querySelector('.mobile-sidebar-toggle');
 
@@ -636,154 +983,13 @@
                 toggle.classList.remove('active');
             }
         });
-        
-        function togglePassword(id, icon) {
-            const input = document.getElementById(id);
-            if (input.type === "password") {
-                input.type = "text";
-                icon.classList.remove("fi-rs-eye");
-                icon.classList.add("fi-rs-eye-crossed");
-            } else {
-                input.type = "password";
-                icon.classList.remove("fi-rs-eye-crossed");
-                icon.classList.add("fi-rs-eye");
-            }
+
+
+        function redirectToOrderDetails(orderId) {
+            window.location.href = `/orders/${orderId}`;
         }
-
-        const form = document.querySelector('.password-form');
-        const submitButton = document.getElementById('updateButton');
-        const buttonText = document.getElementById('buttonText');
-        const currentInput = document.getElementById('currentPassword');
-        const newInput = document.getElementById('newPassword');
-        const confirmInput = document.getElementById('confirmPassword');
-
-        const currentError = document.getElementById('currentPasswordError');
-        const newError = document.getElementById('newPasswordError');
-        const confirmError = document.getElementById('confirmPasswordError');
-
-        const originalButtonText = buttonText.textContent;
-
-        function showLoading() {
-            submitButton.disabled = true;
-            buttonText.innerHTML = '<div class="spinner"></div>Updating...';
-        }
-
-        function hideLoading() {
-            submitButton.disabled = false;
-            buttonText.textContent = originalButtonText;
-        }
-
-        function validateForm() {
-            [currentError, newError, confirmError].forEach(span => span.textContent = '');
-
-            let valid = true;
-
-            if (!currentInput.value.trim()) {
-                currentError.textContent = 'Please enter your current password.';
-                valid = false;
-            }
-
-            const pwd = newInput.value;
-            const pwdRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-            if (!pwdRegex.test(pwd)) {
-                newError.textContent = 'Must be 8+ chars, with uppercase, lowercase, number & special char.';
-                valid = false;
-            } else if (pwd === currentInput.value) {
-                newError.textContent = 'New password must be different from current.';
-                valid = false;
-            }
-
-            if (confirmInput.value !== pwd) {
-                confirmError.textContent = 'Passwords do not match.';
-                valid = false;
-            }
-
-            return valid;
-        }
-
-        form.addEventListener('submit', async function (e) {
-            e.preventDefault();
-
-            if (!validateForm()) {
-                return;
-            }
-
-            showLoading();
-
-            try {
-                const formData = {
-                    currentPassword: currentInput.value,
-                    newPassword: newInput.value,
-                    confirmPassword: confirmInput.value
-                };
-
-                const response = await fetch('/profile/security', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formData)
-                });
-
-                const data = await response.json();
-
-                hideLoading();
-
-                if (response.ok && data.success) {
-                    await Swal.fire({
-                        icon: 'success',
-                        title: 'Success!',
-                        text: 'Password changed successfully!',
-                        confirmButtonText: 'OK',
-                        confirmButtonColor: '#4CAF50',
-                        timer: 3000,
-                        timerProgressBar: true
-                    });
-
-                    form.reset();
-                } else {
-                    if (data.errors) {
-                        if (data.errors.currentPassword) {
-                            currentError.textContent = data.errors.currentPassword;
-                        }
-                        if (data.errors.newPassword) {
-                            newError.textContent = data.errors.newPassword;
-                        }
-                        if (data.errors.confirmPassword) {
-                            confirmError.textContent = data.errors.confirmPassword;
-                        }
-                        if (data.errors.general) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: data.errors.general,
-                                confirmButtonColor: '#e74c3c'
-                            });
-                        }
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'An error occurred while updating your password. Please try again.',
-                            confirmButtonColor: '#e74c3c'
-                        });
-                    }
-                }
-            } catch (error) {
-                hideLoading();
-                console.error('Error:', error);
-
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Network Error',
-                    text: 'Unable to connect to server. Please check your connection and try again.',
-                    confirmButtonColor: '#e74c3c'
-                });
-            }
-        });
 
     </script>
-
 
 </body>
 

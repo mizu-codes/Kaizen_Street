@@ -588,15 +588,20 @@
                         <div class="header-action-right">
                             <div class="header-action-2">
                                 <div class="header-action-icon-2">
-                                    <a href="shop-wishlist.html">
+                                    <a href="/wishlist">
                                         <img class="svgInject" alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
-                                        <span class="pro-count blue">4</span>
+                                        <span id="wishlistItemCount" class="pro-count blue">
+                                            <%= typeof locals.wishlistItemCount !== 'undefined' ? locals.wishlistItemCount : 0 %>
+                                        </span>
+
                                     </a>
                                 </div>
                                 <div class="header-action-icon-2">
-                                    <a class="mini-cart-icon" href="shop-cart.html">
+                                    <a class="mini-cart-icon" href="/cart">
                                         <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
-                                        <span class="pro-count blue">2</span>
+                                        <span id="cartItemCount" class="pro-count blue">
+                                            <%= typeof locals.cartItemCount !=='undefined' ? locals.cartItemCount : 0 %>
+                                        </span>
                                     </a>
                                     <div class="cart-dropdown-wrap cart-dropdown-hm2">
                                         <ul>
@@ -663,15 +668,19 @@
                     <div class="header-action-right d-block d-lg-none">
                         <div class="header-action-2">
                             <div class="header-action-icon-2">
-                                <a href="shop-wishlist.html">
+                                <a href="/wishlist">
                                     <img alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
-                                    <span class="pro-count white">4</span>
-                                </a>
+                                    <span id="wishlistItemCount" class="pro-count blue">
+                                            <%= typeof locals.wishlistItemCount !== 'undefined' ? locals.wishlistItemCount : 0 %>
+                                        </span>
+                                    </a>
                             </div>
                             <div class="header-action-icon-2">
-                                <a class="mini-cart-icon" href="shop-cart.html">
+                                <a class="mini-cart-icon" href="/cart">
                                     <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
-                                    <span class="pro-count white">2</span>
+                                    <span id="cartItemCount" class="pro-count blue">
+                                            <%= typeof locals.cartItemCount !=='undefined' ? locals.cartItemCount : 0 %>
+                                        </span>
                                 </a>
                                 <div class="cart-dropdown-wrap cart-dropdown-hm2">
                                     <ul>
@@ -995,6 +1004,8 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/wishlist-count-updater.js"></script>
+    <script src="/js/cart-count-updater.js"></script>
 
     <script>
         function toggleSidebar() {

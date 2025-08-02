@@ -6,6 +6,7 @@ const profileController = require('../controllers/user/profileController');
 const cartController = require('../controllers/user/cartController');
 const wishlistController = require('../controllers/user/wishlistController');
 const checkoutController = require('../controllers/user/checkoutController');
+const orderController = require('../controllers/user/orderController');
 const { userAuth } = require('../middlewares/auth');
 
 const errorController = require('../controllers/user/errorController');
@@ -70,13 +71,19 @@ router.get('/wishlist', userAuth, wishlistController.loadWishlistPage);
 router.post('/wishlist/add/:productId', userAuth, wishlistController.addToWishlist);
 router.delete('/wishlist/delete/:productId', userAuth, wishlistController.removeFromWishlist);
 
-router.get('/checkout/place-order',userAuth,checkoutController.loadCheckoutPage);
+router.get('/checkout/place-order', userAuth, checkoutController.loadCheckoutPage);
 router.post('/checkout/place-order', userAuth, checkoutController.placeOrder);
 router.get('/checkout/order-success/:orderId', userAuth, checkoutController.orderSuccessPage);
 router.patch('/checkout/set-default/:id', userAuth, checkoutController.setDefaultAddress);
 router.delete('/checkout/address/:id', userAuth, checkoutController.deleteAddress);
 router.get('/checkout/edit-address/:id', userAuth, checkoutController.editAddressPage);
 router.patch('/checkout/edit-address/:id', userAuth, checkoutController.updateAddress);
+
+router.get('/orders', userAuth, orderController.loadOrderPage);
+router.get('/orders/:orderId', userAuth, orderController.loadOrderDetailsPage);
+router.patch('/orders/cancel-item/:itemId', userAuth, orderController.cancelOrderItem);
+router.get('/orders/:orderId/invoice', userAuth, orderController.downloadInvoicePDF);
+
 
 
 module.exports = router;

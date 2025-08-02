@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Profile</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/kaizenicon.svg">
+    <link rel="stylesheet" href="/css/main.css?v=3.4">
+</head>
+<style>
+       .swal-responsive {
+            width: 90% !important;
+            max-width: 320px !important;
+            padding: 1.2rem !important;
+            border-radius: 10px;
+            font-size: 0.95rem;
+        }
+    /* Existing styles from profile-orders.ejs */
+    .main-content {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+    }
+
+    .profile-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 30px;
+        border-bottom: 1px solid #f0f0f0;
+        background: linear-gradient(135deg, #e8f4f2 0%, #ddf0e8 100%);
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .profile-header h3 {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #253D4E;
+        margin: 0;
+    }
+
+    .profile-header h3 i {
+        color: #3BB77E;
+        font-size: 1.75rem;
+    }
+
+    /* New styles for order details page */
+    .header-left {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .btn-back {
+        background: white;
+        border: 1px solid #e0e4e8;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        color: #253D4E;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-back:hover {
+        background: #3BB77E;
+        color: white;
+        border-color: #3BB77E;
+        text-decoration: none;
+    }
+
+    .btn-download-invoice {
+        background: #088178;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-download-invoice:hover {
+        background: #066b62;
+        color: white;
+    }
+
+    /* Grid Layout */
+    .order-details-grid {
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    /* Left Column */
+    .left-column {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .summary-section {
+        background: white;
+        padding: 0.5rem;
+        border-radius: 8px;
+    }
+
+    .summary-section h4 {
+        color: #088178;
+        margin: 0 0 1rem 0;
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+
+    .summary-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #f0f0f0;
+        color: #4a5568;
+    }
+
+    .summary-item:last-child {
+        border-bottom: none;
+    }
+
+    /* Items Section */
+    .items-section {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .item-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: white;
+        border-radius: 8px;
+        border: 1px solid #f0f0f0;
+    }
+
+    .item-image {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 6px;
+    }
+
+    .item-details {
+        flex: 1;
+    }
+
+    .item-details h6 {
+        margin: 0 0 0.25rem 0;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #253D4E;
+    }
+
+    .item-specs {
+        color: #7e7e7e;
+        font-size: 0.85rem;
+    }
+
+    .item-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .order-status {
+        padding: 0.25rem 0.75rem;
+        border-radius: 15px;
+        font-weight: 600;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+    }
+
+    .status-placed {
+        background: #ffc107;
+        color: #856404;
+    }
+
+    .status-processing {
+        background: #17a2b8;
+        color: white;
+    }
+
+    .status-shipped {
+        background: #6f42c1;
+        color: white;
+    }
+
+    .status-delivered {
+        background: #28a745;
+        color: white;
+    }
+
+    .status-cancelled {
+        background: #dc3545;
+        color: white;
+    }
+
+    .btn-cancel {
+        background: #ff9500;
+        color: white;
+        border: none;
+        padding: 0.4rem 0.8rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-cancel:hover {
+        background: #e6850e;
+    }
+
+    .item-total {
+        font-weight: 600;
+        color: #253D4E;
+        font-size: 1.1rem;
+    }
+
+    /* Price Breakdown */
+    .price-breakdown {
+        background: white;
+        padding: 0.2rem;
+        border-radius: 8px;
+    }
+
+    .price-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        color: #4a5568;
+    }
+
+    .total-row {
+        border-top: 1px solid #e0e0e0;
+        padding-top: 1rem;
+        margin-top: 1rem;
+        font-size: 1.1rem;
+    }
+
+    /* Right Column */
+    .right-column {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .address-section {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+    }
+
+    .address-section h4 {
+        color: #088178;
+        margin: 0 0 1rem 0;
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+
+    .address-content p {
+        margin: 0.25rem 0;
+        color: #4a5568;
+        line-height: 1.5;
+    }
+
+    /* Bottom Actions */
+    .bottom-actions {
+        display: flex;
+        justify-content: center;
+        padding-top: 1rem;
+    }
+
+    .btn-back-to-orders {
+        background: #007bff;
+        color: white;
+        text-decoration: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+        border: 2px solid #007bff;
+    }
+
+    .btn-back-to-orders:hover {
+        background: #0056b3;
+        border-color: #0056b3;
+        color: white;
+        text-decoration: none;
+    }
+
+    /* No Order Found */
+    .no-order-found {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: linear-gradient(135deg, #f8fffe 0%, #f0f9f6 100%);
+        border: 2px solid #e8f5e8;
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(59, 183, 126, 0.1);
+    }
+
+    .no-order-found .icon-container {
+        display: inline-block;
+        margin-bottom: 1.5rem;
+    }
+
+    .no-order-found i {
+        font-size: 4rem;
+        color: #dc3545;
+    }
+
+    .no-order-found h3 {
+        color: #253D4E;
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+
+    .no-order-found p {
+        color: #7e8a98;
+        margin-bottom: 2rem;
+        font-size: 1.1rem;
+    }
+
+    /* No Order Found */
+    .no-order-found {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: linear-gradient(135deg, #f8fffe 0%, #f0f9f6 100%);
+        border: 2px solid #e8f5e8;
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(59, 183, 126, 0.1);
+    }
+
+    .no-order-found .icon-container {
+        display: inline-block;
+        margin-bottom: 1.5rem;
+    }
+
+    .no-order-found i {
+        font-size: 4rem;
+        color: #dc3545;
+    }
+
+    .no-order-found h3 {
+        color: #253D4E;
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+
+    .no-order-found p {
+        color: #7e8a98;
+        margin-bottom: 2rem;
+        font-size: 1.1rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .profile-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .header-left {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        .header-actions {
+            width: 100%;
+        }
+
+        .btn-download-invoice {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .order-details-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .item-row {
+            flex-direction: column;
+            text-align: center;
+            gap: 0.75rem;
+        }
+
+        .item-actions {
+            flex-direction: row;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .summary-item,
+        .price-row {
+            flex-direction: column;
+            gap: 0.25rem;
+            text-align: center;
+        }
+
+        .bottom-actions {
+            justify-content: center;
+        }
+    }
+
+    @media (max-width: 480px) {
+
+        .profile-header,
+        .profile-body {
+            padding: 1rem;
+        }
+
+        .summary-section,
+        .address-section,
+        .price-breakdown {
+            padding: 1rem;
+        }
+
+        .item-row {
+            padding: 0.75rem;
+        }
+
+        .item-image {
+            width: 50px;
+            height: 50px;
+        }
+    }
+    
+
+    .btn-cancel-order {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .order-item-detail {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .item-attributes {
+        justify-content: center;
+    }
+
+    .item-pricing {
+        text-align: center;
+    }
+
+    .price-row,
+    .payment-method,
+    .payment-status {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+
+    @media (max-width: 480px) {
+
+        .profile-header,
+        .profile-body {
+            padding: 1rem;
+        }
+
+        .items-list,
+        .address-card,
+        .price-breakdown,
+        .payment-card {
+            padding: 1rem;
+        }
+
+        .order-header-details {
+            padding: 1rem;
+        }
+
+        .item-attributes {
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+    }
+</style>
+
+<body>
+
+    <header class="header-area header-style-1 header-height-2">
+        <div class="header-top header-top-ptb-1 d-none d-lg-block">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-xl-3 col-lg-4">
+                        <div class="header-info">
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-4">
+                        <div class="text-center">
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-4">
+                        <div class="header-info header-info-right">
+                            <% if (user) { %>
+                                <div class="dropdown">
+                                    <a href="#" class="sign-in-link">
+                                        <%= user.name %>
+                                    </a>
+                                    <div class="dropdown-content">
+                                        <a href="/userProfile">Profile</a>
+                                        <a href="/logout">Logout</a>
+                                    </div>
+                                </div>
+                                <% } else { %>
+                                    <ul>
+                                        <li>
+                                            <i class="fi-rs-user"></i>
+                                            <a href="/login">Log In</a>
+                                        </li>
+                                    </ul>
+                                    <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
+            <div class="container">
+                <div class="header-wrap">
+                    <div class="logo logo-width-1">
+                        <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+                    </div>
+                    <div class="header-right">
+                        <div class="search-style-2"></div>
+                        <div class="header-action-right">
+                            <div class="header-action-2">
+                                <div class="header-action-icon-2">
+                                    <a href="/wishlist">
+                                        <img class="svgInject" alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
+                                        <span id="wishlistItemCount" class="pro-count blue">
+                                            <%= typeof locals.wishlistItemCount !== 'undefined' ? locals.wishlistItemCount : 0 %>
+                                        </span>
+
+                                    </a>
+                                </div>
+                                <div class="header-action-icon-2">
+                                    <a class="mini-cart-icon" href="/cart">
+                                        <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
+                                        <span id="cartItemCount" class="pro-count blue">
+                                            <%= typeof locals.cartItemCount !=='undefined' ? locals.cartItemCount : 0 %>
+                                        </span>
+                                    </a>
+                                    <div class="cart-dropdown-wrap cart-dropdown-hm2">
+                                        <ul>
+                                            <li>
+                                                <div class="shopping-cart-img">
+                                                    <a href="shop-product-right.html"><img alt="Evara"
+                                                            src="/imgs/shop/thumbnail-3.jpg"></a>
+                                                </div>
+                                                <div class="shopping-cart-title">
+                                                    <h4><a href="shop-product-right.html">Daisy Casual Bag</a></h4>
+                                                    <h4><span>1 × </span>$800.00</h4>
+                                                </div>
+                                                <div class="shopping-cart-delete">
+                                                    <a href="#"><i class="fi-rs-cross-small"></i></a>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="shopping-cart-img">
+                                                    <a href="shop-product-right.html"><img alt="Evara"
+                                                            src="/imgs/shop/thumbnail-2.jpg"></a>
+                                                </div>
+                                                <div class="shopping-cart-title">
+                                                    <h4><a href="shop-product-right.html">Corduroy Shirts</a></h4>
+                                                    <h4><span>1 × </span>$3200.00</h4>
+                                                </div>
+                                                <div class="shopping-cart-delete">
+                                                    <a href="#"><i class="fi-rs-cross-small"></i></a>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <div class="shopping-cart-footer">
+                                            <div class="shopping-cart-total">
+                                                <h4>Total <span>$4000.00</span></h4>
+                                            </div>
+                                            <div class="shopping-cart-button">
+                                                <a href="shop-cart.html" class="outline">View cart</a>
+                                                <a href="shop-checkout.html">Checkout</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-bottom header-bottom-bg-color sticky-bar">
+            <div class="container">
+                <div class="header-wrap header-space-between position-relative">
+                    <div class="logo logo-width-1 d-block d-lg-none">
+                        <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+                    </div>
+                    <div class="header-nav d-none d-lg-flex">
+                        <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
+                            <nav>
+                                <ul>
+                                    <li><a href="/">Home</a></li>
+                                    <li><a href="/shop">Shop</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="header-action-right d-block d-lg-none">
+                        <div class="header-action-2">
+                            <div class="header-action-icon-2">
+                                <a href="shop-wishlist.html">
+                                    <img alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
+                                    <span class="pro-count white">4</span>
+                                </a>
+                            </div>
+                            <div class="header-action-icon-2">
+                                <a class="mini-cart-icon" href="shop-cart.html">
+                                    <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
+                                    <span class="pro-count white">2</span>
+                                </a>
+                                <div class="cart-dropdown-wrap cart-dropdown-hm2">
+                                    <ul>
+                                        <li>
+                                            <div class="shopping-cart-img">
+                                                <a href="shop-product-right.html"><img alt="Evara"
+                                                        src="/imgs/shop/thumbnail-3.jpg"></a>
+                                            </div>
+                                            <div class="shopping-cart-title">
+                                                <h4><a href="shop-product-right.html">Plain Striola Shirts</a></h4>
+                                                <h3><span>1 × </span>$800.00</h3>
+                                            </div>
+                                            <div class="shopping-cart-delete">
+                                                <a href="#"><i class="fi-rs-cross-small"></i></a>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="shopping-cart-img">
+                                                <a href="shop-product-right.html"><img alt="Evara"
+                                                        src="/imgs/shop/thumbnail-4.jpg"></a>
+                                            </div>
+                                            <div class="shopping-cart-title">
+                                                <h4><a href="shop-product-right.html">Macbook Pro 2022</a></h4>
+                                                <h3><span>1 × </span>$3500.00</h3>
+                                            </div>
+                                            <div class="shopping-cart-delete">
+                                                <a href="#"><i class="fi-rs-cross-small"></i></a>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <div class="shopping-cart-footer">
+                                        <div class="shopping-cart-total">
+                                            <h4>Total <span>$383.00</span></h4>
+                                        </div>
+                                        <div class="shopping-cart-button">
+                                            <a href="shop-cart.html">View cart</a>
+                                            <a href="shop-checkout.html">Checkout</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="header-action-icon-2 d-block d-lg-none">
+                                <div class="burger-icon burger-icon-white">
+                                    <span class="burger-icon-top"></span>
+                                    <span class="burger-icon-mid"></span>
+                                    <span class="burger-icon-bottom"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-header breadcrumb-wrap">
+        <div class="container">
+            <div class="breadcrumb" aria-label="Breadcrumb navigation">
+                <a href="/" rel="nofollow">Home</a>
+                <span></span> User Profile
+                <span></span> My Orders
+                <span></span> Order Details
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-container">
+        <div class="profile-layout">
+            <button class="mobile-sidebar-toggle" onclick="toggleSidebar()">
+                <span>
+                    <i class="fi-rs-menu"></i>
+                    My Account Menu
+                </span>
+                <i class="fi-rs-angle-down toggle-icon"></i>
+            </button>
+
+            <aside class="profile-sidebar" id="profileSidebar">
+                <h4>My Account</h4>
+                <ul>
+                    <li>
+                        <a href="/userProfile">
+                            <i class="fi-rs-user"></i> My Profile
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/orders" class="active">
+                            <i class="fi-rs-shopping-bag"></i> My Orders
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/profile/addresses">
+                            <i class="fi-rs-marker"></i> My Addresses
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/wallet">
+                            <i class="fi-rs-credit-card"></i> My Wallet
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/profile/security">
+                            <i class="fi-rs-shield-check"></i> Security Settings
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/logout">
+                            <i class="fi-rs-sign-out"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </aside>
+
+
+          <main class="profile-content">
+            <!-- Header matching your existing design -->
+            <div class="profile-header">
+                <div class="header-left">
+                    <h3><i class="fi-rs-receipt"></i> Order Details</h3>
+                </div>
+                <div class="header-actions">
+                    <a href="/orders/<%= order._id %>/invoice" class="btn-download-invoice">
+  <i class="fi-rs-download"></i> Download Invoice
+</a>
+                </div>
+            </div>
+
+            <div class="profile-body">
+                <% if (order) { %>
+                    <div class="order-details-grid">
+                        <div class="left-column">
+                            <div class="summary-section">
+                                <h4>Order Summary</h4>
+                                <div class="summary-item">
+                                    <span>Order ID:</span>
+                                    <span> #<%= order._id.toString().slice(-8).toUpperCase() %></span>
+                                </div>
+                                <div class="summary-item">
+                                    <span>Order Date:</span>
+                                    <span>
+                                        <% if (order.createdAt) { %>
+                                            <%= order.createdAt.toLocaleString('en-US', { 
+                                                weekday: 'short',
+                                                year: 'numeric', 
+                                                month: 'short', 
+                                                day: '2-digit', 
+                                                hour: '2-digit', 
+                                                minute: '2-digit'
+                                            }) %>
+                                        <% } else { %>
+                                            Recently
+                                        <% } %>
+                                    </span>
+                                </div>
+                                <div class="summary-item">
+                                    <span>Total Amount:</span>
+                                    <span>₹ <%= order.totalAmount %></span>
+                                </div>
+                                <div class="summary-item">
+                                    <span>Payment Method:</span>
+                                    <span><%= order.paymentMethod || 'card' %></span>
+                                </div>
+                            </div>
+
+                            <div class="items-section">
+                                <% order.items.forEach((item, index) => { %>
+                                    <div class="item-row">
+                                        <img src="<%= item.image || '/imgs/placeholder.jpg' %>" 
+                                             alt="<%= item.name %>" 
+                                             class="item-image"
+                                             onerror="this.src='/imgs/placeholder.jpg'">
+                                        
+                                        <div class="item-details">
+                                            <h6><%= item.name %></h6>
+                                            <div class="item-specs">
+                                                Qty: <%= item.quantity %> | ₹ <%= item.price %> | Variant: <%= item.size || 'Standard' %> |
+                                            </div>
+                                        </div>
+                                        
+                                         <div class="item-actions">
+        <div class="order-status status-<%= item.status.toLowerCase() %>">
+          <%= order.status %>
+        </div>
+       <% if (['placed', 'processing'].includes(order.status.toLowerCase()) && item.status === 'Placed') { %>
+          <button class="btn-cancel" data-item-id="<%= item._id %>" data-item-name="<%= item.name %>">
+            Cancel
+        </button>
+        <% } %>
+      </div>
+                                        
+                                        <div class="item-total">
+                                            ₹<%= item.subtotal %>
+                                        </div>
+                                    </div>
+                                <% }); %>
+                            </div>
+                            
+                            <div class="price-breakdown">
+                                <div class="price-row">
+                                    <span>Subtotal:</span>
+                                    <span>₹<%= order.items.reduce((sum, item) => sum + item.subtotal, 0) %></span>
+                                </div>
+                                <div class="price-row">
+                                    <span>Delivery Charges:</span>
+                                    <span>₹<%= order.shippingCost || 0 %></span>
+                                </div>
+                                <div class="price-row">
+                                    <span>Coupon Discount:</span>
+                                    <span>₹<%= order.discount || 0 %></span>
+                                </div>
+                                <div class="price-row total-row">
+                                    <span><strong>Total:</strong></span>
+                                    <span><strong>₹<%= order.totalAmount %></strong></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column -->
+                        <div class="right-column">
+                            <!-- Shipping Address -->
+                            <div class="address-section">
+                                <h4>Shipping Address</h4>
+                                <div class="address-content">
+                                    <% const a=order.address; %>
+                                        <% if (a) { %>
+                                            <p><strong>Name:</strong>
+                                                <%= a.userName || a.fullName || 'Customer' %>
+                                            </p>
+
+                                            <p>
+                                                <%= a.houseNo || a.address || '' %>, <%= a.locality || a.street
+                                                        || '' %>
+                                            </p>
+                                            <p>
+                                                <%= a.city %> – <%= a.pincode %>
+                                            </p>
+                                            <% if (a.phoneNumber || a.phone) { %>
+                                                <p><strong>Phone:</strong> +91 <%= a.phoneNumber || a.phone %>
+                                                </p>
+                                                <% } %>
+                                                    <% if (a.altPhoneNumber) { %>
+                                                        <p><strong>Alt Phone:</strong> +91 <%= a.altPhoneNumber %>
+                                                        </p>
+                                                        <% } %>
+                                                            <% } else { %>
+                                                                <p>Address details not available</p>
+                                                                <% } %>
+                                </div>
+                            </div>
+                             <!-- Back Button -->
+                    <div class="bottom-actions">
+                        <a href="/orders" class="btn-back-to-orders">
+                            <i class="fi-rs-arrow-left"></i> Orders
+                        </a>
+                    </div>
+                        </div>
+                    </div>
+
+                <% } else { %>
+                    <div class="no-order-found">
+                        <div class="icon-container">
+                            <i class="fi-rs-exclamation"></i>
+                        </div>
+                        <h3>Order Not Found</h3>
+                        <p>The order you're looking for doesn't exist or has been removed.</p>
+                        <a href="/orders" class="btn-back-orders">
+                            <i class="fi-rs-arrow-left"></i> Back to Orders
+                        </a>
+                    </div>
+                <% } %>
+            </div>
+        </main>
+
+        </div>
+    </div>
+
+
+    <footer class="main">
+        <section class="newsletter p-30 text-white wow fadeIn animated">
+            <div class="floating-elements">
+                <div class="floating-element">桜</div>
+                <div class="floating-element">桜</div>
+                <div class="floating-element">⚡</div>
+                <div class="floating-element">🌸</div>
+            </div>
+        </section>
+        <section class="section-padding footer-mid">
+            <div class="container pt-15 pb-20">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="widget-about font-md mb-md-5 mb-lg-0">
+                            <div class="logo logo-width-1 wow fadeIn animated">
+                                <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+                            </div>
+                            <h5 class="mt-20 mb-10 fw-600 text-grey-4 wow fadeIn animated">Contact</h5>
+                            <p class="wow fadeIn animated">
+                                <strong>Address: </strong>562 Wellington Road, Street 32, San Francisco
+                            </p>
+                            <p class="wow fadeIn animated">
+                                <strong>Phone: </strong>+01 2222 365 /(+91) 01 2345 6789
+                            </p>
+                            <p class="wow fadeIn animated">
+                                <strong>Hours: </strong>10:00 - 18:00, Mon - Sat
+                            </p>
+                            <h5 class="mb-10 mt-30 fw-600 text-grey-4 wow fadeIn animated">Follow Us</h5>
+                            <div class="mobile-social-icon wow fadeIn animated mb-sm-5 mb-md-0">
+                                <a href="#"><img src="/imgs/theme/icons/icon-facebook.svg" alt=""></a>
+                                <a href="#"><img src="/imgs/theme/icons/icon-twitter.svg" alt=""></a>
+                                <a href="#"><img src="/imgs/theme/icons/icon-instagram.svg" alt=""></a>
+                                <a href="#"><img src="/imgs/theme/icons/icon-pinterest.svg" alt=""></a>
+                                <a href="#"><img src="/imgs/theme/icons/icon-youtube.svg" alt=""></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-3">
+                        <h5 class="widget-title wow fadeIn animated">About</h5>
+                        <ul class="footer-list wow fadeIn animated mb-sm-5 mb-md-0">
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Delivery Information</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms &amp; Conditions</a></li>
+                            <li><a href="#">Contact Us</a></li>
+                            <li><a href="#">Support Center</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2  col-md-3">
+                        <h5 class="widget-title wow fadeIn animated">My Account</h5>
+                        <ul class="footer-list wow fadeIn animated">
+                            <li><a href="#">Sign In</a></li>
+                            <li><a href="#">View Cart</a></li>
+                            <li><a href="#">My Wishlist</a></li>
+                            <li><a href="#">Track My Order</a></li>
+                            <li><a href="#">Help</a></li>
+                            <li><a href="#">Order</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-4">
+                        <h5 class="widget-title wow fadeIn animated">Install App</h5>
+                        <div class="row">
+                            <div class="col-md-8 col-lg-12">
+                                <p class="wow fadeIn animated">From App Store or Google Play</p>
+                                <div class="download-app wow fadeIn animated">
+                                    <a href="#" class="hover-up mb-sm-4 mb-lg-0"><img class="active"
+                                            src="/imgs/theme/app-store.jpg" alt=""></a>
+                                    <a href="#" class="hover-up"><img src="/imgs/theme/google-play.jpg" alt=""></a>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-12 mt-md-3 mt-lg-0">
+                                <p class="mb-20 wow fadeIn animated">Secured Payment Gateways</p>
+                                <img class="wow fadeIn animated" src="/imgs/theme/payment-method.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="container pb-20 wow fadeIn animated">
+            <div class="row">
+                <div class="col-12 mb-20">
+                    <div class="footer-bottom"></div>
+                </div>
+                <div class="col-lg-6">
+                    <p class="float-md-left font-sm text-muted mb-0">&copy; 2025, <strong class="text-brand">Kaizen
+                            Street</strong>
+                </div>
+                <div class="col-lg-6">
+                    <p class="text-lg-end text-start font-sm text-muted mb-0">All rights reserved</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/wishlist-count-updater.js"></script>=
+    <script src="/js/cart-count-updater.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('profileSidebar');
+            const toggle = document.querySelector('.mobile-sidebar-toggle');
+
+            sidebar.classList.toggle('show');
+            toggle.classList.toggle('active');
+        }
+
+        document.addEventListener('click', function (event) {
+            const sidebar = document.getElementById('profileSidebar');
+            const toggle = document.querySelector('.mobile-sidebar-toggle');
+
+            if (window.innerWidth <= 991 &&
+                !sidebar.contains(event.target) &&
+                !toggle.contains(event.target) &&
+                sidebar.classList.contains('show')) {
+                sidebar.classList.remove('show');
+                toggle.classList.remove('active');
+            }
+        });
+
+        window.addEventListener('resize', function () {
+            const sidebar = document.getElementById('profileSidebar');
+            const toggle = document.querySelector('.mobile-sidebar-toggle');
+
+            if (window.innerWidth > 991) {
+                sidebar.classList.remove('show');
+                toggle.classList.remove('active');
+            }
+        });
+
+
+        function redirectToOrderDetails(orderId) {
+            window.location.href = `/orders/${orderId}`;
+        }
+
+    </script>
+
+  <script>
+  const CANCEL_REASONS = {
+    changed: 'Changed my mind',
+    betterDeal: 'Found a better deal',
+    mistake: 'Ordered by mistake',
+    delayed: 'Shipping is delayed',
+    noLonger: 'Product no longer needed'
+  };
+
+  document.querySelectorAll('.btn-cancel').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const itemId = btn.dataset.itemId;
+      const itemName = btn.dataset.itemName;
+
+      if (!itemId) {
+        return Swal.fire('Error', 'Item ID not found. Cannot cancel.', 'error');
+      }
+
+      const { value: reason, isConfirmed } = await Swal.fire({
+        title: 'Cancel Order Item',
+        html: `<p><strong>${itemName}</strong></p>`,
+        input: 'select',
+        inputOptions: CANCEL_REASONS,
+        inputPlaceholder: 'Select a reason (optional)',
+        showCancelButton: true,
+        confirmButtonText: 'Confirm Cancel',
+        cancelButtonText: 'Close',
+        customClass: {
+          popup: 'swal-responsive'
+        }
+      });
+
+      if (!isConfirmed) return;
+
+      try {
+        const res = await fetch(`/orders/cancel-item/${itemId}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ reason: reason || 'No reason provided' })
+        });
+
+        const result = await res.json();
+
+        if (result.success) {
+
+          const parent = btn.closest('.item-actions');
+          if (parent) {
+          const statusEl = parent.querySelector('.order-status');
+          if (statusEl) {
+          statusEl.textContent = 'Cancelled';
+          statusEl.classList.remove('status-placed', 'status-processing');
+          statusEl.classList.add('status-cancelled');
+        } 
+         btn.remove();
+       }
+
+
+          Swal.fire({
+            icon: 'success',
+            title: 'Item Cancelled',
+            text: 'Your item was cancelled successfully.',
+            timer: 2000,
+            showConfirmButton: false,
+            customClass: {
+              popup: 'swal-responsive'
+            }
+          });
+        } else {
+          Swal.fire('Error', result.message || 'Failed to cancel item', 'error');
+        }
+      } catch (error) {
+        console.error('Fetch error:', error);
+        Swal.fire('Error', 'Something went wrong.', 'error');
+      }
+    });
+  });
+</script>
+
+
+
+</body>
+
+</html>

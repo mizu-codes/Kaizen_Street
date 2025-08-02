@@ -60,53 +60,20 @@
             <div class="header-action-right">
               <div class="header-action-2">
                 <div class="header-action-icon-2">
-                  <a href="shop-wishlist.html">
+                  <a href="/wishlist">
                     <img class="svgInject" alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
-                    <span class="pro-count blue">4</span>
+                    <span id="wishlistItemCount" class="pro-count blue">
+                                            <%= typeof locals.wishlistItemCount !== 'undefined' ? locals.wishlistItemCount : 0 %>
+                                        </span>
                   </a>
                 </div>
                 <div class="header-action-icon-2">
-                  <a class="mini-cart-icon" href="shop-cart.html">
+                  <a class="mini-cart-icon" href="/cart">
                     <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
-                    <span class="pro-count blue">2</span>
+                    <span id="cartItemCount" class="pro-count blue">
+                                            <%= typeof locals.cartItemCount !=='undefined' ? locals.cartItemCount : 0 %>
+                                        </span>
                   </a>
-                  <div class="cart-dropdown-wrap cart-dropdown-hm2">
-                    <ul>
-                      <li>
-                        <div class="shopping-cart-img">
-                          <a href="shop-product-right.html"><img alt="Evara" src="/imgs/shop/thumbnail-3.jpg"></a>
-                        </div>
-                        <div class="shopping-cart-title">
-                          <h4><a href="shop-product-right.html">Daisy Casual Bag</a></h4>
-                          <h4><span>1 × </span>$800.00</h4>
-                        </div>
-                        <div class="shopping-cart-delete">
-                          <a href="#"><i class="fi-rs-cross-small"></i></a>
-                        </div>
-                      </li>
-                      <li>
-                        <div class="shopping-cart-img">
-                          <a href="shop-product-right.html"><img alt="Evara" src="/imgs/shop/thumbnail-2.jpg"></a>
-                        </div>
-                        <div class="shopping-cart-title">
-                          <h4><a href="shop-product-right.html">Corduroy Shirts</a></h4>
-                          <h4><span>1 × </span>$3200.00</h4>
-                        </div>
-                        <div class="shopping-cart-delete">
-                          <a href="#"><i class="fi-rs-cross-small"></i></a>
-                        </div>
-                      </li>
-                    </ul>
-                    <div class="shopping-cart-footer">
-                      <div class="shopping-cart-total">
-                        <h4>Total <span>$4000.00</span></h4>
-                      </div>
-                      <div class="shopping-cart-button">
-                        <a href="shop-cart.html" class="outline">View cart</a>
-                        <a href="shop-checkout.html">Checkout</a>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -133,54 +100,20 @@
           <div class="header-action-right d-block d-lg-none">
             <div class="header-action-2">
               <div class="header-action-icon-2">
-                <a href="shop-wishlist.html">
+                <a href="/wishlist">
                   <img alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
-                  <span class="pro-count white">4</span>
+                  <span id="wishlistItemCount" class="pro-count blue">
+                                            <%= typeof locals.wishlistItemCount !== 'undefined' ? locals.wishlistItemCount : 0 %>
+                                        </span>
                 </a>
               </div>
               <div class="header-action-icon-2">
-                <a class="mini-cart-icon" href="shop-cart.html">
+                <a class="mini-cart-icon" href="/cart">
                   <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
-                  <span class="pro-count white">2</span>
+                  <span id="cartItemCount" class="pro-count blue">
+                                            <%= typeof locals.cartItemCount !=='undefined' ? locals.cartItemCount : 0 %>
+                                        </span>
                 </a>
-                <div class="cart-dropdown-wrap cart-dropdown-hm2">
-                  <ul>
-                    <li>
-                      <div class="shopping-cart-img">
-                        <a href="shop-product-right.html"><img alt="Evara" src="/imgs/shop/thumbnail-3.jpg"></a>
-                      </div>
-                      <div class="shopping-cart-title">
-                        <h4><a href="shop-product-right.html">Plain Striola Shirts</a></h4>
-                        <h3><span>1 × </span>$800.00</h3>
-                      </div>
-                      <div class="shopping-cart-delete">
-                        <a href="#"><i class="fi-rs-cross-small"></i></a>
-                      </div>
-                    </li>
-                    <li>
-                      <div class="shopping-cart-img">
-                        <a href="shop-product-right.html"><img alt="Evara" src="/imgs/shop/thumbnail-4.jpg"></a>
-                      </div>
-                      <div class="shopping-cart-title">
-                        <h4><a href="shop-product-right.html">Macbook Pro 2022</a></h4>
-                        <h3><span>1 × </span>$3500.00</h3>
-                      </div>
-                      <div class="shopping-cart-delete">
-                        <a href="#"><i class="fi-rs-cross-small"></i></a>
-                      </div>
-                    </li>
-                  </ul>
-                  <div class="shopping-cart-footer">
-                    <div class="shopping-cart-total">
-                      <h4>Total <span>$383.00</span></h4>
-                    </div>
-                    <div class="shopping-cart-button">
-                      <a href="shop-cart.html">View cart</a>
-                      <a href="shop-checkout.html">Checkout</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
               <div class="header-action-icon-2 d-block d-lg-none">
                 <div class="burger-icon burger-icon-white">
                   <span class="burger-icon-top"></span>
@@ -263,17 +196,18 @@
 
             <div class="profile-stats">
               <div class="stat-item">
-                <div class="stat-number">
-                  <%= user.orders ? user.orders.length : 0 %>
-                </div>
-                <div class="stat-label">Orders</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-number">
-                  <%= user.addresses ? user.addresses.length : 0 %>
-                </div>
-                <div class="stat-label">Addresses</div>
-              </div>
+  <div class="stat-number">
+    <%= orderCount %>
+  </div>
+  <div class="stat-label">Orders</div>
+</div>
+<div class="stat-item">
+  <div class="stat-number">
+    <%= addressCount %>
+  </div>
+  <div class="stat-label">Addresses</div>
+</div>
+
             </div>
           </div>
         </div>
@@ -435,6 +369,8 @@
 
   <script src="/js/jquery.min.js"></script>
   <script src="/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/wishlist-count-updater.js"></script>
+<script src="/js/cart-count-updater.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
 
   <script>

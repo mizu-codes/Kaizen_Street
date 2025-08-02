@@ -24,7 +24,7 @@ const orderItemSubschema = new Schema({
     },
     size: {
         type: String,
-        enum: ['S', 'M', 'L', 'XL', 'XXL'], 
+        enum: ['S', 'M', 'L', 'XL', 'XXL'],
         required: true
     },
     image: {
@@ -34,8 +34,19 @@ const orderItemSubschema = new Schema({
         type: Number,
         required: true,
         min: 0
+    },
+    status: {
+        type: String,
+        enum: ['Placed', 'Cancelled', 'Returned', 'Delivered'],
+        default: 'Placed'
+    },
+    cancellationReason: {
+        type: String
+    },
+    returnReason: {
+        type: String
     }
-}, { _id: false });
+}, { _id: true });
 
 const orderSchema = new Schema({
     orderId: {
@@ -57,11 +68,11 @@ const orderSchema = new Schema({
         type: [orderItemSubschema],
         required: true,
         validate: {
-      validator: function (items) {
-        return Array.isArray(items) && items.length > 0;
-      },
-      message: 'Order must contain at least one item.'
-    }
+            validator: function (items) {
+                return Array.isArray(items) && items.length > 0;
+            },
+            message: 'Order must contain at least one item.'
+        }
     },
     discount: {
         type: Number,
