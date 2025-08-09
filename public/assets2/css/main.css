@@ -547,8 +547,7 @@ b {
 
 .menu-aside .menu-link {
   padding: 10px;
-  font-weight: 500;
-  font-size: 13px;
+  font-size: 0.9rem;
   color: #292f46;
   border-radius: 0.3rem;
   position: relative;
@@ -564,6 +563,7 @@ b {
   margin-left: 44px;
   display: none;
   margin-top: 10px;
+  font-size: 0.9rem;
 }
 
 .menu-aside .submenu a {

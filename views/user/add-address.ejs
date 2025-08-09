@@ -615,7 +615,16 @@
                         orders.
                     </div>
 
-                    <form class="add-address-form" action="/profile/add-address" method="POST" id="addressForm">
+                   <% const fromCheckout = (from === 'checkout'); %>
+
+<form id="addressForm"
+      action="<%= fromCheckout ? `/checkout/add-address?from=checkout` : `/profile/add-address` %>"
+      method="POST"
+      class="add-address-form">
+  
+  <input type="hidden" name="from" value="<%= from || '' %>">
+
+              
                         <div class="form-title">
                             <i class="ri-home-4-line"></i>
                             Address Information
@@ -945,15 +954,17 @@
             textSpan.textContent = 'Saving...';
             btn.disabled = true;
 
-            try {
-                const res = await fetch(this.action, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
+            const from = '<%= from === "checkout" ? "checkout" : "profile" %>';
+
+             try {
+        const res = await fetch(`/profile/add-address?from=${from}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
                 const json = await res.json();
                 console.log('SERVER SAYS:', json);
 
@@ -965,19 +976,21 @@
                         timer: 1400,
                         showConfirmButton: false,
                         timerProgressBar: true,
-                         customClass: {
-                         popup: 'swal-responsive'
-                }
+                         customClass: { popup: 'swal-responsive' }
                     });
-                    window.location.href = '/profile/addresses';
+
+                     window.location.href = from === 'checkout'
+                     ? '/checkout/place-order'
+                     : '/profile/addresses';
+
                 } else {
                     Object.entries(json.errors || {}).forEach(([f, msg]) => {
                         const span = document.getElementById(f + 'Error');
                         if (span) span.textContent = msg;
                     });
                 }
-            } catch (err) {
-                console.error(err);
+            } catch (error) {
+                console.error(error);
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops…',

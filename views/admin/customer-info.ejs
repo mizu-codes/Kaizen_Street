@@ -74,18 +74,36 @@
                 </button>
             </div>
         </div>
-        <nav>
+         <nav>
             <ul class="menu-aside">
                 <li class="menu-item">
-                    <a class="menu-link" href="/admin">
-                        <i class="icon material-icons md-home"></i>
+                    <a class="menu-link" href="/admin"> <i class="icon material-icons md-home"></i>
                         <span class="text">Dashboard</span>
                     </a>
                 </li>
-                <li class="menu-item active">
-                    <a class="menu-link" href="/admin/user">
-                        <i class="icon material-icons md-person"></i>
+                  <li class="menu-item active">
+                    <a class="menu-link" href="/admin/user"> <i class="icon material-icons md-person"></i>
                         <span class="text">Customers</span>
+                    </a>
+                </li>
+                 <li class="menu-item">
+                    <a class="menu-link" href="/admin/category"> <i class="icon material-icons md-store"></i>
+                        <span class="text">Category</span>
+                    </a>
+                </li>
+                <li class="menu-item has-submenu">
+                    <a class="menu-link"><i class="icon material-icons md-shopping_bag"></i>
+                        <span class="text">Products</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="/admin/addProducts">Product Add</a>
+                        <a href="/admin/products">Product List</a>
+                    </div>
+                </li>
+                 <li class="menu-item">
+                    <a class="menu-link" href="/admin/orders">
+                        <i class="icon material-icons md-shopping_cart"></i>
+                        <span class="text">Orders</span>
                     </a>
                 </li>
             </ul>
@@ -145,6 +163,7 @@
                                             <th>#</th>
                                             <th>Name</th>
                                             <th>Email</th>
+                                            <th>Phone</th> 
                                             <th>Joined On</th>
                                             <th>Actions</th>
                                         </tr>
@@ -161,6 +180,9 @@
                                                 <td>
                                                     <%= cust.email %>
                                                 </td>
+                                                <td>
+                                                    <%= cust.phone || '—' %>
+                                                </td> 
                                                 <td>
                                                     <%= new Date(cust.createdAt).toLocaleDateString() %>
                                                 </td>
@@ -181,7 +203,7 @@
                                             <% }) %>
                                                 <% if (!customers.length) { %>
                                                     <tr>
-                                                        <td colspan="5" class="text-center text-warning py-4">No
+                                                        <td colspan="6" class="text-center text-warning py-4">No
                                                             customers found.
                                                         </td>
                                                     </tr>

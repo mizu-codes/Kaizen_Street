@@ -21,7 +21,7 @@ const listProducts = async (req, res) => {
     ]);
 
     const totalPages = Math.ceil(total / limit);
-    const categories = await Category.find({ isListed: true })
+    const categories = await Category.find({ status: 'active' })
       .sort({ createdAt: -1 })
       .lean();
 
@@ -36,8 +36,8 @@ const listProducts = async (req, res) => {
       error: req.flash('error')[0] || null,
       categories
     });
-  } catch (err) {
-    console.error('Error listing products:', err);
+  } catch (error) {
+    console.error('Error listing products:', error);
     req.flash('error', 'Could not load products.');
     res.redirect('/admin');
   }
@@ -61,8 +61,8 @@ const toggleBlockProduct = async (req, res) => {
       search: req.query.search || ''
     }).toString();
     res.redirect(`/admin/products?${qs}`);
-  } catch (err) {
-    console.error('Error toggling product block status:', err);
+  } catch (error) {
+    console.error('Error toggling product block status:', error);
     req.flash('error', 'Failed to update product status');
     res.redirect('/admin/products');
   }

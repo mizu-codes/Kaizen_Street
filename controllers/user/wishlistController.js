@@ -18,7 +18,7 @@ const addToWishlist = async (req, res) => {
         }
 
         const category = await Category.findById(product.category);
-        if (!category || category.isBlocked || !category.isListed) {
+        if (!category || category.status !== 'active') {
             return res.status(400).json({ message: 'Product category is not available.' });
         }
 
@@ -54,12 +54,14 @@ const loadWishlistPage = async (req, res) => {
     try {
         const userId = req.session.userId;
 
-        const wishlistDoc = await Wishlist
-            .findOne({ userId })
-            .populate({
-                path: 'items.productId',
-                populate: 'category'
-            });
+          const wishlistDoc = await Wishlist.findOne({ userId }).populate({
+      path: 'items.productId',
+      populate: {
+        path:  'category',
+        model: 'Category',
+        match: { status: 'active' }
+      }
+    });
 
         if (!wishlistDoc || wishlistDoc.items.length === 0) {
             return res.render('wishlist', {
@@ -73,7 +75,8 @@ const loadWishlistPage = async (req, res) => {
             .filter(item =>
                 item.productId &&
                 !item.productId.isBlocked &&
-                item.productId.status === 'active'
+                item.productId.status === 'active' &&
+                item.productId.category
             )
             .map(item => {
                 const product = item.productId;

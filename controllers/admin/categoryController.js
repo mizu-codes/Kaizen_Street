@@ -1,5 +1,6 @@
 const Category = require('../../models/categorySchema');
 const Offer = require('../../models/offerSchema');
+const Product=require('../../models/productSchema');
 
 const categoryInfo = async (req, res) => {
   try {
@@ -23,12 +24,20 @@ const categoryInfo = async (req, res) => {
       .limit(limit)
       .lean();
 
+       const categoriesWithCount = await Promise.all(
+      categories.map(async (cat) => {
+        const count = await Product.countDocuments({ category: cat._id });
+        return { ...cat, itemCount: count };
+      })
+    );
+
     const offers = await Offer.find({ active: true }).lean();
+
     const [message] = req.flash('message');
     const [error] = req.flash('error');
 
     return res.render('category-info', {
-      categories,
+      categories:  categoriesWithCount,
       offers,
       q: search,
       page,
@@ -38,8 +47,8 @@ const categoryInfo = async (req, res) => {
       message: message || null,
       error: error || null
     });
-  } catch (err) {
-    console.error('Error fetching categories:', err);
+  } catch (error) {
+    console.error('Error fetching categories:', error);
     req.flash('error', 'Unable to load categories.');
     const [errorFallback] = req.flash('error');
     return res.render('category-info', {
@@ -67,7 +76,6 @@ const addCategory = async (req, res) => {
 
     const exists = await Category.findOne({
       categoryName: categoryName.trim(),
-      isListed: true
     });
 
     if (exists) {
@@ -79,7 +87,6 @@ const addCategory = async (req, res) => {
       categoryName: categoryName.trim(),
       categoryDescription: categoryDescription.trim(),
       status,
-      isListed: true,
       offerId: offerId || null
     });
 
@@ -95,8 +102,13 @@ const addCategory = async (req, res) => {
 
 const editCategory = async (req, res) => {
   const { id } = req.params;
-  const { categoryName, categoryDescription, status, isListed, offerId } = req.body;
+  const { categoryName, categoryDescription, status, offerId } = req.body;
   const redirectBase = `/admin/category?q=${encodeURIComponent(req.query.q || '')}&page=${req.query.page || 1}`;
+
+  if (!categoryName || !categoryName.trim() || !categoryDescription || !categoryDescription.trim()) {
+    req.flash('error', 'Name and description are required.');
+    return res.redirect(redirectBase);
+  }
 
   try {
     const updated = await Category.findByIdAndUpdate(
@@ -105,7 +117,6 @@ const editCategory = async (req, res) => {
         categoryName: categoryName.trim(),
         categoryDescription: categoryDescription.trim(),
         status,
-        isListed: Boolean(isListed),
         offerId: offerId || null
       },
       { new: true }
@@ -121,28 +132,8 @@ const editCategory = async (req, res) => {
   return res.redirect(redirectBase);
 };
 
-const deleteCategory = async (req, res) => {
-  const { id } = req.params;
-  const redirectBase = `/admin/category?q=${encodeURIComponent(req.query.q || '')}&page=${req.query.page || 1}`;
 
-  try {
-    const result = await Category.findByIdAndUpdate(
-      id,
-      { isListed: false },
-      { new: true }
-    );
-    if (!result) throw new Error('Category not found');
-
-    req.flash('message', 'Category blocked.');
-  } catch (err) {
-    console.error('Error blocking category:', err);
-    req.flash('error', 'Error blocking category.');
-  }
-  return res.redirect(redirectBase);
-};
-
-
-const toggleList = async (req, res) => {
+const toggleStatus = async (req, res) => {
   const { id } = req.params;
   const redirectBase = `/admin/category?q=${encodeURIComponent(req.query.q || '')}&page=${req.query.page || 1}`;
 
@@ -150,12 +141,17 @@ const toggleList = async (req, res) => {
     const category = await Category.findById(id);
     if (!category) throw new Error('Category not found');
 
-    category.isListed = !category.isListed;
+    category.status = (category.status === 'active') ? 'inactive' : 'active';
     await category.save();
 
-    req.flash('message', category.isListed ? 'Category unblocked.' : 'Category blocked.');
-  } catch (err) {
-    console.error('Error toggling category:', err);
+    req.flash(
+      'message',
+      category.status === 'active'
+        ? 'Category activated.'
+        : 'Category deactivated.'
+    );
+  } catch (error) {
+    console.error('Error toggling category status:', error);
     req.flash('error', 'Error toggling category status.');
   }
 
@@ -166,6 +162,5 @@ module.exports = {
   categoryInfo,
   addCategory,
   editCategory,
-  deleteCategory,
-  toggleList
+  toggleStatus
 };

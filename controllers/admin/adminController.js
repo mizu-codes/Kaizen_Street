@@ -9,7 +9,7 @@ const pageError = async (req, res) => {
 
 const loadLogin = (req, res) => {
     if (req.session.admin) {
-        return res.redirect('/admin/dashboard')
+        return res.redirect('/admin')
     }
     return res.render('admin-login', {
         error: null, errors: {}

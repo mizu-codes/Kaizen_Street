@@ -18,7 +18,8 @@ const loadCheckoutPage = async (req, res) => {
                 path: 'items.productId',
                 populate: {
                     path: 'category',
-                    model: 'Category'
+                    model: 'Category',
+                    match: { status: 'active' } 
                 }
             })
             .lean();
@@ -32,7 +33,7 @@ const loadCheckoutPage = async (req, res) => {
 
         const validItems = cartDoc.items.filter(item => {
             const product = item.productId;
-            return product && !product.isBlocked && product.status === 'active';
+            return product && !product.isBlocked && product.status === 'active' && product.category;
         });
 
         validItems.reverse()

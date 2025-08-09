@@ -31,74 +31,131 @@
 <script src="/assets2/js/vendors/jquery-3.6.0.min.js"></script>
 <script src="/assets2/js/vendors/bootstrap.bundle.min.js"></script>
 <script src="/assets/js/main.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js" integrity="sha512-..."
-    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js" integrity="sha512-..." crossorigin="anonymous"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        let cropper, currentSlot;
+        let cropper = null;
+        let currentSlot = null;
 
         window.triggerFile = i => {
-            document.getElementById(`fileInput${i}`).click();
+            const input = document.getElementById(`fileInput${i}`);
+            if (!input) return console.warn('file input not found for slot', i);
+            input.setAttribute('accept', 'image/*'); // keep hint
+            input.click();
         };
+
+        function isImageFile(file) {
+            if (!file) return false;
+            if (file.type && file.type.startsWith('image/')) return true;
+            return /\.(jpe?g|png|gif|webp|svg)$/i.test(file.name);
+        }
 
         window.loadCropper = (e, i) => {
             currentSlot = i;
-            const file = e.target.files[0];
+            const fileInput = e.target;
+            const file = fileInput && fileInput.files && fileInput.files[0];
             if (!file) return;
 
+            const isByType = file.type && file.type.startsWith('image/');
+            const isByExt = /\.(jpe?g|png|gif|webp|svg)$/i.test(file.name);
+            if (!isByType && !isByExt) {
+                try { fileInput.value = ''; } catch (err) { }
+
+                const msg = 'Please select an image file (jpg, png, gif, webp, svg).';
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({ icon: 'error', title: 'Invalid file', text: msg, customClass: { popup: 'swal-responsive'}});
+                } else {
+                    alert(msg);
+                }
+                return;
+            }
+
             const imgEl = document.getElementById('cropImage');
-            imgEl.src = URL.createObjectURL(file);
+            if (!imgEl) {
+                console.error('cropImage element not found');
+                return;
+            }
+            try {
+                const url = URL.createObjectURL(file);
+                imgEl.src = url;
+            } catch (error) {
+                console.error('Could not create object URL for image', error);
+                return;
+            }
 
             const modalEl = document.getElementById('cropModal');
+            if (!modalEl) {
+                console.error('cropModal element not found');
+                return;
+            }
             const bsModal = new bootstrap.Modal(modalEl);
             bsModal.show();
 
             modalEl.addEventListener('shown.bs.modal', () => {
-                if (cropper) cropper.destroy();
-                cropper = new Cropper(imgEl, {
-                    aspectRatio: 1,
-                    viewMode: 1,
-                    autoCropArea: 1,
-                });
+                try {
+                    if (cropper) cropper.destroy();
+                    cropper = new Cropper(imgEl, {
+                        aspectRatio: 1,
+                        viewMode: 1,
+                        autoCropArea: 1,
+                    });
+                } catch (err) {
+                    console.error('Cropper init error', err);
+                }
             }, { once: true });
         };
 
-        document.getElementById('cancelCrop').addEventListener('click', () => {
-            if (cropper) {
-                cropper.destroy();
-                cropper = null;
-            }
-        });
+        const cancelEl = document.getElementById('cancelCrop');
+        if (cancelEl) {
+            cancelEl.addEventListener('click', () => {
+                if (cropper) {
+                    cropper.destroy();
+                    cropper = null;
+                }
+            });
+        }
 
-        document.getElementById('cropAndSave').addEventListener('click', () => {
-            if (!cropper || currentSlot == null) return;
+        const saveEl = document.getElementById('cropAndSave');
+        if (saveEl) {
+            saveEl.addEventListener('click', () => {
+                if (!cropper || currentSlot == null) return;
 
-            cropper.getCroppedCanvas({ width: 800, height: 800 }).toBlob(blob => {
-                const reader = new FileReader();
-                reader.onload = () => {
-                    const dataURL = reader.result;
+                cropper.getCroppedCanvas({ width: 800, height: 800 }).toBlob(blob => {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        const dataURL = reader.result;
 
+                        const hidden = document.getElementById(`croppedImage${currentSlot}`);
+                        if (hidden) hidden.value = dataURL;
 
-                    document.getElementById(`croppedImage${currentSlot}`).value = dataURL;
+                        const slot = document.getElementById(`slot-${currentSlot}`);
+                        if (slot) {
+                            const img = slot.querySelector('img');
+                            if (img) img.src = dataURL;
+                            const btn = slot.querySelector('button');
+                            if (btn) btn.style.display = 'none';
+                            slot.classList.add('has-image');
+                        }
 
+                        try { if (typeof updateState === 'function') updateState(); } catch (err) { }
 
-                    const slot = document.getElementById(`slot-${currentSlot}`);
-                    const img = slot.querySelector('img');
-                    img.src = dataURL;
-                    slot.classList.add('has-image');
-                    slot.querySelector('button').style.display = 'none';
+                        const modal = document.getElementById('cropModal');
+                        const bs = bootstrap.Modal.getInstance(modal);
+                        if (bs) bs.hide();
+                    };
+                    reader.readAsDataURL(blob);
 
-                    updateState();
-                    bootstrap.Modal.getInstance(document.getElementById('cropModal')).hide();
-                };
-                reader.readAsDataURL(blob);
-
-                cropper.destroy();
-                cropper = null;
-            }, 'image/jpeg', 0.85);
-        });
-
+                    try {
+                        cropper.destroy();
+                        cropper = null;
+                    } catch (err) { }
+                }, 'image/jpeg', 0.85);
+            });
+        } else {
+            console.warn('Save button with id "cropAndSave" not found — please ensure your modal save button has id="cropAndSave"');
+        }
 
         const addForm = document.getElementById('productAddForm');
         const submitBtn = document.getElementById('submitBtn');
@@ -113,7 +170,6 @@
                 !!document.getElementById(`croppedImage${i}`).value
             );
 
-
             const fields = ['productName', 'regularPrice', 'status', 'category'];
             const sizeFields = ['S', 'M', 'L', 'XL', 'XXL'].map(s => document.getElementById(`stock_${s}`));
             const oneSizeHasStock = sizeFields.some(input => parseInt(input.value) > 0);
@@ -124,16 +180,16 @@
 
             const ok = allImages && allFields && oneSizeHasStock;
             submitBtn.disabled = !ok;
-            document.getElementById('img-error').style.display = allImages ? 'none' : 'block';
+            const imgErr = document.getElementById('img-error');
+            if (imgErr) imgErr.style.display = allImages ? 'none' : 'block';
         }
-
 
         document.querySelectorAll('input, select, textarea').forEach(el => {
             el.addEventListener('input', updateState);
             el.addEventListener('change', updateState);
         });
 
-        updateState()
+        updateState();
 
         addForm.addEventListener('submit', (e) => {
             if (submitBtn.disabled) {
@@ -143,9 +199,8 @@
             }
 
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Submitting…';
+        });
 
-        })
     });
 
 

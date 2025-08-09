@@ -10,6 +10,14 @@
   <link href="/assets2/css/main.css" rel="stylesheet" type="text/css" />
 
   <style>
+    .swal-responsive {
+      width: 90% !important;
+      max-width: 320px !important;
+      padding: 1.2rem !important;
+      border-radius: 10px;
+      font-size: 0.95rem;
+    }
+
     .table-wrap {
       overflow-x: auto;
     }
@@ -72,15 +80,33 @@
     <nav>
       <ul class="menu-aside">
         <li class="menu-item">
-          <a class="menu-link" href="/admin">
-            <i class="icon material-icons md-home"></i>
+          <a class="menu-link" href="/admin"> <i class="icon material-icons md-home"></i>
             <span class="text">Dashboard</span>
           </a>
         </li>
+        <li class="menu-item ">
+          <a class="menu-link" href="/admin/user"> <i class="icon material-icons md-person"></i>
+            <span class="text">Customers</span>
+          </a>
+        </li>
         <li class="menu-item active">
-          <a class="menu-link" href="/admin/user">
-            <i class="icon material-icons md-person"></i>
+          <a class="menu-link" href="/admin/category"> <i class="icon material-icons md-store"></i>
             <span class="text">Category</span>
+          </a>
+        </li>
+        <li class="menu-item has-submenu">
+          <a class="menu-link"><i class="icon material-icons md-shopping_bag"></i>
+            <span class="text">Products</span>
+          </a>
+          <div class="submenu">
+            <a href="/admin/addProducts">Product Add</a>
+            <a href="/admin/products">Product List</a>
+          </div>
+        </li>
+        <li class="menu-item">
+          <a class="menu-link" href="/admin/orders">
+            <i class="icon material-icons md-shopping_cart"></i>
+            <span class="text">Orders</span>
           </a>
         </li>
       </ul>
@@ -121,7 +147,6 @@
         <h2 class="content-title card-title">Category Management</h2>
       </div>
 
-      <!-- Add New Category Card -->
       <div class="card mb-4">
         <div class="card-body">
           <h5 class="card-title">Add New Category</h5>
@@ -178,7 +203,6 @@
         </div>
       </div>
 
-      <!-- All Categories Table -->
       <div class="card">
         <div class="card-body">
           <h4 class="card-title">All Categories</h4>
@@ -190,7 +214,7 @@
                   <th>Name</th>
                   <th>Description</th>
                   <th>Status</th>
-                  <th>Listed</th>
+                  <th>Count</th>
                   <th>Offer</th>
                   <th>Created At</th>
                   <th class="text-end">Actions</th>
@@ -217,7 +241,7 @@
                           <%= cat.status %>
                         </td>
                         <td>
-                          <%= cat.isListed ? 'Yes' : 'No' %>
+                          <%= cat.itemCount || 0 %>
                         </td>
                         <td>
                           <%= cat.offerId ? cat.offerId.title : '—' %>
@@ -228,14 +252,22 @@
                         <td class="text-end">
                           <button type="button" class="btn btn-sm btn-outline-primary me-1"
                             onclick="toggleEdit('<%= cat._id %>')">Edit</button>
-                          <form action="/admin/toggleList/<%= cat._id %>?q=<%= q %>&page=<%= page %>" method="POST"
-                            class="d-inline">
-                            <% if (cat.isListed) { %>
-                              <button type="submit" class="btn btn-sm btn-outline-danger">Block</button>
-                              <% } else { %>
-                                <button type="submit" class="btn btn-sm btn-outline-success">Unblock</button>
-                                <% } %>
-                          </form>
+                          <form
+  action="/admin/toggleStatus/<%= cat._id %>?q=<%= q %>&page=<%= page %>"
+  method="POST"
+  class="d-inline"
+>
+  <% if (cat.status === 'active') { %>
+    <button type="submit" class="btn btn-sm btn-outline-danger">
+      Deactivate
+    </button>
+  <% } else { %>
+    <button type="submit" class="btn btn-sm btn-outline-success">
+      Activate
+    </button>
+  <% } %>
+</form>
+
                         </td>
                       </tr>
                       <tr id="edit-<%= cat._id %>" style="display:none;">
@@ -246,12 +278,8 @@
                             value="<%= cat.categoryName %>" class="form-control form-control-sm" required /></td>
                         <td><input form="edit-<%= cat._id %>-form" type="text" name="categoryDescription"
                             value="<%= cat.categoryDescription %>" class="form-control form-control-sm" required /></td>
-                        <td><select form="edit-<%= cat._id %>-form" name="status" class="form-select form-select-sm">
-                            <option value="active" <%=cat.status==='active' ? 'selected' :''%>>Active</option>
-                            <option value="inactive" <%=cat.status==='inactive' ? 'selected' :''%>>Inactive</option>
-                          </select></td>
-                        <td><input form="edit-<%= cat._id %>-form" type="checkbox" name="isListed"
-                            class="form-check-input" <%=cat.isListed? 'checked' :''%>/></td>
+                        <td></td>
+                        <td></td>
                         <td><select form="edit-<%= cat._id %>-form" name="offerId" class="form-select form-select-sm">
                             <option value="">No Offer</option>
                             <% offers.forEach(offer=>{ %><option value="<%= offer._id %>" <%=cat.offerId &&
@@ -263,9 +291,11 @@
                         <td class="text-end">
                           <div class="d-flex justify-content-end align-items-center gap-2">
                             <form id="edit-<%= cat._id %>-form"
-                              action="/admin/editCategory/<%= cat._id %>?q=<%= q %>&page=<%= page %>" method="POST">
-                              <button type="submit" class="btn btn-sm btn-success py-1 px-2">Save</button></form><button
-                              type="button" class="btn btn-sm btn-outline-secondary py-1 px-2"
+                              action="/admin/editCategory/<%= cat._id %>?q=<%= q %>&page=<%= page %>" method="POST"
+                              onsubmit="return validateEditForm(this)">
+                              <button type="submit" class="btn btn-sm btn-success py-1 px-2">Save</button>
+                            </form>
+                            <button type="button" class="btn btn-sm btn-outline-secondary py-1 px-2"
                               onclick="toggleEdit('<%= cat._id %>')">Cancel</button>
                           </div>
                         </td>
@@ -314,6 +344,8 @@
   <script src="/assets2/js/vendors/jquery-3.6.0.min.js"></script>
   <script src="/assets2/js/vendors/bootstrap.bundle.min.js"></script>
   <script src="/assets2/js/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   <script>
     function toggleEdit(id) {
       const viewRow = document.getElementById(`view-${id}`);
@@ -323,6 +355,8 @@
       editRow.style.display = editRow.style.display === 'none' ? '' : 'none';
     }
   </script>
+
+
 </body>
 
 </html>

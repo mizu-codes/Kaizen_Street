@@ -2,37 +2,23 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
+      <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Checkout</title>
+    <title>Order Success</title>
     <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/kaizenicon.svg">
+    <link rel="stylesheet" href="/css/main.css?v=3.4">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: white;
-            color: #333;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
-        }
-
-        .container {
+        .success-container {
             max-width: 1000px;
             width: 100%;
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 80px;
             align-items: center;
-            padding: 20px;
+            padding: 60px 20px;
+            margin: 0 auto;
         }
 
         .content {
@@ -97,26 +83,50 @@
             min-width: 120px;
         }
 
-        .btn-primary {
+        .success-btn-primary {
             background: linear-gradient(135deg, #ff1744 0%, #f50057 50%, #c51162 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            display: inline-block;
+            text-align: center;
+            min-width: 140px;
+        }
+
+        .success-btn-primary:hover {
+            background: linear-gradient(135deg, #e91e63 0%, #ad1457 50%, #880e4f 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 23, 68, 0.3);
             color: white;
         }
 
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #e91e63 0%, #ad1457 50%, #880e4f 100%);
-            transform: translateY(-1px);
-        }
-
-        .btn-secondary {
+        .success-btn-secondary {
             background-color: transparent;
             color: #ff1744;
             border: 2px solid #ff1744;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-block;
+            text-align: center;
+            min-width: 140px;
         }
 
-        .btn-secondary:hover {
+        .success-btn-secondary:hover {
             background: linear-gradient(135deg, #ff1744 0%, #f50057 50%, #c51162 100%);
             color: white;
             transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 23, 68, 0.3);
         }
 
         .image-section {
@@ -124,12 +134,20 @@
             flex-direction: column;
             align-items: center;
         }
+        
+        .main-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 200px); 
+            padding: 40px 0;
+        }
 
         @media (max-width: 768px) {
-            .container {
+            .success-container {
                 grid-template-columns: 1fr;
                 gap: 40px;
-                padding: 20px;
+                padding: 40px 20px;
             }
 
             .congratulations {
@@ -144,31 +162,303 @@
 </head>
 
 <body>
-
-    <div class="container">
-        <div class="content">
-            <div>
-                <div class="status-title">Order status</div>
-                <h1 class="congratulations">Congratulations..!</h1>
-            </div>
-
-            <div class="order-info">
-                <div class="order-status">Your order is placed</div>
-                <div class="delivery-date">Item will be delivered on 20th August 2025</div>
-            </div>
-
-            <div class="buttons">
-                <a href="/shop" class="btn btn-primary">Continue Shopping</a>
-                <a href="/orders" class="btn btn-secondary">View orders</a>
+   
+    <header class="header-area header-style-1 header-height-2">
+        <div class="header-top header-top-ptb-1 d-none d-lg-block">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-xl-3 col-lg-4">
+                        <div class="header-info">
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-4">
+                        <div class="text-center">
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-4">
+                        <div class="header-info header-info-right">
+                            <% if (user) { %>
+                                <div class="dropdown">
+                                    <a href="#" class="sign-in-link">
+                                        <%= user.name %>
+                                    </a>
+                                    <div class="dropdown-content">
+                                        <a href="/userProfile">Profile</a>
+                                        <a href="/logout">Logout</a>
+                                    </div>
+                                </div>
+                                <% } else { %>
+                                    <ul>
+                                        <li>
+                                            <i class="fi-rs-user"></i>
+                                            <a href="/login">Log In</a>
+                                        </li>
+                                    </ul>
+                                    <% } %>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
-
-        <div class="image-section text-center">
-            <img src="/imgs/anime/order-success.png" alt="Order Success" class="img-fluid" style="max-width: 300px;">
+        <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
+            <div class="container">
+                <div class="header-wrap">
+                    <div class="logo logo-width-1">
+                        <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+                    </div>
+                    <div class="header-right">
+                        <div class="search-style-2"></div>
+                        <div class="header-action-right">
+                            <div class="header-action-2">
+                                <div class="header-action-icon-2">
+                                    <a href="/wishlist">
+                                        <img class="svgInject" alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
+                                        <span id="wishlistItemCount" class="pro-count blue">
+                                            <%= typeof locals.wishlistItemCount !=='undefined' ?
+                                                locals.wishlistItemCount : 0 %>
+                                        </span>
+                                    </a>
+                                </div>
+                                <div class="header-action-icon-2">
+                                    <a class="mini-cart-icon" href="/cart">
+                                        <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
+                                        <span id="cartItemCount" class="pro-count blue">
+                                            <%= typeof locals.cartItemCount !=='undefined' ? locals.cartItemCount : 0 %>
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+        <div class="header-bottom header-bottom-bg-color sticky-bar">
+            <div class="container">
+                <div class="header-wrap header-space-between position-relative">
+                    <div class="logo logo-width-1 d-block d-lg-none">
+                        <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+                    </div>
+                    <div class="header-nav d-none d-lg-flex">
+                        <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
+                            <nav>
+                                <ul>
+                                    <li><a href="/">Home</a></li>
+                                    <li><a href="/shop">Shop</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="header-action-right d-block d-lg-none">
+                        <div class="header-action-2">
+                            <div class="header-action-icon-2">
+                                <a href="/wishlist">
+                                    <img alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
+                                    <span id="wishlistItemCount" class="pro-count blue">
+                                        <%= typeof locals.wishlistItemCount !=='undefined' ? locals.wishlistItemCount :
+                                            0 %>
+                                    </span>
+                                </a>
+                            </div>
+                            <div class="header-action-icon-2">
+                                <a class="mini-cart-icon" href="/cart">
+                                    <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
+                                    <span id="cartItemCount" class="pro-count blue">
+                                        <%= typeof locals.cartItemCount !=='undefined' ? locals.cartItemCount : 0 %>
+                                    </span>
+                                </a>
+                            </div>
+                            <div class="header-action-icon-2 d-block d-lg-none">
+                                <div class="burger-icon burger-icon-white">
+                                    <span class="burger-icon-top"></span>
+                                    <span class="burger-icon-mid"></span>
+                                    <span class="burger-icon-bottom"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
 
+       <div class="mobile-header-active mobile-header-wrapper-style">
+        <div class="mobile-header-wrapper-inner">
+            <div class="mobile-header-top">
+                <div class="mobile-header-logo">
+                    <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+                </div>
+                <div class="mobile-menu-close close-style-wrap close-style-position-inherit">
+                    <button class="close-style search-close">
+                        <i class="icon-top"></i>
+                        <i class="icon-bottom"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="mobile-header-content-area">
+                <div class="mobile-menu-wrap mobile-header-border">
+                    <div class="main-categori-wrap mobile-header-border">
+                    </div>
+                    <nav>
+                        <ul class="mobile-menu">
+                            <li class="menu-item-has-children"><span class="menu-expand"></span><a href="/">Home</a>
+                            </li>
+                            <li class="menu-item-has-children"><span class="menu-expand"></span><a
+                                    href="shop-grid-right.html">shop</a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <!-- mobile menu end -->
+                </div>
+                <div class="mobile-header-info-wrap mobile-header-border">
+                    <div class="single-mobile-header-info">
+                        <a href="/login">Log In</a>
+                    </div>
+                </div>
+                <div class="mobile-social-icon">
+                    <h5 class="mb-15 text-grey-4">Follow Us</h5>
+                    <a href="#"><img src="/imgs/theme/icons/icon-facebook.svg" alt=""></a>
+                    <a href="#"><img src="/imgs/theme/icons/icon-twitter.svg" alt=""></a>
+                    <a href="#"><img src="/imgs/theme/icons/icon-instagram.svg" alt=""></a>
+                    <a href="#"><img src="/imgs/theme/icons/icon-pinterest.svg" alt=""></a>
+                    <a href="#"><img src="/imgs/theme/icons/icon-youtube.svg" alt=""></a>
+                </div>
+            </div>
+        </div>
     </div>
+
+      <div class="main-content">
+        <div class="success-container">
+            <div class="content">
+                <div>
+                    <div class="status-title">Order status</div>
+                    <h1 class="congratulations">Congratulations..!</h1>
+                </div>
+
+                <div class="order-info">
+                    <div class="order-status">Your order is placed</div>
+                    <div class="delivery-date">Item will be delivered on 20th August 2025</div>
+                </div>
+
+              <div class="buttons">
+                    <a href="/shop" class="success-btn-primary">Continue Shopping</a>
+                    <a href="/orders" class="success-btn-secondary">View orders</a>
+                </div>
+            </div>
+
+            <div class="image-section text-center">
+                <img src="/imgs/anime/order-success.png" alt="Order Success" class="img-fluid" style="max-width: 300px;">
+            </div>
+        </div>
+    </div>
+
+     <footer class="main">
+        <section class="section-padding footer-mid">
+            <div class="container pt-15 pb-20">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="widget-about font-md mb-md-5 mb-lg-0">
+                            <h5 class="mt-20 mb-10 fw-600 text-grey-4 wow fadeIn animated">Contact</h5>
+                            <p class="wow fadeIn animated">
+                                <strong>Address: </strong>562 Wellington Road, Street 32, San Francisco
+                            </p>
+                            <p class="wow fadeIn animated">
+                                <strong>Phone: </strong>+01 2222 365 /(+91) 01 2345 6789
+                            </p>
+                            <p class="wow fadeIn animated">
+                                <strong>Hours: </strong>10:00 - 18:00, Mon - Sat
+                            </p>
+                            <h5 class="mb-10 mt-30 fw-600 text-grey-4 wow fadeIn animated">Follow Us</h5>
+                            <div class="mobile-social-icon wow fadeIn animated mb-sm-5 mb-md-0">
+                                <a href="#"><img src="/imgs/theme/icons/icon-facebook.svg" alt=""></a>
+                                <a href="#"><img src="/imgs/theme/icons/icon-twitter.svg" alt=""></a>
+                                <a href="#"><img src="/imgs/theme/icons/icon-instagram.svg" alt=""></a>
+                                <a href="#"><img src="/imgs/theme/icons/icon-pinterest.svg" alt=""></a>
+                                <a href="#"><img src="/imgs/theme/icons/icon-youtube.svg" alt=""></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-3">
+                        <h5 class="widget-title wow fadeIn animated">About</h5>
+                        <ul class="footer-list wow fadeIn animated mb-sm-5 mb-md-0">
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Delivery Information</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms &amp; Conditions</a></li>
+                            <li><a href="#">Contact Us</a></li>
+                            <li><a href="#">Support Center</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2  col-md-3">
+                        <h5 class="widget-title wow fadeIn animated">My Account</h5>
+                        <ul class="footer-list wow fadeIn animated">
+                            <li><a href="#">Sign In</a></li>
+                            <li><a href="#">View Cart</a></li>
+                            <li><a href="#">My Wishlist</a></li>
+                            <li><a href="#">Track My Order</a></li>
+                            <li><a href="#">Help</a></li>
+                            <li><a href="#">Order</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-4">
+                        <h5 class="widget-title wow fadeIn animated">Install App</h5>
+                        <div class="row">
+                            <div class="col-md-8 col-lg-12">
+                                <p class="wow fadeIn animated">From App Store or Google Play</p>
+                                <div class="download-app wow fadeIn animated">
+                                    <a href="#" class="hover-up mb-sm-4 mb-lg-0"><img class="active"
+                                            src="/imgs/theme/app-store.jpg" alt=""></a>
+                                    <a href="#" class="hover-up"><img src="/imgs/theme/google-play.jpg" alt=""></a>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-12 mt-md-3 mt-lg-0">
+                                <p class="mb-20 wow fadeIn animated">Secured Payment Gateways</p>
+                                <img class="wow fadeIn animated" src="/imgs/theme/payment-method.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="container pb-20 wow fadeIn animated">
+            <div class="row">
+                <div class="col-12 mb-20">
+                    <div class="footer-bottom"></div>
+                </div>
+                <div class="col-lg-6">
+                    <p class="float-md-left font-sm text-muted mb-0">&copy; 2025, <strong class="text-brand">Kaizen
+                            Street</strong>
+                </div>
+                <div class="col-lg-6">
+                    <p class="text-lg-end text-start font-sm text-muted mb-0">All rights reserved</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+     <script src="/js/vendor/modernizr-3.6.0.min.js"></script>
+    <script src="/js/vendor/jquery-3.6.0.min.js"></script>
+    <script src="/js/vendor/jquery-migrate-3.3.0.min.js"></script>
+    <script src="/js/vendor/bootstrap.bundle.min.js"></script>
+    <script src="/js/plugins/slick.js"></script>
+    <script src="/js/plugins/jquery.syotimer.min.js"></script>
+    <script src="/js/plugins/wow.js"></script>
+    <script src="/js/plugins/jquery-ui.js"></script>
+    <script src="/js/plugins/perfect-scrollbar.js"></script>
+    <script src="/js/plugins/magnific-popup.js"></script>
+    <script src="/js/plugins/select2.min.js"></script>
+    <script src="/js/plugins/waypoints.js"></script>
+    <script src="/js/plugins/counterup.js"></script>
+    <script src="/js/plugins/jquery.countdown.min.js"></script>
+    <script src="/js/plugins/images-loaded.js"></script>
+    <script src="/js/plugins/isotope.js"></script>
+    <script src="/js/plugins/scrollup.js"></script>
+    <script src="/js/plugins/jquery.vticker-min.js"></script>
+    <script src="/js/plugins/jquery.theia.sticky.js"></script>
+    <script src="/js/plugins/jquery.elevatezoom.js"></script>
+    <script src="/js/main.js?v=3.4"></script>
+    <script src="/js/shop.js?v=3.4"></script>
+
     <script>
         window.history.pushState(null, '', window.location.href);
 

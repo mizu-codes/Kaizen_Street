@@ -22,12 +22,6 @@ const categorySchema = new Schema({
         ref: 'Offer',
         default: null
     },
-    isListed: {
-        type: Boolean,
-        default: true,
-        required: true,
-        index: true
-    },
 },
     {
         timestamps: true

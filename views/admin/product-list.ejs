@@ -8,971 +8,952 @@
   <link rel="shortcut icon" type="image/x-icon" href="/assets2/imgs/theme/kaizenicon.svg">
   <link href="/assets2/css/main.css" rel="stylesheet" type="text/css" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-
-  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
   <style>
     /* Base Layout & Container */
- /* Base Layout & Container */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 15px;
-}
-
-/* Content Header */
-.content-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid #f0f0f0;
-}
-
-.content-title {
-  font-size: 1.75rem;
-  font-weight: 600;
-  color: #333;
-  margin: 0;
-}
-
-/* Submenu Navigation */
-.submenu {
-  margin-bottom: 1rem;
-  padding: 0.75rem 0;
-  border-bottom: 1px solid #e9ecef;
-}
-
-.submenu a {
-  color: white;
-  text-decoration: none;
-  font-weight: 500;
-  background-color: #6c63ff;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  transition: all 0.3s ease;
-  margin-right: 1rem;
-  margin-top: 1rem;
-  box-shadow: 0 8px 12px rgba(2, 1, 13, 0.531);
-}
-
-/* Search & Filter Form */
-.search-filter-form {
-  background: #f8f9fa;
-  padding: 1.5rem;
-  border-radius: 12px;
-  margin-bottom: 2rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.search-filter-form .form-control,
-.search-filter-form .form-select {
-  border: 2px solid #e9ecef;
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-  transition: all 0.3s ease;
-}
-
-.search-filter-form .form-control:focus,
-.search-filter-form .form-select:focus {
-  border-color: #6c63ff;
-  box-shadow: 0 0 0 0.2rem rgba(108, 99, 255, 0.25);
-}
-
-.search-filter-form .btn-primary {
-  background: linear-gradient(135deg, #6c63ff, #8f94fb);
-  border: none;
-  padding: 0.75rem 2rem;
-  border-radius: 8px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.search-filter-form .btn-primary:hover {
-  background: linear-gradient(135deg, #5a52e6, #7d84f2);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(108, 99, 255, 0.3);
-}
-
-/* Table Wrapper & Styling */
-.table-wrap {
-  overflow-x: auto;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  margin-bottom: 2rem;
-}
-
-.table-custom {
-  margin-bottom: 0;
-  font-size: 0.9rem;
-  min-width: 1200px; /* Updated from 1000px */
-}
-
-.table-custom th {
-  background: linear-gradient(90deg, #6c63ff, #8f94fb);
-  color: #fff;
-  border: none;
-  padding: 0.75rem 0.5rem; /* Updated padding */
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 0.8rem;
-  letter-spacing: 0.5px;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  white-space: nowrap; /* Added */
-}
-
-.table-custom tbody tr {
-  transition: all 0.3s ease;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.table-custom tbody tr:hover {
-  background-color: #f8f9ff;
-  transform: scale(1.002); /* Reduced from 1.01 */
-  box-shadow: 0 2px 8px rgba(108, 99, 255, 0.1);
-}
-
-.table-custom td {
-  padding: 0.75rem 0.5rem; /* Updated padding */
-  vertical-align: middle;
-  border: none;
-}
-
-/* Table column widths */
-.table-custom th:nth-child(1) { width: 50px; }   /* # */
-.table-custom th:nth-child(2) { width: 200px; }  /* Name */
-.table-custom th:nth-child(3) { width: 120px; }  /* Category */
-.table-custom th:nth-child(4) { width: 100px; }  /* Regular Price */
-.table-custom th:nth-child(5) { width: 80px; }   /* Discount % */
-.table-custom th:nth-child(6) { width: 100px; }  /* Discount Price */
-.table-custom th:nth-child(7) { width: 140px; }  /* Stock */
-.table-custom th:nth-child(8) { width: 100px; }  /* Sizes */
-.table-custom th:nth-child(9) { width: 80px; }   /* Status */
-.table-custom th:nth-child(10) { width: 80px; }  /* List */
-.table-custom th:nth-child(11) { width: 150px; } /* Actions */
-
-/* Product name styling */
-.product-name {
-  font-weight: 600;
-  color: #333;
-  max-width: 180px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.product-name:hover {
-  overflow: visible;
-  white-space: normal;
-  word-wrap: break-word;
-}
-
-/* Category styling */
-.category-name {
-  color: #6c757d;
-  font-size: 0.85rem;
-}
-
-/* Improved Stock Display */
-.stock-summary {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.stock-total {
-  font-weight: 600;
-  color: #333;
-  font-size: 0.85rem;
-  display: flex;
-  align-items: center;
-}
-
-.stock-total.in-stock {
-  color: #28a745;
-}
-
-.stock-total.low-stock {
-  color: #ffc107;
-}
-
-.stock-total.out-of-stock {
-  color: #dc3545;
-}
-
-.stock-details {
-  font-size: 0.75rem;
-  color: #6c757d;
-  line-height: 1.2;
-}
-
-/* Improved Size Display */
-.size-display {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-  max-width: 120px;
-}
-
-.size-tag {
-  background: #e9ecef;
-  color: #495057;
-  padding: 0.2rem 0.4rem;
-  border-radius: 4px;
-  font-size: 0.7rem;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-/* Price Column Styling */
-.price-column {
-  min-width: 120px;
-  text-align: right; /* Added */
-}
-
-.original-price {
-  font-weight: 600;
-  color: #333;
-}
-
-.discount-price {
-  color: #28a745;
-  font-weight: 600;
-  font-size: 0.9em;
-}
-
-.discount-badge {
-  background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
-  color: white;
-  font-size: 0.65rem; /* Reduced from 0.7rem */
-  padding: 0.2rem 0.4rem; /* Updated padding */
-  border-radius: 10px; /* Reduced from 12px */
-  font-weight: 600;
-  white-space: nowrap; /* Added */
-}
-
-/* Status and List badges */
-.status-badge {
-  padding: 0.35rem 0.75rem;
-  border-radius: 15px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: capitalize;
-  display: inline-flex;
-  align-items: center;
-}
-
-.status-badge.active {
-  background: rgba(40, 167, 69, 0.1);
-  color: #28a745;
-  border: 1px solid rgba(40, 167, 69, 0.3);
-}
-
-.status-badge.inactive {
-  background: rgba(108, 117, 125, 0.1);
-  color: #6c757d;
-  border: 1px solid rgba(108, 117, 125, 0.3);
-}
-
-.list-badge {
-  padding: 0.35rem 0.75rem;
-  border-radius: 15px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-}
-
-.list-badge.listed {
-  background: rgba(40, 167, 69, 0.1);
-  color: #28a745;
-  border: 1px solid rgba(40, 167, 69, 0.3);
-}
-
-.list-badge.not-listed {
-  background: rgba(220, 53, 69, 0.1);
-  color: #dc3545;
-  border: 1px solid rgba(220, 53, 69, 0.3);
-}
-
-/* Action Buttons */
-.btn-sm {
-  font-size: 0.75rem;
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  margin: 0 0.1rem; /* Reduced from 0.2rem */
-}
-
-.btn-outline-primary {
-  border-color: #6c63ff;
-  color: #6c63ff;
-}
-
-.btn-outline-primary:hover {
-  background-color: #6c63ff;
-  border-color: #6c63ff;
-  color: white;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(108, 99, 255, 0.3);
-}
-
-.btn-outline-success {
-  border-color: #28a745;
-  color: #28a745;
-}
-
-.btn-outline-success:hover {
-  background-color: #28a745;
-  border-color: #28a745;
-  color: white;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
-}
-
-.btn-outline-danger {
-  border-color: #dc3545;
-  color: #dc3545;
-}
-
-.btn-outline-danger:hover {
-  background-color: #dc3545;
-  border-color: #dc3545;
-  color: white;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
-}
-
-/* Pagination */
-.pagination {
-  margin-top: 2rem;
-}
-
-.pagination .page-link {
-  color: #6c63ff;
-  border-radius: 8px;
-  border: 2px solid #6c63ff;
-  margin: 0 4px;
-  padding: 0.45rem 0.9rem;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  text-decoration: none;
-}
-
-.pagination .page-link:hover {
-  background-color: #6c63ff;
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(108, 99, 255, 0.3);
-}
-
-.pagination .page-item.active .page-link {
-  background-color: #6c63ff;
-  border-color: #6c63ff;
-  color: white;
-  box-shadow: 0 4px 8px rgba(108, 99, 255, 0.3);
-}
-
-.pagination .page-item.disabled .page-link {
-  color: #aaa;
-  border-color: #ddd;
-  background-color: #f9f9f9;
-  cursor: not-allowed;
-}
-
-.pagination .page-item.disabled .page-link:hover {
-  transform: none;
-  box-shadow: none;
-}
-
-/* ======================== */
-/* UPDATED MODAL SECTION - REPLACE FROM HERE */
-/* ======================== */
-/* Enhanced Modal Styling - Compact Version */
-.modal-dialog {
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-  max-width: 900px;
-}
-
-.modal-dialog.modal-xl {
-  max-width: 950px;
-  margin: 0.5rem auto;
-}
-
-.modal-content {
-  border: none;
-  border-radius: 12px;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-}
-
-.modal-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 1.25rem 1.75rem 1rem;
-  border-bottom: none;
-  position: relative;
-}
-
-.modal-header::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7);
-}
-
-.modal-title {
-  font-weight: 700;
-  font-size: 1.4rem;
-  margin: 0;
-  letter-spacing: -0.3px;
-}
-
-.btn-close {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  opacity: 0.8;
-  transition: all 0.3s ease;
-  filter: invert(1);
-}
-
-.btn-close:hover {
-  background: rgba(255, 255, 255, 0.3);
-  opacity: 1;
-  transform: scale(1.05);
-}
-
-.modal-body {
-  padding: 1.5rem;
-  background: #fafbfc;
-  max-height: none;
-  overflow-y: visible;
-}
-
-/* Compact Image Upload Section */
-.image-upload-section {
-  background: white;
-  border-radius: 10px;
-  padding: 1.25rem;
-  margin-bottom: 1.25rem;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-  border: 1px solid #e8ecf4;
-}
-
-.image-upload-section h6 {
-  color: #2d3748;
-  font-weight: 600;
-  font-size: 0.95rem;
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-}
-
-.image-upload-section h6::before {
-  margin-right: 0.4rem;
-  font-size: 1rem;
-}
-
-.image-upload-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.image-upload-item {
-  border: 2px dashed #cbd5e0;
-  border-radius: 8px;
-  padding: 1rem;
-  text-align: center;
-  transition: all 0.3s ease;
-  position: relative;
-  background: #f7fafc;
-  min-height: 160px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.image-upload-item:hover {
-  border-color: #667eea;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
-  transform: translateY(-1px);
-}
-
-.image-upload-item.has-image {
-  border-style: solid;
-  border-color: #48bb78;
-  background: linear-gradient(135deg, rgba(72, 187, 120, 0.05), rgba(56, 178, 172, 0.05));
-}
-
-.image-upload-input {
-  position: absolute;
-  opacity: 0;
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
-}
-
-.image-upload-label {
-  display: block;
-  cursor: pointer;
-  font-size: 0.85rem;
-  color: #6c757d;
-  margin-bottom: 0.3rem;
-}
-
-.upload-placeholder {
-  color: #718096;
-  font-weight: 500;
-}
-
-.upload-placeholder i {
-  display: block;
-  margin-bottom: 0.4rem;
-  font-size: 2rem;
-  color: #a0aec0;
-}
-
-.image-preview {
-  width: 100%;
-  height: 120px;
-  object-fit: cover;
-  border-radius: 6px;
-  margin-bottom: 0.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.image-remove-btn {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #fc8181, #f56565);
-  color: white;
-  border: none;
-  font-size: 0.7rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 6px rgba(245, 101, 101, 0.3);
-  transition: all 0.3s ease;
-}
-
-.image-remove-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 3px 8px rgba(245, 101, 101, 0.4);
-}
-
-.crop-btn {
-  position: absolute;
-  top: 0.5rem;
-  left: 0.5rem;
-  background: linear-gradient(135deg, #4299e1, #3182ce);
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 0.3rem 0.6rem;
-  font-size: 0.7rem;
-  cursor: pointer;
-  font-weight: 500;
-  box-shadow: 0 2px 6px rgba(66, 153, 225, 0.3);
-  transition: all 0.3s ease;
-}
-
-.crop-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 3px 8px rgba(66, 153, 225, 0.4);
-}
-
-.crop-modal .modal-dialog {
-  max-width: 90vw;
-  max-height: 90vh;
-}
-
-.crop-container {
-  max-height: 60vh;
-  overflow: hidden;
-}
-
-.crop-container img {
-  max-width: 100%;
-}
-
-.crop-controls {
-  display: flex;
-  gap: 10px;
-  margin-top: 15px;
-  flex-wrap: wrap;
-}
-
-.aspect-ratio-btn {
-  padding: 5px 10px;
-  border: 1px solid #dee2e6;
-  background: white;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 12px;
-}
-
-.aspect-ratio-btn.active {
-  background: #007bff;
-  color: white;
-  border-color: #007bff;
-}
-
-/* Compact Form Styling */
-.modal-body .form-label {
-  font-weight: 600;
-  color: #2d3748;
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-  display: flex;
-  align-items: center;
-}
-
-.modal-body .form-control,
-.modal-body .form-select {
-  border: 2px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 0.65rem 0.9rem;
-  transition: all 0.3s ease;
-  background: white;
-  font-size: 0.9rem;
-}
-
-.modal-body .form-control:focus,
-.modal-body .form-select:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
-  outline: none;
-}
-
-.modal-body .form-control::placeholder {
-  color: #a0aec0;
-}
-
-/* Compact Pricing Section */
-.pricing-section {
-  background: white;
-  border-radius: 10px;
-  padding: 1.25rem;
-  margin-bottom: 1.25rem;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-  border: 1px solid #e8ecf4;
-}
-
-.pricing-section h6 {
-  color: #2d3748;
-  font-weight: 600;
-  font-size: 0.95rem;
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-}
-
-.pricing-section h6::before {
-  content: '💰';
-  margin-right: 0.4rem;
-  font-size: 1rem;
-}
-
-.price-calculator {
-  background: linear-gradient(135deg, #f7fafc, #edf2f7);
-  padding: 1rem;
-  border-radius: 8px;
-  margin-top: 1rem;
-  border: 1px solid #e2e8f0;
-}
-
-.price-display {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.8rem 1rem;
-  background: white;
-  border-radius: 6px;
-  margin-top: 0.5rem;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0;
-}
-
-.discount-preview {
-  color: #38a169;
-  font-weight: 700;
-  font-size: 1rem;
-}
-
-.savings-display {
-  color: #28a745;
-  font-weight: bold;
-  font-size: 0.85rem;
-  margin-top: 0.4rem;
-}
-
-/* Compact Row Styling */
-.modal-body .row {
-  margin-bottom: 1rem;
-}
-
-.modal-body .row:last-child {
-  margin-bottom: 0;
-}
-
-/* Stock Input Styling */
-.modal-body input[type="number"] {
-  text-align: center;
-  font-weight: 500;
-}
-
-/* Textarea Styling */
-.modal-body textarea {
-  resize: vertical;
-  min-height: 80px;
-}
-
-.modal-body textarea::placeholder {
-  color: #a0aec0;
-  line-height: 1.4;
-}
-
-/* Small Text Styling */
-.form-text {
-  color: #718096;
-  font-size: 0.8rem;
-  margin-top: 0.4rem;
-  font-style: italic;
-}
-
-/* Compact Modal Footer */
-.modal-footer {
-  padding: 1.25rem 1.75rem;
-  border-top: 1px solid #e2e8f0;
-  background: white;
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.75rem;
-}
-
-.modal-footer .btn {
-  padding: 0.6rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-  border: none;
-}
-
-.modal-footer .btn-secondary {
-  background: #e2e8f0;
-  color: #4a5568;
-  border: 2px solid #e2e8f0;
-}
-
-.modal-footer .btn-secondary:hover {
-  background: #cbd5e0;
-  color: #2d3748;
-  transform: translateY(-1px);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-}
-
-.modal-footer .btn-primary {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  border: 2px solid transparent;
-}
-
-.modal-footer .btn-primary:hover {
-  background: linear-gradient(135deg, #5a67d8, #6b46c1);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 15px rgba(102, 126, 234, 0.3);
-}
-
-/* Enhanced Scrollbar */
-.modal-body::-webkit-scrollbar {
-  display: none;
-}
-
-/* Animation for modal appearance */
-.modal.fade .modal-dialog {
-  transform: scale(0.9) translateY(-30px);
-  transition: all 0.25s ease;
-}
-
-.modal.show .modal-dialog {
-  transform: scale(1) translateY(0);
-}
-
-/* ======================== */
-/* END OF MODAL SECTION */
-/* ======================== */
-
-/* Alert Messages */
-.alert {
-  border: none;
-  border-radius: 12px;
-  padding: 1rem 1.5rem;
-  margin-bottom: 1.5rem;
-  font-weight: 500;
-}
-
-.alert-success {
-  background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(32, 201, 151, 0.1));
-  color: #155724;
-  border-left: 4px solid #28a745;
-}
-
-.alert-danger {
-  background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(231, 76, 60, 0.1));
-  color: #721c24;
-  border-left: 4px solid #dc3545;
-}
-
-/* Icons spacing */
-.fas {
-  margin-right: 0.25rem;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .content-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-
-  .table-wrap {
-    font-size: 0.8rem;
-  }
-
-  .table-custom {
-    min-width: 1000px; /* Reduced for mobile */
-  }
-
-  .btn-sm {
-    font-size: 0.7rem;
-    padding: 0.3rem 0.6rem;
-    margin: 0.1rem;
-  }
-
-  .pagination .page-link {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.8rem;
-  }
-
-  .modal-dialog.modal-xl {
-    max-width: 95%;
-    margin: 0.5rem;
-  }
-  
-  .modal-header {
-    padding: 1.5rem 1.5rem 1rem;
-  }
-  
-  .modal-body {
-    padding: 1.5rem;
-  }
-  
-  .modal-footer {
-    padding: 1.5rem;
-  }
-
-  .search-filter-form {
-    padding: 1rem;
-  }
-
-  .image-upload-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-  
-  .image-upload-section,
-  .pricing-section {
-    padding: 1.5rem;
-  }
-
-  .size-display {
-    max-width: 80px;
-  }
-  
-  .product-name {
-    max-width: 120px;
-  }
-}
-
-@media (max-width: 576px) {
-  .table-custom th,
-  .table-custom td {
-    padding: 0.5rem 0.25rem;
-  }
-
-  .pagination .page-link {
-    margin: 0 1px;
-    padding: 0.4rem 0.6rem;
-  }
-}
-
-/* Loading States */
-.table-custom tbody tr.loading {
-  opacity: 0.6;
-  pointer-events: none;
-}
-
-/* Hover Effects for Interactive Elements */
-.submenu a,
-.btn,
-.page-link {
-  cursor: pointer;
-}
-
-/* Focus States for Accessibility */
-.btn:focus,
-.form-control:focus,
-.form-select:focus,
-.page-link:focus {
-  outline: none;
-  box-shadow: 0 0 0 0.2rem rgba(108, 99, 255, 0.25);
-}
-
-/* Smooth Transitions */
-* {
-  transition: all 0.3s ease;
-}
-
-/* Custom Scrollbar for Table */
-.table-wrap::-webkit-scrollbar {
-  height: 8px;
-}
-
-.table-wrap::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
-}
-
-.table-wrap::-webkit-scrollbar-thumb {
-  background: #6c63ff;
-  border-radius: 4px;
-}
-
-.table-wrap::-webkit-scrollbar-thumb:hover {
-  background: #5a52e6;
-}
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+
+    /* Content Header */
+    .content-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #f0f0f0;
+    }
+
+    .content-title {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: #333;
+      margin: 0;
+    }
+
+    .btn-light {
+      background-color: #f4f5f9;
+    }
+
+    .btn-light:hover {
+      background-color: #088178;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+    }
+
+    .table-custom {
+      margin-bottom: 0;
+      font-size: 0.9rem;
+      min-width: 1200px;
+      /* Updated from 1000px */
+    }
+
+    .table-custom th {
+      background: linear-gradient(90deg, #6c63ff, #8f94fb);
+      color: #fff;
+      border: none;
+      padding: 0.75rem 0.5rem;
+      /* Updated padding */
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.5px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      white-space: nowrap;
+      /* Added */
+    }
+
+    .table-custom tbody tr {
+      transition: all 0.3s ease;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .table-custom tbody tr:hover {
+      background-color: #f8f9ff;
+      transform: scale(1.002);
+      /* Reduced from 1.01 */
+      box-shadow: 0 2px 8px rgba(108, 99, 255, 0.1);
+    }
+
+    .table-custom td {
+      padding: 0.75rem 0.5rem;
+      /* Updated padding */
+      vertical-align: middle;
+      border: none;
+    }
+
+    /* Table column widths */
+    .table-custom th:nth-child(1) {
+      width: 50px;
+    }
+
+    /* # */
+    .table-custom th:nth-child(2) {
+      width: 200px;
+    }
+
+    /* Name */
+    .table-custom th:nth-child(3) {
+      width: 120px;
+    }
+
+    /* Category */
+    .table-custom th:nth-child(4) {
+      width: 100px;
+    }
+
+    /* Regular Price */
+    .table-custom th:nth-child(5) {
+      width: 80px;
+    }
+
+    /* Discount % */
+    .table-custom th:nth-child(6) {
+      width: 100px;
+    }
+
+    /* Discount Price */
+    .table-custom th:nth-child(7) {
+      width: 140px;
+    }
+
+    /* Stock */
+    .table-custom th:nth-child(8) {
+      width: 100px;
+    }
+
+    /* Sizes */
+    .table-custom th:nth-child(9) {
+      width: 80px;
+    }
+
+    /* Status */
+    .table-custom th:nth-child(10) {
+      width: 80px;
+    }
+
+    /* List */
+    .table-custom th:nth-child(11) {
+      width: 150px;
+    }
+
+
+    /* Product name styling */
+    .product-name {
+      font-weight: 600;
+      color: #333;
+      max-width: 180px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .product-name:hover {
+      overflow: visible;
+      white-space: normal;
+      word-wrap: break-word;
+    }
+
+    .category-name {
+      color: #6c757d;
+      font-size: 0.85rem;
+    }
+
+    .stock-summary {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .stock-total {
+      font-weight: 600;
+      color: #333;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .stock-total.in-stock {
+      color: #28a745;
+    }
+
+    .stock-total.low-stock {
+      color: #ffc107;
+    }
+
+    .stock-total.out-of-stock {
+      color: #dc3545;
+    }
+
+    .stock-details {
+      font-size: 0.75rem;
+      color: #6c757d;
+      line-height: 1.2;
+    }
+
+    .size-display {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      max-width: 120px;
+    }
+
+    .size-tag {
+      background: #e9ecef;
+      color: #495057;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    /* Price Column Styling */
+    .price-column {
+      min-width: 110px;
+      text-align: center;
+      /* Added */
+    }
+
+    .original-price {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .discount-price {
+      color: #28a745;
+      font-weight: 600;
+      font-size: 0.9em;
+    }
+
+    .discount-badge {
+      background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+      color: white;
+      font-size: 0.65rem;
+      padding: 0.2rem 0.4rem;
+      border-radius: 10px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* Status and List badges */
+    .status-badge {
+      padding: 0.35rem 0.75rem;
+      border-radius: 15px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: capitalize;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .status-badge.blocked {
+      background-color: #dc3545;
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+
+    .status-badge.active {
+      background-color: #28a745;
+      color: #fff;
+    }
+
+
+    /* Action Buttons */
+    .btn-sm {
+      font-size: 0.75rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      margin: 0 0.1rem;
+      /* Reduced from 0.2rem */
+    }
+
+    .btn-outline-primary {
+      border-color: #6c63ff;
+      color: #6c63ff;
+    }
+
+    .btn-outline-primary:hover {
+      background-color: #6c63ff;
+      border-color: #6c63ff;
+      color: white;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(108, 99, 255, 0.3);
+    }
+
+    .btn-outline-success {
+      border-color: #28a745;
+      color: #28a745;
+    }
+
+    .btn-outline-success:hover {
+      background-color: #28a745;
+      border-color: #28a745;
+      color: white;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+    }
+
+    .btn-outline-danger {
+      border-color: #dc3545;
+      color: #dc3545;
+    }
+
+    .btn-outline-danger:hover {
+      background-color: #dc3545;
+      border-color: #dc3545;
+      color: white;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+    }
+
+    /* Pagination */
+    .pagination {
+      margin-top: 2rem;
+    }
+
+    .pagination .page-link {
+      color: #6c63ff;
+      border-radius: 8px;
+      border: 2px solid #6c63ff;
+      margin: 0 4px;
+      padding: 0.45rem 0.9rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .pagination .page-link:hover {
+      background-color: #6c63ff;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(108, 99, 255, 0.3);
+    }
+
+    .pagination .page-item.active .page-link {
+      background-color: #6c63ff;
+      border-color: #6c63ff;
+      color: white;
+      box-shadow: 0 4px 8px rgba(108, 99, 255, 0.3);
+    }
+
+    .pagination .page-item.disabled .page-link {
+      color: #aaa;
+      border-color: #ddd;
+      background-color: #f9f9f9;
+      cursor: not-allowed;
+    }
+
+    .pagination .page-item.disabled .page-link:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Enhanced Modal Styling */
+    .modal-dialog {
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      max-width: 900px;
+    }
+
+    .modal-dialog.modal-xl {
+      max-width: 950px;
+      margin: 0.5rem auto;
+    }
+
+    .modal-content {
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .modal-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 1.25rem 1.75rem 1rem;
+      border-bottom: none;
+      position: relative;
+    }
+
+    .modal-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7);
+    }
+
+    .modal-title {
+      font-weight: 700;
+      font-size: 1.4rem;
+      margin: 0;
+      letter-spacing: -0.3px;
+    }
+
+    .btn-close {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      opacity: 0.8;
+      transition: all 0.3s ease;
+      filter: invert(1);
+    }
+
+    .btn-close:hover {
+      background: rgba(255, 255, 255, 0.3);
+      opacity: 1;
+      transform: scale(1.05);
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+      background: #fafbfc;
+      max-height: none;
+      overflow-y: visible;
+    }
+
+    /* Compact Image Upload Section */
+    .image-upload-section {
+      background: white;
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+      border: 1px solid #e8ecf4;
+    }
+
+    .image-upload-section h6 {
+      color: #2d3748;
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .image-upload-section h6::before {
+      margin-right: 0.4rem;
+      font-size: 1rem;
+    }
+
+    .image-upload-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .image-upload-item {
+      border: 2px dashed #cbd5e0;
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      position: relative;
+      background: #f7fafc;
+      min-height: 160px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .image-upload-item:hover {
+      border-color: #667eea;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+      transform: translateY(-1px);
+    }
+
+    .image-upload-item.has-image {
+      border-style: solid;
+      border-color: #48bb78;
+      background: linear-gradient(135deg, rgba(72, 187, 120, 0.05), rgba(56, 178, 172, 0.05));
+    }
+
+    .image-upload-input {
+      position: absolute;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+
+    .image-upload-label {
+      display: block;
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: #6c757d;
+      margin-bottom: 0.3rem;
+    }
+
+    .upload-placeholder {
+      color: #718096;
+      font-weight: 500;
+    }
+
+    .upload-placeholder i {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-size: 2rem;
+      color: #a0aec0;
+    }
+
+    .image-preview {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .image-remove-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #fc8181, #f56565);
+      color: white;
+      border: none;
+      font-size: 0.7rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(245, 101, 101, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .image-remove-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 3px 8px rgba(245, 101, 101, 0.4);
+    }
+
+    .crop-btn {
+      position: absolute;
+      top: 0.5rem;
+      left: 0.5rem;
+      background: linear-gradient(135deg, #4299e1, #3182ce);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 0.3rem 0.6rem;
+      font-size: 0.7rem;
+      cursor: pointer;
+      font-weight: 500;
+      box-shadow: 0 2px 6px rgba(66, 153, 225, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .crop-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(66, 153, 225, 0.4);
+    }
+
+    .crop-modal .modal-dialog {
+      max-width: 90vw;
+      max-height: 90vh;
+    }
+
+    .crop-container {
+      max-height: 60vh;
+      overflow: hidden;
+    }
+
+    .crop-container img {
+      max-width: 100%;
+    }
+
+    .crop-controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+
+    .aspect-ratio-btn {
+      padding: 5px 10px;
+      border: 1px solid #dee2e6;
+      background: white;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .aspect-ratio-btn.active {
+      background: #007bff;
+      color: white;
+      border-color: #007bff;
+    }
+
+    /* Compact Form Styling */
+    .modal-body .form-label {
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .modal-body .form-control,
+    .modal-body .form-select {
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 0.65rem 0.9rem;
+      transition: all 0.3s ease;
+      background: white;
+      font-size: 0.9rem;
+    }
+
+    .modal-body .form-control:focus,
+    .modal-body .form-select:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+      outline: none;
+    }
+
+    .modal-body .form-control::placeholder {
+      color: #a0aec0;
+    }
+
+    /* Compact Pricing Section */
+    .pricing-section {
+      background: white;
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+      border: 1px solid #e8ecf4;
+    }
+
+    .pricing-section h6 {
+      color: #2d3748;
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .pricing-section h6::before {
+      content: '💰';
+      margin-right: 0.4rem;
+      font-size: 1rem;
+    }
+
+    .price-calculator {
+      background: linear-gradient(135deg, #f7fafc, #edf2f7);
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+      border: 1px solid #e2e8f0;
+    }
+
+    .price-display {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 1rem;
+      background: white;
+      border-radius: 6px;
+      margin-top: 0.5rem;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e2e8f0;
+    }
+
+    .discount-preview {
+      color: #38a169;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .savings-display {
+      color: #28a745;
+      font-weight: bold;
+      font-size: 0.85rem;
+      margin-top: 0.4rem;
+    }
+
+    /* Compact Row Styling */
+    .modal-body .row {
+      margin-bottom: 1rem;
+    }
+
+    .modal-body .row:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Stock Input Styling */
+    .modal-body input[type="number"] {
+      text-align: center;
+      font-weight: 500;
+    }
+
+    /* Textarea Styling */
+    .modal-body textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .modal-body textarea::placeholder {
+      color: #a0aec0;
+      line-height: 1.4;
+    }
+
+    /* Small Text Styling */
+    .form-text {
+      color: #718096;
+      font-size: 0.8rem;
+      margin-top: 0.4rem;
+      font-style: italic;
+    }
+
+    /* Compact Modal Footer */
+    .modal-footer {
+      padding: 1.25rem 1.75rem;
+      border-top: 1px solid #e2e8f0;
+      background: white;
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+    }
+
+    .modal-footer .btn {
+      padding: 0.6rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      border: none;
+    }
+
+    .modal-footer .btn-secondary {
+      background: #e2e8f0;
+      color: #4a5568;
+      border: 2px solid #e2e8f0;
+    }
+
+    .modal-footer .btn-secondary:hover {
+      background: #cbd5e0;
+      color: #2d3748;
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-footer .btn-primary {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: 2px solid transparent;
+    }
+
+    .modal-footer .btn-primary:hover {
+      background: linear-gradient(135deg, #5a67d8, #6b46c1);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    /* Enhanced Scrollbar */
+    .modal-body::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Animation for modal appearance */
+    .modal.fade .modal-dialog {
+      transform: scale(0.9) translateY(-30px);
+      transition: all 0.25s ease;
+    }
+
+    .modal.show .modal-dialog {
+      transform: scale(1) translateY(0);
+    }
+
+    /* Alert Messages */
+    .alert {
+      border: none;
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+    }
+
+    .alert-success {
+      background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(32, 201, 151, 0.1));
+      color: #155724;
+      border-left: 4px solid #28a745;
+    }
+
+    .alert-danger {
+      background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(231, 76, 60, 0.1));
+      color: #721c24;
+      border-left: 4px solid #dc3545;
+    }
+
+    /* Icons spacing */
+    .fas {
+      margin-right: 0.25rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .content-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .table-wrap {
+        font-size: 0.8rem;
+      }
+
+      .table-custom {
+        min-width: 1000px;
+        /* Reduced for mobile */
+      }
+
+      .btn-sm {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.6rem;
+        margin: 0.1rem;
+      }
+
+      .pagination .page-link {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+      }
+
+      .modal-dialog.modal-xl {
+        max-width: 95%;
+        margin: 0.5rem;
+      }
+
+      .modal-header {
+        padding: 1.5rem 1.5rem 1rem;
+      }
+
+      .modal-body {
+        padding: 1.5rem;
+      }
+
+      .modal-footer {
+        padding: 1.5rem;
+      }
+
+      .search-filter-form {
+        padding: 1rem;
+      }
+
+      .image-upload-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .image-upload-section,
+      .pricing-section {
+        padding: 1.5rem;
+      }
+
+      .size-display {
+        max-width: 80px;
+      }
+
+      .product-name {
+        max-width: 120px;
+      }
+    }
+
+    @media (max-width: 576px) {
+
+      .table-custom th,
+      .table-custom td {
+        padding: 0.5rem 0.25rem;
+      }
+
+      .pagination .page-link {
+        margin: 0 1px;
+        padding: 0.4rem 0.6rem;
+      }
+    }
+
+    /* Loading States */
+    .table-custom tbody tr.loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .btn:focus,
+    .form-control:focus,
+    .form-select:focus,
+    .page-link:focus {
+      outline: none;
+      box-shadow: 0 0 0 0.2rem rgba(108, 99, 255, 0.25);
+    }
+
+    * {
+      transition: all 0.3s ease;
+    }
+
+    .table-wrap::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .table-wrap::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+
+    .table-wrap::-webkit-scrollbar-thumb {
+      background: #6c63ff;
+      border-radius: 4px;
+    }
+
+    .table-wrap::-webkit-scrollbar-thumb:hover {
+      background: #5a52e6;
+    }
+
+    .input-group {
+      background-color: #f6f7fa;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #e0e0e0;
+    }
+
+    .input-group .form-control {
+      border: none;
+      background-color: transparent;
+      padding: 12px 16px;
+      font-size: 16px;
+      color: #333;
+    }
+
+    .input-group .form-control::placeholder {
+      color: #b0b9c8;
+    }
+
+    .input-group .form-control:focus {
+      box-shadow: none;
+      outline: none;
+    }
   </style>
 </head>
 
@@ -997,10 +978,29 @@
             <span class="text">Dashboard</span>
           </a>
         </li>
-        <li class="menu-item active">
-          <a class="menu-link" href="/admin/user">
-            <i class="icon material-icons md-person"></i>
-            <span class="text">Product List</span>
+        <li class="menu-item">
+          <a class="menu-link" href="/admin/user"> <i class="icon material-icons md-person"></i>
+            <span class="text">Customers</span>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a class="menu-link" href="/admin/category"> <i class="icon material-icons md-store"></i>
+            <span class="text">Category</span>
+          </a>
+        </li>
+        <li class="menu-item has-submenu active">
+          <a class="menu-link"><i class="icon material-icons md-shopping_bag"></i>
+            <span class="text">Products</span>
+          </a>
+          <div class="submenu">
+            <a href="/admin/addProducts">Product Add</a>
+            <a href="/admin/products">Product List</a>
+          </div>
+        </li>
+        <li class="menu-item">
+          <a class="menu-link" href="/admin/orders">
+            <i class="icon material-icons md-shopping_cart"></i>
+            <span class="text">Orders</span>
           </a>
         </li>
       </ul>
@@ -1009,34 +1009,29 @@
 
   <main class="main-wrap">
     <header class="main-header navbar">
-      <form class="row d-flex" method="GET" action="/admin/products">
-        <div class="col-auto">
-          <input type="text" name="search" value="<%= search %>" class="form-control " placeholder="Search…" />
-        </div>
-        <div class="col-auto">
-          <select name="limit" class="form-select">
-            <% [5, 10, 20, 50].forEach(n=> { %>
-              <option value="<%= n %>" <%=limit===n ? "selected" : "" %>>
-                <%= n %>/page
-              </option>
-              <% }) %>
-          </select>
-        </div>
-        <div class="col-auto">
-          <button class="btn btn-primary">Go</button>
-          <% if (search) { %>
-            <a href="?page=1&limit=<%= limit %>" class="btn btn-light border ms-2">Clear</a>
-            <% } %>
-        </div>
-      </form>
+      <div class="col-search w-100">
+        <form class="row d-flex align-items-center" method="GET" action="/admin/products">
+          <div class="col-md-5">
+            <div class="input-group">
+              <input type="text" name="search" value="<%= search %>" class="form-control"
+                placeholder="Search products…" />
+              <button class="btn btn-light bg" type="submit"> <i class="material-icons md-search"></i></button>
+            </div>
+          </div>
+
+          <div class="col-md-2">
+            <% if (search) { %>
+              <a href="?page=1&limit=<%= limit %>" class="btn btn-outline-secondary ms-2">Clear</a>
+              <% } %>
+          </div>
+        </form>
+      </div>
     </header>
+
 
     <section class="content-main">
       <div class="content-header d-flex justify-content-between align-items-center mb-4">
         <h2 class="content-title card-title">Product Management</h2>
-        <div class="submenu mb-3">
-          <a href="/admin/addProducts">Product Add</a>
-        </div>
       </div>
 
       <div class="container">
@@ -1068,7 +1063,6 @@
                     <th>Stock</th>
                     <th>Size</th>
                     <th>Status</th>
-                    <th>List</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -1111,90 +1105,92 @@
                                                 <% } else { %>—<% } %>
                                           </td>
                                           <td>
-  <div class="stock-tooltip">
-    <div class="stock-summary">
-      <% 
-        let totalStock = 0;
-        if (p.stock) {
-          totalStock = Object.values(p.stock).reduce((sum, qty) => sum + (parseInt(qty) || 0), 0);
-        }
-        let stockClass = totalStock === 0 ? 'out-of-stock' : totalStock <= 2 ? 'low-stock' : 'in-stock';
-        let stockIcon = totalStock === 0 ? 'fas fa-exclamation-triangle' : totalStock <= 2 ? 'fas fa-exclamation-circle' : 'fas fa-check-circle';
-      %>
-      <div class="stock-total <%= stockClass %>">
-        <i class="<%= stockIcon %> me-1"></i>
-        Total: <%= totalStock %>
-      </div>
-    </div>
-  </div>
-</td>
+                                            <div class="stock-tooltip">
+                                              <div class="stock-summary">
+                                                <% let totalStock=0; if (p.stock) {
+                                                  totalStock=Object.values(p.stock).reduce((sum, qty)=> sum +
+                                                  (parseInt(qty) || 0), 0);
+                                                  }
+                                                  let stockClass = totalStock === 0 ? 'out-of-stock' : totalStock <= 2
+                                                    ? 'low-stock' : 'in-stock' ; let stockIcon=totalStock===0
+                                                    ? 'fas fa-exclamation-triangle' : totalStock <=2
+                                                    ? 'fas fa-exclamation-circle' : 'fas fa-check-circle' ; %>
+                                                    <div class="stock-total <%= stockClass %>">
+                                                      <i class="<%= stockIcon %> me-1"></i>
+                                                      Total: <%= totalStock %>
+                                                    </div>
+                                              </div>
+                                            </div>
+                                          </td>
 
                                           <td>
-  <div class="size-display">
-    <% if (Array.isArray(p.size)) { %>
-      <% p.size.forEach(size => { %>
-        <span class="size-tag"><%= size %></span>
-      <% }) %>
-    <% } else if (p.size) { %>
-      <span class="size-tag"><%= p.size %></span>
-    <% } %>
-  </div>
-</td>
-                                       <td>
-  <span class="status-badge <%= p.status.toLowerCase() %>">
-    <%= p.status %>
-  </span>
-</td>
-                                        <td>
-  <span class="list-badge <%= p.isBlocked ? 'not-listed' : 'listed' %>">
-    <i class="fas fa-<%= p.isBlocked ? 'times' : 'check' %> me-1"></i>
-    <%= p.isBlocked ? 'Not Listed' : 'Listed' %>
-  </span>
-</td>
-                                        <td>
-                                          <div class="d-flex align-items-center">
-                                            <button class="btn btn-sm btn-outline-primary btn-edit"
-                                              data-bs-toggle="modal" data-bs-target="#editProductModal">
-                                              Edit
-                                            </button>
+                                            <div class="size-display">
+                                              <% if (Array.isArray(p.size)) { %>
+                                                <% p.size.forEach(size=> { %>
+                                                  <span class="size-tag">
+                                                    <%= size %>
+                                                  </span>
+                                                  <% }) %>
+                                                    <% } else if (p.size) { %>
+                                                      <span class="size-tag">
+                                                        <%= p.size %>
+                                                      </span>
+                                                      <% } %>
+                                            </div>
+                                          </td>
+                                          <td>
+                                            <span
+                                              class="status-badge <%= p.isBlocked ? 'blocked' : p.status.toLowerCase() %>">
+                                              <%= p.isBlocked ? 'Blocked' : p.status %>
+                                            </span>
+                                          </td>
 
-                                            <form method="POST"
-                                              action="/admin/products/block/<%= p._id %>?page=<%= currentPage %>&limit=<%= limit %>&search=<%= search %>"
-                                              class="ms-2 mb-0">
-                                              <button
-                                                class="btn btn-sm btn-outline-<%= p.isBlocked ? ' success' : 'danger'
+                                          <td>
+                                            <div class="d-flex align-items-center">
+                                              <button class="btn btn-sm btn-outline-primary btn-edit"
+                                                data-bs-toggle="modal" data-bs-target="#editProductModal">
+                                                Edit
+                                              </button>
+
+                                              <form method="POST"
+                                                action="/admin/products/block/<%= p._id %>?page=<%= currentPage %>&limit=<%= limit %>&search=<%= search %>"
+                                                class="ms-2 mb-0">
+                                                <button class="btn btn-sm btn-outline-<%= p.isBlocked ? ' success' : 'danger'
                                                 %>">
-                                                <%= p.isBlocked ? 'Unblock' : 'Block' %>
-                                                  </button>
-                                                  </form>
-            </div>
-            </td>
-            </tr>
-            <% }) %>
-              </tbody>
+                                                  <%= p.isBlocked ? 'Unblock' : 'Block' %>
+                                                </button>
+                                              </form>
+                                            </div>
+                                          </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
               </table>
-      </div>
+            </div>
 
 
-      <nav>
-        <ul class="pagination justify-content-center mt-4">
-          <li class="page-item <%= currentPage === 1 ? " disabled" : "" %>">
-            <a class="page-link" href="?page=<%= currentPage - 1 %>&limit=<%= limit %>&search=<%= search %>">&laquo;</a>
-          </li>
-          <% for (let p=1; p <=totalPages; p++) { %>
-            <li class="page-item <%= currentPage === p ? " active" : "" %>">
-              <a class="page-link" href="?page=<%= p %>&limit=<%= limit %>&search=<%= search %>">
-                <%= p %>
-              </a>
-            </li>
-            <% } %>
-              <li class="page-item <%= currentPage === totalPages ? " disabled" : "" %>">
-                <a class="page-link"
-                  href="?page=<%= currentPage + 1 %>&limit=<%= limit %>&search=<%= search %>">&raquo;</a>
-              </li>
-        </ul>
-      </nav>
+            <nav>
+              <ul class="pagination justify-content-center mt-4">
+                <li class="page-item <%= currentPage === 1 ? " disabled" : "" %>">
+                  <a class="page-link"
+                    href="?page=<%= currentPage - 1 %>&limit=<%= limit %>&search=<%= search %>">&laquo;</a>
+                </li>
+                <% for (let p=1; p <=totalPages; p++) { %>
+                  <li class="page-item <%= currentPage === p ? " active" : "" %>">
+                    <a class="page-link" href="?page=<%= p %>&limit=<%= limit %>&search=<%= search %>">
+                      <%= p %>
+                    </a>
+                  </li>
+                  <% } %>
+                    <li class="page-item <%= currentPage === totalPages ? " disabled" : "" %>">
+                      <a class="page-link"
+                        href="?page=<%= currentPage + 1 %>&limit=<%= limit %>&search=<%= search %>">&raquo;</a>
+                    </li>
+              </ul>
+            </nav>
       </div>
+
+      
 
 
       <div class="modal fade" id="editProductModal" tabindex="-1">
@@ -1262,40 +1258,40 @@
 
 
                 <div class="basic-info-section">
-                <div class="row mb-4">
-                  <div class="col-md-6">
-                    <label class="form-label">Product Name</label>
-                    <input type="text" name="productName" id="editName" class="form-control" required />
+                  <div class="row mb-4">
+                    <div class="col-md-6">
+                      <label class="form-label">Product Name</label>
+                      <input type="text" name="productName" id="editName" class="form-control" required />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Category</label>
+                      <select name="category" id="editCategory" class="form-select" required>
+                        <% categories.forEach(cat=> { %>
+                          <option value="<%= cat._id %>">
+                            <%= cat.categoryName %>
+                          </option>
+                          <% }) %>
+                      </select>
+                    </div>
                   </div>
-                  <div class="col-md-6">
-                    <label class="form-label">Category</label>
-                    <select name="category" id="editCategory" class="form-select" required>
-                      <% categories.forEach(cat=> { %>
-                        <option value="<%= cat._id %>">
-                          <%= cat.categoryName %>
-                        </option>
-                        <% }) %>
-                    </select>
-                  </div>
-                </div>
                 </div>
 
                 <div class="description-section">
-                <div class="mb-4">
-                  <label class="form-label">Description</label>
-                  <textarea name="description" id="editDesc" class="form-control" rows="3"></textarea>
-                </div>
+                  <div class="mb-4">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" id="editDesc" class="form-control" rows="3"></textarea>
+                  </div>
                 </div>
 
                 <div class="specs-section">
-                <div class="mb-4">
-                  <label class="form-label">Specifications</label>
-                  <textarea name="specifications" id="editSpecifications" class="form-control" rows="5"
-                    placeholder="Enter one spec per line, e.g.&#10;Composition: 100% cotton&#10;GSM: 220"></textarea>
-                  <small class="form-text text-muted">
-                    Each new line will become a bullet on the product page.
-                  </small>
-                </div>
+                  <div class="mb-4">
+                    <label class="form-label">Specifications</label>
+                    <textarea name="specifications" id="editSpecifications" class="form-control" rows="5"
+                      placeholder="Enter one spec per line, e.g.&#10;Composition: 100% cotton&#10;GSM: 220"></textarea>
+                    <small class="form-text text-muted">
+                      Each new line will become a bullet on the product page.
+                    </small>
+                  </div>
                 </div>
 
 
@@ -1342,14 +1338,6 @@
                         <% }) %>
                     </div>
                   </div>
-
-                  <div class="col-md-4">
-                    <label class="form-label">Status</label>
-                    <select name="status" id="editStatus" class="form-select" required>
-                      <option value="active">Active</option>
-                      <option value="inactive">Inactive</option>
-                    </select>
-                  </div>
                 </div>
               </div>
             </div>
@@ -1382,9 +1370,17 @@
             </div>
           </div>
         </div>
-      </div>
+      </div><br>
+        <footer class="main-footer font-xs text-center py-3">
+    <div>&copy;
+        <script>document.write(new Date().getFullYear())</script> Kaizen Street. All rights reserved.
+    </div>
+</footer>
+    
 
-
+      <script src="/assets2/js/vendors/jquery-3.6.0.min.js"></script>
+      <script src="/assets2/js/vendors/bootstrap.bundle.min.js"></script>
+      <script src="/assets2/js/main.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>

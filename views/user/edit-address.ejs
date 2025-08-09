@@ -14,7 +14,6 @@
 <body>
 
     <style>
-        /* Main Content Styles */
         .main-content {
             flex: 1;
             background: white;
@@ -588,8 +587,6 @@
                         <form id="editForm" action="<%= fromCheckout 
                 ? `/checkout/edit-address/${address._id}?from=checkout` 
                 : `/profile/edit-address/${address._id}` %>" method="POST" class="add-address-form">
-                            <!-- If not using fetch for PATCH, use method-override: -->
-                            <!-- <input type="hidden" name="_method" value="PATCH"> -->
 
                             <div class="form-title">
                                 <i class="ri-home-4-line"></i>
@@ -732,7 +729,6 @@
                         </form>
                 </div>
             </main>
-
 
         </div>
     </div>

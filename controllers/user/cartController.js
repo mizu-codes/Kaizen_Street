@@ -18,7 +18,6 @@ const addToCart = async (req, res) => {
         }
 
         const product = await Product.findById(productId);
-        const category = await Category.findById(product.category);
 
         if (!product) {
             return res.status(404).json({ message: 'Product not found.' });
@@ -28,9 +27,11 @@ const addToCart = async (req, res) => {
             return res.status(400).json({ message: 'Product is not available.' });
         }
 
-        if (!category || category.isBlocked || !category.isListed) {
-            return res.status(400).json({ message: 'Product category is not available.' });
-        }
+          const category = await Category.findById(product.category).lean();
+
+         if (!category || category.status !== 'active') {
+      return res.status(400).json({ message: 'Product category is not available.' });
+    }
 
         if ((product.stock?.[size] || 0) < 1) {
             return res.status(400).json({ message: 'Product is out of stock for this size.' });
@@ -104,7 +105,8 @@ const loadCartPage = async (req, res) => {
             path: 'items.productId',
             populate: {
                 path: 'category',
-                model: 'Category'
+                model: 'Category',
+                match: { status: 'active' }
             }
         });
 
@@ -118,7 +120,7 @@ const loadCartPage = async (req, res) => {
 
         const validItems = cart.items.filter(item => {
             const product = item.productId;
-            return product && !product.isBlocked && product.status === 'active';
+            return product && !product.isBlocked && product.status === 'active' && product.category;
         });
 
         validItems.reverse();

@@ -7,13 +7,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta property="og:title" content="">
-    <meta property="og:type" content="">
-    <meta property="og:url" content="">
-    <meta property="og:image" content="">
-    <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="assets2/imgs/theme/kaizenicon.svg">
-    <!-- Template CSS -->
     <link href="assets2/css/main.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -54,27 +48,28 @@
                         <a href="/admin/products">Product List</a>
                     </div>
                 </li>
+                 <li class="menu-item">
+                    <a class="menu-link" href="/admin/orders">
+                        <i class="icon material-icons md-shopping_cart"></i>
+                        <span class="text">Orders</span>
+                    </a>
+                </li>
             </ul>
         </nav>
     </aside>
     <main class="main-wrap">
         <header class="main-header navbar">
-            <div class="col-search">
-                <form class="searchform">
-                    <div class="input-group">
-                        <input list="search_terms" type="text" class="form-control" placeholder="Search term">
-                        <button class="btn btn-light bg" type="button"> <i class="material-icons md-search"></i></button>
-                    </div>
-                </form>
-            </div>
-            <div class="col-nav">
-                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i class="material-icons md-apps"></i> </button>
+            <div class="col-search"></div>
+             <div class="col-nav">
                 <ul class="nav">
                     <li class="dropdown nav-item">
-                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false"> <img class="img-xs rounded-circle" src="/imgs/people/avatar2.jpg" alt="User"></a>
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount">
+                            <img class="img-xs rounded-circle" src="/assets2/imgs/people/avatar2.jpg" alt="Admin">
+                        </a>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-danger" href="/admin/logout"><i class="material-icons md-exit_to_app"></i>Logout</a>
+                            <a class="dropdown-item text-danger" href="/admin/logout">
+                                <i class="material-icons md-exit_to_app"></i>Logout
+                            </a>
                         </div>
                     </li>
                 </ul>
@@ -86,7 +81,7 @@
                     <h2 class="content-title card-title">Dashboard </h2>
                 </div>
             </div>
-        </section> <!-- content-main end// -->
+        </section> 
        <footer class="main-footer font-xs text-center py-3">
     <div>&copy;
         <script>document.write(new Date().getFullYear())</script> Kaizen Street. All rights reserved.
@@ -98,7 +93,6 @@
     <script src="assets2/js/vendors/select2.min.js"></script>
     <script src="assets2/js/vendors/perfect-scrollbar.js"></script>
     <script src="assets2/js/vendors/jquery.fullscreen.min.js"></script>
-    <script src="assets2/js/vendors/chart.js"></script>
     <!-- Main Script -->
     <script src="assets2/js/main.js" type="text/javascript"></script>
     <script src="assets2/js/custom-chart.js" type="text/javascript"></script>

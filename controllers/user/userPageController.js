@@ -9,7 +9,8 @@ const loadHomepage = async (req, res) => {
 
         const userId = req.session.userId;
 
-        const categories = await Category.find({ isListed: true });
+        const categories = await Category.find({ status: 'active' }).lean();
+
         let productData = await Product.find({
             isBlocked: false,
             category: { $in: categories.map(category => category._id) },
@@ -23,8 +24,10 @@ const loadHomepage = async (req, res) => {
         }).populate({
             path: 'category',
             select: 'categoryName',
-            match: { isListed: true }
+            match: { status: 'active' }
         }).lean();
+
+        productData = productData.filter(p => p.category);
 
         productData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         productData = productData.slice(0, 4);
@@ -70,6 +73,7 @@ const loadShoppingPage = async (req, res) => {
 
         const filter = {
             isBlocked: false,
+            status: 'active', 
             $or: [
                 { "stock.S": { $gt: 0 } },
                 { "stock.M": { $gt: 0 } },
@@ -99,6 +103,7 @@ const loadShoppingPage = async (req, res) => {
             {
                 $match: {
                     isBlocked: false,
+                    status: 'active',
                     $or: [
                         { "stock.S": { $gt: 0 } },
                         { "stock.M": { $gt: 0 } },
@@ -120,18 +125,23 @@ const loadShoppingPage = async (req, res) => {
         const actualMinPrice = priceRange.length > 0 ? Math.floor(priceRange[0].minPrice) : 0;
         const actualMaxPrice = priceRange.length > 0 ? Math.min(Math.ceil(priceRange[0].maxPrice), 5000) : 5000;
 
-        const [categories, count, products] = await Promise.all([
-            Category.find({ isListed: true }).lean(),
-            Product.countDocuments(filter),
-            Product.find(filter)
-                .populate('category', 'categoryName')
-                .sort(sortCriteria)
-                .skip(perPage * (page - 1))
-                .limit(perPage)
-                .lean()
-        ]);
+        const categories = await Category.find({ status: 'active' }).lean();
 
-        const pages = Math.ceil(count / perPage);
+    let products = await Product.find(filter)
+      .populate({
+        path:   'category',
+        select: 'categoryName status',
+        match:  { status: 'active' }
+      })
+      .sort(sortCriteria)
+      .skip(perPage * (page - 1))
+      .limit(perPage)
+      .lean();
+      
+    products = products.filter(p => p.category);
+
+    const count = await Product.countDocuments(filter);
+    const pages = Math.ceil(count / perPage);
 
         res.render('shop', {
             categories,
@@ -177,8 +187,11 @@ const loadProductDetails = async (req, res) => {
                 { "stock.XL": { $gt: 0 } },
                 { "stock.XXL": { $gt: 0 } }
             ]
-        }).populate('category');
-
+        }).populate({
+            path:  'category',
+            select:'categoryName status',
+            match: { status: 'active' }    
+        });
 
         if (!productDoc) {
             return res.status(404).render('page-404', { message: 'Product not found' });
@@ -188,7 +201,7 @@ const loadProductDetails = async (req, res) => {
             return res.status(404).render('page-404', { message: 'Product not found' });
         }
 
-        if (productDoc.category && productDoc.category.isBlocked) {
+        if (!productDoc.category) {
             return res.status(404).render('page-404', { message: 'Product not found' });
         }
 
@@ -203,9 +216,15 @@ const loadProductDetails = async (req, res) => {
             _id: { $ne: productDoc._id },
             isBlocked: false,
             status: 'active'
-        }).sort({ createdAt: -1 }).lean();
-
-        const relatedProducts = relatedDocs.map(p => {
+         }).populate({
+            path: 'category',
+            match: { status: 'active' } 
+        })
+        .sort({ createdAt: -1 })
+        .lean();
+        
+        const filtered = relatedDocs.filter(p => p.category);
+        const relatedProducts = filtered.map(p => {
             const discountPercent = p.regularPrice > p.discountPrice
                 ? Math.round((1 - p.discountPrice / p.regularPrice) * 100)
                 : 0;
@@ -260,8 +279,8 @@ const loadProductDetails = async (req, res) => {
             isInWishlist: wishlistIds.includes(product._id.toString())
         });
 
-    } catch (err) {
-        console.error('Error loading product details:', err);
+    } catch (error) {
+        console.error('Error loading product details:', error);
         return res.status(500).render('500', { message: 'Internal Server Error' });
     }
 };

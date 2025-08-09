@@ -25,7 +25,6 @@ const updateProduct = async (req, res) => {
   XXL: Number(req.body.stock_XXL || 0)
 };
 
-// Create size array from stock object (only non-zero)
 const size = Object.entries(stock)
   .filter(([_, qty]) => qty > 0)
   .map(([s]) => s);
