@@ -7,23 +7,32 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta property="og:title" content="">
-    <meta property="og:type" content="">
-    <meta property="og:url" content="">
-    <meta property="og:image" content="">
-    <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/kaizenicon.svg">
-    <!-- Template CSS -->
     <link rel="stylesheet" href="/css/main.css?v=3.4">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.4.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #888;
+            z-index: 10;
+        }
+
+        .password-toggle:hover {
+            color: #333333;
+        }
+    </style>
 </head>
 
 <body>
     <main class="main">
         <section class="signup-wrapper">
             <div class="container">
-                <!-- Centered card -->
                 <div class="signup-card mx-auto">
                     <div class="row g-0">
 
@@ -46,14 +55,17 @@
                                     </div>
 
                                     <!-- PASSWORD -->
-                                    <div class="mb-3">
+                                    <div class="mb-3 position-relative">
                                         <input type="password" id="password" name="password" placeholder="Password"
                                             required class="form-control signup-input" />
+                                            <span class="password-toggle" onclick="togglePassword('password')">
+                                                <i class="fas fa-eye" id="password-eye"></i>
+                                            </span>
                                         <div class="invalid-feedback">
                                             Please enter your password.
                                         </div>
                                     </div>
-                                 
+
                                     <div class="text-end mb-1">
                                         <a href="/forgot-password" class="link-forgot">Forgot your password?</a>
                                     </div>
@@ -86,7 +98,7 @@
                                     </p>
                                 </form>
 
-                              
+
                                 <% if (typeof showLoginError !=='undefined' && showLoginError) { %>
                                     <script>
                                         document.addEventListener('DOMContentLoaded', () => {
@@ -108,37 +120,6 @@
                                         });
                                     </script>
                                     <% } %>
-
-                                        <script>
-                                            document.addEventListener('DOMContentLoaded', function () {
-                                                const form = document.getElementById('loginForm');
-                                                const emailInput = document.getElementById('email');
-                                                const passwordInput = document.getElementById('password');
-
-                                                form.addEventListener('submit', function (e) {
-                                                    let valid = true;
-                                                    [emailInput, passwordInput].forEach(i => i.classList.remove('is-invalid'));
-
-                                                    if (!emailInput.checkValidity()) {
-                                                        emailInput.classList.add('is-invalid');
-                                                        valid = false;
-                                                    }
-                                                    if (!passwordInput.value) {
-                                                        passwordInput.classList.add('is-invalid');
-                                                        valid = false;
-                                                    }
-
-                                                    if (!valid) {
-                                                        e.preventDefault();
-                                                        e.stopPropagation();
-                                                    }
-                                                });
-
-                                                [emailInput, passwordInput].forEach(input => {
-                                                    input.addEventListener('input', () => input.classList.remove('is-invalid'));
-                                                });
-                                            });
-                                        </script>
                             </div>
                         </div>
 
@@ -192,6 +173,52 @@
     <script src="/js/plugins/jquery.theia.sticky.js"></script>
     <!-- Template  JS -->
     <script src="/js/main.js?v=3.4"></script>
+
+    <script>
+
+        function togglePassword(inputId) {
+    const passwordInput = document.getElementById(inputId);
+    const eyeIcon = document.getElementById(inputId + '-eye');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        eyeIcon.className = 'fas fa-eye-slash';
+    } else {
+        passwordInput.type = 'password';
+        eyeIcon.className = 'fas fa-eye';
+    }
+}
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('loginForm');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+
+            form.addEventListener('submit', function (e) {
+                let valid = true;
+                [emailInput, passwordInput].forEach(i => i.classList.remove('is-invalid'));
+
+                if (!emailInput.checkValidity()) {
+                    emailInput.classList.add('is-invalid');
+                    valid = false;
+                }
+                if (!passwordInput.value) {
+                    passwordInput.classList.add('is-invalid');
+                    valid = false;
+                }
+
+                if (!valid) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            });
+
+            [emailInput, passwordInput].forEach(input => {
+                input.addEventListener('input', () => input.classList.remove('is-invalid'));
+            });
+        });
+
+    </script>
 </body>
 
 </html>

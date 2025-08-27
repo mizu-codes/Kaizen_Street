@@ -11,6 +11,7 @@ const { userAuth } = require('../middlewares/auth');
 const profileController = require('../controllers/user/profile/profileController');
 const addressController = require('../controllers/user/profile/addressController');
 const securityController = require('../controllers/user/profile/securityController');
+const walletController= require('../controllers/user/profile/walletController');
 
 const errorController = require('../controllers/user/errorController');
 const authController = require('../controllers/user/authController');
@@ -88,8 +89,9 @@ router.get('/orders', userAuth, orderController.loadOrderPage);
 router.get('/orders/:orderId', userAuth, orderController.loadOrderDetailsPage);
 router.patch('/orders/cancel-item/:itemId', userAuth, orderController.cancelOrderItem);
 router.get('/orders/:orderId/invoice', userAuth, orderController.downloadInvoicePDF);
+router.post('/orders/return-item', userAuth, orderController.returnOrderItem);
 
-
+router.get('/wallet',userAuth,walletController.loadWalletPage);
 
 module.exports = router;
 

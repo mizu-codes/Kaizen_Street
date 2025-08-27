@@ -13,9 +13,7 @@
     <meta property="og:image" content="">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/kaizenicon.svg">
-    <!-- Template CSS -->
     <link rel="stylesheet" href="/css/main.css?v=3.4">
 
     <style>
@@ -110,8 +108,7 @@
         .active-filters-section {
             animation: slideIn 0.3s ease-in-out;
         }
-
-        /* Main Newsletter Section */
+       
         .newsletter {
             background: url('https://plus.unsplash.com/premium_photo-1666700698946-fbf7baa0134a?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YW5pbWV8ZW58MHx8MHx8fDA%3D');
             background-size: cover;
@@ -126,13 +123,11 @@
             margin: 40px 0;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
             min-height: 300px;
-            /* Fixed height to maintain size */
             display: flex;
             align-items: center;
             justify-content: center;
         }
-
-        /* Animated overlay pattern */
+      
         .newsletter::before {
             content: '';
             position: absolute;
@@ -168,8 +163,7 @@
                 transform: translateY(-15px) rotate(0.5deg);
             }
         }
-
-        /* Floating anime elements */
+        
         .floating-elements {
             position: absolute;
             top: 0;
@@ -914,11 +908,9 @@
     </script>
 
     <script>
-        // Function to build URL with all current filters
         function buildFilterURL(newParams = {}) {
             const urlParams = new URLSearchParams(window.location.search);
-
-            // Apply new parameters
+           
             Object.keys(newParams).forEach(key => {
                 if (newParams[key] === null || newParams[key] === '') {
                     urlParams.delete(key);
@@ -926,33 +918,27 @@
                     urlParams.set(key, newParams[key]);
                 }
             });
-
-            // Always reset to page 1 when filters change
+         
             urlParams.set('page', '1');
 
             return window.location.pathname + '?' + urlParams.toString();
         }
-
-        // Handle search form submission
+   
         function handleSearchSubmit(event) {
-            // Let the form submit naturally with hidden inputs
             return true;
         }
-
-        // Clear search while maintaining other filters
+       
         function clearSearch() {
             const newURL = buildFilterURL({ search: null });
             window.location.href = newURL;
         }
-
-        // Filter by category while maintaining other filters
+    
         function filterByCategory(categoryId) {
             event.preventDefault();
             const newURL = buildFilterURL({ category: categoryId });
             window.location.href = newURL;
         }
-
-        // Apply price filter while maintaining other filters
+   
         function applyPriceFilter() {
             const minPrice = document.getElementById('min-price').value;
             const maxPrice = document.getElementById('max-price').value;
@@ -963,8 +949,7 @@
             });
             window.location.href = newURL;
         }
-
-        // Remove specific filter
+     
         function removeFilter(filterType) {
             let params = {};
 
@@ -984,13 +969,11 @@
             const newURL = buildFilterURL(params);
             window.location.href = newURL;
         }
-
-        // Clear all filters
+     
         function clearAllFilters() {
             window.location.href = window.location.pathname + '?page=1';
         }
-
-        // Initialize price slider
+      
         $(document).ready(function () {
             const minPrice = parseInt('<%= actualMinPrice %>') || 0;
             const maxPrice = parseInt('<%= actualMaxPrice %>') || 5000;
@@ -1008,13 +991,9 @@
                     $("#max-price").val(ui.values[1]);
                 }
             });
-
-
-
-            // Set initial display value
+        
             $("#amount").val("₹" + minPrice + " - ₹" + maxPrice);
-
-            // Handle clear search button visibility
+            
             const searchInput = document.getElementById('searchInput');
             const clearButton = document.getElementById('clear-search');
 
@@ -1028,7 +1007,7 @@
 
             if (searchInput && clearButton) {
                 searchInput.addEventListener('input', toggleClearButton);
-                toggleClearButton(); // Initial check
+                toggleClearButton();
             }
         });
 
@@ -1046,7 +1025,7 @@
         document.querySelectorAll('.add-to-wishlist-btn').forEach(btn => {
             btn.addEventListener('click', async function () {
                 const productId = this.dataset.productId;
-                const size = this.dataset.size || 'M'; // default size fallback
+                const size = this.dataset.size || 'M'; 
 
                 try {
                     const res = await fetch(`/wishlist/add/${productId}`, {
@@ -1067,8 +1046,7 @@
                                 popup: 'swal-responsive'
                             }
                         });
-
-                        // ✅ Dispatch wishlist update
+                
                         document.dispatchEvent(new CustomEvent('wishlist:updated', {
                             detail: { count: data.itemCount }
                         }));

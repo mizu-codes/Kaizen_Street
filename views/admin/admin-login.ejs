@@ -1,170 +1,316 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Login</title>
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/kaizenicon.svg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
   <style>
-    @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
     * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-      font-family: "Poppins", sans-serif;
     }
+
     body {
+      font-family: 'Poppins', sans-serif;
+      height: 100vh;
+      background: #ffffff;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      background: #000000;
+      color: #343434;
+      padding: 20px;
     }
-    @property --a {
-      syntax: "<angle>";
-      inherits: false;
-      initial-value: 0deg;
-    }
-    .box {
-      position: relative;
-      width: 400px;
-      height: 190px;
-      background: repeating-conic-gradient(
-        from var(--a),
-        #ff2770 0%,
-        #ff2770 5%,
-        transparent 5%,
-        transparent 40%,
-        #ff2770 50%
-      );
-      filter: drop-shadow(0 15px 50px #000);
-      animation: rotating 4s linear infinite;
-      border-radius: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      transition: 0.5s;
-    }
-    .box:hover {
-      width: 450px;
-      height: 450px;
-    }
-    @keyframes rotating {
-      0% { --a: 0deg; }
-      100% { --a: 360deg; }
-    }
-    .box::before {
-      content: "";
-      position: absolute;
+
+    .container {
       width: 100%;
-      height: 100%;
-      background: repeating-conic-gradient(
-        from var(--a),
-        #45f3ff 0%,
-        #45f3ff 5%,
-        transparent 5%,
-        transparent 40%,
-        #45f3ff 50%
-      );
-      filter: drop-shadow(0 15px 50px #000);
+      max-width: 400px;
+    }
+
+    .logo-section {
+      text-align: left;
+      margin-bottom: 2rem;
+    }
+
+    .logo-section img {
+      max-height: 50px;
+      width: auto;
+    }
+
+    .neumorphic-card {
+      background: #ffffff;
+      padding: 2.5rem;
       border-radius: 20px;
-      animation: rotating 4s linear infinite;
-      animation-delay: -1s;
+      box-shadow:
+        20px 20px 40px rgba(0, 0, 0, 0.12),
+        20px 20px 40px rgba(0, 0, 0, 0.05),
+        0 0 0 1px rgba(0, 0, 0, 0.08),
+        0 5px 15px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+       box-shadow:
+        25px 25px 50px rgba(0, 0, 0, 0.1),
+        25px 25px 50px rgba(255, 255, 255, 2),
+        0 0 0 1px rgba(0, 0, 0, 0.15);
     }
-    .box::after {
-      content: "";
-      position: absolute;
-      inset: 4px;
-      background: #2d2d39;
-      border-radius: 15px;
-      border: 8px solid #25252b;
+
+    .neumorphic-card:hover {
+      box-shadow:
+        25px 25px 50px rgba(0, 0, 0, 0.1),
+        25px 25px 50px rgba(255, 255, 255, 2),
+        0 0 0 1px rgba(0, 0, 0, 0.15);
     }
-    .login {
-      position: absolute;
-      inset: 60px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 10px;
-      flex-direction: column;
-      background: rgba(0, 0, 0, 0.2);
-      z-index: 1000;
-      box-shadow: inset 0 10px 20px rgba(0, 0, 0, 0.5);
-      border-bottom: 2px solid rgba(255, 255, 255, 0.5);
-      transition: 0.5s;
-      color: #fff;
-      overflow: hidden;
+
+    .card-header {
+      text-align: center;
+      margin-bottom: 2rem;
     }
-    .box:hover .login { inset: 40px; }
-    .loginBx {
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      transform: translateY(126px);
-      gap: 20px;
-      width: 70%;
-      transition: 0.5s;
-    }
-    .box:hover .loginBx { transform: translateY(0); }
-    .loginBx h2 {
-      text-transform: uppercase;
-      letter-spacing: 0.2em;
+
+    .card-header h1 {
+      font-size: 1.1rem;
       font-weight: 600;
-      margin-bottom: 30px;
+      color: #2c3e50;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
     }
-    .loginBx h2 i {
-      color: #ff2770;
-      text-shadow: 0 0 5px #ff2770, 0 0 30px #ff2770;
+
+    .card-header i {
+      color: black;
     }
-    .loginBx input {
-      width: 100%;
-      padding: 10px 20px;
-      outline: none;
-      font-size: 1em;
-      color: #fff;
-      background: rgba(0, 0, 0, 0.1);
-      border: 2px solid #fff;
-      border-radius: 30px;
-      margin-bottom: 10px;
+
+    .login-form {
+      margin-bottom: 1.5rem;
     }
-    .loginBx input::placeholder { color: #999; }
-    .loginBx input[type="submit"] {
-      background: #45f3ff;
-      border: none;
+
+    .input-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 0.9rem;
       font-weight: 500;
-      color: #111;
-      cursor: pointer;
-      transition: 0.5s;
+      color: #555;
+      margin-bottom: 0.5rem;
+      margin-left: 0.5rem;
     }
-    .loginBx input[type="submit"]:hover {
-      box-shadow: 0 0 10px #45f3ff, 0 0 60px #45f3ff;
+
+    .input-field {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: #ffffff;
+      padding: 1rem 1.2rem;
+      border-radius: 15px;
+      font-size: 1rem;
+      color: #333;
+      font-family: inherit;
+      box-shadow:
+        inset 8px 8px 16px rgba(0, 0, 0, 0.06),
+        inset -8px -8px 16px rgba(255, 255, 255, 1),
+        0 0 0 1px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+    }
+
+    .input-field:focus {
+      box-shadow:
+        inset 10px 10px 20px rgba(0, 0, 0, 0.08),
+        inset -10px -10px 20px rgba(255, 255, 255, 1),
+        0 0 0 2px rgba(52, 152, 219, 0.3);
+    }
+
+    .input-field::placeholder {
+      color: #999;
+      font-weight: 300;
+    }
+
+    .login-button {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: #ffffff;
+      padding: 1rem;
+      border-radius: 15px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #2c3e50;
+      font-family: inherit;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow:
+        12px 12px 24px rgba(0, 0, 0, 0.08),
+        -12px -12px 24px rgba(255, 255, 255, 1),
+        0 0 0 1px rgba(0, 0, 0, 0.05);
+      transition: all 0.2s ease;
+    }
+
+    .login-button:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        15px 15px 30px rgba(0, 0, 0, 0.1),
+        -15px -15px 30px rgba(255, 255, 255, 1),
+        0 0 0 1px rgba(0, 0, 0, 0.08);
+    }
+
+    .login-button:active {
+      transform: translateY(0);
+      box-shadow:
+        inset 8px 8px 16px rgba(0, 0, 0, 0.06),
+        inset -8px -8px 16px rgba(255, 255, 255, 1),
+        0 0 0 1px rgba(0, 0, 0, 0.08);
+    }
+
+    .alert {
+      width: 100%;
+      margin-bottom: 1rem;
+      text-align: center;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .alert-danger {
+      color: #c62828;
+    }
+
+    .card-footer {
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+
+    .card-footer p {
+      font-size: 0.85rem;
+      color: #666;
+      margin: 0;
+    }
+
+    .card-footer a {
+      color: #e74c3c;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .card-footer a:hover {
+      color: #c0392b;
+      text-decoration: underline;
+    }
+
+    @media (max-width: 480px) {
+      .neumorphic-card {
+        padding: 1.5rem;
+      }
+
+      .card-header h1 {
+        font-size: 1.5rem;
+      }
+
+      .input-field,
+      .login-button {
+        padding: 0.875rem 1rem;
+      }
+    }
+
+    .login-button:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .login-button.loading::after {
+      content: '';
+      width: 16px;
+      height: 16px;
+      margin-left: 10px;
+      border: 2px solid transparent;
+      border-top: 2px solid #2c3e50;
+      border-radius: 50%;
+      display: inline-block;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
     }
   </style>
 </head>
+
 <body>
-  <div class="box">
-    <div class="login">
-      <div class="loginBx">
-        <h2>
-          <i class="fa-solid fa-right-to-bracket"></i>
-          ADMIN
-          <i class="fa-solid fa-heart"></i>
-        </h2>
-        <% if (typeof message !== 'undefined' && message) { %>
-          <div class="alert alert-danger" style="width:80%; text-align:center;">
-            <%= message %>
-          </div>
-        <% } %>
-        <form action="/admin/login" method="POST">
-          <input type="email" name="email" placeholder="Email Address" required />
-          <input type="password" name="password" placeholder="Password" required />
-          <input type="submit" value="Sign in" />
-        </form>
+  <div class="container">
+    <div class="neumorphic-card">
+      <!-- Logo Section -->
+      <div class="logo-section">
+          <img src="/imgs/theme/kaizenlogoo.svg" alt="Kaizen Logo">
       </div>
+      <div class="card-header">
+        <h1>
+          <i class="fa-solid fa-right-to-bracket"></i>
+          Admin
+        </h1>
+      </div>
+      <form action="/admin/login" method="POST" class="login-form">
+        <div class="input-group">
+          <label for="email">Email Address</label>
+          <input type="email" name="email" id="email" class="input-field" placeholder="Enter your email address"
+            required autocomplete="email">
+        </div>
+
+        <div class="input-group">
+          <label for="password">Password</label>
+          <input type="password" name="password" id="password" class="input-field" placeholder="Enter your password"
+            required autocomplete="current-password">
+        </div>
+
+        <button type="submit" class="login-button">
+          Sign In
+        </button>
+      </form>
+      <% if (typeof message !=='undefined' && message) { %>
+        <div class="alert alert-danger">
+          <%= message %>
+        </div>
+        <% } %>
     </div>
   </div>
+
+  <script>
+    document.querySelector('.login-form').addEventListener('submit', function () {
+      const button = document.querySelector('.login-button');
+      button.classList.add('loading');
+      button.disabled = true;
+      button.textContent = 'Signing In...';
+    });
+
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+
+    function validateEmail(email) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return re.test(email);
+    }
+
+    emailInput.addEventListener('blur', function () {
+      if (this.value && !validateEmail(this.value)) {
+        this.style.boxShadow = 'inset 8px 8px 16px rgba(231, 76, 60, 0.2), inset -8px -8px 16px rgba(255, 255, 255, 0.8)';
+      } else {
+        this.style.boxShadow = '';
+      }
+    });
+  </script>
 </body>
+
 </html>

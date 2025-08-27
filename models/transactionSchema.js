@@ -21,7 +21,7 @@ const transactionSchema = new Schema({
     },
     paymentMethod: {
         type: String,
-        enum: ['credit', 'debit', 'UPI', 'COD', 'wallet'],
+        enum: ['UPI', 'COD', 'wallet'],
         required: true
     },
     transactionStatus: {

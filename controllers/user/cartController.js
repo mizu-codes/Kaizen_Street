@@ -205,7 +205,7 @@ const updateQuantity = async (req, res) => {
         return res.json({ productId, size, subtotal, cartTotal, available });
     }
     catch (error) {
-        console.error('updateQuantity error:', or);
+        console.error('updateQuantity error:', error);
         return res.status(500).json({ error: 'Server error' });
     }
 }

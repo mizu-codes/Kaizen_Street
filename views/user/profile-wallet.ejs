@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wallet</title>
+  <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/kaizenicon.svg">
+  <link rel="stylesheet" href="/css/main.css?v=3.4">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+</head>
+
+<body>
+  <style>
+    .main-content {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+    }
+
+    .profile-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 30px;
+      border-bottom: 1px solid #f0f0f0;
+      background: linear-gradient(135deg, #e8f4f2 0%, #ddf0e8 100%);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .profile-header h3 {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #253D4E;
+      margin: 0;
+    }
+
+    .profile-header h3 i {
+      color: #3BB77E;
+      font-size: 1.75rem;
+    }
+
+    .btn-add-money {
+      display: flex;
+      align-items: center;
+      background: #2ea368;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .btn-add-money:hover {
+      background: #059669;
+      color: white;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(59, 183, 126, 0.4);
+    }
+
+    .btn-add-money i {
+      margin-right: 6px;
+      color: white;
+      font-size: 1.3rem;
+    }
+
+    .profile-body {
+      padding: 2rem;
+    }
+
+    .wallet-overview {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .balance-card {
+      background: #088178;
+      border-radius: 20px;
+      padding: 2rem;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      width: 80%;
+
+
+    }
+
+    .balance-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 100px;
+      height: 100px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      transform: rotate(45deg);
+    }
+
+    .balance-card::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      left: -10%;
+      width: 80px;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 50%;
+    }
+
+    .balance-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .balance-header i {
+      font-size: 2rem;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 0.75rem;
+      border-radius: 15px;
+    }
+
+    .balance-title {
+      font-size: 1rem;
+      opacity: 0.9;
+      font-weight: 500;
+    }
+
+    .balance-amount {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin: 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: #f8f9fa;
+      border: 2px solid #e9ecef;
+      border-radius: 12px;
+      text-decoration: none;
+      color: #253D4E;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .action-btn:hover {
+      background: #3BB77E;
+      color: white;
+      border-color: #3BB77E;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(59, 183, 126, 0.3);
+    }
+
+    .action-btn i {
+      font-size: 1.5rem;
+      color: #3BB77E;
+      background: white;
+      padding: 0.75rem;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .action-btn:hover i {
+      color: #3BB77E;
+      transform: scale(1.1);
+    }
+
+    .transactions-section {
+      margin-top: 2rem;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .section-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #253D4E;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-title i {
+      color: #3BB77E;
+      font-size: 1.5rem;
+    }
+
+    .view-all-btn {
+      color: #3BB77E;
+      text-decoration: none;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+    }
+
+    .view-all-btn:hover {
+      color: #2ea368;
+      transform: translateX(3px);
+    }
+
+    .transactions-list {
+      background: white;
+      border: 2px solid #f0f0f0;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .transaction-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid #f8f9fa;
+      transition: all 0.3s ease;
+    }
+
+    .transaction-item:last-child {
+      border-bottom: none;
+    }
+
+    .transaction-item:hover {
+      background: #f8f9fa;
+      transform: translateX(4px);
+    }
+
+    .transaction-main {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex: 1;
+    }
+
+    .transaction-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    .transaction-icon.credit {
+      background: rgba(59, 183, 126, 0.1);
+      color: #3BB77E;
+    }
+
+    .transaction-icon.debit {
+      background: rgba(255, 71, 87, 0.1);
+      color: #ff4757;
+    }
+
+    .transaction-details h4 {
+      margin: 0 0 0.25rem 0;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #253D4E;
+    }
+
+    .transaction-date {
+      color: #666;
+      font-size: 0.85rem;
+    }
+
+    .transaction-amount {
+      text-align: right;
+    }
+
+    .amount-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .amount-value.credit {
+      color: #3BB77E;
+    }
+
+    .amount-value.debit {
+      color: #ff4757;
+    }
+
+    .transaction-status {
+      font-size: 0.8rem;
+      margin-top: 0.25rem;
+    }
+
+    .status-completed {
+      color: #3BB77E;
+    }
+
+    .status-pending {
+      color: #ffa726;
+    }
+
+    .status-failed {
+      color: #ff4757;
+    }
+
+    .no-transactions {
+      text-align: center;
+      padding: 4rem 2rem;
+      background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+      border-radius: 20px;
+      border: 2px dashed #e0e0e0;
+    }
+
+    .no-transactions-icon {
+      font-size: 5rem;
+      color: #d0d0d0;
+      margin-bottom: 1.5rem;
+    }
+
+    .no-transactions h4 {
+      color: #253D4E;
+      margin-bottom: 0.75rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .no-transactions p {
+      color: #666;
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Modal styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 20px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: translateY(-30px) scale(0.95);
+      transition: all 0.3s ease;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-overlay.active .modal-content {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2rem 2rem 1rem;
+      border-bottom: 2px solid #f8f9fa;
+    }
+
+    .modal-header h4 {
+      margin: 0;
+      color: #253D4E;
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    .modal-close {
+      background: #f8f9fa;
+      border: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: #666;
+      padding: 0;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+
+    .modal-close:hover {
+      background: #ff4757;
+      color: white;
+      transform: scale(1.1);
+    }
+
+    .modal-body {
+      padding: 2rem;
+    }
+
+    .amount-input-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .amount-input-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: #253D4E;
+    }
+
+    .amount-input {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid #e9ecef;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      font-weight: 600;
+    }
+
+    .amount-input:focus {
+      outline: none;
+      border-color: #3BB77E;
+      box-shadow: 0 0 0 3px rgba(59, 183, 126, 0.1);
+    }
+
+    .quick-amounts {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .quick-amount {
+      background: #f8f9fa;
+      border: 2px solid #e9ecef;
+      padding: 0.75rem;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      color: #253D4E;
+    }
+
+    .quick-amount:hover {
+      background: #3BB77E;
+      color: white;
+      border-color: #3BB77E;
+      transform: translateY(-2px);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem 2rem 2rem;
+      justify-content: flex-end;
+    }
+
+    .btn-cancel {
+      background: #f8f9fa;
+      border: 2px solid #e0e0e0;
+      color: #666;
+      padding: 0.75rem 1.5rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .btn-cancel:hover {
+      background: #e9ecef;
+      border-color: #ccc;
+      transform: translateY(-1px);
+    }
+
+    .btn-add {
+      background: linear-gradient(135deg, #3BB77E 0%, #2ea368 100%);
+      border: 2px solid #3BB77E;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .btn-add:hover {
+      background: linear-gradient(135deg, #2ea368 0%, #059669 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(59, 183, 126, 0.4);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+
+      .main-layout {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .wallet-overview {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .balance-amount {
+        font-size: 2rem;
+      }
+
+      .transaction-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+        padding: 1rem;
+      }
+
+      .transaction-main {
+        order: 1;
+      }
+
+      .transaction-amount {
+        order: 2;
+        text-align: left;
+      }
+
+      .modal-content {
+        margin: 1rem;
+        width: calc(100% - 2rem);
+      }
+
+      .modal-actions {
+        flex-direction: column;
+      }
+
+      .modal-actions button {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .profile-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+      }
+
+      .btn-add-money {
+        justify-content: center;
+      }
+
+      .quick-amounts {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .quick-amounts {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+  <header class="header-area header-style-1 header-height-2">
+    <div class="header-top header-top-ptb-1 d-none d-lg-block">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-xl-3 col-lg-4">
+            <div class="header-info">
+            </div>
+          </div>
+          <div class="col-xl-6 col-lg-4">
+            <div class="text-center">
+            </div>
+          </div>
+          <div class="col-xl-3 col-lg-4">
+            <div class="header-info header-info-right">
+              <% console.log(user);
+                 %>
+              <% if (user) { %>
+              <div class="dropdown">
+                <a href="#" class="sign-in-link">
+                  <%= user.name %>
+                </a>
+                <div class="dropdown-content">
+                  <a href="/userProfile">Profile</a>
+                  <a href="/logout">Logout</a>
+                </div>
+              </div>
+              <% } else { %>
+              <ul>
+                <li>
+                  <i class="fi-rs-user"></i>
+                  <a href="/login">Log In</a>
+                </li>
+              </ul>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
+      <div class="container">
+        <div class="header-wrap">
+          <div class="logo logo-width-1">
+            <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+          </div>
+          <div class="header-right">
+            <div class="search-style-2"></div>
+            <div class="header-action-right">
+              <div class="header-action-2">
+                <div class="header-action-icon-2">
+                  <a href="/wishlist">
+                    <img class="svgInject" alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
+                    <span id="wishlistItemCount" class="pro-count blue">
+                      <%= typeof locals.wishlistItemCount !== 'undefined' ? locals.wishlistItemCount : 0 %>
+                    </span>
+                  </a>
+                </div>
+                <div class="header-action-icon-2">
+                  <a class="mini-cart-icon" href="/cart">
+                    <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
+                    <span id="cartItemCount" class="pro-count blue">
+                      <%= typeof locals.cartItemCount !=='undefined' ? locals.cartItemCount : 0 %>
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="header-bottom header-bottom-bg-color sticky-bar">
+      <div class="container">
+        <div class="header-wrap header-space-between position-relative">
+          <div class="logo logo-width-1 d-block d-lg-none">
+            <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+          </div>
+          <div class="header-nav d-none d-lg-flex">
+            <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
+              <nav>
+                <ul>
+                  <li><a href="/">Home</a></li>
+                  <li><a href="/shop">Shop</a></li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+          <div class="header-action-right d-block d-lg-none">
+            <div class="header-action-2">
+              <div class="header-action-icon-2">
+                <a href="/wishlist">
+                  <img alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
+                  <span id="wishlistItemCount" class="pro-count blue">
+                    <%= typeof locals.wishlistItemCount !== 'undefined' ? locals.wishlistItemCount : 0 %>
+                  </span>
+                </a>
+              </div>
+              <div class="header-action-icon-2">
+                <a class="mini-cart-icon" href="/cart">
+                  <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
+                  <span id="cartItemCount" class="pro-count blue">
+                    <%= typeof locals.cartItemCount !=='undefined' ? locals.cartItemCount : 0 %>
+                  </span>
+                </a>
+                <div class="header-action-icon-2 d-block d-lg-none">
+                  <div class="burger-icon burger-icon-white">
+                    <span class="burger-icon-top"></span>
+                    <span class="burger-icon-mid"></span>
+                    <span class="burger-icon-bottom"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </header>
+
+  <div class="page-header breadcrumb-wrap">
+    <div class="container">
+      <div class="breadcrumb" aria-label="Breadcrumb navigation">
+        <a href="/" rel="nofollow">Home</a>
+        <span></span> Profile
+        <span></span> My Wallet
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-container">
+    <div class="profile-layout">
+      <button class="mobile-sidebar-toggle" onclick="toggleSidebar()">
+        <span>
+          <i class="fi-rs-menu"></i>
+          My Account Menu
+        </span>
+        <i class="fi-rs-angle-down toggle-icon"></i>
+      </button>
+
+      <aside class="profile-sidebar" id="profileSidebar">
+        <h4>My Account</h4>
+        <ul>
+          <li>
+            <a href="/userProfile">
+              <i class="fi-rs-user"></i> My Profile
+            </a>
+          </li>
+          <li>
+            <a href="/orders">
+              <i class="fi-rs-shopping-bag"></i> My Orders
+            </a>
+          </li>
+          <li>
+            <a href="/profile/addresses">
+              <i class="fi-rs-marker"></i> My Addresses
+            </a>
+          </li>
+          <li>
+            <a href="/wallet" class="active">
+              <i class="fi-rs-credit-card"></i> My Wallet
+            </a>
+          </li>
+          <li>
+            <a href="/profile/security">
+              <i class="fi-rs-shield-check"></i> Security Settings
+            </a>
+          </li>
+          <li>
+            <a href="/logout">
+              <i class="fi-rs-sign-out"></i> Logout
+            </a>
+          </li>
+        </ul>
+      </aside>
+
+      <main class="main-content">
+        <div class="profile-header">
+          <h3><i class="ri-wallet-fill"></i> My Wallet</h3>
+          <button class="btn-add-money" onclick="openAddMoneyModal()">
+            <i class="ri-add-line"></i> Add Money
+          </button>
+        </div>
+
+        <div class="profile-body">
+          <div class="wallet-overview">
+            <div class="balance-card">
+              <div class="balance-header">
+                <i class="ri-wallet-fill"></i>
+                <div class="balance-title">Total Balance</div>
+              </div>
+              <div class="balance-amount">₹<%= wallet ? (typeof toDisplay === 'function' ? toDisplay(wallet.balance) : wallet.balance.toFixed(2)) : '0.00' %></div>
+            </div>
+          </div>
+
+          <div class="transactions-section">
+            <div class="section-header">
+              <h4 class="section-title">
+                <i class="ri-time-line"></i>
+                Recent Transactions
+              </h4>
+              <% if (transactions && transactions.length > 0) { %>
+              <a href="/wallet/history" class="view-all-btn">
+                View All <i class="ri-arrow-right-line"></i>
+              </a>
+              <% } %>
+            </div>
+
+            <% if (!transactions || transactions.length === 0) { %>
+            <div class="no-transactions">
+              <div class="no-transactions-icon">
+                <i class="ri-file-list-line"></i>
+              </div>
+              <h4>No transactions yet</h4>
+              <p>Your transaction history will appear here once you start using your wallet.</p>
+            </div>
+            <% } else { %>
+            <div class="transactions-list">
+              <% transactions.slice(0, 5).forEach(transaction => { %>
+              <div class="transaction-item">
+                <div class="transaction-main">
+                  <div class="transaction-icon <%= transaction.type === 'credit' ? 'credit' : 'debit' %>">
+                    <i class="<%= transaction.type === 'credit' ? 'ri-arrow-down-line' : 'ri-arrow-up-line' %>"></i>
+                  </div>
+                  <div class="transaction-details">
+                    <h4><%= transaction.description || transaction.title || 'Wallet Transaction' %></h4>
+                    <p class="transaction-date">
+                      <% if (transaction.createdAt || transaction.date) { %>
+                      <%= new Date(transaction.createdAt || transaction.date).toLocaleString('en-IN', { 
+                          year: 'numeric', 
+                          month: 'short', 
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                      }) %>
+                      <% } %>
+                    </p>
+                  </div>
+                </div>
+                <div class="transaction-amount">
+                  <p class="amount-value <%= transaction.type === 'credit' ? 'credit' : 'debit' %>">
+                    <%= transaction.type === 'credit' ? '+' : '-' %>₹<%= toDisplay(transaction.amount) %>
+                  </p>
+                  <p class="transaction-status status-<%= transaction.status || 'completed' %>">
+                    <%= (transaction.status || 'completed').charAt(0).toUpperCase() + (transaction.status || 'completed').slice(1) %>
+                  </p>
+                </div>
+              </div>
+              <% }) %>
+            </div>
+            <% } %>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="addMoneyModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4>Add Money to Wallet</h4>
+        <button class="modal-close" onclick="closeAddMoneyModal()">
+          <i class="ri-close-line"></i>
+        </button>
+      </div>
+
+      <form id="addMoneyForm" onsubmit="addMoney(event)">
+        <div class="modal-body">
+          <div class="amount-input-group">
+            <label for="amount">Enter Amount (₹)</label>
+            <input type="number" id="amount" name="amount" class="amount-input" min="1" max="50000" step="0.01" placeholder="0.00" required>
+          </div>
+
+          <div class="quick-amounts">
+            <button type="button" class="quick-amount" onclick="setAmount(500)">₹500</button>
+            <button type="button" class="quick-amount" onclick="setAmount(1000)">₹1,000</button>
+            <button type="button" class="quick-amount" onclick="setAmount(10000)">₹10,000</button>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" onclick="closeAddMoneyModal()">Cancel</button>
+          <button type="submit" class="btn-add">
+            <span id="addButtonText">Add Money</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer class="main">
+    <section class="newsletter p-30 text-white wow fadeIn animated">
+      <div class="floating-elements">
+        <div class="floating-element">桜</div>
+        <div class="floating-element">桜</div>
+        <div class="floating-element">⚡</div>
+        <div class="floating-element">🌸</div>
+      </div>
+    </section>
+    <section class="section-padding footer-mid">
+      <div class="container pt-15 pb-20">
+        <div class="row">
+          <div class="col-lg-4 col-md-6">
+            <div class="widget-about font-md mb-md-5 mb-lg-0">
+              <div class="logo logo-width-1 wow fadeIn animated">
+                <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+              </div>
+              <h5 class="mt-20 mb-10 fw-600 text-grey-4 wow fadeIn animated">Contact</h5>
+              <p class="wow fadeIn animated">
+                <strong>Address: </strong>562 Wellington Road, Street 32, San Francisco
+              </p>
+              <p class="wow fadeIn animated">
+                <strong>Phone: </strong>+01 2222 365 /(+91) 01 2345 6789
+              </p>
+              <p class="wow fadeIn animated">
+                <strong>Hours: </strong>10:00 - 18:00, Mon - Sat
+              </p>
+              <h5 class="mb-10 mt-30 fw-600 text-grey-4 wow fadeIn animated">Follow Us</h5>
+              <div class="mobile-social-icon wow fadeIn animated mb-sm-5 mb-md-0">
+                <a href="#"><img src="/imgs/theme/icons/icon-facebook.svg" alt=""></a>
+                <a href="#"><img src="/imgs/theme/icons/icon-twitter.svg" alt=""></a>
+                <a href="#"><img src="/imgs/theme/icons/icon-instagram.svg" alt=""></a>
+                <a href="#"><img src="/imgs/theme/icons/icon-pinterest.svg" alt=""></a>
+                <a href="#"><img src="/imgs/theme/icons/icon-youtube.svg" alt=""></a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-3">
+            <h5 class="widget-title wow fadeIn animated">About</h5>
+            <ul class="footer-list wow fadeIn animated mb-sm-5 mb-md-0">
+              <li><a href="#">About Us</a></li>
+              <li><a href="#">Delivery Information</a></li>
+              <li><a href="#">Privacy Policy</a></li>
+              <li><a href="#">Terms &amp; Conditions</a></li>
+              <li><a href="#">Contact Us</a></li>
+              <li><a href="#">Support Center</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-2  col-md-3">
+            <h5 class="widget-title wow fadeIn animated">My Account</h5>
+            <ul class="footer-list wow fadeIn animated">
+              <li><a href="#">Sign In</a></li>
+              <li><a href="#">View Cart</a></li>
+              <li><a href="#">My Wishlist</a></li>
+              <li><a href="#">Track My Order</a></li>
+              <li><a href="#">Help</a></li>
+              <li><a href="#">Order</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-4">
+            <h5 class="widget-title wow fadeIn animated">Install App</h5>
+            <div class="row">
+              <div class="col-md-8 col-lg-12">
+                <p class="wow fadeIn animated">From App Store or Google Play</p>
+                <div class="download-app wow fadeIn animated">
+                  <a href="#" class="hover-up mb-sm-4 mb-lg-0"><img class="active" src="/imgs/theme/app-store.jpg" alt=""></a>
+                  <a href="#" class="hover-up"><img src="/imgs/theme/google-play.jpg" alt=""></a>
+                </div>
+              </div>
+              <div class="col-md-4 col-lg-12 mt-md-3 mt-lg-0">
+                <p class="mb-20 wow fadeIn animated">Secured Payment Gateways</p>
+                <img class="wow fadeIn animated" src="/imgs/theme/payment-method.png" alt="">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="container pb-20 wow fadeIn animated">
+      <div class="row">
+        <div class="col-12 mb-20">
+          <div class="footer-bottom"></div>
+        </div>
+        <div class="col-lg-6">
+          <p class="float-md-left font-sm text-muted mb-0">&copy; 2025, <strong class="text-brand">Kaizen
+              Street</strong>
+        </div>
+        <div class="col-lg-6">
+          <p class="text-lg-end text-start font-sm text-muted mb-0">All rights reserved</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="/js/wishlist-count-updater.js"></script>
+  <script src="/js/cart-count-updater.js"></script>
+  <script src="/js/main.js?v=3.4"></script>
+  <script src="/js/shop.js?v=3.4"></script>
+
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById('profileSidebar');
+      const toggle = document.querySelector('.mobile-sidebar-toggle');
+
+      sidebar.classList.toggle('show');
+      toggle.classList.toggle('active');
+    }
+
+    document.addEventListener('click', function(event) {
+      const sidebar = document.getElementById('profileSidebar');
+      const toggle = document.querySelector('.mobile-sidebar-toggle');
+
+      if (window.innerWidth <= 991 &&
+        !sidebar.contains(event.target) &&
+        !toggle.contains(event.target) &&
+        sidebar.classList.contains('show')) {
+        sidebar.classList.remove('show');
+        toggle.classList.remove('active');
+      }
+    });
+
+    window.addEventListener('resize', function() {
+      const sidebar = document.getElementById('profileSidebar');
+      const toggle = document.querySelector('.mobile-sidebar-toggle');
+
+      if (window.innerWidth > 991) {
+        sidebar.classList.remove('show');
+        toggle.classList.remove('active');
+      }
+    });
+
+    function openAddMoneyModal() {
+      const modal = document.getElementById('addMoneyModal');
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeAddMoneyModal() {
+      const modal = document.getElementById('addMoneyModal');
+      modal.classList.remove('active');
+      document.body.style.overflow = 'auto';
+
+      document.getElementById('addMoneyForm').reset();
+    }
+  </script>
+</body>
+
+</html>

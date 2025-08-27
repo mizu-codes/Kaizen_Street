@@ -7,7 +7,7 @@ const addController  = require('../controllers/admin/product/addController');
 const listController = require('../controllers/admin/product/listController');
 const editController = require('../controllers/admin/product/editController');
 const orderController = require('../controllers/admin/orderController');
-const { userAuth, adminAuth } = require('../middlewares/auth');
+const { adminAuth } = require('../middlewares/auth');
 
 router.get('/page-error', adminController.pageError)
 router.get('/login', adminController.loadLogin);
@@ -31,7 +31,10 @@ router.post('/products/block/:id',adminAuth, listController.toggleBlockProduct);
 router.post('/products/edit/:id', adminAuth, editController.updateProduct);
 
 router.get('/orders',adminAuth, orderController.loadOrderPage);
-
+router.get('/orders/:orderId', adminAuth, orderController.loadOrderDetailsPage);
+router.patch('/orders/:orderId/status', adminAuth, orderController.changeOrderStatus);
+router.patch('/returns/:orderId/:itemId', adminAuth, orderController.updateReturnRequest);
 
 
 module.exports = router;
+

@@ -1,113 +1,172 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const { Schema } = mongoose;
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require("uuid");
 
-const orderItemSubschema = new Schema({
+const orderItemSubschema = new Schema(
+  {
     product: {
-        type: Schema.Types.ObjectId,
-        ref: 'Product',
-        required: true
+      type: Schema.Types.ObjectId,
+      ref: "Product",
+      required: true,
     },
     name: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     price: {
-        type: Number,
-        required: true,
-        min: 0
+      type: Number,
+      required: true,
+      min: 0,
     },
     quantity: {
-        type: Number,
-        required: true,
-        min: 1
+      type: Number,
+      required: true,
+      min: 1,
     },
     size: {
-        type: String,
-        enum: ['S', 'M', 'L', 'XL', 'XXL'],
-        required: true
+      type: String,
+      enum: ["S", "M", "L", "XL", "XXL"],
+      required: true,
     },
     image: {
-        type: String,
+      type: String,
     },
     subtotal: {
-        type: Number,
-        required: true,
-        min: 0
+      type: Number,
+      required: true,
+      min: 0,
     },
     status: {
-        type: String,
-        enum: ['Placed', 'Cancelled', 'Returned', 'Delivered'],
-        default: 'Placed'
+      type: String,
+      enum: [
+        "Placed",
+        "Processing",
+        "Shipped",
+        "Out for Delivery",
+        "Delivered",
+        "Cancelled",
+        "Returned",
+      ],
+      default: "Placed",
     },
     cancellationReason: {
-        type: String
+      type: String,
     },
-    returnReason: {
-        type: String
-    }
-}, { _id: true });
-
-const orderSchema = new Schema({
-    orderId: {
+    returnRequest: {
+      status: {
         type: String,
-        default: () => uuidv4(),
-        unique: true
+        enum: ["requested", "accepted", "rejected", "refunded"],
+        default: null,
+      },
+      requestedAt: {
+        type: Date,
+        default: Date.now,
+      },
+      reason: {
+        type: String,
+      },
+      verifiedAt: {
+        type: Date,
+      },
+      adminNote: {
+        type: String,
+      },
+      verifiedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Admin",
+      },
+    },
+  },
+  { _id: true }
+);
+
+const orderSchema = new Schema(
+  {
+    orderId: {
+      type: String,
+      default: () => uuidv4(),
+      unique: true,
     },
     user: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
     address: {
-        type: Schema.Types.ObjectId,
-        ref: 'Address',
-        required: true
+      type: Schema.Types.ObjectId,
+      ref: "Address",
+      required: true,
     },
     items: {
-        type: [orderItemSubschema],
-        required: true,
-        validate: {
-            validator: function (items) {
-                return Array.isArray(items) && items.length > 0;
-            },
-            message: 'Order must contain at least one item.'
-        }
+      type: [orderItemSubschema],
+      required: true,
+      validate: {
+        validator: function (items) {
+          return Array.isArray(items) && items.length > 0;
+        },
+        message: "Order must contain at least one item.",
+      },
     },
     discount: {
-        type: Number,
-        default: 0,
-        min: 0
+      type: Number,
+      default: 0,
+      min: 0,
     },
     totalAmount: {
-        type: Number,
-        required: true,
-        min: 0
+      type: Number,
+      required: true,
+      min: 0,
     },
     paymentMethod: {
-        type: String,
-        enum: ['cod', 'razorpay', 'wallet'],
-        default: 'cod',
-        required: true
+      type: String,
+      enum: ["cod", "razorpay", "wallet"],
+      default: "cod",
+      required: true,
     },
     paymentStatus: {
-        type: String,
-        enum: ['paid', 'unpaid'],
-        default: 'unpaid'
+      type: String,
+      enum: ["paid", "unpaid"],
+      default: "unpaid",
     },
     status: {
-        type: String,
-        enum: ['Placed', 'Processing', 'Shipped', 'Delivered', 'Cancelled'],
-        default: 'Placed'
+      type: String,
+      enum: [
+        "Placed",
+        "Processing",
+        "Shipped",
+        "Out for Delivery",
+        "Delivered",
+        "Cancelled",
+        "Returned",
+      ],
+      default: "Placed",
     },
+    history: [
+      {
+        by: {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+        },
+        action: String,
+        timestamp: Date,
+      },
+    ],
     placedAt: {
-        type: Date,
-        default: Date.now
-    }
-}, {
-    timestamps: true
+      type: Date,
+      default: Date.now,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+orderSchema.virtual("displayOrderId").get(function () {
+  return this.orderId ? this.orderId.substring(0, 8).toUpperCase() : "";
 });
 
-const Order = mongoose.model('Order', orderSchema);
-module.exports = Order;
+orderSchema.set("toJSON", { virtuals: true });
+orderSchema.set("toObject", { virtuals: true });
 
+const Order = mongoose.model("Order", orderSchema);
+module.exports = Order;
