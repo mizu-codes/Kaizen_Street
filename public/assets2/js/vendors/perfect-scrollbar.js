@@ -1,8 +1,3 @@
-/*!
- * perfect-scrollbar v1.5.0
- * Copyright 2020 Hyunje Jun, MDBootstrap and Contributors
- * Licensed under MIT
- */
 
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -76,10 +71,8 @@
       scrolling: function (x) { return ("ps--scrolling-" + x); },
     },
   };
+  
 
-  /*
-   * Helper methods
-   */
   var scrollingClassTimeout = { x: null, y: null };
 
   function addScrollingClass(i, x) {
@@ -170,7 +163,6 @@
     ee.unbind(eventName, handler);
 
     if (ee.isEmpty) {
-      // remove
       this.eventElements.splice(this.eventElements.indexOf(ee), 1);
     }
   };
@@ -250,16 +242,13 @@
     if ( forceFireReachEvent === void 0 ) forceFireReachEvent = false;
 
     var element = i.element;
-
-    // reset reach
+ 
     i.reach[y] = null;
-
-    // 1 for subpixel rounding
+  
     if (element[scrollTop] < 1) {
       i.reach[y] = 'start';
     }
 
-    // 1 for subpixel rounding
     if (element[scrollTop] > i[contentHeight] - i[containerHeight] - 1) {
       i.reach[y] = 'end';
     }
@@ -335,13 +324,11 @@
     i.contentHeight = element.scrollHeight;
 
     if (!element.contains(i.scrollbarXRail)) {
-      // clean up and append
       queryChildren(element, cls.element.rail('x')).forEach(function (el) { return remove(el); }
       );
       element.appendChild(i.scrollbarXRail);
     }
     if (!element.contains(i.scrollbarYRail)) {
-      // clean up and append
       queryChildren(element, cls.element.rail('y')).forEach(function (el) { return remove(el); }
       );
       element.appendChild(i.scrollbarYRail);

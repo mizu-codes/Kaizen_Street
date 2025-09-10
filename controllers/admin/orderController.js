@@ -165,6 +165,10 @@ const updateReturnRequest = async (req, res) => {
   try {
     const order = await Order.findById(orderId).session(session);
     if (!order) throw new Error('Order not found');
+    
+    if (!order.user) {
+      throw new Error('Cannot process refund: Order has no associated user');
+    }
 
     const item = order.items.id(itemId);
     if (!item) throw new Error('Item not found in order');
@@ -231,10 +235,10 @@ const updateReturnRequest = async (req, res) => {
       { session }
     );
 
-    let wallet = await Wallet.findOne({ user: order.user }).session(session);
+    let wallet = await Wallet.findOne({ userId: order.user }).session(session);
     if (!wallet) {
       const created = await Wallet.create([{
-        user: order.user,
+        userId: order.user,  
         balance: 0,
         totalCredits: 0,
         totalDebits: 0,
@@ -259,7 +263,7 @@ const updateReturnRequest = async (req, res) => {
 
     const txDocs = await WalletTransaction.create([{
       wallet: wallet._id,
-      user: order.user,
+      user: order.user, 
       type: 'credit',
       amount: refundAmount,
       description: `Refund for ${item.name || 'returned product'}`,

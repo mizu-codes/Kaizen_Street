@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const upload= require('../middlewares/multer');
 const adminController = require('../controllers/admin/adminController');
 const customerController = require('../controllers/admin/customerController');
 const categoryController= require('../controllers/admin/categoryController');
@@ -28,7 +29,7 @@ router.get('/addProducts',adminAuth,addController.getProductAddPage);
 router.post('/addProducts', adminAuth, addController.addNewProduct);
 router.get('/products', adminAuth, listController.listProducts);
 router.post('/products/block/:id',adminAuth, listController.toggleBlockProduct);
-router.post('/products/edit/:id', adminAuth, editController.updateProduct);
+router.post('/products/edit/:id', adminAuth, upload.array('productImages', 3), editController.updateProduct);
 
 router.get('/orders',adminAuth, orderController.loadOrderPage);
 router.get('/orders/:orderId', adminAuth, orderController.loadOrderDetailsPage);

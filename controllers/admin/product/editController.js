@@ -1,6 +1,5 @@
-const Product    = require('../../../models/productSchema');
+const Product = require('../../../models/productSchema');
 const cloudinary = require('../../../middlewares/cloudinary');
-const { cleanProductImages, fixProductImages } = require('./imageUtils');
 
 const updateProduct = async (req, res) => {
   try {
@@ -12,149 +11,150 @@ const updateProduct = async (req, res) => {
       discountPercent,
       discountPrice,
       productOffer,
-      status,
       category,
-      specifications
+      specifications,
+      hasNewImages,
+      imageIndexes,
+      existingImages
     } = req.body;
 
     const stock = {
-  S: Number(req.body.stock_S || 0),
-  M: Number(req.body.stock_M || 0),
-  L: Number(req.body.stock_L || 0),
-  XL: Number(req.body.stock_XL || 0),
-  XXL: Number(req.body.stock_XXL || 0)
-};
+      S: Number(req.body.stock_S || 0),
+      M: Number(req.body.stock_M || 0),
+      L: Number(req.body.stock_L || 0),
+      XL: Number(req.body.stock_XL || 0),
+      XXL: Number(req.body.stock_XXL || 0)
+    };
 
-const size = Object.entries(stock)
-  .filter(([_, qty]) => qty > 0)
-  .map(([s]) => s);
+    const size = Object.entries(stock)
+      .filter(([_, qty]) => qty > 0)
+      .map(([s]) => s);
 
-    console.log('Update request for product:', id);
-    console.log('Full req.body keys:', Object.keys(req.body));
-
-    if (!productName || !description || !regularPrice || !discountPrice || !status || !category || size.length===0) {
-      throw new Error('Please fill all required fields and set at least one size with stock');
-    }
+    if (!productName?.trim()) throw new Error('Product name is required');
+    if (!description?.trim()) throw new Error('Description is required');
+    if (!regularPrice || isNaN(regularPrice) || regularPrice <= 0) throw new Error('Valid regular price is required');
+    if (!discountPrice || isNaN(discountPrice) || discountPrice < 0) throw new Error('Valid discount price is required');
+    if (!category) throw new Error('Category is required');
+    if (size.length === 0) throw new Error('At least one size must have stock > 0');
 
     const product = await Product.findById(id);
     if (!product) throw new Error('Product not found');
 
-    console.log('Current product images:', product.productImage);
-
     let finalImages = [];
 
-    const imageInputs = [
-      req.body.imageBase64_1,
-      req.body.imageBase64_2,
-      req.body.imageBase64_3
-    ];
+    let parsedExistingImages = {};
+    try {
+      parsedExistingImages = existingImages ? JSON.parse(existingImages) : {};
+    } catch (error) {
+      console.warn('Error parsing existing images:', error);
+    }
 
-    console.log('Processing image inputs:', imageInputs.map(img =>
-      img ? (img.startsWith('data:') ? 'NEW_BASE64' : 'EXISTING_URL') : 'EMPTY'
-    ));
+    let parsedImageIndexes = [];
+    try {
+      parsedImageIndexes = imageIndexes ? JSON.parse(imageIndexes) : [];
+    } catch (error) {
+      console.warn('Error parsing image indexes:', error);
+    }
 
-    for (let i = 0; i < imageInputs.length; i++) {
-      const imageData = imageInputs[i];
+    if (hasNewImages === 'true' && req.files && req.files.length > 0) {
+      const uploadedImages = [];
 
-      if (!imageData || imageData.trim() === '') {
-        console.log(`Position ${i + 1}: Empty, skipping`);
-        continue;
-      }
-
-      if (imageData.startsWith('data:image/')) {
-        console.log(`Position ${i + 1}: Uploading new base64 image`);
+      for (const file of req.files) {
         try {
-          const uploadResult = await cloudinary.uploader.upload(imageData, {
+          const b64 = file.buffer.toString("base64");
+          const dataURI = `data:${file.mimetype};base64,${b64}`;
+
+          const uploadResult = await cloudinary.uploader.upload(dataURI, {
             folder: 'kaizen_products',
             quality: 'auto',
-            fetch_format: 'auto'
+            fetch_format: 'auto',
+            resource_type: 'image',
+            transformation: [
+              { width: 800, height: 800, crop: 'pad', background: 'white' }
+            ]
           });
-          finalImages.push(uploadResult.secure_url);
-          console.log(`Successfully uploaded image at position ${i + 1}:`, uploadResult.secure_url);
-        } catch (uploadError) {
-          console.error(`Error uploading image at position ${i + 1}:`, uploadError);
 
-          if (product.productImage[i]) {
-            console.log(`Upload failed, keeping existing image at position ${i + 1}`);
-            finalImages.push(product.productImage[i]);
+          uploadedImages.push(uploadResult.secure_url);
+        } catch (uploadErr) {
+          console.error('Error uploading image:', uploadErr);
+          throw new Error(`Failed to upload image: ${uploadErr.message}`);
+        }
+      }
+
+      let newImageIndex = 0;
+      for (let i = 1; i <= 3; i++) {
+        if (parsedImageIndexes.includes(i)) {
+          if (parsedExistingImages[`image${i}`]) {
+            finalImages.push(parsedExistingImages[`image${i}`]);
+          } else {
+            if (newImageIndex < uploadedImages.length) {
+              finalImages.push(uploadedImages[newImageIndex]);
+              newImageIndex++;
+            }
           }
         }
-      } else if (imageData.startsWith('http')) {
-
-        console.log(`Position ${i + 1}: Keeping existing URL:`, imageData);
-        finalImages.push(imageData);
-      } else {
-
-        console.log(`Position ${i + 1}: Unknown format (${imageData}), checking for existing image`);
-        if (product.productImage[i] && product.productImage[i].startsWith('http')) {
-          console.log(`Keeping existing image at position ${i + 1}:`, product.productImage[i]);
-          finalImages.push(product.productImage[i]);
-        } else {
-          console.log(`No valid existing image at position ${i + 1}, skipping`);
+      }
+    } else {
+      for (let i = 1; i <= 3; i++) {
+        if (parsedImageIndexes.includes(i) && parsedExistingImages[`image${i}`]) {
+          finalImages.push(parsedExistingImages[`image${i}`]);
         }
       }
     }
 
-    if (finalImages.length === 0 && product.productImage.length > 0) {
-      console.log('No images processed, keeping first existing image as fallback');
-      const validExistingImages = product.productImage.filter(img =>
-        img && img.trim() !== '' && img.startsWith('http')
-      );
-      if (validExistingImages.length > 0) {
-        finalImages = validExistingImages.slice(0, 3);
-      }
+    if (finalImages.length === 0) {
+      finalImages = [...product.productImage];
+      console.warn('No images processed, keeping existing product images');
     }
-
-    console.log('Final processed images:', finalImages);
 
     if (finalImages.length === 0) {
       throw new Error('At least one image is required');
     }
 
     const updateData = {
-      productName,
-      description,
-      regularPrice,
-      discountPrice,
-      discountPercent,
-      productOffer,
+      productName: productName.trim(),
+      description: description.trim(),
+      regularPrice: Number(regularPrice),
+      discountPrice: Number(discountPrice),
+      discountPercent: Number(discountPercent || 0),
+      productOffer: Number(productOffer || 0),
       stock,
       size,
-      status,
       category,
-      productImage: finalImages
+      productImage: finalImages,
+      specifications: specifications?.trim() || 'No specifications provided'
     };
-
-    if (specifications && specifications.trim() !== '') {
-      updateData.specifications = specifications.trim();
-    } else {
-
-      updateData.specifications = product.specifications || 'No specifications provided';
-    }
-
-    console.log('Updating product with final image array:', finalImages);
 
     const updatedProduct = await Product.findByIdAndUpdate(id, updateData, {
       new: true,
       runValidators: true
     });
 
-    console.log('Product updated successfully. Final images in DB:', updatedProduct.productImage);
-    req.flash('message', 'Product updated successfully');
+    if (!updatedProduct) {
+      throw new Error('Failed to update product');
+    }
 
   } catch (err) {
     console.error('Error updating product:', err);
-    req.flash('error', err.message || 'Failed to update product');
+
+    if (req.xhr || req.headers.accept?.indexOf('json') > -1) {
+      return res.status(400).json({ error: err.message });
+    }
   }
 
+  const page = req.query.page || req.body.page || 1;
+  const limit = req.query.limit || req.body.limit || 10;
+  const search = req.query.search || req.body.search || '';
+
   const qs = new URLSearchParams({
-    page: req.body.page || 1,
-    limit: req.body.limit || 10,
-    search: req.body.search || ''
+    page: page.toString(),
+    limit: limit.toString(),
+    search: search.toString()
   }).toString();
+
   res.redirect(`/admin/products?${qs}`);
 };
 
-module.exports={
-    updateProduct
-}
+module.exports = {
+  updateProduct,
+};

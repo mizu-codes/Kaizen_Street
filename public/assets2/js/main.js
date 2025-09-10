@@ -1,6 +1,5 @@
 (function ($) {
     "use strict";
-	//===== jquery code for sidebar menu
 	$('.menu-item.has-submenu .menu-link').on('click', function(e){
 		e.preventDefault();
 		if($(this).next('.submenu').is(':hidden')){
@@ -8,8 +7,7 @@
 		} 
 		$(this).next('.submenu').slideToggle(200);
 	});
-
-	// mobile offnavas triggerer for generic use
+	
 	$("[data-trigger]").on("click", function(e){
 		e.preventDefault();
 		e.stopPropagation();
@@ -26,7 +24,6 @@
 		$("body").removeClass("offcanvas-active");
 	}); 
 
-	// minimize sideber on desktop
 
 	$('.btn-aside-minimize').on('click', function(){
 		if( window.innerWidth < 768) {
@@ -36,17 +33,14 @@
 			$("body").removeClass("offcanvas-active");
 		} 
 		else {
-			// minimize sideber on desktop
 			$('body').toggleClass('aside-mini');
 		}
 	});
 
-	//Nice select
 	if ($('.select-nice').length) {
     	$('.select-nice').select2();
 	}
 
-	// Dark mode toogle
 	$('.darkmode').on('click', function () {
 		$('body').toggleClass("dark");
 	});
