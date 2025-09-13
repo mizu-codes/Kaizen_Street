@@ -1,4 +1,7 @@
 const mongoose = require('mongoose');
+const Wallet = require('../../models/walletSchema');
+const { randomUUID } = require('crypto')
+const WalletTransaction = require('../../models/walletTransactionSchema');
 const Product = require('../../models/productSchema');
 const Order = require('../../models/orderSchema');
 const returnAndRefund = require('../../models/returnAndRefundSchema')
@@ -23,8 +26,22 @@ const loadOrderPage = async (req, res) => {
             .find(filter)
             .sort({ createdAt: -1 })
             .select('orderId status createdAt totalAmount items')
+            .lean();
 
-        res.render('profile-order', { orders, q });
+        const processedOrders = orders.map(order => {
+            order.items = order.items.map(item => {
+                return {
+                    ...item,
+                    status: item.status || order.status
+                };
+            });
+
+            order.displayOrderId = order._id.toString().slice(-8).toUpperCase();
+
+            return order;
+        });
+
+        res.render('profile-order', { orders: processedOrders, q });
     } catch (error) {
         console.error('Error loading orders:', error);
         res.redirect('/pageNotFound');
@@ -43,51 +60,133 @@ const loadOrderDetailsPage = async (req, res) => {
         if (!order) {
             return res.status(404).render('page-404');
         }
+
+        order.items = order.items.map(item => {
+            return {
+                ...item,
+                status: item.status || order.status
+            };
+        });
+
         res.render('profile-order-details', { order });
     } catch (error) {
         console.error('Error loading order details:', error);
-        res.status(500).render('error', { message: 'Failed to load order details.' });
+        res.status(500).render('page-404', { message: 'Failed to load order details.' });
     }
 };
 
-
 const cancelOrderItem = async (req, res) => {
+    const session = await mongoose.startSession();
     try {
         const userId = req.session.userId;
         const itemId = req.params.itemId;
-        const reason = req.body.reason || 'No reason provided';
+        const reason = (req.body.reason || 'No reason provided').trim();
 
-        const order = await Order.findOne({ user: userId, 'items._id': itemId });
-        if (!order) {
-            return res.status(404).json({ success: false, message: 'Order item not found.' });
-        }
+        if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
 
-        const item = order.items.id(itemId);
-        if (!item) {
-            return res.status(404).json({ success: false, message: 'Item not found in order.' });
-        }
+        await session.withTransaction(async () => {
+            const orderDoc = await Order.findOne({ user: userId, 'items._id': itemId }).session(session);
+            if (!orderDoc) return res.status(404).json({ success: false, message: 'Order item not found.' });
 
-        order.status = 'Cancelled';
-        item.cancellationReason = reason;
+            const itemDoc = orderDoc.items.id(itemId);
+            if (!itemDoc) return res.status(404).json({ success: false, message: 'Item not found in order.' });
 
-        await Product.updateOne(
-            { _id: item.product },
-            { $inc: { [`stock.${item.size}`]: item.quantity } }
-        );
+            if (String(itemDoc.status).toLowerCase() === 'cancelled') {
+                return res.status(400).json({ success: false, message: 'Item is already cancelled.' });
+            }
 
-        const allCancelled = order.items.every(it => it.status === 'Cancelled');
-        if (allCancelled) {
-            order.status = 'Cancelled';
-        }
+            itemDoc.status = 'Cancelled';
+            itemDoc.cancellationReason = reason;
+            itemDoc.cancelledAt = new Date();
 
-        await order.save();
+            await Product.updateOne(
+                { _id: itemDoc.product },
+                { $inc: { [`stock.${itemDoc.size}`]: itemDoc.quantity } },
+                { session }
+            );
 
-        return res.json({ success: true });
-    } catch (error) {
-        console.error('Cancel item error:', error);
+            const paymentMethod = String(orderDoc.paymentMethod).toLowerCase();
+
+            if (paymentMethod === 'razorpay' || paymentMethod === 'wallet') {
+                const refundAmount = Number(itemDoc.subtotal ?? (itemDoc.price * itemDoc.quantity) ?? 0);
+                const now = new Date();
+
+                let wallet = await Wallet.findOne({ userId: userId }).session(session);
+                if (!wallet) {
+                    wallet = await Wallet.create([{
+                        userId,
+                        balance: refundAmount,
+                        isActive: true,
+                        isBlocked: false,
+                        totalCredits: refundAmount,
+                        totalDebits: 0,
+                        transactionCount: 1,
+                        lastTransactionAt: now,
+                        lastCreditAt: now
+                    }], { session }).then(arr => arr[0]);
+                } else {
+                    const prevBalance = Number(wallet.balance || 0);
+                    wallet.balance = prevBalance + refundAmount;
+                    wallet.totalCredits = (wallet.totalCredits || 0) + refundAmount;
+                    wallet.transactionCount = (wallet.transactionCount || 0) + 1;
+                    wallet.lastTransactionAt = now;
+                    wallet.lastCreditAt = now;
+                    await wallet.save({ session });
+                }
+
+                const balanceBefore = Number((wallet.balance || 0) - refundAmount);
+                const balanceAfter = Number(wallet.balance || 0);
+
+                await WalletTransaction.create([{
+                    transactionId: randomUUID(),
+                    wallet: wallet._id,
+                    user: userId,
+                    type: 'credit',
+                    amount: refundAmount,
+                    description: paymentMethod === 'wallet'
+                        ? `Refund for cancelled item: ${itemDoc.name || 'product'}`
+                        : `Refund for cancelled item: ${itemDoc.name || 'product'}`,
+                    status: 'completed',
+                    balanceBefore,
+                    balanceAfter,
+                    orderId: orderDoc._id,
+                    paymentDetails: {
+                        method: orderDoc.paymentMethod || paymentMethod,
+                        gatewayOrderId: orderDoc.paymentDetails?.razorpay_order_id ?? null,
+                        gatewayPaymentId: orderDoc.paymentDetails?.razorpay_payment_id ?? null,
+                        gatewayTransactionId: null
+                    },
+                    processedAt: now,
+                    completedAt: now
+                }], { session });
+            }
+
+            if (paymentMethod === 'cod') {
+                console.log('COD order cancelled - no refund required');
+            }
+
+            const allCancelled = orderDoc.items.every(it => String(it.status).toLowerCase() === 'cancelled');
+            if (allCancelled) {
+                orderDoc.status = 'Cancelled';
+                orderDoc.cancelledAt = new Date();
+            }
+
+            await orderDoc.save({ session });
+        });
+
+        return res.json({
+            success: true,
+            message: 'Item cancelled successfully. Refund has been processed to your wallet.'
+        });
+    } catch (err) {
+        console.error('Cancel item error:', err);
+        try { await session.abortTransaction(); } catch (e) { }
         return res.status(500).json({ success: false, message: 'Server error.' });
+    } finally {
+        try { session.endSession(); } catch (e) { }
     }
 };
+
 
 const downloadInvoicePDF = async (req, res) => {
     try {
@@ -210,7 +309,6 @@ const returnOrderItem = async (req, res) => {
         return res.status(500).json({ success: false, message: 'Server error' });
     }
 };
-
 
 module.exports = {
     loadOrderPage,

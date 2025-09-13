@@ -11,7 +11,7 @@ const { userAuth } = require('../middlewares/auth');
 const profileController = require('../controllers/user/profile/profileController');
 const addressController = require('../controllers/user/profile/addressController');
 const securityController = require('../controllers/user/profile/securityController');
-const walletController= require('../controllers/user/profile/walletController');
+const walletController = require('../controllers/user/profile/walletController');
 
 const errorController = require('../controllers/user/errorController');
 const authController = require('../controllers/user/authController');
@@ -49,7 +49,6 @@ router.get('/auth/google/callback', passport.authenticate('google', { failureRed
     return res.redirect('/')
 });
 
-
 router.get('/userProfile', userAuth, profileController.userProfile);
 router.get('/profile/edit', userAuth, profileController.updateProfile);
 router.post('/profile/update', userAuth, upload.single('avatar'), profileController.saveProfile);
@@ -84,6 +83,8 @@ router.get('/checkout/add-address', userAuth, addressController.addAddress);
 router.post('/checkout/add-address', userAuth, addressController.createAddress);
 router.get('/checkout/edit-address/:id', userAuth, checkoutController.editAddressPage);
 router.patch('/checkout/edit-address/:id', userAuth, checkoutController.updateAddress);
+router.post("/checkout/create-razorpay-order", userAuth, checkoutController.createRazorpayOrder);
+router.post("/checkout/verify-payment", userAuth, checkoutController.verifyRazorpayPayment);
 
 router.get('/orders', userAuth, orderController.loadOrderPage);
 router.get('/orders/:orderId', userAuth, orderController.loadOrderDetailsPage);
@@ -91,7 +92,7 @@ router.patch('/orders/cancel-item/:itemId', userAuth, orderController.cancelOrde
 router.get('/orders/:orderId/invoice', userAuth, orderController.downloadInvoicePDF);
 router.post('/orders/return-item', userAuth, orderController.returnOrderItem);
 
-router.get('/wallet',userAuth,walletController.loadWalletPage);
+router.get('/wallet', userAuth, walletController.loadWalletPage);
 
 module.exports = router;
 

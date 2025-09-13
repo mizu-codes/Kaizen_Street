@@ -9,10 +9,385 @@
   <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/kaizenicon.svg">
   <link rel="stylesheet" href="/css/main.css?v=3.4">
   <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
-</head>
-
-<body>
   <style>
+    .pagination-container {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .pagination-info {
+      text-align: center;
+    }
+
+    .pagination-info p {
+      color: #666;
+      font-size: 14px;
+      margin: 0;
+    }
+
+    .pagination-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .pagination-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      text-decoration: none;
+      color: #333;
+      background: white;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .pagination-btn:hover:not(.disabled) {
+      background: #088178;
+      color: white;
+      border-color: #088178;
+    }
+
+    .pagination-btn.disabled {
+      color: #999;
+      cursor: not-allowed;
+      background: #f5f5f5;
+    }
+
+    .pagination-numbers {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .pagination-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      text-decoration: none;
+      color: #333;
+      background: white;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .pagination-number:hover {
+      background: #088178;
+      color: white;
+      border-color: #088178;
+    }
+
+    .pagination-number.active {
+      background: #088178;
+      color: white;
+      border-color: #088178;
+      font-weight: 600;
+    }
+
+    .pagination-dots {
+      color: #999;
+      padding: 0 5px;
+      font-weight: bold;
+    }
+
+    @media (max-width: 768px) {
+      .pagination-controls {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .pagination-numbers {
+        order: -1;
+      }
+
+      .pagination-btn {
+        min-width: 120px;
+        justify-content: center;
+      }
+    }
+
+    .mascot-container {
+      position: relative;
+      grid-column: 3;
+      width: 280px;
+      height: 280px;
+      margin: 0;
+      position: absolute;
+      top: 0;
+      right: 1rem;
+      background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);
+      border-radius: 20px;
+      padding: 20px;
+      overflow: hidden;
+      margin: 20px;
+    }
+
+    .piggy-bank {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: piggyFloat 3s ease-in-out infinite;
+    }
+
+    .piggy-body {
+      width: 120px;
+      height: 80px;
+      background: linear-gradient(145deg, #ff9a9e, #fecfef);
+      border-radius: 60px 60px 40px 40px;
+      position: relative;
+      box-shadow: 0 8px 20px rgba(255, 154, 158, 0.3);
+    }
+
+    /* Piggy Face */
+    .piggy-face {
+      position: absolute;
+      top: 15px;
+      left: 25px;
+      right: 25px;
+      bottom: 20px;
+    }
+
+    .piggy-eyes {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+
+    .eye {
+      width: 12px;
+      height: 12px;
+      background: #333;
+      border-radius: 50%;
+      position: relative;
+      animation: blink 4s infinite;
+    }
+
+    .eye::before {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 4px;
+      height: 4px;
+      background: white;
+      border-radius: 50%;
+    }
+
+    /* Piggy Snout */
+    .piggy-snout {
+      width: 25px;
+      height: 18px;
+      background: linear-gradient(145deg, #ff8a95, #ff6b7d);
+      border-radius: 50%;
+      margin: 0 auto;
+      position: relative;
+      box-shadow: 0 2px 8px rgba(255, 107, 125, 0.3);
+    }
+
+    .nostril {
+      position: absolute;
+      width: 3px;
+      height: 6px;
+      background: #d63384;
+      border-radius: 50%;
+      top: 6px;
+    }
+
+    .nostril.left {
+      left: 6px;
+    }
+
+    .nostril.right {
+      right: 6px;
+    }
+
+    /* Piggy Ears */
+    .ear {
+      position: absolute;
+      width: 20px;
+      height: 25px;
+      background: linear-gradient(145deg, #ff9a9e, #fecfef);
+      border-radius: 10px 10px 5px 15px;
+      top: -5px;
+    }
+
+    .ear.left {
+      left: 15px;
+      transform: rotate(-30deg);
+      animation: earWiggle 3s ease-in-out infinite;
+    }
+
+    .ear.right {
+      right: 15px;
+      transform: rotate(30deg);
+      animation: earWiggle 3s ease-in-out infinite reverse;
+    }
+
+    /* Piggy Legs */
+    .leg {
+      position: absolute;
+      width: 12px;
+      height: 15px;
+      background: linear-gradient(145deg, #ff9a9e, #fecfef);
+      border-radius: 6px;
+      bottom: -15px;
+    }
+
+    .leg.front-left {
+      left: 20px;
+    }
+
+    .leg.front-right {
+      right: 20px;
+    }
+
+    .leg.back-left {
+      left: 35px;
+    }
+
+    .leg.back-right {
+      right: 35px;
+    }
+
+    /* Piggy Tail */
+    .piggy-tail {
+      position: absolute;
+      right: -8px;
+      top: 15px;
+      width: 15px;
+      height: 15px;
+      border: 3px solid #ff8a95;
+      border-radius: 50%;
+      border-right: none;
+      border-bottom: none;
+      transform: rotate(45deg);
+      animation: tailWag 2s ease-in-out infinite;
+    }
+
+    /* Coin Slot */
+    .coin-slot {
+      position: absolute;
+      top: -3px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 25px;
+      height: 3px;
+      background: #333;
+      border-radius: 2px;
+    }
+
+    /* Floating coins going into piggy */
+    .floating-coin {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: linear-gradient(45deg, #ffd700, #ffed4e);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: bold;
+      color: #b8860b;
+      box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+    }
+
+    .coin1 {
+      top: 20%;
+      left: 20%;
+      animation: coinToPiggy1 5s ease-in-out infinite;
+    }
+
+    .coin2 {
+      top: 25%;
+      right: 15%;
+      animation: coinToPiggy2 6s ease-in-out infinite;
+      animation-delay: 2s;
+    }
+
+    .coin3 {
+      bottom: 35%;
+      left: 10%;
+      animation: coinToPiggy3 4.5s ease-in-out infinite;
+      animation-delay: 1s;
+    }
+
+    /* Sparkles */
+    .sparkle {
+      position: absolute;
+      font-size: 16px;
+      color: #3BB77E;
+      animation: sparkleFloat 2s ease-in-out infinite;
+    }
+
+    .sparkle1 {
+      top: 15%;
+      left: 65%;
+      animation-delay: 0s;
+    }
+
+    .sparkle2 {
+      top: 70%;
+      left: 75%;
+      animation-delay: 1s;
+    }
+
+    .sparkle3 {
+      top: 80%;
+      left: 15%;
+      animation-delay: 0.5s;
+    }
+
+    .sparkle4 {
+      top: 30%;
+      left: 5%;
+      animation-delay: 1.5s;
+    }
+
+    /* Message */
+    .piggy-message {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      padding: 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      animation: messageFloat 3s ease-in-out infinite;
+    }
+
+    .piggy-message::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-bottom: 8px solid white;
+    }
+
     .main-content {
       background: white;
       border-radius: 16px;
@@ -76,13 +451,14 @@
 
     .profile-body {
       padding: 2rem;
+      position: relative;
     }
 
     .wallet-overview {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
+      grid-template-columns: 1fr 1fr 50px;
       margin-bottom: 2rem;
+      align-items: start;
     }
 
     .balance-card {
@@ -187,177 +563,266 @@
     }
 
     .transactions-section {
-      margin-top: 2rem;
+      margin-top: 30px;
     }
 
     .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-      gap: 1rem;
+      margin-bottom: 30px;
     }
 
     .section-title {
-      font-size: 1.4rem;
-      font-weight: 600;
-      color: #253D4E;
-      margin: 0;
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 12px;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 8px;
     }
 
     .section-title i {
-      color: #3BB77E;
-      font-size: 1.5rem;
+      font-size: 1.8rem;
+      background: linear-gradient(135deg, #48bb78, #38a169);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
     }
 
-    .view-all-btn {
-      color: #3BB77E;
-      text-decoration: none;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      transition: all 0.3s ease;
-      font-size: 0.9rem;
-    }
 
-    .view-all-btn:hover {
-      color: #2ea368;
-      transform: translateX(3px);
+    .section-subtitle {
+      color: #718096;
+      font-size: 0.95rem;
+      margin-left: 36px;
     }
 
     .transactions-list {
-      background: white;
-      border: 2px solid #f0f0f0;
-      border-radius: 16px;
-      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
 
     .transaction-item {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 20px;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      padding: 1.25rem 1.5rem;
-      border-bottom: 1px solid #f8f9fa;
+      align-items: center;
+      border: 1px solid #e2e8f0;
       transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
     }
 
-    .transaction-item:last-child {
-      border-bottom: none;
+    .transaction-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 4px;
+      background: #088178;
+      opacity: 0;
+      transition: opacity 0.3s ease;
     }
 
     .transaction-item:hover {
-      background: #f8f9fa;
-      transform: translateX(4px);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+      border-color: #088178;
+    }
+
+    .transaction-item:hover::before {
+      opacity: 1;
     }
 
     .transaction-main {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 16px;
       flex: 1;
     }
 
     .transaction-icon {
-      width: 50px;
-      height: 50px;
+      width: 48px;
+      height: 48px;
       border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       font-weight: 600;
+      position: relative;
     }
 
     .transaction-icon.credit {
-      background: rgba(59, 183, 126, 0.1);
-      color: #3BB77E;
+      background: linear-gradient(135deg, #48bb78, #38a169);
+      color: white;
+      box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
     }
 
     .transaction-icon.debit {
-      background: rgba(255, 71, 87, 0.1);
-      color: #ff4757;
+      background: linear-gradient(135deg, #f56565, #e53e3e);
+      color: white;
+      box-shadow: 0 4px 12px rgba(245, 101, 101, 0.3);
+    }
+
+    .transaction-details {
+      flex: 1;
     }
 
     .transaction-details h4 {
-      margin: 0 0 0.25rem 0;
       font-size: 1rem;
       font-weight: 600;
-      color: #253D4E;
+      color: #1a202c;
+      margin-bottom: 4px;
+      line-height: 1.3;
     }
 
+    .transaction-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tx-method-badge {
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+      text-transform: capitalize;
+      letter-spacing: 0.025em;
+    }
+
+    /* shared look and layout (keep consistent across payment buttons) */
+    .method-razorpay,
+    .method-wallet,
+    .method-cod {
+      color: #fff;
+      padding: 0.4rem 1rem;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      transition: transform .12s ease, box-shadow .12s ease;
+      font-weight: 600;
+    }
+
+    /* Razorpay (unchanged) */
+    .method-razorpay {
+      background: linear-gradient(135deg, #012652 0%, #0D94FB 100%);
+      box-shadow: 0 6px 18px rgba(13, 148, 251, 0.16);
+    }
+
+    .method-razorpay:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(13, 148, 251, 0.18);
+    }
+
+    /* Wallet — pink pastel gradient (your requested style) */
+    .method-wallet {
+      background: linear-gradient(145deg, #ff9a9e 0%, #fecfef 100%);
+      box-shadow: 0 6px 18px rgba(255, 154, 158, 0.14);
+      color: #fff;
+    }
+
+    .method-wallet:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(255, 154, 158, 0.18);
+    }
+
+    /* Cash On Delivery (unchanged) */
+    .method-cod {
+      background: linear-gradient(135deg, #ff8c00 0%, #ffd54f 100%);
+      box-shadow: 0 6px 18px rgba(255, 173, 51, 0.14);
+    }
+
+    .method-cod:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(255, 173, 51, 0.18);
+    }
+
+    /* amount text helper */
+    .method-razorpay .amount,
+    .method-wallet .amount,
+    .method-cod .amount {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #ffffff;
+      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.12);
+    }
+
+
     .transaction-date {
-      color: #666;
       font-size: 0.85rem;
+      color: #718096;
+      font-weight: 500;
     }
 
     .transaction-amount {
       text-align: right;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
     }
 
     .amount-value {
       font-size: 1.1rem;
       font-weight: 700;
-      margin: 0;
+      margin-bottom: 4px;
     }
 
     .amount-value.credit {
-      color: #3BB77E;
+      color: #38a169;
     }
 
     .amount-value.debit {
-      color: #ff4757;
+      color: #e53e3e;
     }
 
     .transaction-status {
       font-size: 0.8rem;
-      margin-top: 0.25rem;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-weight: 600;
+      text-transform: capitalize;
     }
 
-    .status-completed {
-      color: #3BB77E;
-    }
-
-    .status-pending {
-      color: #ffa726;
-    }
-
-    .status-failed {
-      color: #ff4757;
-    }
 
     .no-transactions {
       text-align: center;
-      padding: 4rem 2rem;
-      background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-      border-radius: 20px;
-      border: 2px dashed #e0e0e0;
+      padding: 60px 20px;
+      color: #718096;
     }
 
     .no-transactions-icon {
-      font-size: 5rem;
-      color: #d0d0d0;
-      margin-bottom: 1.5rem;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #e2e8f0, #cbd5e0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 2rem;
+      color: #a0aec0;
     }
 
     .no-transactions h4 {
-      color: #253D4E;
-      margin-bottom: 0.75rem;
-      font-size: 1.5rem;
-      font-weight: 600;
+      font-size: 1.25rem;
+      color: #4a5568;
+      margin-bottom: 8px;
     }
 
     .no-transactions p {
-      color: #666;
-      margin-bottom: 2rem;
-      font-size: 1.1rem;
-      max-width: 400px;
-      margin-left: auto;
-      margin-right: auto;
+      color: #718096;
+      line-height: 1.5;
     }
 
     /* Modal styles */
@@ -534,18 +999,227 @@
       box-shadow: 0 4px 15px rgba(59, 183, 126, 0.4);
     }
 
+    /* Animations */
+    @keyframes piggyFloat {
+
+      0%,
+      100% {
+        transform: translate(-50%, -50%) translateY(0px);
+      }
+
+      50% {
+        transform: translate(-50%, -50%) translateY(-5px);
+      }
+    }
+
+    @keyframes blink {
+
+      0%,
+      90%,
+      100% {
+        transform: scaleY(1);
+      }
+
+      95% {
+        transform: scaleY(0.1);
+      }
+    }
+
+    @keyframes earWiggle {
+
+      0%,
+      100% {
+        transform: rotate(-30deg);
+      }
+
+      50% {
+        transform: rotate(-20deg);
+      }
+    }
+
+    @keyframes tailWag {
+
+      0%,
+      100% {
+        transform: rotate(45deg);
+      }
+
+      50% {
+        transform: rotate(35deg);
+      }
+    }
+
+    @keyframes coinToPiggy1 {
+      0% {
+        transform: translateY(0px) scale(1);
+        opacity: 0;
+      }
+
+      20% {
+        opacity: 1;
+      }
+
+      80% {
+        transform: translateY(-100px) translateX(50px) scale(0.8);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(-120px) translateX(70px) scale(0);
+        opacity: 0;
+      }
+    }
+
+    @keyframes coinToPiggy2 {
+      0% {
+        transform: translateY(0px) scale(1);
+        opacity: 0;
+      }
+
+      20% {
+        opacity: 1;
+      }
+
+      80% {
+        transform: translateY(-80px) translateX(-30px) scale(0.8);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(-100px) translateX(-50px) scale(0);
+        opacity: 0;
+      }
+    }
+
+    @keyframes coinToPiggy3 {
+      0% {
+        transform: translateY(0px) scale(1);
+        opacity: 0;
+      }
+
+      20% {
+        opacity: 1;
+      }
+
+      80% {
+        transform: translateY(-60px) translateX(80px) scale(0.8);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(-80px) translateX(100px) scale(0);
+        opacity: 0;
+      }
+    }
+
+    @keyframes sparkleFloat {
+
+      0%,
+      100% {
+        transform: translateY(0px) scale(1);
+        opacity: 0.7;
+      }
+
+      50% {
+        transform: translateY(-15px) scale(1.2);
+        opacity: 1;
+      }
+    }
+
+    @keyframes messageFloat {
+
+      0%,
+      100% {
+        transform: translateX(-50%) translateY(0px);
+      }
+
+      50% {
+        transform: translateX(-50%) translateY(-2px);
+      }
+    }
+
     /* Responsive Design */
     @media (max-width: 768px) {
+
+      .mascot-container {
+        width: 250px;
+        height: 250px;
+        margin: 10px;
+      }
+
+      .balance-card {
+        background: #088178;
+        border-radius: 20px;
+        padding: 2rem;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+      }
+
+      .balance-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 100px;
+        height: 100px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        transform: rotate(45deg);
+      }
+
+      .balance-card::after {
+        content: '';
+        position: absolute;
+        bottom: -30%;
+        left: -10%;
+        width: 80px;
+        height: 80px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 50%;
+      }
+
+      .balance-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 2;
+      }
+
+      .balance-header i {
+        font-size: 2rem;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0.75rem;
+        border-radius: 15px;
+      }
+
+      .balance-title {
+        font-size: 1rem;
+        opacity: 0.9;
+        font-weight: 500;
+      }
+
+      .balance-amount {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin: 0;
+        position: relative;
+        z-index: 2;
+      }
+
+      .piggy-body {
+        width: 100px;
+        height: 70px;
+      }
+
       .container {
         padding: 1rem;
       }
 
       .main-layout {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-      }
-
-      .wallet-overview {
         grid-template-columns: 1fr;
         gap: 1rem;
       }
@@ -600,12 +1274,138 @@
     }
 
     @media (max-width: 480px) {
-      .quick-amounts {
-        grid-template-columns: 1fr;
+      .mascot-container {
+        display: none;
+      }
+    }
+
+    @media (max-width: 640px) {
+
+      .mascot-container {
+        display: none;
+      }
+
+      .balance-card {
+        background: #088178;
+        border-radius: 20px;
+        padding: 2rem;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        width: 200%;
+      }
+
+      .balance-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 100px;
+        height: 100px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        transform: rotate(45deg);
+      }
+
+      .balance-card::after {
+        content: '';
+        position: absolute;
+        bottom: -30%;
+        left: -10%;
+        width: 80px;
+        height: 80px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 50%;
+      }
+
+      .balance-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 2;
+      }
+
+      .balance-header i {
+        font-size: 2rem;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0.75rem;
+        border-radius: 15px;
+      }
+
+      .balance-title {
+        font-size: 1rem;
+        opacity: 0.9;
+        font-weight: 500;
+      }
+
+      .balance-amount {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin: 0;
+        position: relative;
+        z-index: 2;
+      }
+
+      .transaction-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        padding: 16px;
+      }
+
+      .transaction-amount {
+        align-self: flex-end;
+        text-align: right;
+      }
+
+      .transaction-main {
+        width: 100%;
+      }
+
+      .transaction-meta {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+    }
+   
+    .transaction-item {
+      animation: fadeInUp 0.6s ease forwards;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .transaction-item:nth-child(1) {
+      animation-delay: 0.1s;
+    }
+
+    .transaction-item:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .transaction-item:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+
+    .transaction-item:nth-child(4) {
+      animation-delay: 0.4s;
+    }
+
+    .transaction-item:nth-child(5) {
+      animation-delay: 0.5s;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
     }
   </style>
+</head>
 
+<body>
   <header class="header-area header-style-1 header-height-2">
     <div class="header-top header-top-ptb-1 d-none d-lg-block">
       <div class="container">
@@ -620,26 +1420,25 @@
           </div>
           <div class="col-xl-3 col-lg-4">
             <div class="header-info header-info-right">
-              <% console.log(user);
-                 %>
-              <% if (user) { %>
-              <div class="dropdown">
-                <a href="#" class="sign-in-link">
-                  <%= user.name %>
-                </a>
-                <div class="dropdown-content">
-                  <a href="/userProfile">Profile</a>
-                  <a href="/logout">Logout</a>
-                </div>
-              </div>
-              <% } else { %>
-              <ul>
-                <li>
-                  <i class="fi-rs-user"></i>
-                  <a href="/login">Log In</a>
-                </li>
-              </ul>
-              <% } %>
+              <% console.log(user); %>
+                <% if (user) { %>
+                  <div class="dropdown">
+                    <a href="#" class="sign-in-link">
+                      <%= user.name %>
+                    </a>
+                    <div class="dropdown-content">
+                      <a href="/userProfile">Profile</a>
+                      <a href="/logout">Logout</a>
+                    </div>
+                  </div>
+                  <% } else { %>
+                    <ul>
+                      <li>
+                        <i class="fi-rs-user"></i>
+                        <a href="/login">Log In</a>
+                      </li>
+                    </ul>
+                    <% } %>
             </div>
           </div>
         </div>
@@ -659,7 +1458,7 @@
                   <a href="/wishlist">
                     <img class="svgInject" alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
                     <span id="wishlistItemCount" class="pro-count blue">
-                      <%= typeof locals.wishlistItemCount !== 'undefined' ? locals.wishlistItemCount : 0 %>
+                      <%= typeof locals.wishlistItemCount !=='undefined' ? locals.wishlistItemCount : 0 %>
                     </span>
                   </a>
                 </div>
@@ -699,7 +1498,7 @@
                 <a href="/wishlist">
                   <img alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
                   <span id="wishlistItemCount" class="pro-count blue">
-                    <%= typeof locals.wishlistItemCount !== 'undefined' ? locals.wishlistItemCount : 0 %>
+                    <%= typeof locals.wishlistItemCount !=='undefined' ? locals.wishlistItemCount : 0 %>
                   </span>
                 </a>
               </div>
@@ -795,7 +1594,52 @@
                 <i class="ri-wallet-fill"></i>
                 <div class="balance-title">Total Balance</div>
               </div>
-              <div class="balance-amount">₹<%= wallet ? (typeof toDisplay === 'function' ? toDisplay(wallet.balance) : wallet.balance.toFixed(2)) : '0.00' %></div>
+              <div class="balance-amount">₹<%= wallet ? (typeof toDisplay==='function' ? toDisplay(wallet.balance) :
+                  wallet.balance.toFixed(2)) : '0.00' %>
+              </div>
+            </div>
+          </div>
+
+          <div class="mascot-container">
+          
+            <div class="sparkle sparkle1">✨</div>
+            <div class="sparkle sparkle2">💎</div>
+            <div class="sparkle sparkle3">✨</div>
+            <div class="sparkle sparkle4">⭐</div>
+           
+            <div class="floating-coin coin1">₹</div>
+            <div class="floating-coin coin2">₹</div>
+            <div class="floating-coin coin3">₹</div>
+           
+            <div class="piggy-bank">
+              <div class="piggy-body">
+                <div class="coin-slot"></div>
+
+                <div class="ear left"></div>
+                <div class="ear right"></div>
+              
+                <div class="piggy-face">
+                  <div class="piggy-eyes">
+                    <div class="eye"></div>
+                    <div class="eye"></div>
+                  </div>
+                  <div class="piggy-snout">
+                    <div class="nostril left"></div>
+                    <div class="nostril right"></div>
+                  </div>
+                </div>
+              
+                <div class="leg front-left"></div>
+                <div class="leg front-right"></div>
+                <div class="leg back-left"></div>
+                <div class="leg back-right"></div>
+           
+                <div class="piggy-tail"></div>
+              </div>
+            </div>
+
+            <div class="piggy-message">
+              Save more, dream bigger!<br>
             </div>
           </div>
 
@@ -805,56 +1649,127 @@
                 <i class="ri-time-line"></i>
                 Recent Transactions
               </h4>
-              <% if (transactions && transactions.length > 0) { %>
-              <a href="/wallet/history" class="view-all-btn">
-                View All <i class="ri-arrow-right-line"></i>
-              </a>
-              <% } %>
+              <p class="section-subtitle">Your latest wallet activity</p>
             </div>
 
-            <% if (!transactions || transactions.length === 0) { %>
-            <div class="no-transactions">
-              <div class="no-transactions-icon">
-                <i class="ri-file-list-line"></i>
-              </div>
-              <h4>No transactions yet</h4>
-              <p>Your transaction history will appear here once you start using your wallet.</p>
-            </div>
-            <% } else { %>
-            <div class="transactions-list">
-              <% transactions.slice(0, 5).forEach(transaction => { %>
-              <div class="transaction-item">
-                <div class="transaction-main">
-                  <div class="transaction-icon <%= transaction.type === 'credit' ? 'credit' : 'debit' %>">
-                    <i class="<%= transaction.type === 'credit' ? 'ri-arrow-down-line' : 'ri-arrow-up-line' %>"></i>
-                  </div>
-                  <div class="transaction-details">
-                    <h4><%= transaction.description || transaction.title || 'Wallet Transaction' %></h4>
-                    <p class="transaction-date">
-                      <% if (transaction.createdAt || transaction.date) { %>
-                      <%= new Date(transaction.createdAt || transaction.date).toLocaleString('en-IN', { 
-                          year: 'numeric', 
-                          month: 'short', 
-                          day: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit'
-                      }) %>
-                      <% } %>
-                    </p>
-                  </div>
+            <% if (!transactions || transactions.length===0) { %>
+              <div class="no-transactions">
+                <div class="no-transactions-icon">
+                  <i class="ri-file-list-line"></i>
                 </div>
-                <div class="transaction-amount">
-                  <p class="amount-value <%= transaction.type === 'credit' ? 'credit' : 'debit' %>">
-                    <%= transaction.type === 'credit' ? '+' : '-' %>₹<%= toDisplay(transaction.amount) %>
-                  </p>
-                  <p class="transaction-status status-<%= transaction.status || 'completed' %>">
-                    <%= (transaction.status || 'completed').charAt(0).toUpperCase() + (transaction.status || 'completed').slice(1) %>
-                  </p>
-                </div>
+                <h4>No transactions yet</h4>
+                <p>Your transaction history will appear here once you start using your wallet.</p>
               </div>
-              <% }) %>
-            </div>
-            <% } %>
+              <% } else { %>
+                <div class="transactions-list">
+                  <% transactions.forEach(transaction=> { %>
+                    <div class="transaction-item">
+                      <div class="transaction-main">
+                        <div class="transaction-icon <%= transaction.type === 'credit' ? 'credit' : 'debit' %>">
+                          <i
+                            class="<%= transaction.type === 'credit' ? 'ri-arrow-down-line' : 'ri-arrow-up-line' %>"></i>
+                        </div>
+                        <div class="transaction-details">
+                          <h4>
+                            <%= transaction.description || transaction.title || 'Wallet Transaction' %>
+                          </h4>
+
+                          <div class="transaction-meta">
+                            <% const method=(transaction.paymentDetails && transaction.paymentDetails.method) ?
+                              transaction.paymentDetails.method : null; %>
+
+                              <% if (method) { %>
+                                <span class="tx-method-badge method-<%= method %>">
+                                  <%= method==='razorpay' ? 'Razorpay' : method==='cod' ? 'Cash on Delivery' : 'Wallet'
+                                    %>
+                                </span>
+                                <% } %>
+
+                                  <p class="transaction-date">
+                                    <% if (transaction.createdAt || transaction.date) { %>
+                                      <%= new Date(transaction.createdAt || transaction.date).toLocaleString('en-IN', {
+                                        year: 'numeric' , month: 'short' , day: 'numeric' , hour: '2-digit' ,
+                                        minute: '2-digit' }) %>
+                                        <% } %>
+                                  </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="transaction-amount">
+                        <p class="amount-value <%= transaction.type === 'credit' ? 'credit' : 'debit' %>">
+                          <%= transaction.type==='credit' ? '+' : '-' %>₹<%= toDisplay(transaction.amount) %>
+                        </p>
+                        <p class="transaction-status status-<%= transaction.status || 'completed' %>">
+                          <%= (transaction.status || 'completed' ).charAt(0).toUpperCase() + (transaction.status
+                            || 'completed' ).slice(1) %>
+                        </p>
+                      </div>
+                    </div>
+                    <% }) %>
+                </div>
+               
+                <% if (totalPages> 1) { %>
+                  <div class="pagination-container">
+
+                    <div class="pagination-controls">
+                      <% if (hasPrevPage) { %>
+                        <a href="?page=<%= page - 1 %>" class="pagination-btn prev-btn">
+                          <i class="ri-arrow-left-s-line"></i> Previous
+                        </a>
+                        <% } else { %>
+                          <span class="pagination-btn prev-btn disabled">
+                            <i class="ri-arrow-left-s-line"></i> Previous
+                          </span>
+                          <% } %>
+                           
+                            <div class="pagination-numbers">
+                              <% let startPage=Math.max(1, page - 2); let endPage=Math.min(totalPages, page + 2); if
+                                (endPage - startPage < 4) { if (startPage===1) { endPage=Math.min(totalPages, startPage
+                                + 4); } else { startPage=Math.max(1, endPage - 4); } } %>
+
+                                <% if (startPage> 1) { %>
+                                  <a href="?page=1" class="pagination-number">1</a>
+                                  <% if (startPage> 2) { %>
+                                    <span class="pagination-dots">...</span>
+                                    <% } %>
+                                      <% } %>
+
+                                        <% for (let i=startPage; i <=endPage; i++) { %>
+                                          <% if (i===page) { %>
+                                            <span class="pagination-number active">
+                                              <%= i %>
+                                            </span>
+                                            <% } else { %>
+                                              <a href="?page=<%= i %>" class="pagination-number">
+                                                <%= i %>
+                                              </a>
+                                              <% } %>
+                                                <% } %>
+
+                                                  <% if (endPage < totalPages) { %>
+                                                    <% if (endPage < totalPages - 1) { %>
+                                                      <span class="pagination-dots">...</span>
+                                                      <% } %>
+                                                        <a href="?page=<%= totalPages %>" class="pagination-number">
+                                                          <%= totalPages %>
+                                                        </a>
+                                                        <% } %>
+                            </div>
+
+                            <% if (hasNextPage) { %>
+                              <a href="?page=<%= page + 1 %>" class="pagination-btn next-btn">
+                                Next <i class="ri-arrow-right-s-line"></i>
+                              </a>
+                              <% } else { %>
+                                <span class="pagination-btn next-btn disabled">
+                                  Next <i class="ri-arrow-right-s-line"></i>
+                                </span>
+                                <% } %>
+                    </div>
+                  </div>
+                  <% } %>
+                    <% } %>
           </div>
         </div>
       </main>
@@ -874,7 +1789,8 @@
         <div class="modal-body">
           <div class="amount-input-group">
             <label for="amount">Enter Amount (₹)</label>
-            <input type="number" id="amount" name="amount" class="amount-input" min="1" max="50000" step="0.01" placeholder="0.00" required>
+            <input type="number" id="amount" name="amount" class="amount-input" min="1" max="50000" step="0.01"
+              placeholder="0.00" required>
           </div>
 
           <div class="quick-amounts">
@@ -959,7 +1875,8 @@
               <div class="col-md-8 col-lg-12">
                 <p class="wow fadeIn animated">From App Store or Google Play</p>
                 <div class="download-app wow fadeIn animated">
-                  <a href="#" class="hover-up mb-sm-4 mb-lg-0"><img class="active" src="/imgs/theme/app-store.jpg" alt=""></a>
+                  <a href="#" class="hover-up mb-sm-4 mb-lg-0"><img class="active" src="/imgs/theme/app-store.jpg"
+                      alt=""></a>
                   <a href="#" class="hover-up"><img src="/imgs/theme/google-play.jpg" alt=""></a>
                 </div>
               </div>
@@ -1004,7 +1921,7 @@
       toggle.classList.toggle('active');
     }
 
-    document.addEventListener('click', function(event) {
+    document.addEventListener('click', function (event) {
       const sidebar = document.getElementById('profileSidebar');
       const toggle = document.querySelector('.mobile-sidebar-toggle');
 
@@ -1017,7 +1934,7 @@
       }
     });
 
-    window.addEventListener('resize', function() {
+    window.addEventListener('resize', function () {
       const sidebar = document.getElementById('profileSidebar');
       const toggle = document.querySelector('.mobile-sidebar-toggle');
 

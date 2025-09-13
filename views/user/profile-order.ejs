@@ -841,9 +841,9 @@
                                 ₹<%= item.price %> × <%= item.quantity %> = ₹<%= item.subtotal %>
                               </div>
                             </div>
-                            <div class="order-status status-<%= order.status.toLowerCase().replace(/\s+/g, '-') %>">
-                              <%= order.status %>
-                            </div>
+                             <div class="order-status status-<%= (item.status || order.status).toLowerCase().replace(/\s+/g, '-') %>">
+                      <%= item.status || order.status %>
+                    </div>
                             <div class="summary-row total">
                               <span>Total:</span>
                               <span>₹<%= order.totalAmount %></span>

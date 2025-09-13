@@ -6,7 +6,6 @@ const Wallet = require('../../models/walletSchema');
 const WalletTransaction = require('../../models/walletTransactionSchema');
 const { v4: uuidv4 } = require('uuid');
 
-
 const loadOrderPage = async (req, res) => {
   try {
     const page = parseInt(req.query.page, 10) || 1;
@@ -15,14 +14,16 @@ const loadOrderPage = async (req, res) => {
     const q = (req.query.q || '').toString().trim();
     const statusRaw = (req.query.status || '').toString().trim();
     const matchConditions = {};
-    if (statusRaw && statusRaw.toLowerCase() !== 'all') matchConditions.status = statusRaw;
+
+    if (statusRaw && statusRaw.toLowerCase() !== 'all') {
+      matchConditions.status = statusRaw;
+    }
 
     const returnCollection = returnAndRefund.collection.name;
 
     const pipeline = [
       { $lookup: { from: 'users', localField: 'user', foreignField: '_id', as: 'user' } },
       { $unwind: '$user' },
-      { $addFields: { displayOrderId: { $toUpper: { $substrBytes: [{ $replaceAll: { input: "$orderId", find: "-", replacement: "" } }, 0, 8] } } } },
       {
         $lookup: {
           from: returnCollection,
@@ -43,17 +44,34 @@ const loadOrderPage = async (req, res) => {
 
     if (q) {
       const regex = new RegExp(q, 'i');
-      pipeline.splice(0, 0, { $match: { $or: [{ orderId: regex }, { 'items.name': regex }, { 'user.name': regex }] } });
+      pipeline.splice(0, 0, {
+        $match: {
+          $or: [
+            { orderId: regex },
+            { 'items.name': regex },
+            { 'user.name': regex }
+          ]
+        }
+      });
     }
 
-    const [{ data: orders, total }] = await Order.aggregate(pipeline).exec();
+    const result = await Order.aggregate(pipeline).exec();
+
+    const orders = result[0]?.data || [];
+    const total = result[0]?.total || [];
+
+    const processedOrders = orders.map(order => {
+      order.displayOrderId = order._id.toString().slice(-8).toUpperCase();
+      return order;
+    });
+
     res.render('order-list', {
-      orders,
-      page,
-      limit,
+      orders: processedOrders,
+      _page: page,
+      _limit: limit,
       totalPages: Math.ceil((total[0]?.count || 0) / limit),
-      q,
-      status: statusRaw || 'all'
+      _q: q,
+      _status: statusRaw || 'all'
     });
   } catch (error) {
     console.error('loadOrderPage error', error);
@@ -78,7 +96,7 @@ const loadOrderDetailsPage = async (req, res) => {
         .populate('items.product')
         .lean({ virtuals: true });
 
-    if (!order) return res.status(404).render('pageNotFound');
+    if (!order) return res.status(404).render('page-404');
 
     const hasReturnInItems = Array.isArray(order.items) &&
       order.items.some(it => it.returnRequest && String(it.returnRequest.status).toLowerCase() === 'requested');
@@ -115,8 +133,23 @@ const changeOrderStatus = async (req, res) => {
       const order = await Order.findById(orderId).session(session);
       if (!order) throw new Error('Order not found');
 
-
       order.status = status;
+
+      order.items.forEach(item => {
+        if (item.status !== 'Cancelled' &&
+          (!item.returnRequest || item.returnRequest.status !== 'requested')) {
+          item.status = status;
+
+          if (status === 'Shipped' && !item.shippedAt) {
+            item.shippedAt = new Date();
+          } else if (status === 'Delivered' && !item.deliveredAt) {
+            item.deliveredAt = new Date();
+          } else if (status === 'Out for Delivery' && !item.outForDeliveryAt) {
+            item.outForDeliveryAt = new Date();
+          }
+        }
+      });
+
       order.history = order.history || [];
       order.history.push({
         by: req.session?.userId || null,
@@ -128,14 +161,13 @@ const changeOrderStatus = async (req, res) => {
     });
 
     session.endSession();
-    return res.json({ success: true, status });
+    return res.json({ success: true, status, message: 'Order status updated and synced with all items' });
   } catch (err) {
     session.endSession();
     console.error('changeOrderStatus error:', err);
     return res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
-
 
 const updateReturnRequest = async (req, res) => {
   const { orderId, itemId } = req.params;
@@ -165,7 +197,7 @@ const updateReturnRequest = async (req, res) => {
   try {
     const order = await Order.findById(orderId).session(session);
     if (!order) throw new Error('Order not found');
-    
+
     if (!order.user) {
       throw new Error('Cannot process refund: Order has no associated user');
     }
@@ -238,7 +270,7 @@ const updateReturnRequest = async (req, res) => {
     let wallet = await Wallet.findOne({ userId: order.user }).session(session);
     if (!wallet) {
       const created = await Wallet.create([{
-        userId: order.user,  
+        userId: order.user,
         balance: 0,
         totalCredits: 0,
         totalDebits: 0,
@@ -261,9 +293,11 @@ const updateReturnRequest = async (req, res) => {
       { session }
     );
 
+    const originalPaymentMethod = order.paymentMethod || order.paymentDetails?.method || 'cod';
+
     const txDocs = await WalletTransaction.create([{
       wallet: wallet._id,
-      user: order.user, 
+      user: order.user,
       type: 'credit',
       amount: refundAmount,
       description: `Refund for ${item.name || 'returned product'}`,
@@ -273,7 +307,10 @@ const updateReturnRequest = async (req, res) => {
       balanceAfter,
       orderId: order._id,
       returnId: returnReq._id,
-      paymentDetails: { method: 'wallet' },
+      paymentDetails: {
+        method: originalPaymentMethod,
+        refundedTo: 'wallet'
+      },
       processedAt: new Date(),
       completedAt: new Date()
     }], { session });

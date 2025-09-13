@@ -10,6 +10,285 @@
     <link rel="stylesheet" href="/css/main.css?v=3.4">
     <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
     <style>
+        .payment-option {
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #ffffff;
+        }
+
+        .payment-option:hover {
+            border-color: #3399cc;
+            background-color: #f8f9fa;
+        }
+
+        .payment-option input[type="radio"]:checked+.payment-option-icon+.payment-option-content {
+            color: #3399cc;
+        }
+
+        .payment-option input[type="radio"]:checked~* {
+            border-color: #3399cc;
+        }
+
+        .payment-option.insufficient-balance {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background-color: #f8f9fa;
+            border-color: #dc3545;
+        }
+
+        .payment-option.insufficient-balance input[type="radio"] {
+            cursor: not-allowed;
+        }
+
+        .payment-option input[type="radio"] {
+            margin-right: 15px;
+            transform: scale(1.2);
+            accent-color: #3399cc;
+        }
+
+        .payment-option-icon {
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 8px;
+        }
+
+        .payment-option input[type="radio"]:checked+.payment-option-icon {
+            background-color: #e3f2fd;
+        }
+
+        .payment-icon {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            max-width: 100px;
+            max-height: 150px;
+        }
+
+        .payment-option-content {
+            flex: 1;
+        }
+
+        .payment-option-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .payment-option-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .wallet-info {
+            padding: 5px 0;
+        }
+
+        .wallet-balance-label {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .wallet-balance {
+            font-weight: 600;
+            color: #28a745;
+            font-size: 14px;
+        }
+
+        .insufficient-balance-msg {
+            margin-top: 4px;
+            padding: 4px 8px;
+            background-color: #f8d7da;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .payment-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .payment-title i {
+            color: #3399cc;
+            font-size: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .payment-option {
+                padding: 12px;
+            }
+
+            .payment-option-icon {
+                width: 45px;
+                height: 45px;
+                margin-right: 12px;
+            }
+
+            .payment-icon {
+                max-width: 35px;
+                max-height: 35px;
+            }
+
+            .payment-option input[type="radio"] {
+                margin-right: 12px;
+            }
+
+            .payment-option-title {
+                font-size: 15px;
+            }
+
+            .payment-option-desc {
+                font-size: 13px;
+            }
+        }
+
+        .payment-option {
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #ffffff;
+        }
+
+        .payment-option:hover {
+            border-color: #3399cc;
+            background-color: #f8f9fa;
+        }
+
+        .payment-option input[type="radio"]:checked+.payment-option-icon+.payment-option-content {
+            color: #3399cc;
+        }
+
+        .payment-option input[type="radio"]:checked~* {
+            border-color: #3399cc;
+        }
+
+        .payment-option.insufficient-balance {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background-color: #f8f9fa;
+            border-color: #dc3545;
+        }
+
+        .payment-option.insufficient-balance input[type="radio"] {
+            cursor: not-allowed;
+        }
+
+        .payment-option input[type="radio"] {
+            margin-right: 15px;
+            transform: scale(1.2);
+            accent-color: #3399cc;
+        }
+
+        .payment-option input[type="radio"]:checked+.payment-option-icon {
+            background-color: #e3f2fd;
+            color: #3399cc;
+        }
+
+        .payment-option-content {
+            flex: 1;
+        }
+
+        .payment-option-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .payment-option-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .wallet-balance-label {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .wallet-balance {
+            font-weight: 600;
+            color: #28a745;
+            font-size: 14px;
+        }
+
+        .insufficient-balance-msg {
+            margin-top: 4px;
+            padding: 4px 8px;
+            background-color: #f8d7da;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .payment-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .payment-title i {
+            color: #3399cc;
+            font-size: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .payment-option {
+                padding: 12px;
+            }
+
+            .payment-option-icon {
+                width: 35px;
+                height: 35px;
+                font-size: 20px;
+                margin-right: 12px;
+            }
+
+            .payment-option input[type="radio"] {
+                margin-right: 12px;
+            }
+
+            .payment-option-title {
+                font-size: 15px;
+            }
+
+            .payment-option-desc {
+                font-size: 13px;
+            }
+        }
+
         .swal2-popup.swal-responsive {
             color: #333 !important;
             border: 2px solid rgba(0, 0, 0, 0.1) !important;
@@ -534,25 +813,9 @@
             border: 1px solid #e9ecef;
         }
 
-        .payment-title {
-            font-size: 1.4rem;
-            font-weight: 600;
-            color: #1a1a1a;
-            margin-bottom: 25px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
         .payment-title i {
             color: #ff1744;
             font-size: 1.5rem;
-        }
-
-        .payment-options {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
         }
 
         .payment-option {
@@ -583,32 +846,6 @@
         .payment-option-content {
             flex: 1;
         }
-
-        .payment-option-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #1a1a1a;
-            margin-bottom: 5px;
-        }
-
-        .payment-option-desc {
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        .payment-option-icon {
-            color: #ff1744;
-            font-size: 1.8rem;
-            background: rgba(255, 23, 68, 0.1);
-            padding: 10px;
-            border-radius: 10px;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
 
         /* Order Summary Styles - MODIFIED */
         .order-summary {
@@ -1007,9 +1244,8 @@
     </div>
 
     <div class="checkout-container">
-
         <div class="checkout-content">
-            <div class="main-content"> <!-- Header -->
+            <div class="main-content">
                 <div class="section">
 
                     <div class="checkout-header">
@@ -1104,7 +1340,6 @@
                     </div>
                 </div>
 
-                <!-- Order Items Section -->
                 <div class="section">
                     <h2 class="section-title">
                         Order Items (<%= cart.items.length %> items)
@@ -1148,7 +1383,6 @@
                                     <% } %>
                 </div>
 
-                <!-- Payment Methods Section - ADD THIS -->
                 <div class="section payment-methods">
                     <h2 class="payment-title">
                         <i class="ri-secure-payment-line"></i>
@@ -1162,11 +1396,17 @@
                                     : '' %>
                                 >
                                 <div class="payment-option-icon">
-                                    <% if (method==='razorpay' ) { %><i class="ri-bank-card-line"></i>
+                                    <% if (method==='razorpay' ) { %>
+                                        <img src="/assets2/imgs/theme/razorpay-icon.webp" alt="Razorpay"
+                                            class="payment-icon">
                                         <% } %>
-                                            <% if (method==='wallet' ) { %><i class="ri-wallet-3-line"></i>
+                                            <% if (method==='wallet' ) { %>
+                                                <img src="/assets2/imgs/theme/wallet-icon.png" alt="Wallet"
+                                                    class="payment-icon">
                                                 <% } %>
-                                                    <% if (method==='cod' ) { %><i class="ri-hand-coin-line"></i>
+                                                    <% if (method==='cod' ) { %>
+                                                        <img src="/assets2/imgs/theme/money-notes-receiving-dollar-color-icon.png"
+                                                            alt="Cash on Delivery" class="payment-icon">
                                                         <% } %>
                                 </div>
                                 <div class="payment-option-content">
@@ -1175,24 +1415,33 @@
                                             : 'Cash on Delivery' %>
                                     </div>
                                     <div class="payment-option-desc">
-                                        <%= method==='razorpay' ? 'Pay securely with cards, UPI, and more' :
-                                            method==='wallet' ? 'Use your digital wallet balance'
-                                            : 'Pay when your order arrives' %>
+                                        <% if (method==='razorpay' ) { %>
+                                            Pay securely with netbanking
+                                            <% } else if (method==='wallet' ) { %>
+                                                Use your digital wallet balance
+                                                <div class="wallet-info">
+                                                    <span class="wallet-balance-label">Available Balance: </span>
+                                                    <span class="wallet-balance">₹<%= (walletBalance || 0).toFixed(2) %>
+                                                            </span>
+                                                </div>
+                                                <% } else { %>
+                                                    Pay when your order arrives
+                                                    <% } %>
                                     </div>
                                 </div>
                             </label>
                             <% }) %>
                     </div>
 
+                    <div style="display: none;">
+                        <span class="order-total">₹<%= cart.total.toFixed(2) %></span>
+                    </div>
                 </div>
 
             </div>
 
 
-
-            <!-- Order Summary -->
             <div class="order-summary">
-                <!-- Progress steps - ADD THIS at the top of order summary -->
                 <div class="progress-steps">
                     <div class="step completed">
                         <div class="step-icon">✓</div>
@@ -1350,9 +1599,10 @@
     <script src="/js/wishlist-count-updater.js"></script>
     <script src="/js/cart-count-updater.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 
     <script>
-
         async function placeOrder() {
             const swalOpts = {
                 customClass: { popup: 'swal-responsive' }
@@ -1379,7 +1629,6 @@
                 });
             }
             const addressId = defaultCard.dataset.addressId;
-
 
             if (paymentMethod === 'cod') {
                 try {
@@ -1419,26 +1668,205 @@
                 return;
             }
 
-            if (paymentMethod === 'razorpay') {
-                return Swal.fire({
-                    icon: 'info',
-                    title: 'Info',
-                    text: 'Razorpay payment flow not yet implemented.',
-                    ...swalOpts
-                });
+            if (paymentMethod === 'wallet') {
+                try {
+                    const loadingSwal = Swal.fire({
+                        title: 'Processing Payment...',
+                        text: 'Deducting amount from your wallet',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        willOpen: () => {
+                            Swal.showLoading();
+                        },
+                        ...swalOpts
+                    });
+
+                    const res = await fetch('/checkout/place-order', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ addressId, paymentMethod })
+                    });
+                    const data = await res.json();
+
+                    loadingSwal.close();
+
+                    if (res.ok && data.success) {
+                        await Swal.fire({
+                            icon: 'success',
+                            title: 'Payment Successful!',
+                            text: 'Amount has been deducted from your wallet. Order placed successfully!',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            ...swalOpts
+                        });
+                        window.location.href = `/checkout/order-success/${data.orderId}`;
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Payment Failed',
+                            text: data.message || 'Wallet payment failed.',
+                            ...swalOpts
+                        });
+                    }
+                } catch (err) {
+                    console.error('Wallet payment error:', err);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Payment Error',
+                        text: 'Something went wrong with wallet payment. Try again.',
+                        ...swalOpts
+                    });
+                }
+                return;
             }
 
-            if (paymentMethod === 'wallet') {
-                return Swal.fire({
-                    icon: 'info',
-                    title: 'Info',
-                    text: 'Wallet payment flow not yet implemented.',
-                    ...swalOpts
-                });
+            if (paymentMethod === 'razorpay') {
+                try {
+                    const loadingSwal = Swal.fire({
+                        title: 'Processing...',
+                        text: 'Creating payment order',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        willOpen: () => {
+                            Swal.showLoading();
+                        },
+                        ...swalOpts
+                    });
+
+                    const orderRes = await fetch('/checkout/create-razorpay-order', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ addressId })
+                    });
+
+                    const orderData = await orderRes.json();
+
+                    loadingSwal.close();
+
+                    if (!orderRes.ok || !orderData.success) {
+                        return Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: orderData.message || 'Failed to create payment order.',
+                            ...swalOpts
+                        });
+                    }
+
+                    const options = {
+                        key: orderData.key,
+                        amount: orderData.amount,
+                        currency: 'INR',
+                        order_id: orderData.orderId,
+                        name: 'Kaizen Street',
+                        description: 'Order Payment',
+                        image: '/assets2/imgs/theme/kaizenicon.svg',
+
+                        method: {
+                            netbanking: true,
+                            card: false,
+                            wallet: false,
+                            upi: false,
+                            paylater: false
+                        },
+
+
+                        handler: async function (response) {
+                            const verifySwal = Swal.fire({
+                                title: 'Verifying Payment...',
+                                text: 'Please wait while we confirm your payment',
+                                allowOutsideClick: false,
+                                showConfirmButton: false,
+                                willOpen: () => {
+                                    Swal.showLoading();
+                                },
+                                ...swalOpts
+                            });
+
+                            try {
+                                const verifyRes = await fetch('/checkout/verify-payment', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({
+                                        razorpay_payment_id: response.razorpay_payment_id,
+                                        razorpay_order_id: response.razorpay_order_id,
+                                        razorpay_signature: response.razorpay_signature,
+                                        addressId: orderData.addressId
+                                    })
+                                });
+
+                                const verifyData = await verifyRes.json();
+                                verifySwal.close();
+
+                                if (verifyRes.ok && verifyData.success) {
+                                    await Swal.fire({
+                                        icon: 'success',
+                                        title: 'Payment Successful!',
+                                        text: 'Your order has been placed successfully.',
+                                        showConfirmButton: false,
+                                        timer: 2000,
+                                        ...swalOpts
+                                    });
+                                    window.location.href = `/checkout/order-success/${verifyData.orderId}`;
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Payment Verification Failed',
+                                        text: verifyData.message || 'Payment could not be verified.',
+                                        ...swalOpts
+                                    });
+                                }
+                            } catch (error) {
+                                console.error('Payment verification error:', error);
+                                verifySwal.close();
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Verification Error',
+                                    text: 'Something went wrong during payment verification.',
+                                    ...swalOpts
+                                });
+                            }
+                        },
+
+                        modal: {
+                            ondismiss: function () {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Payment Cancelled',
+                                    text: 'You cancelled the payment process.',
+                                    ...swalOpts
+                                });
+                            }
+                        },
+
+                        theme: {
+                            color: '#3399cc'
+                        },
+
+                        retry: {
+                            enabled: true,
+                            max_count: 3
+                        },
+
+                        timeout: 600,
+
+                        remember_customer: false
+                    };
+
+                    const rzp = new Razorpay(options);
+                    rzp.open();
+
+                } catch (err) {
+                    console.error('Razorpay error:', err);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Payment Error',
+                        text: 'Failed to initialize payment. Please try again.',
+                        ...swalOpts
+                    });
+                }
+                return;
             }
         }
-
-
 
         async function setDefaultAddress(id) {
             try {
@@ -1473,7 +1901,6 @@
                     popup: 'swal-responsive'
                 }
             });
-
 
             if (!shouldDelete) {
                 return;
@@ -1516,7 +1943,6 @@
             }
         }
 
-
         async function editAddress(id) {
             try {
                 const res = await fetch(`/checkout/edit-address/${id}?from=checkout`, {
@@ -1546,6 +1972,44 @@
                 });
             }
         }
+
+        function checkWalletBalance() {
+            const walletRadio = document.querySelector('input[name="payment"][value="wallet"]');
+            const walletBalanceDisplay = document.querySelector('.wallet-balance');
+            const orderTotal = parseFloat(document.querySelector('.order-total')?.textContent?.replace('₹', '').replace(',', '') || 0);
+
+            if (walletRadio && walletBalanceDisplay) {
+                const walletBalance = parseFloat(walletBalanceDisplay.textContent.replace('₹', '').replace(',', ''));
+
+                if (walletBalance < orderTotal) {
+                    walletRadio.disabled = true;
+                    walletRadio.closest('.payment-option').classList.add('insufficient-balance');
+
+                    let insufficientMsg = walletRadio.closest('.payment-option').querySelector('.insufficient-balance-msg');
+                    if (!insufficientMsg) {
+                        insufficientMsg = document.createElement('div');
+                        insufficientMsg.className = 'insufficient-balance-msg';
+                        insufficientMsg.style.color = '#dc3545';
+                        insufficientMsg.style.fontSize = '12px';
+                        insufficientMsg.style.marginTop = '4px';
+                        insufficientMsg.textContent = `Insufficient balance. Need ₹${(orderTotal - walletBalance).toFixed(2)} more`;
+                        walletRadio.closest('.payment-option-content').appendChild(insufficientMsg);
+                    }
+                } else {
+                    walletRadio.disabled = false;
+                    walletRadio.closest('.payment-option').classList.remove('insufficient-balance');
+
+                    const insufficientMsg = walletRadio.closest('.payment-option').querySelector('.insufficient-balance-msg');
+                    if (insufficientMsg) {
+                        insufficientMsg.remove();
+                    }
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            checkWalletBalance();
+        });
 
     </script>
 

@@ -13,6 +13,21 @@
 <body>
 
   <style>
+
+    .mixed-status-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.mixed-status-info small {
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+}
+
     .content-header .btn-add {
       background-color: #6c63ff;
       color: #fff;
@@ -285,124 +300,150 @@
           <% } %>
 
           <div class="table-wrap">
-            <table class="table table-custom align-middle mb-0">
-              <thead>
-                <tr>
-                  <th>SL No</th>
-                  <th>Order ID</th>
-                  <th>Customer</th>
-                  <th>Products</th>
-                  <th>Date</th>
-                  <th>No of Products</th>
-                  <th>Amount</th>
-                  <th>Status</th>
-                  <th>Details</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% if (orders.length) { %>
-                <% orders.forEach((order, i)=> { %>
-                <tr>
-                  <td>
-                    <%= (_page - 1) * _limit + i + 1 %>
-                  </td>
-                  <td><strong>#<%= order.displayOrderId %></strong></td>
-                  <td>
-                    <%= order.user?.name || '—' %>
-                  </td>
-                  <td>
-                    <%= order.items?.map(item=> item.name).join(', ') || '—' %>
-                  </td>
-                  <td>
-                    <%= new Date(order.placedAt || order.createdAt).toLocaleDateString() %>
-                  </td>
-                  <td>
-                    <%= order.items?.length || 0 %>
-                  </td>
-                  <td>₹<%= (order.totalAmount || 0).toLocaleString() %>
-                  </td>
-                  <td>
-                    <div class="status-container">
-                      <% if (order.status === 'Cancelled') { %>
-                      <span class="status-cancelled">Cancelled</span>
-                      <% } else if (order.status === 'Placed') { %>
-                      <span class="status-placed">Placed</span>
-                      <% } else if (order.status === 'Processing') { %>
-                      <span class="status-processing">Processing</span>
-                      <% } else if (order.status === 'Shipped') { %>
-                      <span class="status-shipped">Shipped</span>
-                      <% } else if (order.status === 'Out for Delivery') { %>
-                      <span class="status-out-for-delivery">Out for Delivery</span>
-                      <% } else if (order.status === 'Delivered') { %>
-                      <span class="status-delivered">Delivered</span>
-                      <% } else { %>
-                      <span class="status-pending">
-                        <%= order.status %>
-                      </span>
-                      <% } %>
-
-                      <% const returnItem = (order.items || []).find(it => it.returnRequest && it.returnRequest.status); %>
-                      <% if (returnItem && returnItem.returnRequest && returnItem.returnRequest.status) { %>
-                      <% const rs = String(returnItem.returnRequest.status || '').toLowerCase(); %>
-                      <% if (rs === 'requested') { %>
-                      <span class="return-requested return-<%= rs %>">
-                        Refund Requested
-                      </span>
-                      <% } else if (rs === 'refunded') { %>
-                      <span class="return-accepted return-<%= rs %>">
-                        Refunded
-                      </span>
-                      <% } else if (rs === 'rejected') { %>
-                      <span class="return-rejected return-<%= rs %>">
-                        Rejected
-                      </span>
-                      <% } else { %>
-                      <span class="return-badge return-<%= rs %>">
-                        <%= rs.charAt(0).toUpperCase() + rs.slice(1) %>
-                      </span>
-                      <% } %>
-                      <% } %>
-                    </div>
-                  </td>
-                  <td>
-                    <a href="/admin/orders/<%= order._id %>" class="btn btn-sm btn-outline-primary">View</a>
-                  </td>
-                </tr>
-                <% }) %>
-                <% } else { %>
-                <tr>
-                  <td colspan="9" class="text-center text-warning py-4">
-                    No orders found.
-                  </td>
-                </tr>
+  <table class="table table-custom align-middle mb-0">
+    <thead>
+      <tr>
+        <th>SL No</th>
+        <th>Order ID</th>
+        <th>Customer</th>
+        <th>Products</th>
+        <th>Date</th>
+        <th>No of Products</th>
+        <th>Amount</th>
+        <th>Status</th>
+        <th>Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (orders.length) { %>
+      <% orders.forEach((order, i)=> { %>
+      <tr>
+        <td>
+          <%= (_page - 1) * _limit + i + 1 %>
+        </td>
+        <td><strong>#<%= order.displayOrderId||order._id.toString().slice(-8).toUpperCase() %></strong></td>
+        <td>
+          <%= order.user?.name || '—' %>
+        </td>
+        <td>
+          <%= order.items?.map(item=> item.name).join(', ') || '—' %>
+        </td>
+        <td>
+          <%= new Date(order.placedAt || order.createdAt).toLocaleDateString() %>
+        </td>
+        <td>
+          <%= order.items?.length || 0 %>
+        </td>
+        <td>₹<%= (order.totalAmount || 0).toLocaleString() %>
+        </td>
+        <td>
+          <div class="status-container">
+            <% if (order.status === 'Cancelled') { %>
+            <span class="status-cancelled">Cancelled</span>
+            <% } else if (order.status === 'Placed') { %>
+            <span class="status-placed">Placed</span>
+            <% } else if (order.status === 'Processing') { %>
+            <span class="status-processing">Processing</span>
+            <% } else if (order.status === 'Shipped') { %>
+            <span class="status-shipped">Shipped</span>
+            <% } else if (order.status === 'Out for Delivery') { %>
+            <span class="status-out-for-delivery">Out for Delivery</span>
+            <% } else if (order.status === 'Delivered') { %>
+            <span class="status-delivered">Delivered</span>
+            <% } else { %>
+            <span class="status-pending">
+              <%= order.status %>
+            </span>
+            <% } %>
+           
+            <% 
+              const items = order.items || [];
+              const cancelledItems = items.filter(item => (item.status || order.status) === 'Cancelled');
+              const deliveredItems = items.filter(item => (item.status || order.status) === 'Delivered');
+              const totalItems = items.length;
+       
+              const hasMixedStatuses = items.some(item => 
+                item.status && item.status !== order.status
+              );
+            %>
+            
+            <% if (hasMixedStatuses) { %>
+              <div class="mixed-status-info">
+                <% if (cancelledItems.length > 0 && cancelledItems.length < totalItems) { %>
+                  <small class="text-warning">
+                    (<%= cancelledItems.length %>/<%= totalItems %> cancelled)
+                  </small>
                 <% } %>
-              </tbody>
-            </table>
-
-            <nav aria-label="Page navigation">
-              <ul class="pagination justify-content-center mt-4">
-                <li class="page-item <%= _page <= 1 ? 'disabled' : '' %>">
-                  <a class="page-link" href="/admin/orders?<%= _q ? 'q=' + _q + '&' : '' %><%= _status && _status !== 'all' ? 'status=' + _status + '&' : '' %>page=<%= _page - 1 %>&limit=<%= _limit %>">
-                    <i class="material-icons" style="font-size:16px;">Prev</i>
-                  </a>
-                </li>
-
-                <% for (let p=1; p <=totalPages; p++) { %>
-                <li class="page-item <%= p === _page ? 'active' : '' %>">
-                  <a class="page-link" href="/admin/orders?<%= _q ? 'q=' + _q + '&' : '' %><%= _status && _status !== 'all' ? 'status=' + _status + '&' : '' %>page=<%= p %>&limit=<%= _limit %>">
-                    <%= p %>
-                  </a>
-                </li>
+                <% if (deliveredItems.length > 0 && deliveredItems.length < totalItems) { %>
+                  <small class="text-success">
+                    (<%= deliveredItems.length %>/<%= totalItems %> delivered)
+                  </small>
                 <% } %>
-
-                <li class="page-item <%= _page >= totalPages ? 'disabled' : '' %>">
-                  <a class="page-link" href="/admin/orders?<%= _q ? 'q=' + _q + '&' : '' %><%= _status && _status !== 'all' ? 'status=' + _status + '&' : '' %>page=<%= _page + 1 %>&limit=<%= _limit %>">
-                    <i class="material-icons" style="font-size:16px;">Next</i>
-                  </a>
-                </li>
-              </ul>
-            </nav>
+              </div>
+            <% } %>
+            
+            <% const returnItem = (order.items || []).find(it => it.returnRequest && it.returnRequest.status); %>
+            <% if (returnItem && returnItem.returnRequest && returnItem.returnRequest.status) { %>
+            <% const rs = String(returnItem.returnRequest.status || '').toLowerCase(); %>
+            <% if (rs === 'requested') { %>
+            <span class="return-requested return-<%= rs %>">
+              Refund Requested
+            </span>
+            <% } else if (rs === 'refunded') { %>
+            <span class="return-accepted return-<%= rs %>">
+              Refunded
+            </span>
+            <% } else if (rs === 'rejected') { %>
+            <span class="return-rejected return-<%= rs %>">
+              Rejected
+            </span>
+            <% } else { %>
+            <span class="return-badge return-<%= rs %>">
+              <%= rs.charAt(0).toUpperCase() + rs.slice(1) %>
+            </span>
+            <% } %>
+            <% } %>
           </div>
+        </td>
+        <td>
+          <a href="/admin/orders/<%= order._id %>" class="btn btn-sm btn-outline-primary">View</a>
+        </td>
+      </tr>
+      <% }) %>
+      <% } else { %>
+      <tr>
+        <td colspan="9" class="text-center text-warning py-4">
+          No orders found.
+        </td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  <nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center mt-4">
+      <li class="page-item <%= _page <= 1 ? 'disabled' : '' %>">
+        <a class="page-link" href="/admin/orders?<%= _q ? 'q=' + _q + '&' : '' %><%= _status && _status !== 'all' ? 'status=' + _status + '&' : '' %>page=<%= _page - 1 %>&limit=<%= _limit %>">
+          <i class="material-icons" style="font-size:16px;">Prev</i>
+        </a>
+      </li>
+
+      <% for (let p=1; p <=totalPages; p++) { %>
+      <li class="page-item <%= p === _page ? 'active' : '' %>">
+        <a class="page-link" href="/admin/orders?<%= _q ? 'q=' + _q + '&' : '' %><%= _status && _status !== 'all' ? 'status=' + _status + '&' : '' %>page=<%= p %>&limit=<%= _limit %>">
+          <%= p %>
+        </a>
+      </li>
+      <% } %>
+
+      <li class="page-item <%= _page >= totalPages ? 'disabled' : '' %>">
+        <a class="page-link" href="/admin/orders?<%= _q ? 'q=' + _q + '&' : '' %><%= _status && _status !== 'all' ? 'status=' + _status + '&' : '' %>page=<%= _page + 1 %>&limit=<%= _limit %>">
+          <i class="material-icons" style="font-size:16px;">Next</i>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
         </div>
       </div>
 

@@ -837,177 +837,191 @@
           </div>
         </div>
 
-        <div class="profile-body">
-          <% if (order) { %>
-          <div class="order-details-grid">
-            <div class="left-column">
-              <div class="summary-section">
-                <h4>Order Summary</h4>
-                <div class="summary-item">
-                  <span>Order ID:</span>
-                  <span> #<%= order.displayOrderId %></span>
-                </div>
-                <div class="summary-item">
-                  <span>Order Date:</span>
-                  <span>
-                    <% if (order.createdAt) { %>
-                    <%= order.createdAt.toLocaleString('en-US', { 
-                                                weekday: 'short',
-                                                year: 'numeric', 
-                                                month: 'short', 
-                                                day: '2-digit', 
-                                                hour: '2-digit', 
-                                                minute: '2-digit'
-                                            }) %>
-                    <% } else { %>
-                    Recently
-                    <% } %>
-                  </span>
-                </div>
-                <div class="summary-item">
-                  <span>Total Amount:</span>
-                  <span>₹ <%= order.totalAmount %></span>
-                </div>
-                <div class="summary-item">
-                  <span>Payment Method:</span>
-                  <span><%= order.paymentMethod || 'card' %></span>
-                </div>
-                <div class="summary-item">
-                  <span>Current Status:</span>
-                  <span class="status-badge status-<%= order.status.toLowerCase().replace(/\s+/g, '-') %>"><%= order.status %>
-                </div>
-              </div>
+       <div class="profile-body">
+  <% if (order) { %>
+  <div class="order-details-grid">
+    <div class="left-column">
+      <div class="summary-section">
+        <h4>Order Summary</h4>
+        <div class="summary-item">
+          <span>Order ID:</span>
+          <span> #<%= order.displayOrderId||order._id.toString().slice(-8).toUpperCase() %></span>
+        </div>
+        <div class="summary-item">
+          <span>Order Date:</span>
+          <span>
+            <% if (order.createdAt) { %>
+            <%= (order.createdAt.toLocaleString ? order.createdAt : new Date(order.createdAt)).toLocaleString('en-US', { 
+              weekday: 'short',
+              year: 'numeric', 
+              month: 'short', 
+              day: '2-digit', 
+              hour: '2-digit', 
+              minute: '2-digit'
+            }) %>
+            <% } else { %>
+            Recently
+            <% } %>
+          </span>
+        </div>
+        <div class="summary-item">
+          <span>Total Amount:</span>
+          <span>₹ <%= order.totalAmount %></span>
+        </div>
+        <div class="summary-item">
+          <span>Payment Method:</span>
+          <span><%= order.paymentMethod || 'card' %></span>
+        </div>
+        <div class="summary-item">
+          <span>Overall Order Status:</span>
+          <span class="status-badge status-<%= order.status.toLowerCase().replace(/\s+/g, '-') %>"><%= order.status %></span>
+        </div>
+        <div class="summary-item">
+          <span>Total Items:</span>
+          <span><%= order.items.length %></span>
+        </div>
+      </div>
 
-              <div class="items-section">
-                <% order.items.forEach((item, index) => { %>
-                <div class="item-row">
-                  <img src="<%= item.image || '/imgs/placeholder.jpg' %>" alt="<%= item.name %>" class="item-image" onerror="this.src='/imgs/placeholder.jpg'">
+      <div class="items-section">
+        <h4>Order Items</h4>
+        <% order.items.forEach((item, index) => { %>
+        <div class="item-row">
+          <img src="<%= item.image || '/imgs/placeholder.jpg' %>" 
+               alt="<%= item.name %>" 
+               class="item-image" 
+               onerror="this.src='/imgs/placeholder.jpg'">
 
-                  <div class="item-details">
-                    <h6><%= item.name %></h6>
-                    <div class="item-specs">
-                      Qty: <%= item.quantity %> | ₹ <%= item.price %> | Variant: <%= item.size || 'Standard' %> 
-                    </div>
-                  </div>
-
-
-                  <div class="item-actions">
-                    <button class="btn-cancel <%= ['placed', 'processing'].includes(order.status.toLowerCase()) ? '' : 'faded' %>" data-item-id="<%= item._id %>" data-item-name="<%= item.name %>" <%= ['placed', 'processing'].includes(order.status.toLowerCase()) ? '' : 'disabled' %>>
-                      Cancel
-                    </button>
-
-                    <% if (item.returnRequest && item.returnRequest.status) { %>
-                    <div class="return-status">
-                      <% const status = item.returnRequest.status.toLowerCase(); %>
-                      <% if (status === 'requested') { %>
-                      <span class="return-requested return-<%= status %>">
-                        Refund Requested
-                      </span>
-                      <% } else if (status === 'refunded') { %>
-                      <span class="return-accepted return-<%= status %>">
-                        Refunded
-                      </span>
-                      <% } else if (status === 'rejected') { %>
-                      <span class="return-rejected return-<%= status %>">
-                        Rejected
-                      </span>
-                      <% } else { %>
-                      <span class="return-badge return-<%= status %>">
-                        <%= status.charAt(0).toUpperCase() + status.slice(1) %>
-                      </span>
-                      <% } %>
-                    </div>
-                    <% } %>
-
-
-
-                    <% if (order.status.toLowerCase() === 'delivered' && (!item.returnRequest || !item.returnRequest.status)) { %>
-                    <button class="btn-return" data-item-id="<%= item._id %>" data-item-name="<%= item.name %>">
-                      Return
-                    </button>
-                    <% } %>
-                  </div>
-
-                  <div class="item-total">
-                    ₹<%= item.subtotal %>
-                  </div>
-                </div>
-                <% }); %>
-              </div>
-
-
-
-              <div class="price-breakdown">
-                <div class="price-row">
-                  <span>Subtotal:</span>
-                  <span>₹<%= order.items.reduce((sum, item) => sum + item.subtotal, 0) %></span>
-                </div>
-                <div class="price-row">
-                  <span>Delivery Charges:</span>
-                  <span>₹<%= order.shippingCost || 0 %></span>
-                </div>
-                <div class="price-row">
-                  <span>Coupon Discount:</span>
-                  <span>₹<%= order.discount || 0 %></span>
-                </div>
-                <div class="price-row total-row">
-                  <span><strong>Total:</strong></span>
-                  <span><strong>₹<%= order.totalAmount %></strong></span>
-                </div>
-              </div>
-            </div>
-
-            <div class="right-column">
-              <div class="address-section">
-                <h4>Shipping Address</h4>
-                <div class="address-content">
-                  <% const a=order.address; %>
-                  <% if (a) { %>
-                  <p><strong>Name:</strong>
-                    <%= a.userName || a.fullName || 'Customer' %>
-                  </p>
-
-                  <p>
-                    <%= a.houseNo || a.address || '' %>, <%= a.locality || a.street
-                                                        || '' %>
-                  </p>
-                  <p>
-                    <%= a.city %> – <%= a.pincode %>
-                  </p>
-                  <% if (a.phoneNumber || a.phone) { %>
-                  <p><strong>Phone:</strong> +91 <%= a.phoneNumber || a.phone %>
-                  </p>
-                  <% } %>
-                  <% if (a.altPhoneNumber) { %>
-                  <p><strong>Alt Phone:</strong> +91 <%= a.altPhoneNumber %>
-                  </p>
-                  <% } %>
-                  <% } else { %>
-                  <p>Address details not available</p>
-                  <% } %>
-                </div>
-              </div>
-              <div class="bottom-actions">
-                <a href="/orders" class="btn-back-to-orders">
-                  <i class="fi-rs-arrow-left"></i> Orders
-                </a>
-              </div>
+          <div class="item-details">
+            <h6><%= item.name %></h6>
+            <div class="item-specs">
+              Qty: <%= item.quantity %> | ₹ <%= item.price %> | Variant: <%= item.size || 'Standard' %>
+            </div><br>
+            <div class="item-status-display">
+              <span class="status-badge status-<%= (item.status || order.status).toLowerCase().replace(/\s+/g, '-') %>">
+                <%= item.status || order.status %>
+              </span>
             </div>
           </div>
 
+          <div class="item-actions">
+            <% const itemStatus = (item.status || order.status).toLowerCase(); %>
+            <% const canCancel = ['placed', 'processing', 'confirmed'].includes(itemStatus) && itemStatus !== 'cancelled'; %>
+            
+            <button class="btn-cancel <%= canCancel ? '' : 'faded' %>" 
+                    data-item-id="<%= item._id %>" 
+                    data-item-name="<%= item.name %>" 
+                    <%= canCancel ? '' : 'disabled' %>>
+              Cancel
+            </button>
+
+            <% if (item.returnRequest && item.returnRequest.status) { %>
+            <div class="return-status">
+              <% const status = item.returnRequest.status.toLowerCase(); %>
+              <% if (status === 'requested') { %>
+              <span class="return-requested return-<%= status %>">
+                Refund Requested
+              </span>
+              <% } else if (status === 'refunded') { %>
+              <span class="return-accepted return-<%= status %>">
+                Refunded
+              </span>
+              <% } else if (status === 'rejected') { %>
+              <span class="return-rejected return-<%= status %>">
+                Rejected
+              </span>
+              <% } else { %>
+              <span class="return-badge return-<%= status %>">
+                <%= status.charAt(0).toUpperCase() + status.slice(1) %>
+              </span>
+              <% } %>
+            </div>
+            <% } %>
+          
+            <% const canReturn = itemStatus === 'delivered' && (!item.returnRequest || !item.returnRequest.status) && itemStatus !== 'cancelled'; %>
+            <% if (canReturn) { %>
+            <button class="btn-return" data-item-id="<%= item._id %>" data-item-name="<%= item.name %>">
+              Return
+            </button>
+            <% } %>
+          </div>
+
+          <div class="item-total">
+            ₹<%= item.subtotal %>
+          </div>
+        </div>
+        <% }); %>
+      </div>
+
+      <div class="price-breakdown">
+        <div class="price-row">
+          <span>Subtotal:</span>
+          <span>₹<%= order.items.reduce((sum, item) => sum + item.subtotal, 0) %></span>
+        </div>
+        <div class="price-row">
+          <span>Shipping Charges:</span>
+          <span>₹<%= order.shippingCost || 0 %></span>
+        </div>
+        <div class="price-row">
+          <span>Discount Applied:</span>
+          <span>-₹<%= order.discount || 0 %></span>
+        </div>
+        <div class="price-row total-row">
+          <span><strong>Total Amount:</strong></span>
+          <span><strong>₹<%= order.totalAmount %></strong></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-column">
+      <div class="address-section">
+        <h4>Shipping Address</h4>
+        <div class="address-content">
+          <% const a = order.address; %>
+          <% if (a) { %>
+          <p><strong>Name:</strong>
+            <%= a.userName || a.fullName || 'Customer' %>
+          </p>
+          <p>
+            <%= a.houseNo || a.address || '' %>, <%= a.locality || a.street || '' %>
+          </p>
+          <p>
+            <%= a.city %> – <%= a.pincode %>
+          </p>
+          <% if (a.phoneNumber || a.phone) { %>
+          <p><strong>Phone:</strong> +91 <%= a.phoneNumber || a.phone %>
+          </p>
+          <% } %>
+          <% if (a.altPhoneNumber) { %>
+          <p><strong>Alt Phone:</strong> +91 <%= a.altPhoneNumber %>
+          </p>
+          <% } %>
           <% } else { %>
-          <div class="no-order-found">
-            <div class="icon-container">
-              <i class="fi-rs-exclamation"></i>
-            </div>
-            <h3>Order Not Found</h3>
-            <p>The order you're looking for doesn't exist or has been removed.</p>
-            <a href="/orders" class="btn-back-orders">
-              <i class="fi-rs-arrow-left"></i> Back to Orders
-            </a>
-          </div>
+          <p>Address details not available</p>
           <% } %>
         </div>
+      </div>
+      
+      <div class="bottom-actions">
+        <a href="/orders" class="btn-back-to-orders">
+          <i class="fi-rs-arrow-left"></i> Back to Orders
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <% } else { %>
+  <div class="no-order-found">
+    <div class="icon-container">
+      <i class="fi-rs-exclamation"></i>
+    </div>
+    <h3>Order Not Found</h3>
+    <p>The order you're looking for doesn't exist or has been removed.</p>
+    <a href="/orders" class="btn-back-orders">
+      <i class="fi-rs-arrow-left"></i> Back to Orders
+    </a>
+  </div>
+  <% } %>
+</div>
       </main>
     </div>
   </div>

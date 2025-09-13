@@ -38,15 +38,7 @@ const orderItemSubschema = new Schema(
     },
     status: {
       type: String,
-      enum: [
-        "Placed",
-        "Processing",
-        "Shipped",
-        "Out for Delivery",
-        "Delivered",
-        "Cancelled",
-        "Returned",
-      ],
+      enum: ["Placed", "Processing", "Shipped", "Out for Delivery", "Delivered", "Cancelled", "Returned"],
       default: "Placed",
     },
     cancellationReason: {
@@ -127,6 +119,20 @@ const orderSchema = new Schema(
       type: String,
       enum: ["paid", "unpaid"],
       default: "unpaid",
+    },
+    paymentDetails: {
+      razorpay_order_id: {
+        type: String
+      },
+      razorpay_payment_id: {
+        type: String
+      },
+      razorpay_signature: {
+        type: String
+      },
+      raw: {
+        type: Schema.Types.Mixed
+      },
     },
     status: {
       type: String,
