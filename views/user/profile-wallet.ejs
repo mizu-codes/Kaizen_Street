@@ -151,7 +151,6 @@
       box-shadow: 0 8px 20px rgba(255, 154, 158, 0.3);
     }
 
-    /* Piggy Face */
     .piggy-face {
       position: absolute;
       top: 15px;
@@ -215,7 +214,6 @@
       right: 6px;
     }
 
-    /* Piggy Ears */
     .ear {
       position: absolute;
       width: 20px;
@@ -326,7 +324,6 @@
       animation-delay: 1s;
     }
 
-    /* Sparkles */
     .sparkle {
       position: absolute;
       font-size: 16px;
@@ -358,7 +355,6 @@
       animation-delay: 1.5s;
     }
 
-    /* Message */
     .piggy-message {
       position: absolute;
       bottom: 20px;
@@ -399,7 +395,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 20px 30px;
+      padding: 10px 20px;
       border-bottom: 1px solid #f0f0f0;
       background: linear-gradient(135deg, #e8f4f2 0%, #ddf0e8 100%);
       flex-wrap: wrap;
@@ -421,32 +417,10 @@
       font-size: 1.75rem;
     }
 
-    .btn-add-money {
-      display: flex;
-      align-items: center;
-      background: #2ea368;
-      color: white;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: 500;
-      transition: all 0.3s ease;
-      cursor: pointer;
-      font-size: 13px;
-    }
-
-    .btn-add-money:hover {
-      background: #059669;
-      color: white;
-      transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(59, 183, 126, 0.4);
-    }
-
     .btn-add-money i {
-      margin-right: 6px;
+      margin-right: -5px;
       color: white;
-      font-size: 1.3rem;
+      font-size: 1.2rem;
     }
 
     .profile-body {
@@ -697,7 +671,6 @@
       letter-spacing: 0.025em;
     }
 
-    /* shared look and layout (keep consistent across payment buttons) */
     .method-razorpay,
     .method-wallet,
     .method-cod {
@@ -713,7 +686,6 @@
       font-weight: 600;
     }
 
-    /* Razorpay (unchanged) */
     .method-razorpay {
       background: linear-gradient(135deg, #012652 0%, #0D94FB 100%);
       box-shadow: 0 6px 18px rgba(13, 148, 251, 0.16);
@@ -724,7 +696,6 @@
       box-shadow: 0 10px 24px rgba(13, 148, 251, 0.18);
     }
 
-    /* Wallet — pink pastel gradient (your requested style) */
     .method-wallet {
       background: linear-gradient(145deg, #ff9a9e 0%, #fecfef 100%);
       box-shadow: 0 6px 18px rgba(255, 154, 158, 0.14);
@@ -736,7 +707,6 @@
       box-shadow: 0 10px 24px rgba(255, 154, 158, 0.18);
     }
 
-    /* Cash On Delivery (unchanged) */
     .method-cod {
       background: linear-gradient(135deg, #ff8c00 0%, #ffd54f 100%);
       box-shadow: 0 6px 18px rgba(255, 173, 51, 0.14);
@@ -747,7 +717,6 @@
       box-shadow: 0 10px 24px rgba(255, 173, 51, 0.18);
     }
 
-    /* amount text helper */
     .method-razorpay .amount,
     .method-wallet .amount,
     .method-cod .amount {
@@ -902,7 +871,7 @@
     }
 
     .modal-body {
-      padding: 2rem;
+      padding: 1rem;
     }
 
     .amount-input-group {
@@ -924,6 +893,7 @@
       font-size: 1.1rem;
       transition: all 0.3s ease;
       font-weight: 600;
+      box-sizing: border-box;
     }
 
     .amount-input:focus {
@@ -961,23 +931,31 @@
     .modal-actions {
       display: flex;
       gap: 1rem;
-      padding: 1rem 2rem 2rem;
+      padding: 1rem 1rem;
       justify-content: flex-end;
     }
 
     .btn-cancel {
-      background: #f8f9fa;
-      border: 2px solid #e0e0e0;
-      color: #666;
-      padding: 0.75rem 1.5rem;
-      border-radius: 10px;
+      margin-top: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 5px 14px;
+      color: white;
+      background: #088178;
+      border-radius: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
       cursor: pointer;
       transition: all 0.3s ease;
-      font-weight: 500;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: none;
     }
 
     .btn-cancel:hover {
-      background: #e9ecef;
+      background: #088178;
       border-color: #ccc;
       transform: translateY(-1px);
     }
@@ -997,6 +975,59 @@
       background: linear-gradient(135deg, #2ea368 0%, #059669 100%);
       transform: translateY(-1px);
       box-shadow: 0 4px 15px rgba(59, 183, 126, 0.4);
+    }
+
+    /* Add Money trigger button */
+    .btn-add-money {
+      background: linear-gradient(135deg, #3BB77E 0%, #2ea368 100%);
+      border: none;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: monospace;
+      font-size: 1rem;
+      margin: 1rem 0;
+    }
+
+    .btn-add-money:hover {
+      background: linear-gradient(135deg, #2ea368 0%, #059669 100%);
+      transform: translateY(-2px);
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+      .modal-content {
+        width: 95%;
+        margin: 1rem;
+      }
+
+      .modal-header {
+        padding: 1.5rem 1.5rem 1rem;
+      }
+
+      .modal-body {
+        padding: 1.5rem;
+      }
+
+      .modal-actions {
+        padding: 1rem 1.5rem 1.5rem;
+        flex-direction: column;
+      }
+
+      .quick-amounts {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* SweetAlert2 custom styles */
+    .custom-swal-container {
+      z-index: 1100 !important;
+    }
+
+    .custom-swal-popup {
+      border-radius: 15px !important;
     }
 
     /* Animations */
@@ -1369,7 +1400,7 @@
         gap: 8px;
       }
     }
-   
+
     .transaction-item {
       animation: fadeInUp 0.6s ease forwards;
       opacity: 0;
@@ -1601,23 +1632,23 @@
           </div>
 
           <div class="mascot-container">
-          
+
             <div class="sparkle sparkle1">✨</div>
             <div class="sparkle sparkle2">💎</div>
             <div class="sparkle sparkle3">✨</div>
             <div class="sparkle sparkle4">⭐</div>
-           
+
             <div class="floating-coin coin1">₹</div>
             <div class="floating-coin coin2">₹</div>
             <div class="floating-coin coin3">₹</div>
-           
+
             <div class="piggy-bank">
               <div class="piggy-body">
                 <div class="coin-slot"></div>
 
                 <div class="ear left"></div>
                 <div class="ear right"></div>
-              
+
                 <div class="piggy-face">
                   <div class="piggy-eyes">
                     <div class="eye"></div>
@@ -1628,12 +1659,12 @@
                     <div class="nostril right"></div>
                   </div>
                 </div>
-              
+
                 <div class="leg front-left"></div>
                 <div class="leg front-right"></div>
                 <div class="leg back-left"></div>
                 <div class="leg back-right"></div>
-           
+
                 <div class="piggy-tail"></div>
               </div>
             </div>
@@ -1708,7 +1739,7 @@
                     </div>
                     <% }) %>
                 </div>
-               
+
                 <% if (totalPages> 1) { %>
                   <div class="pagination-container">
 
@@ -1722,7 +1753,7 @@
                             <i class="ri-arrow-left-s-line"></i> Previous
                           </span>
                           <% } %>
-                           
+
                             <div class="pagination-numbers">
                               <% let startPage=Math.max(1, page - 2); let endPage=Math.min(totalPages, page + 2); if
                                 (endPage - startPage < 4) { if (startPage===1) { endPage=Math.min(totalPages, startPage
@@ -1776,13 +1807,11 @@
     </div>
   </div>
 
-  <div class="modal-overlay" id="addMoneyModal">
+  <div id="addMoneyModal" class="modal-overlay">
     <div class="modal-content">
       <div class="modal-header">
         <h4>Add Money to Wallet</h4>
-        <button class="modal-close" onclick="closeAddMoneyModal()">
-          <i class="ri-close-line"></i>
-        </button>
+        <button type="button" class="modal-close" onclick="closeAddMoneyModal()">×</button>
       </div>
 
       <form id="addMoneyForm" onsubmit="addMoney(event)">
@@ -1792,14 +1821,12 @@
             <input type="number" id="amount" name="amount" class="amount-input" min="1" max="50000" step="0.01"
               placeholder="0.00" required>
           </div>
-
           <div class="quick-amounts">
             <button type="button" class="quick-amount" onclick="setAmount(500)">₹500</button>
             <button type="button" class="quick-amount" onclick="setAmount(1000)">₹1,000</button>
             <button type="button" class="quick-amount" onclick="setAmount(10000)">₹10,000</button>
           </div>
         </div>
-
         <div class="modal-actions">
           <button type="button" class="btn-cancel" onclick="closeAddMoneyModal()">Cancel</button>
           <button type="submit" class="btn-add">
@@ -1809,6 +1836,8 @@
       </form>
     </div>
   </div>
+
+
 
   <footer class="main">
     <section class="newsletter p-30 text-white wow fadeIn animated">
@@ -1911,6 +1940,8 @@
   <script src="/js/cart-count-updater.js"></script>
   <script src="/js/main.js?v=3.4"></script>
   <script src="/js/shop.js?v=3.4"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <script>
     function toggleSidebar() {
@@ -1957,6 +1988,213 @@
 
       document.getElementById('addMoneyForm').reset();
     }
+
+
+    const swalOpts = {
+      customClass: {
+        container: 'custom-swal-container',
+        popup: 'custom-swal-popup'
+      }
+    };
+
+    function setAmount(amount) {
+      document.getElementById('amount').value = amount;
+    }
+
+    async function addMoney(event) {
+      event.preventDefault();
+
+      const amount = parseFloat(document.getElementById('amount').value);
+
+      if (!amount || amount <= 0) {
+        return Swal.fire({
+          icon: 'error',
+          title: 'Invalid Amount',
+          text: 'Please enter a valid amount',
+          ...swalOpts
+        });
+      }
+
+      if (amount > 50000) {
+        return Swal.fire({
+          icon: 'error',
+          title: 'Amount Too High',
+          text: 'Maximum amount allowed is ₹50,000',
+          ...swalOpts
+        });
+      }
+
+      try {
+        const loadingSwal = Swal.fire({
+          title: 'Processing...',
+          text: 'Creating payment order',
+          allowOutsideClick: false,
+          showConfirmButton: false,
+          willOpen: () => {
+            Swal.showLoading();
+          },
+          ...swalOpts
+        });
+
+        const orderRes = await fetch('/wallet/create-razorpay-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ amount })
+        });
+
+        const orderData = await orderRes.json();
+        loadingSwal.close();
+
+        if (!orderRes.ok || !orderData.success) {
+          return Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: orderData.message || 'Failed to create payment order.',
+            ...swalOpts
+          });
+        }
+
+        const options = {
+          key: orderData.key,
+          amount: orderData.amount,
+          currency: orderData.currency || 'INR',
+          order_id: orderData.orderId,
+          name: 'Kaizen Street',
+          description: 'Wallet Top-up',
+          image: '/assets2/imgs/theme/kaizenicon.svg',
+
+          method: {
+            netbanking: true,
+            card: false,
+            wallet: false,
+            upi: false,
+            paylater: false
+          },
+
+          handler: async function (response) {
+            const verifySwal = Swal.fire({
+              title: 'Verifying Payment...',
+              text: 'Please wait while we confirm your payment',
+              allowOutsideClick: false,
+              showConfirmButton: false,
+              willOpen: () => {
+                Swal.showLoading();
+              },
+              ...swalOpts
+            });
+
+            try {
+              const verifyRes = await fetch('/wallet/verify-payment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_signature: response.razorpay_signature,
+                  amount: amount
+                })
+              });
+
+              const verifyData = await verifyRes.json();
+              verifySwal.close();
+
+              if (verifyRes.ok && verifyData.success) {
+                await Swal.fire({
+                  icon: 'success',
+                  title: 'Payment Successful!',
+                  text: verifyData.message,
+                  showConfirmButton: false,
+                  timer: 3000,
+                  ...swalOpts
+                });
+
+                closeAddMoneyModal();
+                window.location.reload();
+              } else {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Payment Verification Failed',
+                  text: verifyData.message || 'Payment could not be verified.',
+                  ...swalOpts
+                });
+              }
+            } catch (error) {
+              console.error('Payment verification error:', error);
+              verifySwal.close();
+              Swal.fire({
+                icon: 'error',
+                title: 'Verification Error',
+                text: 'Something went wrong during payment verification.',
+                ...swalOpts
+              });
+            }
+          },
+
+          modal: {
+            ondismiss: function () {
+              Swal.fire({
+                icon: 'warning',
+                title: 'Payment Cancelled',
+                text: 'You cancelled the payment process.',
+                ...swalOpts
+              });
+            }
+          },
+
+          theme: {
+            color: '#3BB77E'
+          },
+
+          retry: {
+            enabled: true,
+            max_count: 3
+          },
+
+          timeout: 600,
+          remember_customer: false
+        };
+
+        const rzp = new Razorpay(options);
+        rzp.open();
+
+      } catch (err) {
+        console.error('Razorpay error:', err);
+        Swal.fire({
+          icon: 'error',
+          title: 'Payment Error',
+          text: 'Failed to initialize payment. Please try again.',
+          ...swalOpts
+        });
+      }
+    }
+
+    function openAddMoneyModal() {
+      document.getElementById('addMoneyModal').classList.add('active');
+      document.getElementById('amount').value = '';
+      document.getElementById('amount').focus();
+    }
+
+    function closeAddMoneyModal() {
+      document.getElementById('addMoneyModal').classList.remove('active');
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const modal = document.getElementById('addMoneyModal');
+      if (modal) {
+        modal.addEventListener('click', function (e) {
+          if (e.target === modal) {
+            closeAddMoneyModal();
+          }
+        });
+      }
+    });
+
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        closeAddMoneyModal();
+      }
+    });
   </script>
 </body>
 

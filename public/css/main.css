@@ -2523,7 +2523,7 @@ label {
 
         .sakura {
             position: absolute;
-            color: rgba(20, 184, 166, 0.08);
+            color: rgba(20, 184, 166, 0.4);
             font-size: 1.2rem;
             animation: sakuraFall 15s linear infinite;
         }
@@ -11093,4 +11093,100 @@ display: inline-block;
       .welcome-section .subtitle {
         font-size: 1rem;
       }
+    }
+
+
+
+      section.newsletter {
+              background: url('/imgs/theme/japan-pic.png');
+            background-size: cover;
+            background-position: center 50%;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            margin: 40px 0;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+             min-height: 300px; /* Fixed height to maintain size */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+     
+        .newsletter::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.1) 2px, transparent 2px),
+                radial-gradient(circle at 75% 75%, rgba(255, 182, 193, 0.1) 1px, transparent 1px),
+                linear-gradient(45deg, transparent 40%, rgba(255, 255, 255, 0.05) 50%, transparent 60%);
+            background-size: 50px 50px, 30px 30px, 100px 100px;
+            animation: float 20s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(1deg); }
+            50% { transform: translateY(-5px) rotate(-1deg); }
+            75% { transform: translateY(-15px) rotate(0.5deg); }
+        }
+      
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .floating-element {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.3;
+            animation: floatAround 15s linear infinite;
+        }
+
+        .floating-element:nth-child(1) {
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-element:nth-child(2) {
+            top: 60%;
+            right: 15%;
+            animation-delay: 5s;
+        }
+
+        .floating-element:nth-child(3) {
+            bottom: 30%;
+            left: 20%;
+            animation-delay: 10s;
+        }
+
+        @keyframes floatAround {
+            0% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
+            25% { transform: translateY(-20px) rotate(90deg); opacity: 0.6; }
+            50% { transform: translateY(-10px) rotate(180deg); opacity: 0.4; }
+            75% { transform: translateY(-30px) rotate(270deg); opacity: 0.5; }
+            100% { transform: translateY(0px) rotate(360deg); opacity: 0.3; }
+        }
+   
+        @media (max-width: 768px) {
+            .newsletter {
+                margin: auto;
+                background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
     }

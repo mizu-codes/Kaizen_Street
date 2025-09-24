@@ -7,6 +7,7 @@ const Address = require('../../models/addressSchema');
 const Order = require('../../models/orderSchema');
 const Wallet = require('../../models/walletSchema');
 const WalletTransaction = require('../../models/walletTransactionSchema');
+const Transaction = require('../../models/transactionSchema');
 const crypto = require("crypto");
 const env = require('dotenv').config();
 const Razorpay = require("razorpay");
@@ -15,6 +16,32 @@ const razorpay = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID,
     key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
+
+
+const createOrderTransaction = async (orderData, session = null) => {
+    try {
+        const transactionData = {
+            customerId: orderData.userId,
+            orderId: orderData.orderId,
+            amount: orderData.totalAmount,
+            paymentMethod: orderData.paymentMethod,
+            transactionStatus: orderData.paymentMethod === 'cod' ? 'pending' : 'success',
+            type: 'order_payment',
+            description: `Order payment for ${orderData.itemCount || 0} items`,
+            gatewayTransactionId: orderData.razorpay_payment_id || null,
+            gatewayOrderId: orderData.razorpay_order_id || null
+        };
+
+        if (session) {
+            await Transaction.create([transactionData], { session });
+        } else {
+            await Transaction.create(transactionData);
+        }
+    } catch (error) {
+        console.error('Error creating order transaction:', error);
+        throw error;
+    }
+};
 
 const loadCheckoutPage = async (req, res) => {
     try {
@@ -145,7 +172,7 @@ const placeOrder = async (req, res) => {
                 });
             }
         }
-
+     
         if (paymentMethod === 'wallet') {
             const wallet = await Wallet.findOne({ userId, isActive: true, isBlocked: false });
 
@@ -178,6 +205,14 @@ const placeOrder = async (req, res) => {
                     status: 'Placed'
                 });
                 await order.save({ session });
+            
+                await createOrderTransaction({
+                    userId: userId,
+                    orderId: order._id,
+                    totalAmount: finalAmount,
+                    paymentMethod: 'wallet',
+                    itemCount: orderItems.length
+                }, session);
 
                 const balanceBefore = wallet.balance;
                 wallet.balance -= finalAmount;
@@ -230,30 +265,56 @@ const placeOrder = async (req, res) => {
                 });
             }
         }
-
+        
         if (paymentMethod === 'cod') {
-            const order = new Order({
-                user: userId,
-                address: address._id,
-                items: orderItems,
-                totalAmount: finalAmount,
-                discount,
-                paymentMethod,
-                paymentStatus: 'unpaid',
-                status: 'Placed'
-            });
-            await order.save();
+            const session = await mongoose.startSession();
+            session.startTransaction();
 
-            for (let item of cart.items) {
-                const product = item.productId;
-                const size = item.size;
-                product.stock[size] -= item.quantity;
-                await product.save();
+            try {
+                const order = new Order({
+                    user: userId,
+                    address: address._id,
+                    items: orderItems,
+                    totalAmount: finalAmount,
+                    discount,
+                    paymentMethod,
+                    paymentStatus: 'unpaid',
+                    status: 'Placed'
+                });
+                await order.save({ session });
+
+                // 🔥 Create order transaction record
+                await createOrderTransaction({
+                    userId: userId,
+                    orderId: order._id,
+                    totalAmount: finalAmount,
+                    paymentMethod: 'cod',
+                    itemCount: orderItems.length
+                }, session);
+
+                for (let item of cart.items) {
+                    const product = item.productId;
+                    const size = item.size;
+                    product.stock[size] -= item.quantity;
+                    await product.save({ session });
+                }
+
+                await Cart.deleteOne({ userId }, { session });
+
+                await session.commitTransaction();
+                session.endSession();
+
+                return res.json({ success: true, orderId: order._id });
+
+            } catch (error) {
+                await session.abortTransaction();
+                session.endSession();
+                console.error('COD order creation failed:', error);
+                return res.status(500).json({
+                    success: false,
+                    message: 'Order creation failed. Please try again.'
+                });
             }
-
-            await Cart.deleteOne({ userId });
-
-            return res.json({ success: true, orderId: order._id });
         }
 
         return res.json({
@@ -493,35 +554,63 @@ const verifyRazorpayPayment = async (req, res) => {
         const discount = cart.discount || 0;
         const finalAmount = totalAmount - discount;
 
-        const order = new Order({
-            user: userId,
-            address: addressId,
-            items: orderItems,
-            totalAmount: finalAmount,
-            discount,
-            paymentMethod: "razorpay",
-            paymentStatus: "paid",
-            status: "Placed",
-            paymentDetails: {
-                razorpay_order_id,
-                razorpay_payment_id,
-                razorpay_signature,
-                raw: req.body
+        const session = await mongoose.startSession();
+        session.startTransaction();
+
+        try {
+            const order = new Order({
+                user: userId,
+                address: addressId,
+                items: orderItems,
+                totalAmount: finalAmount,
+                discount,
+                paymentMethod: "razorpay",
+                paymentStatus: "paid",
+                status: "Placed",
+                paymentDetails: {
+                    razorpay_order_id,
+                    razorpay_payment_id,
+                    razorpay_signature,
+                    raw: req.body
+                }
+            });
+
+            await order.save({ session });
+          
+            await createOrderTransaction({
+                userId: userId,
+                orderId: order._id,
+                totalAmount: finalAmount,
+                paymentMethod: 'razorpay',
+                itemCount: orderItems.length,
+                razorpay_payment_id: razorpay_payment_id,
+                razorpay_order_id: razorpay_order_id
+            }, session);
+
+            for (let item of cart.items) {
+                const product = item.productId;
+                const size = item.size;
+                product.stock[size] -= item.quantity;
+                await product.save({ session });
             }
-        });
 
-        await order.save();
+            await Cart.deleteOne({ userId }, { session });
 
-        for (let item of cart.items) {
-            const product = item.productId;
-            const size = item.size;
-            product.stock[size] -= item.quantity;
-            await product.save();
+            await session.commitTransaction();
+            session.endSession();
+
+            return res.json({ success: true, orderId: order._id });
+
+        } catch (error) {
+            await session.abortTransaction();
+            session.endSession();
+            console.error('Razorpay order creation failed:', error);
+            return res.status(500).json({
+                success: false,
+                message: 'Payment processing failed. Please try again.'
+            });
         }
 
-        await Cart.deleteOne({ userId });
-
-        return res.json({ success: true, orderId: order._id });
     } catch (err) {
         console.error("Verify Payment Error:", err);
         res.status(500).json({ success: false, message: "Verification error" });

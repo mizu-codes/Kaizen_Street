@@ -10,7 +10,7 @@
   <link href="/assets2/css/main.css" rel="stylesheet" type="text/css" />
 
   <style>
-
+   
     .item-status-info {
   margin-top: 8px;
   display: flex;
@@ -442,6 +442,18 @@
             <span class="text">Orders</span>
           </a>
         </li>
+         <li class="menu-item">
+          <a class="menu-link" href="/admin/transactions">
+            <i class="icon material-icons md-account_balance_wallet"></i>
+            <span class="text">Transactions</span>
+          </a>
+        </li>
+         <li class="menu-item">
+          <a class="menu-link" href="/admin/coupons">
+            <i class="icon material-icons md-account_balance_wallet"></i>
+            <span class="text">Coupons</span>
+          </a>
+        </li>
       </ul>
     </nav>
   </aside>
@@ -635,17 +647,6 @@
                       });
                       const hasMultipleStatuses = Object.keys(statusSummary).length > 1;
                     %>
-                    
-                    <% if (hasMultipleStatuses) { %>
-                      <div class="status-breakdown">
-                        <small class="text-muted">Item Status Breakdown:</small>
-                        <% Object.entries(statusSummary).forEach(([status, count]) => { %>
-                          <span class="mini-status status-<%= status.toLowerCase().replace(/\s+/g, '-') %>">
-                            <%= count %> <%= status %>
-                          </span>
-                        <% }); %>
-                      </div>
-                    <% } %>
                   </span>
                 </span>
               </div>

@@ -8,6 +8,8 @@ const addController  = require('../controllers/admin/product/addController');
 const listController = require('../controllers/admin/product/listController');
 const editController = require('../controllers/admin/product/editController');
 const orderController = require('../controllers/admin/orderController');
+const transactionController= require('../controllers/admin/transactionController');
+const couponController= require('../controllers/admin/couponController');
 const { adminAuth } = require('../middlewares/auth');
 
 router.get('/page-error', adminController.pageError)
@@ -35,6 +37,17 @@ router.get('/orders',adminAuth, orderController.loadOrderPage);
 router.get('/orders/:orderId', adminAuth, orderController.loadOrderDetailsPage);
 router.patch('/orders/:orderId/status', adminAuth, orderController.changeOrderStatus);
 router.patch('/returns/:orderId/:itemId', adminAuth, orderController.updateReturnRequest);
+
+router.get('/transactions',adminAuth,transactionController.loadTransactionsPage);
+router.get('/transactions/:id',adminAuth,transactionController.getTransactionDetails);
+
+router.get('/coupons',adminAuth,couponController.loadCouponPage);
+router.post('/coupons/add',adminAuth,couponController.addCoupon);
+router.delete('/coupons/delete/:id',adminAuth,couponController.deleteCoupon);
+router.put('/coupons/edit/:id', adminAuth, couponController.updateCoupon);
+router.get('/coupons/data/:id', adminAuth, couponController.getCouponData);
+
+
 
 
 module.exports = router;

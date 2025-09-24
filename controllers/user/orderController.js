@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Wallet = require('../../models/walletSchema');
 const { randomUUID } = require('crypto')
 const WalletTransaction = require('../../models/walletTransactionSchema');
+const Transaction = require('../../models/transactionSchema');
 const Product = require('../../models/productSchema');
 const Order = require('../../models/orderSchema');
 const returnAndRefund = require('../../models/returnAndRefundSchema')
@@ -144,8 +145,8 @@ const cancelOrderItem = async (req, res) => {
                     type: 'credit',
                     amount: refundAmount,
                     description: paymentMethod === 'wallet'
-                        ? `Refund for cancelled item: ${itemDoc.name || 'product'}`
-                        : `Refund for cancelled item: ${itemDoc.name || 'product'}`,
+                        ? `Refund for cancelled : ${itemDoc.name || 'product'}`
+                        : `Refund for cancelled : ${itemDoc.name || 'product'}`,
                     status: 'completed',
                     balanceBefore,
                     balanceAfter,
@@ -158,6 +159,19 @@ const cancelOrderItem = async (req, res) => {
                     },
                     processedAt: now,
                     completedAt: now
+                }], { session });
+
+                await Transaction.create([{
+                    customerId: userId,
+                    orderId: orderDoc._id,
+                    amount: refundAmount,
+                    paymentMethod: orderDoc.paymentMethod,
+                    transactionStatus: 'success',
+                    type: 'refund',
+                    refundReason: 'cancellation',
+                    description: `Refund for cancelled item: ${itemDoc.name || 'product'}`,
+                    gatewayTransactionId: orderDoc.paymentDetails?.razorpay_payment_id || null,
+                    gatewayOrderId: orderDoc.paymentDetails?.razorpay_order_id || null
                 }], { session });
             }
 
@@ -186,7 +200,6 @@ const cancelOrderItem = async (req, res) => {
         try { session.endSession(); } catch (e) { }
     }
 };
-
 
 const downloadInvoicePDF = async (req, res) => {
     try {
@@ -315,5 +328,5 @@ module.exports = {
     loadOrderDetailsPage,
     cancelOrderItem,
     downloadInvoicePDF,
-    returnOrderItem
+    returnOrderItem,
 }

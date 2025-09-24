@@ -93,6 +93,8 @@ router.get('/orders/:orderId/invoice', userAuth, orderController.downloadInvoice
 router.post('/orders/return-item', userAuth, orderController.returnOrderItem);
 
 router.get('/wallet', userAuth, walletController.loadWalletPage);
+router.post("/wallet/create-razorpay-order", userAuth, walletController.createWalletRazorpayOrder);
+router.post("/wallet/verify-payment", userAuth, walletController.verifyWalletRazorpayPayment);
 
 module.exports = router;
 

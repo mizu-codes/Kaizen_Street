@@ -12,6 +12,15 @@ const couponSchema = new Schema({
         required: true,
         unique: true
     },
+    description: {
+        type: String,
+        trim: true
+    },
+    usageType: {
+        type: String,
+        enum: ['once', 'multiple'],
+        default: 'once'
+    },
     activeDate: {
         type: Date,
         required: true
@@ -38,12 +47,8 @@ const couponSchema = new Schema({
     },
     status: {
         type: String,
-        enum: ['active', 'expired', 'upcoming', 'disabled'],
+        enum: ['active', 'inactive'],
         default: 'upcoming'
-    },
-    isList: {
-        type: Boolean,
-        default: true
     },
 }, { timestamps: true })
 

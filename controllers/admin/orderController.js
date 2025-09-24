@@ -4,7 +4,35 @@ const Product = require('../../models/productSchema');
 const returnAndRefund = require('../../models/returnAndRefundSchema');
 const Wallet = require('../../models/walletSchema');
 const WalletTransaction = require('../../models/walletTransactionSchema');
+const Transaction = require('../../models/transactionSchema');
 const { v4: uuidv4 } = require('uuid');
+
+
+const createRefundTransaction = async (refundData, session = null) => {
+  try {
+    const transactionData = {
+      customerId: refundData.userId,
+      orderId: refundData.orderId,
+      amount: refundData.refundAmount,
+      paymentMethod: refundData.originalPaymentMethod,
+      transactionStatus: 'success',
+      type: 'refund',
+      refundReason: 'return',
+      description: `Refund for returned item: ${refundData.itemName || 'product'}`,
+      gatewayTransactionId: refundData.originalGatewayTransactionId || null,
+      gatewayOrderId: refundData.originalGatewayOrderId || null
+    };
+
+    if (session) {
+      await Transaction.create([transactionData], { session });
+    } else {
+      await Transaction.create(transactionData);
+    }
+  } catch (error) {
+    console.error('Error creating refund transaction:', error);
+    throw error;
+  }
+};
 
 const loadOrderPage = async (req, res) => {
   try {
@@ -300,7 +328,7 @@ const updateReturnRequest = async (req, res) => {
       user: order.user,
       type: 'credit',
       amount: refundAmount,
-      description: `Refund for ${item.name || 'returned product'}`,
+      description: `Refund for returned : ${item.name || 'returned product'}`,
       transactionId: uuidv4(),
       status: 'completed',
       balanceBefore,
@@ -314,6 +342,16 @@ const updateReturnRequest = async (req, res) => {
       processedAt: new Date(),
       completedAt: new Date()
     }], { session });
+
+    await createRefundTransaction({
+      userId: order.user,
+      orderId: order._id,
+      refundAmount: refundAmount,
+      originalPaymentMethod: originalPaymentMethod,
+      itemName: item.name || 'returned product',
+      originalGatewayTransactionId: order.paymentDetails?.razorpay_payment_id || null,
+      originalGatewayOrderId: order.paymentDetails?.razorpay_order_id || null
+    }, session);
 
     await session.commitTransaction();
 
