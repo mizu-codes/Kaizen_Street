@@ -1,6 +1,5 @@
 const Category = require('../../models/categorySchema');
-const Offer = require('../../models/offerSchema');
-const Product=require('../../models/productSchema');
+const Product = require('../../models/productSchema');
 
 const categoryInfo = async (req, res) => {
   try {
@@ -18,27 +17,23 @@ const categoryInfo = async (req, res) => {
     const totalPages = Math.ceil(totalCount / limit);
 
     const categories = await Category.find(filter)
-      .populate('offerId')
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
       .lean();
 
-       const categoriesWithCount = await Promise.all(
+    const categoriesWithCount = await Promise.all(
       categories.map(async (cat) => {
         const count = await Product.countDocuments({ category: cat._id });
         return { ...cat, itemCount: count };
       })
     );
 
-    const offers = await Offer.find({ active: true }).lean();
-
-    const [message] = req.flash('message');
-    const [error] = req.flash('error');
+    const message = req.query.success;
+    const error = req.query.error;
 
     return res.render('category-info', {
-      categories:  categoriesWithCount,
-      offers,
+      categories: categoriesWithCount,
       q: search,
       page,
       limit,
@@ -49,29 +44,17 @@ const categoryInfo = async (req, res) => {
     });
   } catch (error) {
     console.error('Error fetching categories:', error);
-    req.flash('error', 'Unable to load categories.');
-    const [errorFallback] = req.flash('error');
-    return res.render('category-info', {
-      categories: [],
-      offers: [],
-      q: '',
-      page: 1,
-      limit: 5,
-      totalPages: 0,
-      message: null,
-      error: errorFallback
-    });
+    return res.redirect(`/admin/category?error=${encodeURIComponent('Unable to load categories.')}`);
   }
 };
 
 const addCategory = async (req, res) => {
   try {
-    const { categoryName, categoryDescription, status, offerId } = req.body;
+    const { categoryName, categoryDescription, status } = req.body;
     const redirectBase = `/admin/category?q=${encodeURIComponent(req.query.q || '')}&page=${req.query.page || 1}`;
 
     if (!categoryName?.trim() || !categoryDescription?.trim()) {
-      req.flash('error', 'Name and description are required.');
-      return res.redirect(redirectBase);
+      return res.redirect(`${redirectBase}&error=${encodeURIComponent('Name and description are required.')}`);
     }
 
     const exists = await Category.findOne({
@@ -79,35 +62,31 @@ const addCategory = async (req, res) => {
     });
 
     if (exists) {
-      req.flash('error', `Category “${categoryName.trim()}” already exists.`);
-      return res.redirect(redirectBase);
+      return res.redirect(`${redirectBase}&error=${encodeURIComponent(`Category "${categoryName.trim()}" already exists.`)}`);
     }
 
     await Category.create({
       categoryName: categoryName.trim(),
       categoryDescription: categoryDescription.trim(),
       status,
-      offerId: offerId || null
+      categoryOffer: 0
     });
 
-    req.flash('message', `Category “${categoryName.trim()}” added successfully.`);
-    return res.redirect(redirectBase);
+    return res.redirect(`${redirectBase}&success=${encodeURIComponent(`Category "${categoryName.trim()}" added successfully.`)}`);
   } catch (err) {
     console.error('Error adding category:', err);
-    req.flash('error', 'Error adding category. Please try again.');
-    return res.redirect(`/admin/category`);
+    const redirectBase = `/admin/category?q=${encodeURIComponent(req.query.q || '')}&page=${req.query.page || 1}`;
+    return res.redirect(`${redirectBase}&error=${encodeURIComponent('Error adding category. Please try again.')}`);
   }
 };
 
-
 const editCategory = async (req, res) => {
   const { id } = req.params;
-  const { categoryName, categoryDescription, status, offerId } = req.body;
+  const { categoryName, categoryDescription, status } = req.body;
   const redirectBase = `/admin/category?q=${encodeURIComponent(req.query.q || '')}&page=${req.query.page || 1}`;
 
   if (!categoryName || !categoryName.trim() || !categoryDescription || !categoryDescription.trim()) {
-    req.flash('error', 'Name and description are required.');
-    return res.redirect(redirectBase);
+    return res.redirect(`${redirectBase}&error=${encodeURIComponent('Name and description are required.')}`);
   }
 
   try {
@@ -116,22 +95,18 @@ const editCategory = async (req, res) => {
       {
         categoryName: categoryName.trim(),
         categoryDescription: categoryDescription.trim(),
-        status,
-        offerId: offerId || null
+        status
       },
       { new: true }
     );
     if (!updated) throw new Error('Category not found');
 
-    req.flash('message', 'Category updated.');
+    return res.redirect(`${redirectBase}&success=${encodeURIComponent('Category updated successfully.')}`);
   } catch (err) {
     console.error('Error updating category:', err);
-    req.flash('error', 'Error updating category.');
+    return res.redirect(`${redirectBase}&error=${encodeURIComponent('Error updating category.')}`);
   }
-
-  return res.redirect(redirectBase);
 };
-
 
 const toggleStatus = async (req, res) => {
   const { id } = req.params;
@@ -144,23 +119,70 @@ const toggleStatus = async (req, res) => {
     category.status = (category.status === 'active') ? 'inactive' : 'active';
     await category.save();
 
-    req.flash(
-      'message',
-      category.status === 'active'
-        ? 'Category activated.'
-        : 'Category deactivated.'
-    );
+    const statusMessage = category.status === 'active' ? 'Category activated.' : 'Category deactivated.';
+    return res.redirect(`${redirectBase}&success=${encodeURIComponent(statusMessage)}`);
   } catch (error) {
     console.error('Error toggling category status:', error);
-    req.flash('error', 'Error toggling category status.');
+    return res.redirect(`${redirectBase}&error=${encodeURIComponent('Error toggling category status.')}`);
   }
+};
 
-  return res.redirect(redirectBase);
+const addCategoryOffer = async (req, res) => {
+  const { id } = req.params;
+  const { categoryOffer } = req.body;
+  const redirectBase = `/admin/category?q=${encodeURIComponent(req.query.q || '')}&page=${req.query.page || 1}`;
+
+  try {
+    const discount = parseFloat(categoryOffer);
+
+    if (!categoryOffer || discount < 1 || discount > 100) {
+      return res.redirect(`${redirectBase}&error=${encodeURIComponent('Please enter a valid discount percentage between 1-100.')}`);
+    }
+
+    const updated = await Category.findByIdAndUpdate(
+      id,
+      { categoryOffer: discount },
+      { new: true }
+    );
+
+    if (!updated) {
+      return res.redirect(`${redirectBase}&error=${encodeURIComponent('Category not found.')}`);
+    }
+
+    return res.redirect(`${redirectBase}&success=${encodeURIComponent(`${discount}% offer added to "${updated.categoryName}" successfully.`)}`);
+  } catch (error) {
+    console.error('Error adding category offer:', error);
+    return res.redirect(`${redirectBase}&error=${encodeURIComponent('Error adding offer. Please try again.')}`);
+  }
+};
+
+const removeCategoryOffer = async (req, res) => {
+  const { id } = req.params;
+  const redirectBase = `/admin/category?q=${encodeURIComponent(req.query.q || '')}&page=${req.query.page || 1}`;
+
+  try {
+    const updated = await Category.findByIdAndUpdate(
+      id,
+      { categoryOffer: 0 },
+      { new: true }
+    );
+
+    if (!updated) {
+      return res.redirect(`${redirectBase}&error=${encodeURIComponent('Category not found.')}`);
+    }
+
+    return res.redirect(`${redirectBase}&success=${encodeURIComponent(`Offer removed from "${updated.categoryName}" successfully.`)}`);
+  } catch (error) {
+    console.error('Error removing category offer:', error);
+    return res.redirect(`${redirectBase}&error=${encodeURIComponent('Error removing offer. Please try again.')}`);
+  }
 };
 
 module.exports = {
   categoryInfo,
   addCategory,
   editCategory,
-  toggleStatus
+  toggleStatus,
+  addCategoryOffer,
+  removeCategoryOffer
 };

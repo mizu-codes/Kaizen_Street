@@ -485,72 +485,79 @@
                     <a href="/shop" class="view-more d-none d-md-flex">View More<i
                             class="fi-rs-angle-double-small-right"></i></a>
                 </div>
-                <div class="tab-content wow fadeIn animated" id="myTabContent">
-                    <div class="tab-pane fade show active" id="tab-one" role="tabpanel" aria-labelledby="tab-one">
-                        <div class="row product-grid-4">
-                            <% products.forEach(product=> { %>
-                                <div class="col-lg-3 col-md-4 col-12 col-sm-6">
-                                    <div class="product-cart-wrap mb-xs-30">
-                                        <div class="product-img-action-wrap">
-                                            <div class="product-img product-img-zoom">
-                                                <a href="/products/<%= product._id %>">
-                                                    <img class="default-img" src="<%= product.productImage[0] %>"
-                                                        alt="<%= product.productName %>">
-                                                    <% if (product.productImage[1]) { %>
-                                                        <img class="hover-img" src="<%= product.productImage[1] %>"
-                                                            alt="<%= product.productName %> hover">
-                                                        <% } %>
-                                                </a>
-                                            </div>
-                                            <div class="product-action-1">
-                                                <a href="javascript:void(0);" aria-label="Add To Wishlist"
-                                                    class="action-btn hover-up add-to-wishlist-btn"
-                                                    data-product-id="<%= product._id %>" data-size="M">
-                                                    <i class="fi-rs-heart"></i>
-                                                </a>
-                                            </div>
 
-                                            <% if (product.productOffer> 0) { %>
-                                                <div class="product-badges product-badges-position product-badges-mrg">
-                                                    <span class="<%= product.productOffer >= 30 && product.productOffer <= 50 ? 'hot'
-                     : product.productOffer < 30 ? 'best'
-                     : 'sale' %>">
-                                                        <% if (product.productOffer>= 30 && product.productOffer <= 50)
-                                                                { %>
-                                                                Hot
-                                                                <% } else if (product.productOffer < 30) { %>
-                                                                    Best Sell
-                                                                    <% } else { %>
-                                                                        Sale
-                                                                        <% } %>
-                                                    </span>
-                                                </div>
-                                                <% } %>
-                                        </div>
+               <div class="tab-content wow fadeIn animated" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab-one" role="tabpanel" aria-labelledby="tab-one">
+        <div class="row product-grid-4">
+            <% products.forEach(product=> { %>
+                <div class="col-lg-3 col-md-4 col-12 col-sm-6">
+                    <div class="product-cart-wrap mb-xs-30">
+                        <div class="product-img-action-wrap">
+                            <div class="product-img product-img-zoom">
+                                <a href="/products/<%= product._id %>">
+                                    <img class="default-img" src="<%= product.productImage[0] %>"
+                                        alt="<%= product.productName %>">
+                                    <% if (product.productImage[1]) { %>
+                                        <img class="hover-img" src="<%= product.productImage[1] %>"
+                                            alt="<%= product.productName %> hover">
+                                        <% } %>
+                                </a>
+                            </div>
+                            <div class="product-action-1">
+                                <a href="javascript:void(0);" aria-label="Add To Wishlist"
+                                    class="action-btn hover-up add-to-wishlist-btn"
+                                    data-product-id="<%= product._id %>" data-size="M">
+                                    <i class="fi-rs-heart"></i>
+                                </a>
+                            </div>
 
-                                        <div class="product-content-wrap">
-                                            <div class="product-category">
-                                                <a href="#">
-                                                    <%= product.category?.categoryName || 'Uncategorized' %>
-                                                </a>
-                                            </div>
-                                            <h2>
-                                                <a href="/shop/product/<%= product._id %>">
-                                                    <%= product.productName %>
-                                                </a>
-                                            </h2>
-                                            <div class="product-price">
-                                                <span>₹<%= product.discountPrice %></span>
-                                                <% if (product.discountPrice !==product.regularPrice) { %>
-                                                    <span class="old-price">₹<%= product.regularPrice %></span>
-                                                    <% } %>
-                                            </div>
-                                        </div>
-                                    </div>
+                            <!-- Updated offer badge logic -->
+                            <% if (product.offer && product.offer.hasOffer) { %>
+                                <div class="product-badges product-badges-position product-badges-mrg">
+                                    <span class="<%= product.offer.discountPercentage >= 30 && product.offer.discountPercentage <= 50 ? 'hot'
+                 : product.offer.discountPercentage < 30 ? 'best'
+                 : 'sale' %>">
+                                        <% if (product.offer.discountPercentage >= 30 && product.offer.discountPercentage <= 50) { %>
+                                            Hot
+                                        <% } else if (product.offer.discountPercentage < 30) { %>
+                                            Best Sell
+                                        <% } else { %>
+                                            Sale
+                                        <% } %>
+                                    </span>
                                 </div>
-                                <% }) %>
+                            <% } %>
+                        </div>
+
+                        <div class="product-content-wrap">
+                            <div class="product-category">
+                                <a href="#">
+                                    <%= product.category?.categoryName || 'Uncategorized' %>
+                                </a>
+                            </div>
+                            <h2>
+                                <a href="/shop/product/<%= product._id %>">
+                                    <%= product.productName %>
+                                </a>
+                            </h2>
+                            <!-- Updated pricing logic -->
+                            <div class="product-price">
+                                <% if (product.offer && product.offer.hasOffer) { %>
+                                    <span>₹<%= product.offer.finalPrice %></span>
+                                    <span class="old-price">₹<%= product.offer.originalPrice %></span>
+                                <% } else { %>
+                                    <span>₹<%= product.regularPrice %></span>
+                                    <% if (product.discountPrice !== product.regularPrice) { %>
+                                        <span class="old-price">₹<%= product.regularPrice %></span>
+                                    <% } %>
+                                <% } %>
+                            </div>
                         </div>
                     </div>
+                </div>
+            <% }) %>
+        </div>
+    </div>
 
                     <div class="tab-pane fade" id="tab-three" role="tabpanel" aria-labelledby="tab-three">
                         <div class="row product-grid-4">

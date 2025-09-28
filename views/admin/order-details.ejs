@@ -10,22 +10,86 @@
   <link href="/assets2/css/main.css" rel="stylesheet" type="text/css" />
 
   <style>
-   
-    .item-status-info {
-  margin-top: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
+    .item-pricing-info {
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      background-color: #f8f9fa;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
 
-.item-status-badge {
-  font-size: 12px;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-weight: 500;
-  display: inline-block;
-  width: fit-content;
-}
+    .original-item-price {
+      color: #999;
+      text-decoration: line-through;
+    }
+
+    .paid-item-price {
+      color: #28a745;
+      font-weight: 600;
+    }
+
+    .item-price .price-breakdown .original-price {
+      text-decoration: line-through;
+      color: #999;
+      font-size: 0.9em;
+    }
+
+    .item-price .price-breakdown .customer-paid {
+      color: #28a745;
+      font-weight: 600;
+      font-size: 1.1em;
+    }
+
+    .discount-applied {
+      color: #28a745;
+      font-weight: 500;
+    }
+
+    .savings-highlight {
+      text-align: center;
+      color: #28a745;
+      font-weight: 500;
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      background-color: #f8f9fa;
+      border-radius: 4px;
+      border-left: 3px solid #6c63ff;
+    }
+
+    .return-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .item-pricing-info {
+        font-size: 0.8em;
+        padding: 0.4rem;
+      }
+
+      .return-actions {
+        flex-direction: column;
+        gap: 0.3rem;
+      }
+    }
+
+    .item-status-info {
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .item-status-badge {
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-weight: 500;
+      display: inline-block;
+      width: fit-content;
+    }
+
     .content-header-right {
       margin-top: 1.5rem;
       display: flex;
@@ -198,7 +262,7 @@
       display: inline-block;
       margin-left: 1rem;
     }
-    
+
     .return-requested {
       background-color: #fff3cd;
       color: #856404;
@@ -213,7 +277,7 @@
       background-color: #f8d7da;
       color: #721c24;
     }
-    
+
     .return-badge {
       background-color: #e9ecef;
       color: #495057;
@@ -337,7 +401,7 @@
     .btn-secondary:hover {
       background: #5a5f7d;
     }
-    
+
     @media (max-width: 768px) {
       .order-details-grid {
         grid-template-columns: 1fr;
@@ -398,7 +462,7 @@
 </head>
 
 <body>
-  
+
   <aside class="navbar-aside" id="offcanvas_aside">
     <div class="aside-top">
       <a href="/admin" class="brand-wrap">
@@ -442,18 +506,24 @@
             <span class="text">Orders</span>
           </a>
         </li>
-         <li class="menu-item">
+        <li class="menu-item">
           <a class="menu-link" href="/admin/transactions">
             <i class="icon material-icons md-account_balance_wallet"></i>
             <span class="text">Transactions</span>
           </a>
         </li>
-         <li class="menu-item">
+        <li class="menu-item ">
           <a class="menu-link" href="/admin/coupons">
-            <i class="icon material-icons md-account_balance_wallet"></i>
+            <i class="icon material-icons md-local_offer"></i>
             <span class="text">Coupons</span>
           </a>
         </li>
+         <li class="menu-item">
+          <a class="menu-link" href="/admin/sales-report">
+            <i class="icon material-icons md-assessment"></i>
+            <span class="text">Sales Report</span>
+          </a>
+          </li>
       </ul>
     </nav>
   </aside>
@@ -461,288 +531,311 @@
   <main class="main-wrap">
     <% const _msg=typeof message !=='undefined' ? message : '' ; %>
 
-    <header class="main-header navbar">
-      <div class="col-search">
-      </div>
-      <div class="col-nav">
-        <ul class="nav">
-          <li class="dropdown nav-item">
-            <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount">
-              <img class="img-xs rounded-circle" src="/assets2/imgs/people/avatar2.jpg" alt="Admin">
-            </a>
-            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-              <a class="dropdown-item text-danger" href="/admin/logout">
-                <i class="material-icons md-exit_to_app"></i>Logout
+      <header class="main-header navbar">
+        <div class="col-search">
+        </div>
+        <div class="col-nav">
+          <ul class="nav">
+            <li class="dropdown nav-item">
+              <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount">
+                <img class="img-xs rounded-circle" src="/assets2/imgs/people/avatar2.jpg" alt="Admin">
               </a>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </header>
-
- <section class="content-main">
-  <div class="content-header d-flex justify-content-between align-items-center mb-4">
-    <div>
-      <h2 class="content-title card-title">Order Details</h2>
-    </div>
-  </div>
-
-  <% if (_msg) { %>
-  <div class="alert alert-warning mb-4">
-    <%= _msg %>
-  </div>
-  <% } %>
-
-  <% if (order) { %>
-
-  <div class="order-details-grid">
-    <div class="left-column">
-      <div class="order-summary-card">
-        <div class="card-header">
-          <i class="material-icons" style="vertical-align: middle; margin-right: 0.5rem;"></i>
-          Order Items
-        </div>
-        <div class="card-body">
-          <div class="items-section">
-            <% if (order.items && order.items.length> 0) { %>
-            <% order.items.forEach((item, index)=> { %>
-            <% 
-              const itemStatus = item.status || order.status;
-              const itemStatusLower = itemStatus.toLowerCase();
-            %>
-            <div class="item-card">
-              <img src="<%= item.image || '/imgs/placeholder.jpg' %>" alt="<%= item.name %>" class="item-image" onerror="this.src='/imgs/placeholder.jpg'">
-
-              <div class="item-details">
-                <div class="item-name">
-                  <%= item.name %>
-                </div>
-                <div class="item-specs">
-                  Qty: <%= item.quantity %> | Size: <%= item.size || 'Standard' %> | Unit Price: ₹<%= item.price %>
-                </div>
-       
-              <div class="item-status-info">
-  <div class="status-badges-inline">
-    <span class="item-status-badge status-<%= itemStatusLower.replace(/\s+/g, '-') %>">
-      <%= itemStatus %>
-    </span>
-    
-    <% if (item.returnRequest && item.returnRequest.status) { %>
-      <% const rs = String(item.returnRequest.status).toLowerCase(); %>
-      <% if (rs === 'requested') { %>
-        <span class="return-requested return-<%= rs %>">
-          Return Requested
-        </span>
-      <% } else if (rs === 'refunded') { %>
-        <span class="return-accepted return-<%= rs %>">
-          Refunded
-        </span>
-      <% } else if (rs === 'rejected') { %>
-        <span class="return-rejected return-<%= rs %>">
-          Rejected
-        </span>
-      <% } %>
-    <% } %>
-  </div>
-  
-  <div class="status-details">
-    <% if (item.returnRequest && item.returnRequest.reason) { %>
-      <small class="return-reason">Reason: <%= item.returnRequest.reason %></small>
-    <% } %>
-    
-    <% if (item.returnRequest && item.returnRequest.adminNote) { %>
-      <small class="admin-note">Admin Note: <%= item.returnRequest.adminNote %></small>
-    <% } %>
-    
-    <% if (itemStatusLower === 'cancelled' && item.cancellationReason) { %>
-      <small class="cancellation-reason">
-        Reason: <%= item.cancellationReason %>
-      </small>
-    <% } %>
-  </div>
-</div>
+              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                <a class="dropdown-item text-danger" href="/admin/logout">
+                  <i class="material-icons md-exit_to_app"></i>Logout
+                </a>
               </div>
+            </li>
+          </ul>
+        </div>
+      </header>
 
-              <div class="item-actions">
-                <div class="item-price">₹<%= item.subtotal || (item.price * item.quantity) %></div>
-                
-                <div class="item-action-buttons">
-                  <% if (item.returnRequest && item.returnRequest.status === 'requested') { %>
-                    <div class="return-actions">
-                      <button class="btn btn-sm btn-success" onclick="handleReturnRequest('<%= order._id %>', '<%= item._id %>', 'approve')">
-                        Approve
-                      </button>
-                      <button class="btn btn-sm btn-danger" onclick="handleReturnRequest('<%= order._id %>', '<%= item._id %>', 'reject')">
-                        Reject
-                      </button>
+      <section class="content-main">
+        <div class="content-header d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <h2 class="content-title card-title">Order Details</h2>
+          </div>
+        </div>
+
+        <% if (_msg) { %>
+          <div class="alert alert-warning mb-4">
+            <%= _msg %>
+          </div>
+          <% } %>
+
+            <% if (order) { %>
+
+              <div class="order-details-grid">
+                <div class="left-column">
+                  <div class="order-summary-card">
+                    <div class="card-header">
+                      <i class="material-icons" style="vertical-align: middle; margin-right: 0.5rem;"></i>
+                      Order Items
                     </div>
-                  <% } %>
+                    <div class="card-body">
+                      <div class="items-section">
+                        <% if (order.items && order.items.length> 0) { %>
+                          <% order.items.forEach((item, index)=> { %>
+                            <% const itemStatus=item.status || order.status; const
+                              itemStatusLower=itemStatus.toLowerCase(); const orderDiscount=order.discount || 0; %>
+                              <div class="item-card">
+                                <img src="<%= item.image || '/imgs/placeholder.jpg' %>" alt="<%= item.name %>"
+                                  class="item-image" onerror="this.src='/imgs/placeholder.jpg'">
+
+                                <div class="item-details">
+                                  <div class="item-name">
+                                    <%= item.name %>
+                                  </div>
+                                  <div class="item-specs">
+                                    Qty: <%= item.quantity %> | Size: <%= item.size || 'Standard' %> | Unit Price: ₹<%=
+                                          item.price %>
+                                  </div>
+
+                                  <% if (orderDiscount> 0) { %>
+                                    <div class="item-pricing-info">
+                                      <div class="original-item-price">Original: ₹<%= item.itemOriginalSubtotal %>
+                                      </div>
+                                      <div class="paid-item-price">Customer Paid: ₹<%= item.itemActualPaid %>
+                                      </div>
+                                    </div>
+                                    <% } %>
+
+                                      <div class="item-status-info">
+                                        <div class="status-badges-inline">
+                                          <span
+                                            class="item-status-badge status-<%= itemStatusLower.replace(/\s+/g, '-') %>">
+                                            <%= itemStatus %>
+                                          </span>
+
+                                          <% if (item.returnRequest && item.returnRequest.status) { %>
+                                            <% const rs=String(item.returnRequest.status).toLowerCase(); %>
+                                              <% if (rs==='requested' ) { %>
+                                                <span class="return-requested return-<%= rs %>">
+                                                  Return Requested
+                                                </span>
+                                                <% } else if (rs==='refunded' ) { %>
+                                                  <span class="return-accepted return-<%= rs %>">
+                                                    Refunded
+                                                  </span>
+                                                  <% } else if (rs==='rejected' ) { %>
+                                                    <span class="return-rejected return-<%= rs %>">
+                                                      Rejected
+                                                    </span>
+                                                    <% } %>
+                                                      <% } %>
+                                        </div>
+
+                                        <div class="status-details">
+                                          <% if (item.returnRequest && item.returnRequest.reason) { %>
+                                            <small class="return-reason">Reason: <%= item.returnRequest.reason %>
+                                                </small>
+                                            <% } %>
+
+                                              <% if (item.returnRequest && item.returnRequest.adminNote) { %>
+                                                <small class="admin-note">Admin Note: <%= item.returnRequest.adminNote
+                                                    %></small>
+                                                <% } %>
+
+                                                  <% if (itemStatusLower==='cancelled' && item.cancellationReason) { %>
+                                                    <small class="cancellation-reason">
+                                                      Reason: <%= item.cancellationReason %>
+                                                    </small>
+                                                    <% } %>
+                                        </div>
+                                      </div>
+                                </div>
+
+                                <div class="item-actions">
+
+
+                                  <div class="item-action-buttons">
+                                    <% if (item.returnRequest && item.returnRequest.status==='requested' ) { %>
+                                      <div class="return-actions">
+                                        <button class="btn btn-sm btn-success"
+                                          onclick="handleReturnRequest('<%= order._id %>', '<%= item._id %>', 'approve')">
+                                          Approve
+                                        </button>
+                                        <button class="btn btn-sm btn-danger"
+                                          onclick="handleReturnRequest('<%= order._id %>', '<%= item._id %>', 'reject')">
+                                          Reject
+                                        </button>
+                                      </div>
+                                      <% } %>
+                                  </div>
+                                </div>
+                              </div>
+                              <% }); %>
+                                <% } else { %>
+                                  <p class="text-center text-muted">No items found in this order.</p>
+                                  <% } %>
+                      </div>
+
+                      <div class="customer-info">
+                        <div class="customer-name">
+                          <strong>Name:</strong>
+                          <%= order.user?.name || 'Customer' %>
+                        </div>
+                        <div class="customer-email">
+                          <%= order.user?.email || 'No email provided' %>
+                        </div>
+
+                        <div class="card-body">
+                          <div class="info-row">
+                            <span class="info-label">Order ID:</span>
+                            <span class="info-value">#<%=
+                                order.displayOrderId||order._id.toString().slice(-8).toUpperCase() %></span>
+                          </div>
+                          <div class="info-row">
+                            <span class="info-label">Order Date:</span>
+                            <span class="info-value">
+                              <% if (order.placedAt || order.createdAt) { %>
+                                <%= new Date(order.placedAt || order.createdAt).toLocaleString('en-US', {
+                                  weekday: 'short' , year: 'numeric' , month: 'short' , day: '2-digit' , hour: '2-digit'
+                                  , minute: '2-digit' }) %>
+                                  <% } else { %>
+                                    Recently
+                                    <% } %>
+                            </span>
+                          </div>
+
+                          <div class="info-row">
+                            <span class="info-label">Payment Method:</span>
+                            <span class="info-value">
+                              <%= order.paymentMethod || 'Card' %>
+                            </span>
+                          </div>
+                          <div class="info-row">
+                            <span class="info-label">Total Items:</span>
+                            <span class="info-value">
+                              <%= order.items?.length || 0 %>
+                            </span>
+                          </div>
+                          <div class="info-row">
+                            <span class="info-label">Overall Order Status:</span>
+                            <span class="info-value">
+                              <span class="status-wrapper">
+                                <span
+                                  class="status-badge status-<%= order.status.toLowerCase().replace(/\s+/g, '-') %>">
+                                  <% if (order.status && order.status.toLowerCase()==='delivered' ) { %>
+                                    <svg class="badge-check" viewBox="0 0 24 24" width="16" height="16"
+                                      aria-hidden="true">
+                                      <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                                    </svg>
+                                    <% } %>
+                                      <%= order.status %>
+                                </span>
+
+                                <% const items=order.items || []; const statusSummary={}; items.forEach(item=> {
+                                  const status = item.status || order.status;
+                                  statusSummary[status] = (statusSummary[status] || 0) + 1;
+                                  });
+                                  const hasMultipleStatuses = Object.keys(statusSummary).length > 1;
+                                  %>
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="price-breakdown">
+                        <% const orderDiscount=order.discount || 0; %>
+                          <div class="price-row">
+                            <span>Subtotal:</span>
+                            <span>₹<%= order.originalTotal || (order.items && order.items.length> 0 ?
+                                order.items.reduce((sum, item) => sum + (item.subtotal || (item.price * item.quantity)),
+                                0) : 0) %></span>
+                          </div>
+                          <div class="price-row">
+                            <span>Shipping Charges:</span>
+                            <span>₹<%= order.shippingCost || 0 %></span>
+                          </div>
+                          <div class="price-row discount-applied">
+                            <span>Discount Applied:</span>
+                            <span>-₹<%= orderDiscount %></span>
+                          </div>
+                          <div class="price-row total-row">
+                            <span><strong>Customer Paid:</strong></span>
+                            <span><strong>₹<%= order.actualAmountPaid || order.totalAmount || 0 %></strong></span>
+                          </div>
+                          <% if (orderDiscount> 0) { %>
+                            <div class="savings-highlight">
+                              <small>Customer saved ₹<%= orderDiscount %> with coupon!</small>
+                            </div>
+                            <% } %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="right-column">
+                  <div class="address-card">
+                    <div class="card-header">
+                      <i class="material-icons" style="vertical-align: middle; margin-right: 0.5rem;"></i>
+                      Shipping Address
+                    </div>
+                    <div class="address-content">
+                      <% const a=order.address; %>
+                        <% if (a) { %>
+                          <p><strong>
+                              <%= a.userName || 'Customer' %>
+                            </strong></p>
+                          <p>
+                            <%= a.houseNo || '' %>, <%= a.locality || '' %>
+                          </p>
+                          <p>
+                            <%= a.city %> - <%= a.pincode %>
+                          </p>
+                          <% if (a.phoneNumber) { %>
+                            <p><strong>Phone:</strong> +91 <%= a.phoneNumber %>
+                            </p>
+                            <% } %>
+                              <% } else { %>
+                                <p>Address details not available</p>
+                                <% } %>
+                    </div>
+                  </div>
+
+                  <div class="content-header-right">
+                    <button class="btn btn-update" onclick="updateOrderStatus()">
+                      <i class="material-icons md-edit"></i>
+                      Update Overall Status
+                    </button>
+                  </div>
+
+                  <div class="d-flex align-items-center">
+                    <a href="/admin/orders" class="btn-back">
+                      <i class="material-icons md-arrow_back"></i>
+                      Back to Orders
+                    </a>
+                  </div>
                 </div>
               </div>
-            </div>
-            <% }); %>
-            <% } else { %>
-            <p class="text-center text-muted">No items found in this order.</p>
-            <% } %>
-          </div>
 
-          <div class="customer-info">
-            <div class="customer-name">
-              <strong>Name:</strong>
-              <%= order.user?.name || 'Customer' %>
-            </div>
-            <div class="customer-email">
-              <%= order.user?.email || 'No email provided' %>
-            </div>
+              <% } else { %>
+                <div class="card mb-4">
+                  <div class="card-body text-center py-5">
+                    <i class="material-icons"
+                      style="font-size: 4rem; color: #dc3545; margin-bottom: 1rem;">error_outline</i>
+                    <h3 class="mb-3">Order Not Found</h3>
+                    <p class="text-muted mb-4">The order you're looking for doesn't exist or has been removed.</p>
+                    <a href="/admin/orders" class="btn btn-add">
+                      <i class="material-icons md-arrow_back"></i>
+                      Back to Orders
+                    </a>
+                  </div>
+                </div>
+                <% } %>
+      </section>
 
-            <div class="card-body">
-              <div class="info-row">
-                <span class="info-label">Order ID:</span>
-                <span class="info-value">#<%= order.displayOrderId||order._id.toString().slice(-8).toUpperCase() %></span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">Order Date:</span>
-                <span class="info-value">
-                  <% if (order.placedAt || order.createdAt) { %>
-                  <%= new Date(order.placedAt || order.createdAt).toLocaleString('en-US', {
-                              weekday: 'short' , year: 'numeric' , month: 'short' , day: '2-digit' , hour: '2-digit'
-                              , minute: '2-digit' }) %>
-                  <% } else { %>
-                  Recently
-                  <% } %>
-                </span>
-              </div>
 
-              <div class="info-row">
-                <span class="info-label">Payment Method:</span>
-                <span class="info-value">
-                  <%= order.paymentMethod || 'Card' %>
-                </span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">Total Items:</span>
-                <span class="info-value">
-                  <%= order.items?.length || 0 %>
-                </span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">Overall Order Status:</span>
-                <span class="info-value">
-                  <span class="status-wrapper">
-                    <span class="status-badge status-<%= order.status.toLowerCase().replace(/\s+/g, '-') %>">
-                      <% if (order.status && order.status.toLowerCase() === 'delivered') { %>
-                      <svg class="badge-check" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
-                        <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-                      </svg>
-                      <% } %>
-                      <%= order.status %>
-                    </span>
-                 
-                    <% 
-                      const items = order.items || [];
-                      const statusSummary = {};
-                      items.forEach(item => {
-                        const status = item.status || order.status;
-                        statusSummary[status] = (statusSummary[status] || 0) + 1;
-                      });
-                      const hasMultipleStatuses = Object.keys(statusSummary).length > 1;
-                    %>
-                  </span>
-                </span>
-              </div>
-            </div>
-          </div>
-          
-          <div class="price-breakdown">
-            <div class="price-row">
-              <span>Subtotal:</span>
-              <span>₹<%= order.items && order.items.length> 0 ? order.items.reduce((sum, item) => sum +
-                          (item.subtotal || (item.price * item.quantity)), 0) : 0 %></span>
-            </div>
-            <div class="price-row">
-              <span>Shipping Charges:</span>
-              <span>₹<%= order.shippingCost || 0 %></span>
-            </div>
-            <div class="price-row">
-              <span>Discount Applied:</span>
-              <span>-₹<%= order.discount || 0 %></span>
-            </div>
-            <div class="price-row total-row">
-              <span><strong>Total Amount:</strong></span>
-              <span><strong>₹<%= order.totalAmount || 0 %></strong></span>
-            </div>
-          </div>
+      <footer class="main-footer font-xs text-center py-3">
+        <div>&copy;
+          <script>
+            document.write(new Date().getFullYear())
+          </script> Kaizen Street. All rights reserved.
         </div>
-      </div>
-    </div>
-
-    <div class="right-column">
-      <div class="address-card">
-        <div class="card-header">
-          <i class="material-icons" style="vertical-align: middle; margin-right: 0.5rem;"></i>
-          Shipping Address
-        </div>
-        <div class="address-content">
-          <% const a=order.address; %>
-          <% if (a) { %>
-          <p><strong>
-              <%= a.userName || 'Customer' %>
-            </strong></p>
-          <p>
-            <%= a.houseNo || '' %>, <%= a.locality || '' %>
-          </p>
-          <p>
-            <%= a.city %> - <%= a.pincode %>
-          </p>
-          <% if (a.phoneNumber) { %>
-          <p><strong>Phone:</strong> +91 <%= a.phoneNumber %>
-          </p>
-          <% } %>
-          <% } else { %>
-          <p>Address details not available</p>
-          <% } %>
-        </div>
-      </div>
-      
-      <div class="content-header-right">
-        <button class="btn btn-update" onclick="updateOrderStatus()">
-          <i class="material-icons md-edit"></i>
-          Update Overall Status
-        </button>
-      </div>
-      
-      <div class="d-flex align-items-center">
-        <a href="/admin/orders" class="btn-back">
-          <i class="material-icons md-arrow_back"></i>
-          Back to Orders
-        </a>
-      </div>
-    </div>
-  </div>
-
-  <% } else { %>
-  <div class="card mb-4">
-    <div class="card-body text-center py-5">
-      <i class="material-icons" style="font-size: 4rem; color: #dc3545; margin-bottom: 1rem;">error_outline</i>
-      <h3 class="mb-3">Order Not Found</h3>
-      <p class="text-muted mb-4">The order you're looking for doesn't exist or has been removed.</p>
-      <a href="/admin/orders" class="btn btn-add">
-        <i class="material-icons md-arrow_back"></i>
-        Back to Orders
-      </a>
-    </div>
-  </div>
-  <% } %>
-</section>
-
-
-    <footer class="main-footer font-xs text-center py-3">
-      <div>&copy;
-        <script>
-          document.write(new Date().getFullYear())
-        </script> Kaizen Street. All rights reserved.
-      </div>
-    </footer>
+      </footer>
   </main>
 
   <script src="/assets2/js/vendors/jquery-3.6.0.min.js"></script>
@@ -750,334 +843,334 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <script>
-  async function handleReturnRequest(orderId, itemId, action) {
-    console.log('handleReturnRequest called with:', { orderId, itemId, action });
-    
-    if (!orderId || !itemId) {
-      Swal.fire('Error', 'Missing order or item information', 'error');
-      return;
-    }
- 
-    const actionText = action === 'approve' ? 'approve' : 'reject';
-    const confirmResult = await Swal.fire({
-      title: `Confirm ${actionText}`,
-      text: `Are you sure you want to ${actionText} this return request?`,
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: `Yes, ${actionText}`,
-      cancelButtonText: 'Cancel',
-      confirmButtonColor: action === 'approve' ? '#28a745' : '#dc3545',
-      cancelButtonColor: '#6c757d'
-    });
+    async function handleReturnRequest(orderId, itemId, action) {
+      console.log('handleReturnRequest called with:', { orderId, itemId, action });
 
-    if (!confirmResult.isConfirmed) {
-      return;
-    }
-
-    Swal.fire({
-      title: 'Processing...',
-      text: 'Please wait while we update the return status.',
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-      showConfirmButton: false,
-      didOpen: () => {
-        Swal.showLoading();
+      if (!orderId || !itemId) {
+        Swal.fire('Error', 'Missing order or item information', 'error');
+        return;
       }
-    });
 
-    try {
-      console.log('Making request to:', `/admin/returns/${orderId}/${itemId}`);
-      console.log('With action:', action);
-
-      const resp = await fetch(`/admin/returns/${orderId}/${itemId}`, {
-        method: 'PATCH',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          action: action,
-          adminNote: ''
-        })
+      const actionText = action === 'approve' ? 'approve' : 'reject';
+      const confirmResult = await Swal.fire({
+        title: `Confirm ${actionText}`,
+        text: `Are you sure you want to ${actionText} this return request?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: `Yes, ${actionText}`,
+        cancelButtonText: 'Cancel',
+        confirmButtonColor: action === 'approve' ? '#28a745' : '#dc3545',
+        cancelButtonColor: '#6c757d'
       });
 
-      console.log('Response status:', resp.status);
-
-      const responseText = await resp.text();
-      console.log('Response text:', responseText);
-
-      let data;
-      try {
-        data = JSON.parse(responseText);
-      } catch (parseError) {
-        console.error('Failed to parse response as JSON:', parseError);
-        throw new Error(`Server returned invalid response: ${responseText}`);
+      if (!confirmResult.isConfirmed) {
+        return;
       }
-
-      if (!resp.ok) {
-        const errorMessage = data?.message || `HTTP ${resp.status}: ${resp.statusText}`;
-        throw new Error(errorMessage);
-      }
-   
-      Swal.fire({
-        title: 'Success!',
-        text: data.message || `Return request ${action}d successfully.`,
-        icon: 'success',
-        confirmButtonText: 'OK'
-      }).then(() => {
-        location.reload();
-      });
-
-    } catch (err) {
-      console.error('Error in handleReturnRequest:', err);
 
       Swal.fire({
-        title: 'Error',
-        text: err.message || 'Failed to update return status',
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
-    }
-  }
-
-  function updateStatusUI(newStatus) {
-    const badge = document.getElementById('order-status-badge') || document.querySelector('.info-value .status-badge');
-
-    if (!badge) return;
-
-    const safe = (s) => String(s).toLowerCase().replace(/\s+/g, '-');
-
-    badge.className = badge.className
-      .split(/\s+/)
-      .filter(c => !c.startsWith('status-'))
-      .join(' ');
-
-    badge.classList.add('status-' + safe(newStatus));
-    badge.textContent = newStatus;
-  }
-
-  async function updateOrderStatus() {
-    const currentStatus = '<%= order ? order.status : "Placed" %>';
-    const orderId = '<%= order ? order._id : "" %>';
-
-    if (!orderId) {
-      return Swal.fire('Error', 'Order ID not found', 'error');
-    }
-
-    const statusOptions = {
-      'Placed': 'Order Placed',
-      'Processing': 'Processing',
-      'Shipped': 'Shipped',
-      'Out for Delivery': 'Out for Delivery',
-      'Delivered': 'Delivered',
-      'Cancelled': 'Cancelled'
-    };
-
-    const {
-      value: selected
-    } = await Swal.fire({
-      title: 'Update Order Status',
-      input: 'select',
-      inputOptions: statusOptions,
-      inputValue: currentStatus,
-      showCancelButton: true,
-      confirmButtonText: 'Update Status',
-      confirmButtonColor: '#6c63ff',
-      inputValidator: (value) => !value && 'You need to select a status!'
-    });
-
-    if (!selected) return;
-
-    Swal.fire({
-      title: 'Updating...',
-      allowOutsideClick: false,
-      didOpen: () => Swal.showLoading()
-    });
-
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000);
-
-    try {
-      const resp = await fetch(`/admin/orders/${orderId}/status`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          status: selected
-        }),
-        signal: controller.signal
-      });
-
-      clearTimeout(timeoutId);
-
-      let body = null;
-      try {
-        body = await resp.json();
-      } catch (e) {
-        body = null;
-      }
-
-      if (!resp.ok) {
-        const msg = body?.message || body?.error || `HTTP ${resp.status}`;
-        throw new Error(msg);
-      }
-
-      updateStatusUI(selected);
-
-      await Swal.fire({
-        title: 'Success',
-        text: 'Order status updated successfully',
-        icon: 'success',
-        confirmButtonColor: '#6c63ff'
-      });
-
-    } catch (err) {
-      const message = err.name === 'AbortError' ? 'Request timed out' : (err.message || 'Something went wrong');
-      console.error('Status update error:', err);
-      Swal.fire('Error', message, 'error');
-    } finally {
-      try {
-        Swal.close();
-      } catch (e) {}
-    }
-  }
-
-  (function setupPolling() {
-    if (!('<%= order ? order._id : "" %>')) return;
-    const orderId = '<%= order._id %>';
-    let lastStatus = '<%= order.status %>';
-    const pollIntervalMs = 30000;
-    let pollTimer = null;
-
-    async function poll() {
-      try {
-        const res = await fetch(`/admin/orders/${orderId}/status`);
-        if (!res.ok) return;
-        const json = await res.json().catch(() => null);
-        if (!json || !json.status) return;
-        if (json.status !== lastStatus) {
-          lastStatus = json.status;
-          updateStatusUI(lastStatus);
+        title: 'Processing...',
+        text: 'Please wait while we update the return status.',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        showConfirmButton: false,
+        didOpen: () => {
+          Swal.showLoading();
         }
-      } catch (e) {}
-    }
+      });
 
-    pollTimer = setInterval(poll, pollIntervalMs);
+      try {
+        console.log('Making request to:', `/admin/returns/${orderId}/${itemId}`);
+        console.log('With action:', action);
 
-    window.addEventListener('beforeunload', () => {
-      if (pollTimer) clearInterval(pollTimer);
-    });
+        const resp = await fetch(`/admin/returns/${orderId}/${itemId}`, {
+          method: 'PATCH',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action: action,
+            adminNote: ''
+          })
+        });
 
-    setTimeout(poll, 2000);
-  })();
+        console.log('Response status:', resp.status);
 
-  document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.return-info').forEach(icon => {
-      icon.addEventListener('click', async () => {
-        const orderId = icon.getAttribute('data-order-id');
-        const itemId = icon.getAttribute('data-item-id');
-        const productName = icon.getAttribute('data-product') || 'Unknown Product';
-        const reason = icon.getAttribute('data-reason') || 'No reason provided';
+        const responseText = await resp.text();
+        console.log('Response text:', responseText);
 
-        if (!orderId || !itemId) {
-          Swal.fire('Error', 'Missing order or item information', 'error');
-          return;
+        let data;
+        try {
+          data = JSON.parse(responseText);
+        } catch (parseError) {
+          console.error('Failed to parse response as JSON:', parseError);
+          throw new Error(`Server returned invalid response: ${responseText}`);
         }
 
-        const result = await Swal.fire({
-          title: 'Return Request',
-          html: `
+        if (!resp.ok) {
+          const errorMessage = data?.message || `HTTP ${resp.status}: ${resp.statusText}`;
+          throw new Error(errorMessage);
+        }
+
+        Swal.fire({
+          title: 'Success!',
+          text: data.message || `Return request ${action}d successfully.`,
+          icon: 'success',
+          confirmButtonText: 'OK'
+        }).then(() => {
+          location.reload();
+        });
+
+      } catch (err) {
+        console.error('Error in handleReturnRequest:', err);
+
+        Swal.fire({
+          title: 'Error',
+          text: err.message || 'Failed to update return status',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+      }
+    }
+
+    function updateStatusUI(newStatus) {
+      const badge = document.getElementById('order-status-badge') || document.querySelector('.info-value .status-badge');
+
+      if (!badge) return;
+
+      const safe = (s) => String(s).toLowerCase().replace(/\s+/g, '-');
+
+      badge.className = badge.className
+        .split(/\s+/)
+        .filter(c => !c.startsWith('status-'))
+        .join(' ');
+
+      badge.classList.add('status-' + safe(newStatus));
+      badge.textContent = newStatus;
+    }
+
+    async function updateOrderStatus() {
+      const currentStatus = '<%= order ? order.status : "Placed" %>';
+      const orderId = '<%= order ? order._id : "" %>';
+
+      if (!orderId) {
+        return Swal.fire('Error', 'Order ID not found', 'error');
+      }
+
+      const statusOptions = {
+        'Placed': 'Order Placed',
+        'Processing': 'Processing',
+        'Shipped': 'Shipped',
+        'Out for Delivery': 'Out for Delivery',
+        'Delivered': 'Delivered',
+        'Cancelled': 'Cancelled'
+      };
+
+      const {
+        value: selected
+      } = await Swal.fire({
+        title: 'Update Order Status',
+        input: 'select',
+        inputOptions: statusOptions,
+        inputValue: currentStatus,
+        showCancelButton: true,
+        confirmButtonText: 'Update Status',
+        confirmButtonColor: '#6c63ff',
+        inputValidator: (value) => !value && 'You need to select a status!'
+      });
+
+      if (!selected) return;
+
+      Swal.fire({
+        title: 'Updating...',
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading()
+      });
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+      try {
+        const resp = await fetch(`/admin/orders/${orderId}/status`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            status: selected
+          }),
+          signal: controller.signal
+        });
+
+        clearTimeout(timeoutId);
+
+        let body = null;
+        try {
+          body = await resp.json();
+        } catch (e) {
+          body = null;
+        }
+
+        if (!resp.ok) {
+          const msg = body?.message || body?.error || `HTTP ${resp.status}`;
+          throw new Error(msg);
+        }
+
+        updateStatusUI(selected);
+
+        await Swal.fire({
+          title: 'Success',
+          text: 'Order status updated successfully',
+          icon: 'success',
+          confirmButtonColor: '#6c63ff'
+        });
+
+      } catch (err) {
+        const message = err.name === 'AbortError' ? 'Request timed out' : (err.message || 'Something went wrong');
+        console.error('Status update error:', err);
+        Swal.fire('Error', message, 'error');
+      } finally {
+        try {
+          Swal.close();
+        } catch (e) { }
+      }
+    }
+
+    (function setupPolling() {
+      if (!('<%= order ? order._id : "" %>')) return;
+      const orderId = '<%= order._id %>';
+      let lastStatus = '<%= order.status %>';
+      const pollIntervalMs = 30000;
+      let pollTimer = null;
+
+      async function poll() {
+        try {
+          const res = await fetch(`/admin/orders/${orderId}/status`);
+          if (!res.ok) return;
+          const json = await res.json().catch(() => null);
+          if (!json || !json.status) return;
+          if (json.status !== lastStatus) {
+            lastStatus = json.status;
+            updateStatusUI(lastStatus);
+          }
+        } catch (e) { }
+      }
+
+      pollTimer = setInterval(poll, pollIntervalMs);
+
+      window.addEventListener('beforeunload', () => {
+        if (pollTimer) clearInterval(pollTimer);
+      });
+
+      setTimeout(poll, 2000);
+    })();
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.return-info').forEach(icon => {
+        icon.addEventListener('click', async () => {
+          const orderId = icon.getAttribute('data-order-id');
+          const itemId = icon.getAttribute('data-item-id');
+          const productName = icon.getAttribute('data-product') || 'Unknown Product';
+          const reason = icon.getAttribute('data-reason') || 'No reason provided';
+
+          if (!orderId || !itemId) {
+            Swal.fire('Error', 'Missing order or item information', 'error');
+            return;
+          }
+
+          const result = await Swal.fire({
+            title: 'Return Request',
+            html: `
         <p><strong>Product:</strong> ${productName}</p>
         <p><strong>Reason:</strong> ${reason}</p>
         <p style="color: #666; font-size: 0.9em;">Order ID: ${orderId}</p>
         <p style="color: #666; font-size: 0.9em;">Item ID: ${itemId}</p>
       `,
-          icon: 'info',
-          showCancelButton: true,
-          confirmButtonText: 'Approve',
-          cancelButtonText: 'Reject',
-          confirmButtonColor: '#28a745',
-          cancelButtonColor: '#dc3545',
-          reverseButtons: true
-        });
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Approve',
+            cancelButtonText: 'Reject',
+            confirmButtonColor: '#28a745',
+            cancelButtonColor: '#dc3545',
+            reverseButtons: true
+          });
 
-        if (result.isConfirmed) {
-          await handleReturnDecision(orderId, itemId, 'accepted');
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-          await handleReturnDecision(orderId, itemId, 'rejected');
+          if (result.isConfirmed) {
+            await handleReturnDecision(orderId, itemId, 'accepted');
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            await handleReturnDecision(orderId, itemId, 'rejected');
+          }
+        });
+      });
+    });
+
+    async function handleReturnDecision(orderId, itemId, action) {
+      Swal.fire({
+        title: 'Processing...',
+        text: 'Please wait while we update the return status.',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        showConfirmButton: false,
+        didOpen: () => {
+          Swal.showLoading();
         }
       });
-    });
-  });
 
-  async function handleReturnDecision(orderId, itemId, action) {
-    Swal.fire({
-      title: 'Processing...',
-      text: 'Please wait while we update the return status.',
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-      showConfirmButton: false,
-      didOpen: () => {
-        Swal.showLoading();
-      }
-    });
-
-    try {
-      console.log('Making request to:', `/admin/returns/${orderId}/${itemId}`);
-      console.log('With action:', action);
-
-      const resp = await fetch(`/admin/returns/${orderId}/${itemId}`, {
-        method: 'PATCH',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          action,
-          adminNote: ''
-        })
-      });
-
-      console.log('Response status:', resp.status);
-
-      const responseText = await resp.text();
-      console.log('Response text:', responseText);
-
-      let data;
       try {
-        data = JSON.parse(responseText);
-      } catch (parseError) {
-        console.error('Failed to parse response as JSON:', parseError);
-        throw new Error(`Server returned invalid response: ${responseText}`);
+        console.log('Making request to:', `/admin/returns/${orderId}/${itemId}`);
+        console.log('With action:', action);
+
+        const resp = await fetch(`/admin/returns/${orderId}/${itemId}`, {
+          method: 'PATCH',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action,
+            adminNote: ''
+          })
+        });
+
+        console.log('Response status:', resp.status);
+
+        const responseText = await resp.text();
+        console.log('Response text:', responseText);
+
+        let data;
+        try {
+          data = JSON.parse(responseText);
+        } catch (parseError) {
+          console.error('Failed to parse response as JSON:', parseError);
+          throw new Error(`Server returned invalid response: ${responseText}`);
+        }
+
+        if (!resp.ok) {
+          const errorMessage = data?.message || `HTTP ${resp.status}: ${resp.statusText}`;
+          throw new Error(errorMessage);
+        }
+
+        Swal.fire({
+          title: 'Success!',
+          text: data.message || `Return request ${action} successfully.`,
+          icon: 'success',
+          confirmButtonText: 'OK'
+        }).then(() => {
+          location.reload();
+        });
+
+      } catch (err) {
+        console.error('Error in handleReturnDecision:', err);
+
+        Swal.fire({
+          title: 'Error',
+          text: err.message || 'Failed to update return status',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
       }
-
-      if (!resp.ok) {
-        const errorMessage = data?.message || `HTTP ${resp.status}: ${resp.statusText}`;
-        throw new Error(errorMessage);
-      }
-
-      Swal.fire({
-        title: 'Success!',
-        text: data.message || `Return request ${action} successfully.`,
-        icon: 'success',
-        confirmButtonText: 'OK'
-      }).then(() => {
-        location.reload();
-      });
-
-    } catch (err) {
-      console.error('Error in handleReturnDecision:', err);
-
-      Swal.fire({
-        title: 'Error',
-        text: err.message || 'Failed to update return status',
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
     }
-  }
-</script>
+  </script>
 
 
 </body>

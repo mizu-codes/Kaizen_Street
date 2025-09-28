@@ -34,8 +34,16 @@ const couponSchema = new Schema({
         required: true
     },
     appliedUsers: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        },
+        orderId: {
+            type: mongoose.Schema.Types.ObjectId, ref: 'Order'
+        },
+        appliedDate: {
+            type: Date, default: Date.now
+        }
     }],
     discountPrice: {
         type: Number,

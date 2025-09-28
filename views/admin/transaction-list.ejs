@@ -13,8 +13,6 @@
 <body>
 
   <style>
-
-    
     .content-header .btn-add {
       background-color: #6c63ff;
       color: #fff;
@@ -32,14 +30,14 @@
       background: linear-gradient(90deg, #6c63ff, #8f94fb);
       color: #fff;
       border: none;
-  padding: 12px 10px;
+      padding: 12px 10px;
     }
 
     .table-custom td {
-  vertical-align: middle;
-  white-space: nowrap;
-  padding: 6px;
-}
+      vertical-align: middle;
+      white-space: nowrap;
+      padding: 6px;
+    }
 
     .table-custom tbody tr:hover {
       background-color: #f1f1f1;
@@ -70,7 +68,6 @@
       background-color: #f9f9f9;
     }
 
-    /* Transaction Type Badges */
     .type-order {
       background: #007bff;
       color: white;
@@ -90,15 +87,14 @@
     }
 
     .type-wallet-topup {
-      background: #0dcaf0 ;
+      background: #0dcaf0;
       color: white;
       padding: 4px 10px;
       border-radius: 20px;
       font-size: 0.775rem;
       font-weight: 500;
     }
-
-    /* Payment Method Badges - Using your existing styles */
+   
     .method-razorpay,
     .method-wallet,
     .method-cod {
@@ -114,8 +110,7 @@
       font-weight: 600;
       text-decoration: none;
     }
-
-    /* Razorpay */
+ 
     .method-razorpay {
       background: linear-gradient(135deg, #012652 0%, #0D94FB 100%);
       box-shadow: 0 6px 18px rgba(13, 148, 251, 0.16);
@@ -126,7 +121,6 @@
       box-shadow: 0 10px 24px rgba(13, 148, 251, 0.18);
     }
 
-    /* Wallet — pink pastel gradient */
     .method-wallet {
       background: linear-gradient(145deg, #ff9a9e 0%, #fecfef 100%);
       box-shadow: 0 6px 18px rgba(255, 154, 158, 0.14);
@@ -137,8 +131,7 @@
       transform: translateY(-2px);
       box-shadow: 0 10px 24px rgba(255, 154, 158, 0.18);
     }
-
-    /* Cash On Delivery */
+    
     .method-cod {
       background: linear-gradient(135deg, #ff8c00 0%, #ffd54f 100%);
       box-shadow: 0 6px 18px rgba(255, 173, 51, 0.14);
@@ -148,8 +141,7 @@
       transform: translateY(-2px);
       box-shadow: 0 10px 24px rgba(255, 173, 51, 0.18);
     }
-
-    /* Amount styling with +/- indicators */
+    
     .amount-positive {
       color: #28a745;
       font-weight: 600;
@@ -174,7 +166,8 @@
       min-width: 150px;
     }
 
-    .transaction-id, .order-id {
+    .transaction-id,
+    .order-id {
       font-family: 'Courier New', monospace;
       font-size: 0.85rem;
       color: #6c757d;
@@ -235,249 +228,276 @@
             <span class="text">Transactions</span>
           </a>
         </li>
-         <li class="menu-item">
+        <li class="menu-item ">
           <a class="menu-link" href="/admin/coupons">
-            <i class="icon material-icons md-account_balance_wallet"></i>
+            <i class="icon material-icons md-local_offer"></i>
             <span class="text">Coupons</span>
           </a>
         </li>
+         <li class="menu-item">
+          <a class="menu-link" href="/admin/sales-report">
+            <i class="icon material-icons md-assessment"></i>
+            <span class="text">Sales Report</span>
+          </a>
+          </li>
       </ul>
     </nav>
   </aside>
 
- <main class="main-wrap">
+  <main class="main-wrap">
     <% const _page=typeof page !=='undefined' ? page : 1; const _limit=typeof limit !=='undefined' ? limit :
-      transactions.length || 1; const _q=typeof q !=='undefined' ? q : '' ; const _method=typeof method !=='undefined' ? method : '' ; const _type=typeof type !=='undefined' ? type : '' ; const _msg=typeof message !=='undefined' ? message : '' ; %>
-    <header class="main-header navbar">
-      <div class="col-search">
-        <form id="transactionFilterForm" class="searchform d-flex" action="/admin/transactions" method="GET">
-          <input type="hidden" name="page" id="pageInput" value="1">
-        
-          <div class="dropdown me-2">
-            <select name="method" class="form-select filter-dropdown" onchange="document.getElementById('transactionFilterForm').submit()">
-              <option value="all" <%=(!_method || _method==='all' ) ? 'selected' : '' %>>All Methods</option>
-              <option value="razorpay" <%=_method==='razorpay' ? 'selected' : '' %>>Razorpay</option>
-              <option value="cod" <%=_method==='cod' ? 'selected' : '' %>>COD</option>
-              <option value="wallet" <%=_method==='wallet' ? 'selected' : '' %>>Wallet</option>
-            </select>
-          </div>
+      transactions.length || 1; const _q=typeof q !=='undefined' ? q : '' ; const _method=typeof method !=='undefined' ?
+      method : '' ; const _type=typeof type !=='undefined' ? type : '' ; const _msg=typeof message !=='undefined' ?
+      message : '' ; %>
+      <header class="main-header navbar">
+        <div class="col-search">
+          <form id="transactionFilterForm" class="searchform d-flex" action="/admin/transactions" method="GET">
+            <input type="hidden" name="page" id="pageInput" value="1">
 
-          <div class="dropdown me-2">
-            <select name="type" class="form-select filter-dropdown" onchange="document.getElementById('transactionFilterForm').submit()">
-              <option value="all" <%=(!_type || _type==='all' ) ? 'selected' : '' %>>All Types</option>
-              <option value="order_payment" <%=_type==='order_payment' ? 'selected' : '' %>>Orders</option>
-              <option value="refund" <%=_type==='refund' ? 'selected' : '' %>>Refunds</option>
-              <option value="wallet_topup" <%=_type==='wallet_topup' ? 'selected' : '' %>>Wallet Top-up</option>
-            </select>
-          </div>
-
-          <input type="text" name="q" value="<%= _q || '' %>" class="form-control" placeholder="Search by user name, email, or transaction ID" />
-
-          <button class="btn btn-light ms-2" type="submit">
-            <i class="material-icons md-search"></i>
-          </button>
-
-          <% if ((_q && _q.trim()) || (_method && _method !=='all' ) || (_type && _type !=='all' )) { %>
-          <a href="/admin/transactions" class="btn btn-outline-secondary ms-2" style="font-size:1rem;">Clear</a>
-          <% } %>
-        </form>
-      </div>
-      <div class="col-nav">
-        <ul class="nav">
-          <li class="dropdown nav-item">
-            <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount">
-              <img class="img-xs rounded-circle" src="/assets2/imgs/people/avatar2.jpg" alt="Admin">
-            </a>
-            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-              <a class="dropdown-item text-danger" href="/admin/logout">
-                <i class="material-icons md-exit_to_app"></i>Logout
-              </a>
+            <div class="dropdown me-2">
+              <select name="method" class="form-select filter-dropdown"
+                onchange="document.getElementById('transactionFilterForm').submit()">
+                <option value="all" <%=(!_method || _method==='all' ) ? 'selected' : '' %>>All Methods</option>
+                <option value="razorpay" <%=_method==='razorpay' ? 'selected' : '' %>>Razorpay</option>
+                <option value="cod" <%=_method==='cod' ? 'selected' : '' %>>COD</option>
+                <option value="wallet" <%=_method==='wallet' ? 'selected' : '' %>>Wallet</option>
+              </select>
             </div>
-          </li>
-        </ul>
-      </div>
-    </header>
 
-   <section class="content-main">
-  <div class="content-header d-flex justify-content-between align-items-center mb-4">
-    <div>
-      <h2 class="content-title card-title">Transaction Management</h2>
-      <p class="text-muted">Total: <%= totalTransactions || 0 %> transactions</p>
-    </div>
-  </div>
-  <div class="card mb-4">
-    <div class="card-body">
-      <div class="table-wrap">
-        <table class="table table-custom align-middle mb-0">
-          <thead>
-            <tr>
-              <th>SL No</th>
-              <th>Transaction ID</th>
-              <th>User Name</th>
-              <th>Order ID</th>
-              <th>Date</th>
-              <th>Type</th>
-              <th>Amount</th>
-              <th>Method</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% if (transactions.length) { %>
-            <% transactions.forEach((transaction, i)=> { %>
-            <tr>
-              <td>
-                <%= (page - 1) * limit + i + 1 %>
-              </td>
-              <td>
-                <div class="transaction-id">
-                  #<%= transaction._id.toString().slice(-8).toUpperCase() %>
-                </div>
-              </td>
-              <td>
-                <div class="user-info">
-                  <strong><%= transaction.customerId?.name || '—' %></strong>
-                  <% if (transaction.customerId?.email) { %>
-                  <br><small class="text-muted"><%= transaction.customerId.email %></small>
-                  <% } %>
-                </div>
-              </td>
-              <td>
-                <% if (transaction.isWalletTransaction) { %>
-                <span class="text-muted"></span>
-                <small class="d-block text-info">Wallet Transaction</small>
-                <% } else if (transaction.displayOrderId) { %>
-                <span class="order-id">#<%= transaction.displayOrderId %></span>
-                <% } else { %>
-                <span class="text-muted">—</span>
-                <% } %>
-              </td>
-              <td>
-                <%= new Date(transaction.createdAt).toLocaleDateString() %><br>
-                <small class="text-muted"><%= new Date(transaction.createdAt).toLocaleTimeString() %></small>
-              </td>
-              <td>
-                <% if (transaction.type === 'order_payment') { %>
-                <span class="type-order">Ordered</span>
-                <% } else if (transaction.type === 'refund') { %>
-                <span class="type-refund">Refund</span>
-                <% } else if (transaction.type === 'wallet_topup') { %>
-                <span class="type-wallet-topup">Top-up</span>
-                <% } else { %>
-                <span class="badge bg-secondary"><%= transaction.type || 'Other' %></span>
-                <% } %>
-              </td>
-              <td>
-                <% const amount = transaction.amount || 0; %>
-                <% if (transaction.type === 'refund') { %>
-                <span class="text-success fw-bold">+₹<%= amount.toLocaleString() %></span>
-                <% } else if (transaction.type === 'order_payment') { %>
-                <span class="text-danger fw-bold">-₹<%= amount.toLocaleString() %></span>
-                <% } else if (transaction.type === 'wallet_topup') { %>
-                <span class="text-primary fw-bold">+₹<%= amount.toLocaleString() %></span>
-                <% } else { %>
-                <span class="fw-bold">₹<%= amount.toLocaleString() %></span>
-                <% } %>
-              </td>
-              <td>
-                <% const method = transaction.paymentMethod || 'unknown'; %>
-                <% if (method === 'razorpay') { %>
-                <span class="method-razorpay">Razorpay</span>
-                <% } else if (method === 'cod') { %>
-                <span class="method-cod">COD</span>
-                <% } else if (method === 'wallet') { %>
-                <span class="method-wallet">Wallet</span>
-                <% } else { %>
-                <span class="badge bg-light text-dark"><%= method %></span>
-                <% } %>
-              </td>
-              <td>
-                <% const status = transaction.status || 'completed'; %>
-                <% if (status === 'completed' || status === 'paid') { %>
-                <span class="badge bg-success">Completed</span>
-                <% } else if (status === 'pending') { %>
-                <span class="badge bg-warning">Pending</span>
-                <% } else if (status === 'failed') { %>
-                <span class="badge bg-danger">Failed</span>
-                <% } else { %>
-                <span class="badge bg-secondary"><%= status %></span>
-                <% } %>
-              </td>
-            </tr>
-            <% }) %>
-            <% } else { %>
-            <tr>
-              <td colspan="9" class="text-center text-warning py-4">
-                No transactions found.
-                <% if ((q && q.trim()) || (method && method !== 'all') || (type && type !== 'all')) { %>
-                <br><small>Try adjusting your search or filter criteria.</small>
-                <% } %>
-              </td>
-            </tr>
-            <% } %>
-          </tbody>
-        </table>
-        
-        <% if (typeof totalPages !== 'undefined' && totalPages > 1) { %>
-        <nav aria-label="Page navigation">
-          <ul class="pagination justify-content-center mt-4">
-            <li class="page-item <%= page <= 1 ? 'disabled' : '' %>">
-              <a class="page-link" href="/admin/transactions?<%= q ? 'q=' + encodeURIComponent(q) + '&' : '' %><%= method && method !== 'all' ? 'method=' + method + '&' : '' %><%= type && type !== 'all' ? 'type=' + type + '&' : '' %>page=<%= page - 1 %>&limit=<%= limit %>">
-                <i class="material-icons" style="font-size:16px;">chevron_left</i> Prev
+            <div class="dropdown me-2">
+              <select name="type" class="form-select filter-dropdown"
+                onchange="document.getElementById('transactionFilterForm').submit()">
+                <option value="all" <%=(!_type || _type==='all' ) ? 'selected' : '' %>>All Types</option>
+                <option value="order_payment" <%=_type==='order_payment' ? 'selected' : '' %>>Orders</option>
+                <option value="refund" <%=_type==='refund' ? 'selected' : '' %>>Refunds</option>
+                <option value="wallet_topup" <%=_type==='wallet_topup' ? 'selected' : '' %>>Wallet Top-up</option>
+              </select>
+            </div>
+
+            <input type="text" name="q" value="<%= _q || '' %>" class="form-control"
+              placeholder="Search by user name, email, or transaction ID" />
+
+            <button class="btn btn-light ms-2" type="submit">
+              <i class="material-icons md-search"></i>
+            </button>
+
+            <% if ((_q && _q.trim()) || (_method && _method !=='all' ) || (_type && _type !=='all' )) { %>
+              <a href="/admin/transactions" class="btn btn-outline-secondary ms-2" style="font-size:1rem;">Clear</a>
+              <% } %>
+          </form>
+        </div>
+        <div class="col-nav">
+          <ul class="nav">
+            <li class="dropdown nav-item">
+              <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount">
+                <img class="img-xs rounded-circle" src="/assets2/imgs/people/avatar2.jpg" alt="Admin">
               </a>
-            </li>
-
-            <% 
-            const startPage = Math.max(1, page - 2);
-            const endPage = Math.min(totalPages, page + 2);
-            %>
-
-            <% if (startPage > 1) { %>
-            <li class="page-item">
-              <a class="page-link" href="/admin/transactions?<%= q ? 'q=' + encodeURIComponent(q) + '&' : '' %><%= method && method !== 'all' ? 'method=' + method + '&' : '' %><%= type && type !== 'all' ? 'type=' + type + '&' : '' %>page=1&limit=<%= limit %>">1</a>
-            </li>
-            <% if (startPage > 2) { %>
-            <li class="page-item disabled"><span class="page-link">...</span></li>
-            <% } %>
-            <% } %>
-
-            <% for (let p = startPage; p <= endPage; p++) { %>
-            <li class="page-item <%= p === page ? 'active' : '' %>">
-              <a class="page-link" href="/admin/transactions?<%= q ? 'q=' + encodeURIComponent(q) + '&' : '' %><%= method && method !== 'all' ? 'method=' + method + '&' : '' %><%= type && type !== 'all' ? 'type=' + type + '&' : '' %>page=<%= p %>&limit=<%= limit %>">
-                <%= p %>
-              </a>
-            </li>
-            <% } %>
-
-            <% if (endPage < totalPages) { %>
-            <% if (endPage < totalPages - 1) { %>
-            <li class="page-item disabled"><span class="page-link">...</span></li>
-            <% } %>
-            <li class="page-item">
-              <a class="page-link" href="/admin/transactions?<%= q ? 'q=' + encodeURIComponent(q) + '&' : '' %><%= method && method !== 'all' ? 'method=' + method + '&' : '' %><%= type && type !== 'all' ? 'type=' + type + '&' : '' %>page=<%= totalPages %>&limit=<%= limit %>"><%= totalPages %></a>
-            </li>
-            <% } %>
-
-            <li class="page-item <%= page >= totalPages ? 'disabled' : '' %>">
-              <a class="page-link" href="/admin/transactions?<%= q ? 'q=' + encodeURIComponent(q) + '&' : '' %><%= method && method !== 'all' ? 'method=' + method + '&' : '' %><%= type && type !== 'all' ? 'type=' + type + '&' : '' %>page=<%= page + 1 %>&limit=<%= limit %>">
-                Next <i class="material-icons" style="font-size:16px;">chevron_right</i>
-              </a>
+              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                <a class="dropdown-item text-danger" href="/admin/logout">
+                  <i class="material-icons md-exit_to_app"></i>Logout
+                </a>
+              </div>
             </li>
           </ul>
-        </nav>
-        <% } %>
-      </div>
-    </div>
-  </div>
-</section>
+        </div>
+      </header>
 
-    <footer class="main-footer font-xs text-center py-3">
-      <div>&copy;
-        <script>
-          document.write(new Date().getFullYear())
-        </script> Kaizen Street. All rights reserved.
-      </div>
-    </footer>
+      <section class="content-main">
+        <div class="content-header d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <h2 class="content-title card-title">Transaction Management</h2>
+            <p class="text-muted">Total: <%= totalTransactions || 0 %> transactions</p>
+          </div>
+        </div>
+        <div class="card mb-4">
+          <div class="card-body">
+            <div class="table-wrap">
+              <table class="table table-custom align-middle mb-0">
+                <thead>
+                  <tr>
+                    <th>SL No</th>
+                    <th>Transaction ID</th>
+                    <th>User Name</th>
+                    <th>Order ID</th>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Method</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% if (transactions.length) { %>
+                    <% transactions.forEach((transaction, i)=> { %>
+                      <tr>
+                        <td>
+                          <%= (page - 1) * limit + i + 1 %>
+                        </td>
+                        <td>
+                          <div class="transaction-id">
+                            #<%= transaction._id.toString().slice(-8).toUpperCase() %>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="user-info">
+                            <strong>
+                              <%= transaction.customerId?.name || '—' %>
+                            </strong>
+                            <% if (transaction.customerId?.email) { %>
+                              <br><small class="text-muted">
+                                <%= transaction.customerId.email %>
+                              </small>
+                              <% } %>
+                          </div>
+                        </td>
+                        <td>
+                          <% if (transaction.isWalletTransaction) { %>
+                            <span class="text-muted"></span>
+                            <small class="d-block text-info">Wallet Transaction</small>
+                            <% } else if (transaction.displayOrderId) { %>
+                              <span class="order-id">#<%= transaction.displayOrderId %></span>
+                              <% } else { %>
+                                <span class="text-muted">—</span>
+                                <% } %>
+                        </td>
+                        <td>
+                          <%= new Date(transaction.createdAt).toLocaleDateString() %><br>
+                            <small class="text-muted">
+                              <%= new Date(transaction.createdAt).toLocaleTimeString() %>
+                            </small>
+                        </td>
+                        <td>
+                          <% if (transaction.type==='order_payment' ) { %>
+                            <span class="type-order">Ordered</span>
+                            <% } else if (transaction.type==='refund' ) { %>
+                              <span class="type-refund">Refund</span>
+                              <% } else if (transaction.type==='wallet_topup' ) { %>
+                                <span class="type-wallet-topup">Top-up</span>
+                                <% } else { %>
+                                  <span class="badge bg-secondary">
+                                    <%= transaction.type || 'Other' %>
+                                  </span>
+                                  <% } %>
+                        </td>
+                        <td>
+                          <% const amount=transaction.amount || 0; %>
+                            <% if (transaction.type==='refund' ) { %>
+                              <span class="text-success fw-bold">+₹<%= amount.toLocaleString() %></span>
+                              <% } else if (transaction.type==='order_payment' ) { %>
+                                <span class="text-danger fw-bold">-₹<%= amount.toLocaleString() %></span>
+                                <% } else if (transaction.type==='wallet_topup' ) { %>
+                                  <span class="text-primary fw-bold">+₹<%= amount.toLocaleString() %></span>
+                                  <% } else { %>
+                                    <span class="fw-bold">₹<%= amount.toLocaleString() %></span>
+                                    <% } %>
+                        </td>
+                        <td>
+                          <% const method=transaction.paymentMethod || 'unknown' ; %>
+                            <% if (method==='razorpay' ) { %>
+                              <span class="method-razorpay">Razorpay</span>
+                              <% } else if (method==='cod' ) { %>
+                                <span class="method-cod">COD</span>
+                                <% } else if (method==='wallet' ) { %>
+                                  <span class="method-wallet">Wallet</span>
+                                  <% } else { %>
+                                    <span class="badge bg-light text-dark">
+                                      <%= method %>
+                                    </span>
+                                    <% } %>
+                        </td>
+                        <td>
+                          <% const status=transaction.status || 'completed' ; %>
+                            <% if (status==='completed' || status==='paid' ) { %>
+                              <span class="badge bg-success">Completed</span>
+                              <% } else if (status==='pending' ) { %>
+                                <span class="badge bg-warning">Pending</span>
+                                <% } else if (status==='failed' ) { %>
+                                  <span class="badge bg-danger">Failed</span>
+                                  <% } else { %>
+                                    <span class="badge bg-secondary">
+                                      <%= status %>
+                                    </span>
+                                    <% } %>
+                        </td>
+                      </tr>
+                      <% }) %>
+                        <% } else { %>
+                          <tr>
+                            <td colspan="9" class="text-center text-warning py-4">
+                              No transactions found.
+                              <% if ((q && q.trim()) || (method && method !=='all' ) || (type && type !=='all' )) { %>
+                                <br><small>Try adjusting your search or filter criteria.</small>
+                                <% } %>
+                            </td>
+                          </tr>
+                          <% } %>
+                </tbody>
+              </table>
+
+              <% if (typeof totalPages !=='undefined' && totalPages> 1) { %>
+                <nav aria-label="Page navigation">
+                  <ul class="pagination justify-content-center mt-4">
+                    <li class="page-item <%= page <= 1 ? 'disabled' : '' %>">
+                      <a class="page-link"
+                        href="/admin/transactions?<%= q ? 'q=' + encodeURIComponent(q) + '&' : '' %><%= method && method !== 'all' ? 'method=' + method + '&' : '' %><%= type && type !== 'all' ? 'type=' + type + '&' : '' %>page=<%= page - 1 %>&limit=<%= limit %>">
+                        <i class="material-icons" style="font-size:16px;"></i> Prev
+                      </a>
+                    </li>
+
+                    <% const startPage=Math.max(1, page - 2); const endPage=Math.min(totalPages, page + 2); %>
+
+                      <% if (startPage> 1) { %>
+                        <li class="page-item">
+                          <a class="page-link"
+                            href="/admin/transactions?<%= q ? 'q=' + encodeURIComponent(q) + '&' : '' %><%= method && method !== 'all' ? 'method=' + method + '&' : '' %><%= type && type !== 'all' ? 'type=' + type + '&' : '' %>page=1&limit=<%= limit %>">1</a>
+                        </li>
+                        <% if (startPage> 2) { %>
+                          <li class="page-item disabled"><span class="page-link">...</span></li>
+                          <% } %>
+                            <% } %>
+
+                              <% for (let p=startPage; p <=endPage; p++) { %>
+                                <li class="page-item <%= p === page ? 'active' : '' %>">
+                                  <a class="page-link"
+                                    href="/admin/transactions?<%= q ? 'q=' + encodeURIComponent(q) + '&' : '' %><%= method && method !== 'all' ? 'method=' + method + '&' : '' %><%= type && type !== 'all' ? 'type=' + type + '&' : '' %>page=<%= p %>&limit=<%= limit %>">
+                                    <%= p %>
+                                  </a>
+                                </li>
+                                <% } %>
+
+                                  <% if (endPage < totalPages) { %>
+                                    <% if (endPage < totalPages - 1) { %>
+                                      <li class="page-item disabled"><span class="page-link">...</span></li>
+                                      <% } %>
+                                        <li class="page-item">
+                                          <a class="page-link"
+                                            href="/admin/transactions?<%= q ? 'q=' + encodeURIComponent(q) + '&' : '' %><%= method && method !== 'all' ? 'method=' + method + '&' : '' %><%= type && type !== 'all' ? 'type=' + type + '&' : '' %>page=<%= totalPages %>&limit=<%= limit %>">
+                                            <%= totalPages %>
+                                          </a>
+                                        </li>
+                                        <% } %>
+
+                                          <li class="page-item <%= page >= totalPages ? 'disabled' : '' %>">
+                                            <a class="page-link"
+                                              href="/admin/transactions?<%= q ? 'q=' + encodeURIComponent(q) + '&' : '' %><%= method && method !== 'all' ? 'method=' + method + '&' : '' %><%= type && type !== 'all' ? 'type=' + type + '&' : '' %>page=<%= page + 1 %>&limit=<%= limit %>">
+                                              Next <i class="material-icons" style="font-size:16px;"></i>
+                                            </a>
+                                          </li>
+                  </ul>
+                </nav>
+                <% } %>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="main-footer font-xs text-center py-3">
+        <div>&copy;
+          <script>
+            document.write(new Date().getFullYear())
+          </script> Kaizen Street. All rights reserved.
+        </div>
+      </footer>
   </main>
 
   <script src="/assets2/js/vendors/jquery-3.6.0.min.js"></script>

@@ -6,6 +6,7 @@ const cartController = require('../controllers/user/cartController');
 const wishlistController = require('../controllers/user/wishlistController');
 const checkoutController = require('../controllers/user/checkoutController');
 const orderController = require('../controllers/user/orderController');
+const couponController = require('../controllers/user/profile/couponController');
 const { userAuth } = require('../middlewares/auth');
 
 const profileController = require('../controllers/user/profile/profileController');
@@ -33,6 +34,8 @@ router.post('/resend-otp', authController.resendOtp);
 router.get('/login', authController.loadLogin);
 router.post('/login', authController.login);
 router.get('/logout', authController.logout);
+
+router.post('/validate-referral-code', authController.validateReferralCode);
 
 router.get('/forgot-password', passwordController.loadForgotPassword);
 router.post('/forgot-password', passwordController.sendPasswordOtp);
@@ -85,6 +88,9 @@ router.get('/checkout/edit-address/:id', userAuth, checkoutController.editAddres
 router.patch('/checkout/edit-address/:id', userAuth, checkoutController.updateAddress);
 router.post("/checkout/create-razorpay-order", userAuth, checkoutController.createRazorpayOrder);
 router.post("/checkout/verify-payment", userAuth, checkoutController.verifyRazorpayPayment);
+router.post('/checkout/apply-coupon', userAuth, checkoutController.applyCoupon);
+router.delete('/checkout/remove-coupon', userAuth, checkoutController.removeCoupon);
+router.get('/checkout/validate-coupon', userAuth, checkoutController.validateCoupon);
 
 router.get('/orders', userAuth, orderController.loadOrderPage);
 router.get('/orders/:orderId', userAuth, orderController.loadOrderDetailsPage);
@@ -95,6 +101,8 @@ router.post('/orders/return-item', userAuth, orderController.returnOrderItem);
 router.get('/wallet', userAuth, walletController.loadWalletPage);
 router.post("/wallet/create-razorpay-order", userAuth, walletController.createWalletRazorpayOrder);
 router.post("/wallet/verify-payment", userAuth, walletController.verifyWalletRazorpayPayment);
+
+router.get('/profile/coupons', userAuth, couponController.loadCouponPage);
 
 module.exports = router;
 

@@ -26,7 +26,7 @@ const loadOrderPage = async (req, res) => {
         const orders = await Order
             .find(filter)
             .sort({ createdAt: -1 })
-            .select('orderId status createdAt totalAmount items')
+            .select('orderId status createdAt totalAmount items discount coupon')
             .lean();
 
         const processedOrders = orders.map(order => {
@@ -38,6 +38,8 @@ const loadOrderPage = async (req, res) => {
             });
 
             order.displayOrderId = order._id.toString().slice(-8).toUpperCase();
+
+            console.log(`Order ${order.displayOrderId}: discount = ${order.discount || 0}`);
 
             return order;
         });
@@ -96,6 +98,29 @@ const cancelOrderItem = async (req, res) => {
                 return res.status(400).json({ success: false, message: 'Item is already cancelled.' });
             }
 
+            const originalItemSubtotal = itemDoc.subtotal ?? (itemDoc.price * itemDoc.quantity);
+            const orderTotalOriginal = orderDoc.items.reduce((sum, item) => sum + (item.subtotal ?? (item.price * item.quantity)), 0);
+            const orderDiscount = orderDoc.discount || 0;
+
+            let refundAmount;
+            if (orderDiscount > 0 && orderTotalOriginal > 0) {
+                const itemDiscountProportion = originalItemSubtotal / orderTotalOriginal;
+                const itemDiscountAmount = orderDiscount * itemDiscountProportion;
+                refundAmount = originalItemSubtotal - itemDiscountAmount;
+            } else {
+                refundAmount = originalItemSubtotal;
+            }
+
+            refundAmount = Math.max(0, Math.round(refundAmount * 100) / 100);
+
+            console.log('Refund Calculation Debug:', {
+                itemId,
+                originalItemSubtotal,
+                orderTotalOriginal,
+                orderDiscount,
+                calculatedRefundAmount: refundAmount
+            });
+
             itemDoc.status = 'Cancelled';
             itemDoc.cancellationReason = reason;
             itemDoc.cancelledAt = new Date();
@@ -109,7 +134,6 @@ const cancelOrderItem = async (req, res) => {
             const paymentMethod = String(orderDoc.paymentMethod).toLowerCase();
 
             if (paymentMethod === 'razorpay' || paymentMethod === 'wallet') {
-                const refundAmount = Number(itemDoc.subtotal ?? (itemDoc.price * itemDoc.quantity) ?? 0);
                 const now = new Date();
 
                 let wallet = await Wallet.findOne({ userId: userId }).session(session);
@@ -145,8 +169,8 @@ const cancelOrderItem = async (req, res) => {
                     type: 'credit',
                     amount: refundAmount,
                     description: paymentMethod === 'wallet'
-                        ? `Refund for cancelled : ${itemDoc.name || 'product'}`
-                        : `Refund for cancelled : ${itemDoc.name || 'product'}`,
+                        ? `Refund for cancelled: ${itemDoc.name || 'product'} (including discount adjustment)`
+                        : `Refund for cancelled: ${itemDoc.name || 'product'} (including discount adjustment)`,
                     status: 'completed',
                     balanceBefore,
                     balanceAfter,
@@ -169,7 +193,7 @@ const cancelOrderItem = async (req, res) => {
                     transactionStatus: 'success',
                     type: 'refund',
                     refundReason: 'cancellation',
-                    description: `Refund for cancelled item: ${itemDoc.name || 'product'}`,
+                    description: `Refund for cancelled item: ${itemDoc.name || 'product'} (discounted amount)`,
                     gatewayTransactionId: orderDoc.paymentDetails?.razorpay_payment_id || null,
                     gatewayOrderId: orderDoc.paymentDetails?.razorpay_order_id || null
                 }], { session });
@@ -287,6 +311,22 @@ const returnOrderItem = async (req, res) => {
             success: false, message: `Return window expired (${returnWindowDays} days)`
         });
 
+        const originalItemSubtotal = item.subtotal ?? (item.price * item.quantity);
+        const orderTotalOriginal = order.items.reduce((sum, orderItem) =>
+            sum + (orderItem.subtotal ?? (orderItem.price * orderItem.quantity)), 0);
+        const orderDiscount = order.discount || 0;
+
+        let refundAmount;
+        if (orderDiscount > 0 && orderTotalOriginal > 0) {
+            const itemDiscountProportion = originalItemSubtotal / orderTotalOriginal;
+            const itemDiscountAmount = orderDiscount * itemDiscountProportion;
+            refundAmount = originalItemSubtotal - itemDiscountAmount;
+        } else {
+            refundAmount = originalItemSubtotal;
+        }
+
+        refundAmount = Math.max(0, Math.round(refundAmount * 100) / 100);
+
         await session.withTransaction(async () => {
             const newReturn = await returnAndRefund.create([{
                 user: userId,
@@ -296,6 +336,7 @@ const returnOrderItem = async (req, res) => {
                 size: item.size,
                 quantity: item.quantity,
                 regularPrice: item.price ?? item.subtotal / (item.quantity || 1) ?? 0,
+                refundAmount: refundAmount,
                 reason: reason.trim()
             }], { session });
 
@@ -307,14 +348,19 @@ const returnOrderItem = async (req, res) => {
                 status: 'requested',
                 reason: reason.trim(),
                 requestedAt: new Date(),
-                returnRecord: newReturn[0]._id
+                returnRecord: newReturn[0]._id,
+                refundAmount: refundAmount
             };
 
             await orderDoc.save({ session });
         });
 
         await session.endSession();
-        return res.json({ success: true, message: 'Return requested successfully' });
+        return res.json({
+            success: true,
+            message: 'Return requested successfully',
+            refundAmount: refundAmount
+        });
     } catch (err) {
         console.error('returnOrderItem error', err);
         try { await session.endSession(); } catch (e) { }
@@ -322,6 +368,7 @@ const returnOrderItem = async (req, res) => {
         return res.status(500).json({ success: false, message: 'Server error' });
     }
 };
+
 
 module.exports = {
     loadOrderPage,

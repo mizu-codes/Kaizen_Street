@@ -41,71 +41,128 @@ const loadOrderPage = async (req, res) => {
     const skip = (page - 1) * limit;
     const q = (req.query.q || '').toString().trim();
     const statusRaw = (req.query.status || '').toString().trim();
-    const matchConditions = {};
 
-    if (statusRaw && statusRaw.toLowerCase() !== 'all') {
-      matchConditions.status = statusRaw;
+
+    const matchConditions = {};
+    const statusFilter = statusRaw && statusRaw.toLowerCase() !== 'all' && statusRaw !== '' ? statusRaw : null;
+    if (statusFilter) {
+      matchConditions.status = statusFilter;
     }
 
     const returnCollection = returnAndRefund.collection.name;
 
+    let initialMatch = {};
+    if (q) {
+      const regex = new RegExp(q, 'i');
+      initialMatch = {
+        $or: [
+          { orderId: regex },
+          { 'items.name': regex },
+          { 'user.name': regex }
+        ]
+      };
+    }
+
     const pipeline = [
-      { $lookup: { from: 'users', localField: 'user', foreignField: '_id', as: 'user' } },
-      { $unwind: '$user' },
+      ...(Object.keys(initialMatch).length ? [{ $match: initialMatch }] : []),
+
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'user',
+          foreignField: '_id',
+          as: 'user'
+        }
+      },
+      { $unwind: { path: '$user', preserveNullAndEmptyArrays: true } },
+
       {
         $lookup: {
           from: returnCollection,
           let: { orderId: '$_id' },
           pipeline: [
-            { $match: { $expr: { $and: [{ $eq: ['$order', '$$orderId'] }, { $eq: ['$status', 'requested'] }] } } },
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ['$order', '$$orderId'] },
+                    { $eq: ['$status', 'requested'] }
+                  ]
+                }
+              }
+            },
             { $project: { _id: 1 } }
           ],
           as: 'pendingReturns'
         }
       },
-      { $addFields: { pendingReturnCount: { $size: { $ifNull: ['$pendingReturns', []] } } } },
-      { $project: { pendingReturns: 0 } },
-      ...(Object.keys(matchConditions).length ? [{ $match: matchConditions }] : []),
-      { $sort: { createdAt: -1 } },
-      { $facet: { data: [{ $skip: skip }, { $limit: limit }], total: [{ $count: 'count' }] } }
-    ];
 
-    if (q) {
-      const regex = new RegExp(q, 'i');
-      pipeline.splice(0, 0, {
-        $match: {
-          $or: [
-            { orderId: regex },
-            { 'items.name': regex },
-            { 'user.name': regex }
+      {
+        $addFields: {
+          pendingReturnCount: {
+            $size: { $ifNull: ['$pendingReturns', []] }
+          }
+        }
+      },
+
+      { $project: { pendingReturns: 0 } },
+
+      ...(Object.keys(matchConditions).length ? [{ $match: matchConditions }] : []),
+
+      { $sort: { createdAt: -1 } },
+
+      {
+        $facet: {
+          data: [
+            { $skip: skip },
+            { $limit: limit }
+          ],
+          total: [
+            { $count: 'count' }
           ]
         }
-      });
-    }
+      }
+    ];
 
     const result = await Order.aggregate(pipeline).exec();
 
     const orders = result[0]?.data || [];
-    const total = result[0]?.total || [];
+    const totalCount = result[0]?.total[0]?.count || 0;
 
-    const processedOrders = orders.map(order => {
+    const processedOrders = orders.map((order, index) => {
       order.displayOrderId = order._id.toString().slice(-8).toUpperCase();
+
+      const originalTotal = order.items?.reduce((sum, item) => {
+        return sum + (item.subtotal || (item.price * item.quantity));
+      }, 0) || 0;
+
+      const orderDiscount = order.discount || 0;
+      const actualAmountPaid = originalTotal - orderDiscount;
+
+      order.originalTotal = originalTotal;
+      order.actualAmountPaid = actualAmountPaid;
+
       return order;
     });
+
+    const totalPages = Math.ceil(totalCount / limit);
 
     res.render('order-list', {
       orders: processedOrders,
       _page: page,
       _limit: limit,
-      totalPages: Math.ceil((total[0]?.count || 0) / limit),
+      totalPages: totalPages,
       _q: q,
-      _status: statusRaw || 'all'
+      _status: statusRaw || 'all',
+      _msg: req.flash('message') || null
     });
+
   } catch (error) {
-    console.error('loadOrderPage error', error);
+    console.error('loadOrderPage error:', error);
     return res.status(500).send('Server error');
   }
 };
+
 
 const loadOrderDetailsPage = async (req, res) => {
   try {
@@ -125,6 +182,32 @@ const loadOrderDetailsPage = async (req, res) => {
         .lean({ virtuals: true });
 
     if (!order) return res.status(404).render('page-404');
+
+    const originalTotal = order.items.reduce((sum, item) => sum + (item.subtotal || (item.price * item.quantity)), 0);
+    const orderDiscount = order.discount || 0;
+    const actualAmountPaid = originalTotal - orderDiscount;
+
+    order.items = order.items.map(item => {
+      const itemOriginalSubtotal = item.subtotal || (item.price * item.quantity);
+      let itemActualPaid;
+
+      if (orderDiscount > 0 && originalTotal > 0) {
+        const itemDiscountProportion = itemOriginalSubtotal / originalTotal;
+        const itemDiscountAmount = orderDiscount * itemDiscountProportion;
+        itemActualPaid = itemOriginalSubtotal - itemDiscountAmount;
+      } else {
+        itemActualPaid = itemOriginalSubtotal;
+      }
+
+      return {
+        ...item,
+        itemOriginalSubtotal,
+        itemActualPaid: Math.round(itemActualPaid * 100) / 100
+      };
+    });
+
+    order.originalTotal = originalTotal;
+    order.actualAmountPaid = actualAmountPaid;
 
     const hasReturnInItems = Array.isArray(order.items) &&
       order.items.some(it => it.returnRequest && String(it.returnRequest.status).toLowerCase() === 'requested');
@@ -260,11 +343,21 @@ const updateReturnRequest = async (req, res) => {
     const returnReq = await returnAndRefund.findOne({ order: order._id, itemId }).session(session);
     if (!returnReq) throw new Error('Return record not found');
 
-    const refundAmount = (typeof returnReq.refundAmount === 'number' && returnReq.refundAmount > 0)
-      ? returnReq.refundAmount
-      : (typeof item.subtotal === 'number' && item.subtotal > 0)
-        ? item.subtotal
-        : ((Number(item.price) || 0) * (Number(item.quantity) || 0));
+    const originalItemSubtotal = item.subtotal || (item.price * item.quantity);
+    const orderTotalOriginal = order.items.reduce((sum, orderItem) =>
+      sum + (orderItem.subtotal || (orderItem.price * orderItem.quantity)), 0);
+    const orderDiscount = order.discount || 0;
+
+    let refundAmount;
+    if (orderDiscount > 0 && orderTotalOriginal > 0) {
+      const itemDiscountProportion = originalItemSubtotal / orderTotalOriginal;
+      const itemDiscountAmount = orderDiscount * itemDiscountProportion;
+      refundAmount = originalItemSubtotal - itemDiscountAmount;
+    } else {
+      refundAmount = originalItemSubtotal;
+    }
+
+    refundAmount = Math.max(0, Math.round(refundAmount * 100) / 100);
 
     if (refundAmount <= 0) {
       throw new Error('Computed refund amount is zero — cannot refund');
@@ -328,7 +421,7 @@ const updateReturnRequest = async (req, res) => {
       user: order.user,
       type: 'credit',
       amount: refundAmount,
-      description: `Refund for returned : ${item.name || 'returned product'}`,
+      description: `Refund for returned: ${item.name || 'returned product'} (discount-adjusted)`,
       transactionId: uuidv4(),
       status: 'completed',
       balanceBefore,
@@ -355,7 +448,10 @@ const updateReturnRequest = async (req, res) => {
 
     await session.commitTransaction();
 
-    return res.json({ success: true, message: 'Return approved and refund credited to wallet' });
+    return res.json({
+      success: true,
+      message: `Return approved and ₹${refundAmount} refunded to wallet (discount-adjusted)`
+    });
 
   } catch (error) {
     console.error("Error updating return request:", error);

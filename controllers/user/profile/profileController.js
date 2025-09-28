@@ -15,6 +15,7 @@ const userProfile = async (req, res) => {
     const orderCount = await Order.countDocuments({ user: userId });
     const addressCount = await Address.countDocuments({ userId: userId });
     const userData = await User.findById(userId);
+
     if (!userData) {
       req.session.destroy();
       return res.redirect('/login');
@@ -56,13 +57,13 @@ const saveProfile = async (req, res) => {
     const { name, email, phone } = req.body;
 
     const user = await User.findById(userId);
-    
+
     if (!user) {
-  return res.status(401).json({
-    success: false,
-    message: 'Unauthorized. Please log in again.'
-  });
-}
+      return res.status(401).json({
+        success: false,
+        message: 'Unauthorized. Please log in again.'
+      });
+    }
 
     if (!name || !name.trim()) {
       return res.status(400).json({

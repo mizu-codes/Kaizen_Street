@@ -539,76 +539,81 @@
                     </div>
                 </div>
                 
-                <div class="row product-grid-3">
-                    <% if (products && products.length) { %>
-                        <% products.forEach((product, index) => { %>
-                            <div class="col-lg-4 col-md-4 col-12 col-sm-6">
-                                <div class="product-cart-wrap mb-30">
-                                    <div class="product-img-action-wrap">
-                                        <div class="product-img product-img-zoom">
-                                            <a href="/products/<%= product._id %>">
-                                                <img class="default-img" src="<%= product.productImage[0] %>" alt="<%= product.productName %>">
-                                                <% if (product.productImage[1]) { %>
-                                                    <img class="hover-img" src="<%= product.productImage[1] %>" alt="<%= product.productName %> hover">
-                                                <% } %>
-                                            </a>
-                                        </div>
-                                        <div class="product-action-1">
-                                            <a href="javascript:void(0);" aria-label="Add To Wishlist" 
-                                               class="action-btn hover-up add-to-wishlist-btn" 
-                                               data-product-id="<%= product._id %>" data-size="M">
-                                                <i class="fi-rs-heart"></i>
-                                            </a>
-                                        </div>
-
-                                        <% if (product.productOffer > 0) { %>
-                                            <div class="product-badges product-badges-position product-badges-mrg">
-                                                <span class="<%= product.productOffer >= 30 && product.productOffer <= 50 ? 'hot' : product.productOffer < 30 ? 'best' : 'sale' %>">
-                                                    <% if (product.productOffer >= 30 && product.productOffer <= 50) { %>
-                                                        Hot
-                                                    <% } else if (product.productOffer < 30) { %>
-                                                        Best Sell
-                                                    <% } else { %>
-                                                        Sale
-                                                    <% } %>
-                                                </span>
-                                            </div>
-                                        <% } %>
-                                    </div>
-                                    <div class="product-content-wrap">
-                                        <div class="product-category">
-                                            <a href="#" onclick="filterByCategory('<%= product.category._id %>')">
-                                                <%= product.category.categoryName %>
-                                            </a>
-                                        </div>
-                                        <h2>
-                                            <a href="/shop/product/<%= product._id %>">
-                                                <%= product.productName %>
-                                            </a>
-                                        </h2>
-                                        <% if (product.rating) { %>
-                                            <div class="rating-result" title="<%= product.rating %>%">
-                                                <span><span><%= product.rating %>%</span></span>
-                                            </div>
-                                        <% } %>
-                                        <div class="product-price">
-                                            <span>₹<%= product.discountPrice %></span>
-                                            <% if (product.discountPrice !== product.regularPrice) { %>
-                                                <span class="old-price">₹<%= product.regularPrice %></span>
-                                            <% } %>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        <% }) %>
-                    <% } else { %>
-                        <div class="col-12 text-center">
-                            <p>No products found.</p>
+              <div class="row product-grid-3">
+    <% if (products && products.length) { %>
+        <% products.forEach((product, index) => { %>
+            <div class="col-lg-4 col-md-4 col-12 col-sm-6">
+                <div class="product-cart-wrap mb-30">
+                    <div class="product-img-action-wrap">
+                        <div class="product-img product-img-zoom">
+                            <a href="/products/<%= product._id %>">
+                                <img class="default-img" src="<%= product.productImage[0] %>" alt="<%= product.productName %>">
+                                <% if (product.productImage[1]) { %>
+                                    <img class="hover-img" src="<%= product.productImage[1] %>" alt="<%= product.productName %> hover">
+                                <% } %>
+                            </a>
                         </div>
-                    <% } %>
+                        <div class="product-action-1">
+                            <a href="javascript:void(0);" aria-label="Add To Wishlist" 
+                               class="action-btn hover-up add-to-wishlist-btn" 
+                               data-product-id="<%= product._id %>" data-size="M">
+                                <i class="fi-rs-heart"></i>
+                            </a>
+                        </div>
+                       
+                        <% if (product.offer && product.offer.hasOffer) { %>
+                            <div class="product-badges product-badges-position product-badges-mrg">
+                                <span class="<%= product.offer.discountPercentage >= 30 && product.offer.discountPercentage <= 50 ? 'hot' : product.offer.discountPercentage < 30 ? 'best' : 'sale' %>">
+                                    <% if (product.offer.discountPercentage >= 30 && product.offer.discountPercentage <= 50) { %>
+                                        Hot
+                                    <% } else if (product.offer.discountPercentage < 30) { %>
+                                        Best Sell
+                                    <% } else { %>
+                                        Sale
+                                    <% } %>
+                                </span>
+                            </div>
+                        <% } %>
+                    </div>
+                    <div class="product-content-wrap">
+                        <div class="product-category">
+                            <a href="#" onclick="filterByCategory('<%= product.category._id %>')">
+                                <%= product.category.categoryName %>
+                            </a>
+                        </div>
+                        <h2>
+                            <a href="/shop/product/<%= product._id %>">
+                                <%= product.productName %>
+                            </a>
+                        </h2>
+                        <% if (product.rating) { %>
+                            <div class="rating-result" title="<%= product.rating %>%">
+                                <span><span><%= product.rating %>%</span></span>
+                            </div>
+                        <% } %>
+                     
+                        <div class="product-price">
+                            <% if (product.offer && product.offer.hasOffer) { %>
+                                <span>₹<%= product.offer.finalPrice %></span>
+                                <span class="old-price">₹<%= product.offer.originalPrice %></span>
+                            <% } else { %>
+                                <span>₹<%= product.regularPrice %></span>
+                                <% if (product.discountPrice && product.discountPrice !== product.regularPrice) { %>
+                                    <span class="old-price">₹<%= product.regularPrice %></span>
+                                <% } %>
+                            <% } %>
+                        </div>
+                    </div>
                 </div>
-                
-                <!--pagination-->
+            </div>
+        <% }) %>
+    <% } else { %>
+        <div class="col-12 text-center">
+            <p>No products found.</p>
+        </div>
+    <% } %>
+</div>
+           
                 <div class="pagination-area mt-15 mb-sm-5 mb-lg-0">
                     <nav aria-label="Page navigation example">
                         <ul class="pagination justify-content-start">
@@ -665,8 +670,6 @@
                         <% }) %>
                     </ul>
                 </div>
-                
-                <!-- Filter By Price -->
                 <div class="sidebar-widget price_range range mb-30">
                     <div class="widget-header position-relative mb-20 pb-10">
                         <h5 class="widget-title mb-10">Filter by Price</h5>
@@ -681,12 +684,10 @@
                                     <input type="text" id="amount" name="price" readonly 
                                            value="₹<%= minPrice %> - ₹<%= maxPrice %>" placeholder="₹0 - ₹5000" />
                                 </div>
-                                <!-- Hidden inputs to store current values -->
                                 <input type="hidden" id="min-price" value="<%= minPrice %>">
                                 <input type="hidden" id="max-price" value="<%= maxPrice %>">
                             </div>
                         </div>
-                        <!-- Filter buttons -->
                         <div class="filter-buttons" style="margin-top: 15px;">
                             <button onclick="applyPriceFilter()" class="btn btn-sm btn-default">
                                 <i class="fi-rs-filter mr-5"></i> Apply Filter

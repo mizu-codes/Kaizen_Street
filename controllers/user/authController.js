@@ -1,4 +1,8 @@
-const User=require('../../models/userSchema');
+
+const mongoose = require('mongoose');
+const User = require('../../models/userSchema');
+const Wallet = require('../../models/walletSchema');
+const WalletTransaction = require('../../models/walletTransactionSchema');
 const { securePassword } = require('../../utils/passwordUtils');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
@@ -108,11 +112,32 @@ const login = async (req, res) => {
     }
 };
 
+const validateReferralCode = async (req, res) => {
+    try {
+        const { referralCode } = req.body;
+
+        if (!referralCode || referralCode.trim() === '') {
+            return res.json({ valid: false, message: 'Referral code is required.' });
+        }
+
+        const referrer = await User.findOne({ referalCode: referralCode.trim().toUpperCase() });
+
+        if (!referrer) {
+            return res.json({ valid: false, message: 'Invalid referral code.' });
+        }
+
+        return res.json({ valid: true, message: 'Valid referral code!' });
+
+    } catch (error) {
+        console.error('Error validating referral code:', error);
+        return res.json({ valid: false, message: 'Error validating referral code.' });
+    }
+};
 
 
 const signup = async (req, res) => {
     try {
-        const { name, email, password, confirmPassword, phone } = req.body
+        const { name, email, password, confirmPassword, phone, referralCode } = req.body
 
         if (password !== confirmPassword) {
             return res.render('signup', { message: 'Passwords do not match' });
@@ -126,6 +151,16 @@ const signup = async (req, res) => {
             });
         }
 
+        let referrer = null;
+        if (referralCode && referralCode.trim() !== '') {
+            referrer = await User.findOne({ referalCode: referralCode.trim().toUpperCase() });
+            if (!referrer) {
+                return res.render('signup', {
+                    message: 'Invalid referral code provided.'
+                });
+            }
+        }
+
         const otp = generateOtp()
 
         const emailSent = await sendVerificationEmail(email, otp);
@@ -135,7 +170,7 @@ const signup = async (req, res) => {
         }
 
         req.session.userOtp = otp;
-        req.session.userData = { name, email, password, phone }
+        req.session.userData = { name, email, password, phone, referralCode: referralCode?.trim().toUpperCase() || null }
 
         res.render('verify-otp');
         console.log('OTP sent', otp)
@@ -146,6 +181,78 @@ const signup = async (req, res) => {
     }
 }
 
+const createWalletWithReferralCredit = async (newUserId, referrerUserId) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+        const creditAmount = 100;
+
+        const existingWallet = await Wallet.findOne({ userId: newUserId }).session(session);
+        if (existingWallet) {
+            await session.abortTransaction();
+            session.endSession();
+            console.log('Wallet already exists for user');
+            return existingWallet;
+        }
+
+        const newWallet = new Wallet({
+            userId: newUserId,
+            balance: creditAmount,
+            totalCredits: creditAmount,
+            totalDebits: 0,
+            transactionCount: 1,
+            isActive: true,
+            isBlocked: false,
+            lastTransactionAt: new Date(),
+            lastCreditAt: new Date()
+        });
+
+        const savedWallet = await newWallet.save({ session });
+
+        const walletTransaction = new WalletTransaction({
+            wallet: savedWallet._id,
+            user: newUserId,
+            type: 'credit',
+            amount: creditAmount,
+            description: 'Referral bonus - Welcome credit for joining with referral code',
+            status: 'completed',
+            balanceBefore: 0,
+            balanceAfter: creditAmount,
+            paymentDetails: {
+                method: null,
+                gatewayTransactionId: null,
+                gatewayOrderId: null,
+                gatewayPaymentId: null
+            },
+            processedAt: new Date(),
+            completedAt: new Date()
+        });
+
+        await walletTransaction.save({ session });
+
+        await User.findByIdAndUpdate(referrerUserId, {
+            $inc: { totalReferrals: 1 }
+        }, { session });
+
+        await User.findByIdAndUpdate(newUserId, {
+            referralRewardReceived: true
+        }, { session });
+
+        await session.commitTransaction();
+        session.endSession();
+
+        console.log(`Referral credit processed: ₹${creditAmount} added to wallet for user ${newUserId}`);
+        return savedWallet;
+
+    } catch (error) {
+        await session.abortTransaction();
+        session.endSession();
+        console.error('Error creating wallet with referral credit:', error);
+        throw error;
+    }
+};
+
 const verifyOtp = async (req, res) => {
     try {
         const { otp } = req.body;
@@ -153,9 +260,9 @@ const verifyOtp = async (req, res) => {
         console.log("Entered OTP:", otp);
 
         if (otp === req.session.userOtp) {
-            const user = req.session.userData;
+            const userData = req.session.userData;
 
-            const existingUser = await User.findOne({ email: user.email });
+            const existingUser = await User.findOne({ email: userData.email });
             if (existingUser) {
                 return res.status(400).json({
                     success: false,
@@ -163,29 +270,63 @@ const verifyOtp = async (req, res) => {
                 });
             }
 
-            const passwordHash = await securePassword(user.password)
+            const passwordHash = await securePassword(userData.password);
+
+            let referrer = null;
+            if (userData.referralCode) {
+                referrer = await User.findOne({ referalCode: userData.referralCode });
+
+                if (!referrer) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Invalid referral code provided.'
+                    });
+                }
+            }
 
             const saveUserData = new User({
-                name: user.name,
-                email: user.email,
+                name: userData.name,
+                email: userData.email,
                 password: passwordHash,
-                phone: user.phone
-            })
+                phone: userData.phone,
+                referredBy: referrer ? referrer._id : null
+            });
 
-            await saveUserData.save();
+            const savedUser = await saveUserData.save();
 
-            req.session.userId = saveUserData._id;
+            if (referrer) {
+                try {
+                    if (referrer._id.toString() === savedUser._id.toString()) {
+                        console.log('Self-referral attempt blocked');
+                    } else {
+                        await createWalletWithReferralCredit(savedUser._id, referrer._id);
+                        console.log(`Referral successful: ${userData.email} referred by ${referrer.email}`);
+                    }
+                } catch (walletError) {
+                    console.error('Error processing referral wallet credit:', walletError);
+                }
+            }
+
+            req.session.userId = savedUser._id;
             req.session.userOtp = null;
             req.session.userData = null;
 
-            res.json({ success: true, redirectUrl: '/' })
+            const message = referrer ?
+                'Account created successfully! ₹100 referral credit has been added to your wallet.' :
+                'Account created successfully!';
+
+            res.json({
+                success: true,
+                redirectUrl: '/',
+                message: message
+            });
         } else {
-            res.status(400).json({ success: false, message: 'Invalid OTP,Please try again' });
+            res.status(400).json({ success: false, message: 'Invalid OTP, Please try again' });
         }
 
     } catch (error) {
         console.error('Error Verifying OTP', error);
-        return res.status(500).json({ success: false, message: 'An error occured' })
+        return res.status(500).json({ success: false, message: 'An error occurred' })
     }
 }
 
@@ -230,7 +371,7 @@ const logout = async (req, res) => {
     }
 }
 
-module.exports={
+module.exports = {
     loadSignup,
     signup,
     verifyOtp,
@@ -238,4 +379,5 @@ module.exports={
     loadLogin,
     login,
     logout,
+    validateReferralCode
 }

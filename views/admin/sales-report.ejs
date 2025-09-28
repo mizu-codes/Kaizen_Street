@@ -1,0 +1,804 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Kaizen Sales Report</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="/assets2/imgs/theme/kaizenicon.svg">
+    <link href="/assets2/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/daterangepicker/3.1.0/daterangepicker.css" rel="stylesheet">
+    <style>
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #6c63ff, #8f94fb);
+        }
+
+        .stat-card.revenue::before {
+            background: linear-gradient(90deg, #28a745, #20c997);
+        }
+
+        .stat-card.discount::before {
+            background: linear-gradient(90deg, #dc3545, #fd7e14);
+        }
+
+        .stat-card.net::before {
+            background: linear-gradient(90deg, #ffc107, #fd7e14);
+        }
+
+        .stat-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: rgba(108, 99, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            color: #6c63ff;
+            font-size: 18px;
+        }
+
+        .stat-card.revenue .stat-icon {
+            background: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+        }
+
+        .stat-card.discount .stat-icon {
+            background: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+        }
+
+        .stat-card.net .stat-icon {
+            background: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 3px;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .filter-section-card {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            border-radius: 10px;
+        }
+
+        .date-range-display {
+            background: linear-gradient(135deg, #6c63ff, #8f94fb);
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .btn-custom {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, #6c63ff, #8f94fb);
+            color: white;
+        }
+
+        .btn-success-custom {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+
+        .btn-info-custom {
+            background: linear-gradient(135deg, #17a2b8, #20c997);
+            color: white;
+        }
+
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+
+        .no-data i {
+            font-size: 64px;
+            margin-bottom: 20px;
+            color: #adb5bd;
+        }
+
+        .discount-amount {
+            color: #dc3545;
+            font-weight: 600;
+        }
+
+        .final-amount {
+            color: #28a745;
+            font-weight: 600;
+        }
+
+        .order-id {
+            font-weight: 600;
+            color: #6c63ff;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: capitalize;
+        }
+
+        .status-placed {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-processing {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-shipped {
+            background: #e2e3e5;
+            color: #383d41;
+        }
+
+        .status-out-for-delivery {
+            background: #ffeaa7;
+            color: #6c5ce7;
+        }
+
+        .status-delivered {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .table-custom th {
+            background: linear-gradient(90deg, #6c63ff, #8f94fb);
+            color: #fff;
+            border: none;
+            padding: 10px 8px;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+
+        .table-custom tbody td {
+            padding: 8px 6px;
+            vertical-align: middle;
+            border-bottom: 1px solid #f1f1f1;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .table-custom tbody tr:hover {
+            background-color: #f8f9ff;
+        }
+
+        .amount-with-discount {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .original-amount {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 0.75em;
+        }
+
+        .paid-amount {
+            color: #28a745;
+            font-weight: 600;
+            font-size: 0.85em;
+        }
+
+        .discount-info {
+            color: #28a745;
+            font-weight: 500;
+            font-size: 0.65em;
+        }
+
+        .pagination .page-link {
+            color: #6c63ff;
+            border-radius: 8px;
+            border: 1px solid #6c63ff;
+            margin: 0 4px;
+            transition: 0.3s ease;
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+
+        .pagination .page-link:hover {
+            background-color: #6c63ff;
+            color: white;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #6c63ff;
+            border-color: #6c63ff;
+            color: white;
+        }
+
+        .pagination .page-item.disabled .page-link {
+            color: #aaa;
+            border-color: #ddd;
+            background-color: #f9f9f9;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-section .row {
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <aside class="navbar-aside" id="offcanvas_aside">
+        <div class="aside-top">
+            <a href="/admin" class="brand-wrap">
+                <img src="/assets2/imgs/theme/kaizenlogoo.svg" class="logo" alt="Kaizen Dashboard">
+            </a>
+            <div>
+                <button class="btn btn-icon btn-aside-minimize">
+                    <i class="text-muted material-icons md-menu_open"></i>
+                </button>
+            </div>
+        </div>
+        <nav>
+            <ul class="menu-aside">
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin"> <i class="icon material-icons md-home"></i>
+                        <span class="text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/user"> <i class="icon material-icons md-person"></i>
+                        <span class="text">Customers</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/category"> <i class="icon material-icons md-store"></i>
+                        <span class="text">Category</span>
+                    </a>
+                </li>
+                <li class="menu-item has-submenu">
+                    <a class="menu-link"><i class="icon material-icons md-shopping_bag"></i>
+                        <span class="text">Products</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="/admin/addProducts">Product Add</a>
+                        <a href="/admin/products">Product List</a>
+                    </div>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/orders">
+                        <i class="icon material-icons md-shopping_cart"></i>
+                        <span class="text">Orders</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/transactions">
+                        <i class="icon material-icons md-account_balance_wallet"></i>
+                        <span class="text">Transactions</span>
+                    </a>
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/coupons">
+                        <i class="icon material-icons md-local_offer"></i>
+                        <span class="text">Coupons</span>
+                    </a>
+                </li>
+                <li class="menu-item active">
+                    <a class="menu-link" href="/admin/sales-report">
+                        <i class="icon material-icons md-assessment"></i>
+                        <span class="text">Sales Report</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="main-wrap">
+        <header class="main-header navbar">
+            <div class="col-search">
+                <h4 class="mb-0">Sales Analytics & Reports</h4>
+            </div>
+            <div class="col-nav">
+                <ul class="nav">
+                    <li class="dropdown nav-item">
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount">
+                            <img class="img-xs rounded-circle" src="/assets2/imgs/people/avatar2.jpg" alt="Admin">
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                            <a class="dropdown-item text-danger" href="/admin/logout">
+                                <i class="material-icons md-exit_to_app"></i>Logout
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </header>
+
+        <section class="content-main">
+            <div class="content-header d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="content-title card-title">Sales Report</h2>
+                    <p class="mb-0 text-muted">Generate comprehensive sales analytics and reports</p>
+                </div>
+
+                <div class="card filter-section-card" style="padding: 15px; min-width: 500px;">
+                    <form id="reportForm" class="d-flex align-items-end gap-2">
+                        <div>
+                            <label class="form-label fw-semibold" style="font-size: 12px;">Report Type</label>
+                            <select class="form-select form-select-sm" id="reportType" style="min-width: 100px;">
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly" selected>Monthly</option>
+                                <option value="yearly">Yearly</option>
+                                <option value="custom">Custom</option>
+                            </select>
+                        </div>
+
+                        <div id="customDateSection" style="display: none;">
+                            <label class="form-label fw-semibold" style="font-size: 12px;">Date Range</label>
+                            <input type="text" class="form-control form-control-sm" id="dateRange"
+                                placeholder="Select range" readonly style="min-width: 120px;">
+                        </div>
+
+                        <button type="submit" class="btn btn-sm btn-custom btn-primary-custom">
+                            <i class="material-icons md-search" style="font-size: 16px;"></i>
+                        </button>
+
+                        <button type="button" class="btn btn-sm btn-custom btn-success-custom"
+                            onclick="downloadReport('pdf')">
+                            PDF
+                        </button>
+
+                        <button type="button" class="btn btn-sm btn-custom btn-info-custom"
+                            onclick="downloadReport('excel')">
+                            Excel
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-3">Generating report...</p>
+            </div>
+
+            <div class="date-range-display" id="dateRangeDisplay" style="display: none;">
+                <i class="material-icons md-date_range" style="margin-right: 10px;"></i>
+                <span id="dateRangeText">Report Period: January 1, 2024 - January 31, 2024</span>
+            </div>
+
+            <div class="stats-grid" id="statsSection">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="material-icons md-shopping_cart"></i>
+                    </div>
+                    <div class="stat-value" id="totalOrders">0</div>
+                    <div class="stat-label">Total Orders</div>
+                </div>
+
+                <div class="stat-card revenue">
+                    <div class="stat-icon">
+                        <i class="material-icons md-attach_money"></i>
+                    </div>
+                    <div class="stat-value" id="totalRevenue">₹0</div>
+                    <div class="stat-label">Total Revenue</div>
+                </div>
+
+                <div class="stat-card discount">
+                    <div class="stat-icon">
+                        <i class="material-icons md-local_offer"></i>
+                    </div>
+                    <div class="stat-value" id="totalDiscounts">₹0</div>
+                    <div class="stat-label">Total Discounts</div>
+                </div>
+
+                <div class="stat-card net">
+                    <div class="stat-icon">
+                        <i class="material-icons md-trending_up"></i>
+                    </div>
+                    <div class="stat-value" id="netSales">₹0</div>
+                    <div class="stat-label">Net Sales</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Order Details</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-wrap">
+                        <table class="table table-custom align-middle mb-0" id="ordersTable">
+                            <thead>
+                                <tr>
+                                    <th>SL No</th>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Products</th>
+                                    <th>Date</th>
+                                    <th>No of Products</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ordersTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                    <nav aria-label="Page navigation" id="paginationSection" style="display: none;">
+                        <ul class="pagination justify-content-center mt-4" id="paginationList"></ul>
+                    </nav>
+                </div>
+            </div>
+
+            <div class="no-data" id="noDataSection" style="display: none;">
+                <i class="material-icons md-assessment"></i>
+                <h4>No Sales Data Found</h4>
+                <p>No orders were found for the selected period. Try adjusting your filters.</p>
+            </div>
+
+        </section>
+
+        <footer class="main-footer font-xs text-center py-3">
+            <div>&copy;
+                <script>
+                    document.write(new Date().getFullYear())
+                </script> Kaizen Street. All rights reserved.
+            </div>
+        </footer>
+    </main>
+
+    <script src="/assets2/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/assets2/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/daterangepicker/3.1.0/daterangepicker.min.js"></script>
+
+    <script>
+        let currentPage = 1;
+        let totalPages = 1;
+        let currentOrders = [];
+        const ordersPerPage = 10;
+     
+        $(document).ready(function () {
+            $('#dateRange').daterangepicker({
+                opens: 'left',
+                locale: {
+                    format: 'YYYY-MM-DD'
+                },
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                }
+            });
+        });
+     
+        document.getElementById('reportType').addEventListener('change', function () {
+            const customSection = document.getElementById('customDateSection');
+            customSection.style.display = this.value === 'custom' ? 'block' : 'none';
+        });
+      
+        document.getElementById('reportForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            currentPage = 1;
+            generateReport();
+        });
+
+        function generateReport() {
+            console.log('Generating report...');
+     
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('statsSection').style.display = 'none';
+            document.getElementById('noDataSection').style.display = 'none';
+            document.querySelector('.card').style.display = 'none';
+            document.getElementById('dateRangeDisplay').style.display = 'none';
+
+            const reportType = document.getElementById('reportType').value;
+            let requestData = { reportType };
+           
+            if (reportType === 'custom') {
+                const dateRange = $('#dateRange').data('daterangepicker');
+                if (dateRange) {
+                    requestData.startDate = dateRange.startDate.format('YYYY-MM-DD');
+                    requestData.endDate = dateRange.endDate.format('YYYY-MM-DD');
+                } else {
+                    alert('Please select a date range for custom reports.');
+                    document.getElementById('loading').style.display = 'none';
+                    return;
+                }
+            }
+
+            console.log('Request data:', requestData);
+            
+            fetch('/admin/sales-report/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData)
+            })
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Received data:', data);
+                    document.getElementById('loading').style.display = 'none';
+
+                    if (data.success) {
+                        let dateRangeText = '';
+                        switch (reportType) {
+                            case 'daily':
+                                dateRangeText = `Today: ${data.dateRange.formatted.start}`;
+                                break;
+                            case 'weekly':
+                                dateRangeText = `This Week: ${data.dateRange.formatted.start} - ${data.dateRange.formatted.end}`;
+                                break;
+                            case 'monthly':
+                                dateRangeText = `This Month: ${data.dateRange.formatted.start} - ${data.dateRange.formatted.end}`;
+                                break;
+                            case 'yearly':
+                                dateRangeText = `This Year: ${data.dateRange.formatted.start} - ${data.dateRange.formatted.end}`;
+                                break;
+                            case 'custom':
+                                dateRangeText = `Custom: ${data.dateRange.formatted.start} - ${data.dateRange.formatted.end}`;
+                                break;
+                        }
+
+                        document.getElementById('dateRangeText').textContent = `Report Period: ${dateRangeText}`;
+                        document.getElementById('dateRangeDisplay').style.display = 'block';
+                        document.getElementById('statsSection').style.display = 'grid';
+                      
+                        updateStatistics(data.data.statistics);
+                        
+                        currentOrders = data.data.orders || [];
+                        setupPagination();
+                        displayOrdersPage(currentPage);
+                    } else {
+                        console.error('Error in response:', data.message);
+                        Swal.fire('Error', 'Error generating report: ' + (data.message || 'Unknown error'), 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('loading').style.display = 'none';
+                    Swal.fire('Error', 'Error generating report. Please try again. Error: ' + error.message, 'error');
+                });
+        }
+
+        function updateStatistics(stats) {
+            document.getElementById('totalOrders').textContent = stats.totalOrders || 0;
+            document.getElementById('totalRevenue').textContent = `₹${(stats.totalRevenue || 0).toLocaleString()}`;
+            document.getElementById('totalDiscounts').textContent = `₹${(stats.totalDiscounts || 0).toLocaleString()}`;
+            document.getElementById('netSales').textContent = `₹${(stats.netSales || 0).toLocaleString()}`;
+        }
+
+        function setupPagination() {
+            totalPages = Math.ceil(currentOrders.length / ordersPerPage);
+
+            if (currentOrders.length === 0) {
+                document.querySelector('.card').style.display = 'none';
+                document.getElementById('noDataSection').style.display = 'block';
+                return;
+            }
+
+            document.querySelector('.card').style.display = 'block';
+            document.getElementById('noDataSection').style.display = 'none';
+            
+            if (totalPages > 1) {
+                document.getElementById('paginationSection').style.display = 'block';
+                renderPagination();
+            } else {
+                document.getElementById('paginationSection').style.display = 'none';
+            }
+        }
+
+        function displayOrdersPage(page) {
+            const tbody = document.getElementById('ordersTableBody');
+            tbody.innerHTML = '';
+
+            const startIndex = (page - 1) * ordersPerPage;
+            const endIndex = startIndex + ordersPerPage;
+            const pageOrders = currentOrders.slice(startIndex, endIndex);
+
+            pageOrders.forEach((order, index) => {
+                const slNo = startIndex + index + 1;
+                const statusClass = `status-${order.status.toLowerCase().replace(/\s+/g, '-')}`;
+                
+                let amountDisplay;
+                if (order.discount > 0) {
+                    amountDisplay = `
+            <div class="amount-with-discount">
+              <div class="original-amount">₹${order.originalAmount.toLocaleString()}</div>
+              <div class="paid-amount">₹${order.finalAmount.toLocaleString()}</div>
+              <small class="discount-info">(-₹${order.discount.toLocaleString()})</small>
+            </div>
+          `;
+                } else {
+                    amountDisplay = `₹${order.finalAmount.toLocaleString()}`;
+                }
+
+                const row = `
+          <tr>
+            <td>${slNo}</td>
+            <td><strong>#${order.orderId}</strong></td>
+            <td>${order.customer.name}</td>
+            <td title="${order.products}">${order.products.length > 30 ? order.products.substring(0, 30) + '...' : order.products}</td>
+            <td>${moment(order.date).format('DD/MM/YYYY')}</td>
+            <td>${order.itemCount}</td>
+            <td>${amountDisplay}</td>
+            <td><span class="status-badge ${statusClass}">${order.status}</span></td>
+          </tr>
+        `;
+                tbody.innerHTML += row;
+            });
+
+            console.log(`Displayed ${pageOrders.length} orders on page ${page}`);
+        }
+
+        function renderPagination() {
+            const paginationList = document.getElementById('paginationList');
+            paginationList.innerHTML = '';
+
+            const prevClass = currentPage <= 1 ? 'disabled' : '';
+            paginationList.innerHTML += `<li class="page-item ${prevClass}">
+          <a class="page-link" href="#" onclick="changePage(${currentPage - 1})">
+            <i class="material-icons" style="font-size:16px;">Prev</i>
+          </a>
+        </li>`;
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, currentPage + 2);
+
+            if (startPage > 1) {
+                paginationList.innerHTML += `<li class="page-item"><a class="page-link" href="#" onclick="changePage(1)">1</a></li>`;
+                if (startPage > 2) {
+                    paginationList.innerHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+                }
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                const activeClass = i === currentPage ? 'active' : '';
+                paginationList.innerHTML += `
+          <li class="page-item ${activeClass}">
+            <a class="page-link" href="#" onclick="changePage(${i})">${i}</a>
+          </li>
+        `;
+            }
+
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    paginationList.innerHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+                }
+                paginationList.innerHTML += `<li class="page-item"><a class="page-link" href="#" onclick="changePage(${totalPages})">${totalPages}</a></li>`;
+            }
+        
+            const nextClass = currentPage >= totalPages ? 'disabled' : '';
+            paginationList.innerHTML += `
+        <li class="page-item ${nextClass}">
+          <a class="page-link" href="#" onclick="changePage(${currentPage + 1})">
+            <i class="material-icons" style="font-size:16px;">Next</i>
+          </a>
+        </li>
+      `;
+        }
+
+        function changePage(page) {
+            if (page < 1 || page > totalPages || page === currentPage) return;
+
+            currentPage = page;
+            displayOrdersPage(currentPage);
+            renderPagination();
+          
+            document.getElementById('ordersTable').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function downloadReport(format) {
+            const reportType = document.getElementById('reportType').value;
+            let params = new URLSearchParams();
+            params.append('reportType', reportType);
+            params.append('format', format);
+
+            if (reportType === 'custom') {
+                const dateRange = $('#dateRange').data('daterangepicker');
+                if (dateRange) {
+                    params.append('startDate', dateRange.startDate.format('YYYY-MM-DD'));
+                    params.append('endDate', dateRange.endDate.format('YYYY-MM-DD'));
+                }
+            }
+       
+            document.getElementById('loading').style.display = 'block';
+           
+            window.location.href = `/admin/sales-report/download?${params.toString()}`;
+           
+            setTimeout(() => {
+                document.getElementById('loading').style.display = 'none';
+            }, 2000);
+        }
+        
+        window.addEventListener('load', function () {
+            generateReport();
+        });
+    </script>
+
+</body>
+
+</html>

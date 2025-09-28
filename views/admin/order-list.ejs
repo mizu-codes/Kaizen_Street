@@ -13,44 +13,80 @@
 <body>
 
   <style>
-
+    .amount-with-discount {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2px;
+    }
+  
+    .original-amount {
+      text-decoration: line-through;
+      color: #999;
+      font-size: 0.85em;
+    }
+  
+    .paid-amount {
+      color: #28a745;
+      font-weight: 600;
+      font-size: 0.95em;
+    }
+  
+    .discount-info {
+      color: #28a745;
+      font-weight: 500;
+      font-size: 0.75em;
+    }
+  
+    @media (max-width: 768px) {
+      .amount-with-discount {
+        align-items: flex-start;
+      }
+  
+      .original-amount,
+      .paid-amount {
+        font-size: 0.8em;
+      }
+    }
+  
     .mixed-status-info {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-}
-
-.mixed-status-info small {
-  font-size: 11px;
-  padding: 2px 6px;
-  border-radius: 3px;
-  background-color: #f8f9fa;
-  border: 1px solid #dee2e6;
-}
-
+      text-align: center;
+      display: block;
+    }
+  
+    .mixed-status-info small {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      background-color: #f8f9fa;
+      border: 1px solid #dee2e6;
+      margin: 2px;
+    }
+  
     .content-header .btn-add {
       background-color: #6c63ff;
       color: #fff;
     }
-
+  
     .content-header .btn-add:hover {
       background-color: #5a52d4;
     }
-
+  
     .table-wrap {
       overflow-x: auto;
     }
-
+  
     .table-custom th {
       background: linear-gradient(90deg, #6c63ff, #8f94fb);
       color: #fff;
       border: none;
     }
-
+  
     .table-custom tbody tr:hover {
       background-color: #f1f1f1;
     }
-
+  
     .pagination .page-link {
       color: #6c63ff;
       border-radius: 8px;
@@ -58,24 +94,24 @@
       margin: 0 4px;
       transition: 0.3s ease;
     }
-
+  
     .pagination .page-link:hover {
       background-color: #6c63ff;
       color: white;
     }
-
+  
     .pagination .page-item.active .page-link {
       background-color: #6c63ff;
       border-color: #6c63ff;
       color: white;
     }
-
+  
     .pagination .page-item.disabled .page-link {
       color: #aaa;
       border-color: #ddd;
       background-color: #f9f9f9;
     }
-
+  
     .status-cancelled {
       background: #dc3545;
       color: white;
@@ -84,7 +120,7 @@
       font-size: 0.875rem;
       font-weight: 500;
     }
-
+  
     .status-placed {
       background: #ffc107;
       color: white;
@@ -93,7 +129,7 @@
       font-size: 0.875rem;
       font-weight: 500;
     }
-
+  
     .status-processing {
       background: #17a2b8;
       color: white;
@@ -102,7 +138,7 @@
       font-size: 0.875rem;
       font-weight: 500;
     }
-
+  
     .status-shipped {
       background: #6f42c1;
       color: white;
@@ -111,7 +147,7 @@
       font-size: 0.875rem;
       font-weight: 500;
     }
-
+  
     .status-out-for-delivery {
       background: #fd7e14;
       color: white;
@@ -121,7 +157,7 @@
       font-weight: 500;
       white-space: nowrap;
     }
-
+  
     .status-delivered {
       background: #28a745;
       color: white;
@@ -130,20 +166,21 @@
       font-size: 0.875rem;
       font-weight: 500;
     }
-
+  
     td {
+      text-align: center;
       vertical-align: top;
       padding: 12px 8px;
     }
-   
+  
     .status-container {
       display: flex;
       flex-direction: column;
       gap: 4px;
-      align-items: flex-start;
+      align-items: center;
       min-width: 100px;
     }
-
+  
     .return-badge,
     .return-requested,
     .return-accepted,
@@ -158,29 +195,29 @@
       margin-top: 0.6rem;
       margin-left: 0.2rem;
       white-space: nowrap;
-
+  
     }
-
+  
     .return-requested {
       background-color: #fff3cd;
       color: #856404;
     }
-
+  
     .return-accepted {
       background-color: #d4edda;
       color: #155724;
     }
-
+  
     .return-rejected {
       background-color: #f8d7da;
       color: #721c24;
     }
-
+  
     .return-badge {
       background-color: #e9ecef;
       color: #495057;
     }
-
+  
     .filter-dropdown {
       min-width: 150px;
     }
@@ -235,12 +272,18 @@
             <span class="text">Transactions</span>
           </a>
         </li>
-         <li class="menu-item">
+<li class="menu-item ">
           <a class="menu-link" href="/admin/coupons">
-            <i class="icon material-icons md-account_balance_wallet"></i>
+            <i class="icon material-icons md-local_offer"></i>
             <span class="text">Coupons</span>
           </a>
         </li>
+         <li class="menu-item">
+          <a class="menu-link" href="/admin/sales-report">
+            <i class="icon material-icons md-assessment"></i>
+            <span class="text">Sales Report</span>
+          </a>
+          </li>
       </ul>
     </nav>
   </aside>
@@ -296,171 +339,180 @@
       </div>
     </header>
 
-    <section class="content-main">
-      <div class="content-header d-flex justify-content-between align-items-center mb-4">
-        <div>
-          <h2 class="content-title card-title">Order Management</h2>
-        </div>
+   <section class="content-main">
+  <div class="content-header d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="content-title card-title">Order Management</h2>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <% if (_msg) { %>
+      <div class="alert alert-warning">
+        <%= _msg %>
       </div>
-
-      <div class="card mb-4">
-        <div class="card-body">
-          <% if (_msg) { %>
-          <div class="alert alert-warning">
-            <%= _msg %>
-          </div>
-          <% } %>
-
-          <div class="table-wrap">
-  <table class="table table-custom align-middle mb-0">
-    <thead>
-      <tr>
-        <th>SL No</th>
-        <th>Order ID</th>
-        <th>Customer</th>
-        <th>Products</th>
-        <th>Date</th>
-        <th>No of Products</th>
-        <th>Amount</th>
-        <th>Status</th>
-        <th>Details</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% if (orders.length) { %>
-      <% orders.forEach((order, i)=> { %>
-      <tr>
-        <td>
-          <%= (_page - 1) * _limit + i + 1 %>
-        </td>
-        <td><strong>#<%= order.displayOrderId||order._id.toString().slice(-8).toUpperCase() %></strong></td>
-        <td>
-          <%= order.user?.name || '—' %>
-        </td>
-        <td>
-          <%= order.items?.map(item=> item.name).join(', ') || '—' %>
-        </td>
-        <td>
-          <%= new Date(order.placedAt || order.createdAt).toLocaleDateString() %>
-        </td>
-        <td>
-          <%= order.items?.length || 0 %>
-        </td>
-        <td>₹<%= (order.totalAmount || 0).toLocaleString() %>
-        </td>
-        <td>
-          <div class="status-container">
-            <% if (order.status === 'Cancelled') { %>
-            <span class="status-cancelled">Cancelled</span>
-            <% } else if (order.status === 'Placed') { %>
-            <span class="status-placed">Placed</span>
-            <% } else if (order.status === 'Processing') { %>
-            <span class="status-processing">Processing</span>
-            <% } else if (order.status === 'Shipped') { %>
-            <span class="status-shipped">Shipped</span>
-            <% } else if (order.status === 'Out for Delivery') { %>
-            <span class="status-out-for-delivery">Out for Delivery</span>
-            <% } else if (order.status === 'Delivered') { %>
-            <span class="status-delivered">Delivered</span>
-            <% } else { %>
-            <span class="status-pending">
-              <%= order.status %>
-            </span>
-            <% } %>
-           
-            <% 
-              const items = order.items || [];
-              const cancelledItems = items.filter(item => (item.status || order.status) === 'Cancelled');
-              const deliveredItems = items.filter(item => (item.status || order.status) === 'Delivered');
-              const totalItems = items.length;
-       
-              const hasMixedStatuses = items.some(item => 
-                item.status && item.status !== order.status
-              );
-            %>
-            
-            <% if (hasMixedStatuses) { %>
-              <div class="mixed-status-info">
-                <% if (cancelledItems.length > 0 && cancelledItems.length < totalItems) { %>
-                  <small class="text-warning">
-                    (<%= cancelledItems.length %>/<%= totalItems %> cancelled)
-                  </small>
-                <% } %>
-                <% if (deliveredItems.length > 0 && deliveredItems.length < totalItems) { %>
-                  <small class="text-success">
-                    (<%= deliveredItems.length %>/<%= totalItems %> delivered)
-                  </small>
-                <% } %>
-              </div>
-            <% } %>
-            
-            <% const returnItem = (order.items || []).find(it => it.returnRequest && it.returnRequest.status); %>
-            <% if (returnItem && returnItem.returnRequest && returnItem.returnRequest.status) { %>
-            <% const rs = String(returnItem.returnRequest.status || '').toLowerCase(); %>
-            <% if (rs === 'requested') { %>
-            <span class="return-requested return-<%= rs %>">
-              Refund Requested
-            </span>
-            <% } else if (rs === 'refunded') { %>
-            <span class="return-accepted return-<%= rs %>">
-              Refunded
-            </span>
-            <% } else if (rs === 'rejected') { %>
-            <span class="return-rejected return-<%= rs %>">
-              Rejected
-            </span>
-            <% } else { %>
-            <span class="return-badge return-<%= rs %>">
-              <%= rs.charAt(0).toUpperCase() + rs.slice(1) %>
-            </span>
-            <% } %>
-            <% } %>
-          </div>
-        </td>
-        <td>
-          <a href="/admin/orders/<%= order._id %>" class="btn btn-sm btn-outline-primary">View</a>
-        </td>
-      </tr>
-      <% }) %>
-      <% } else { %>
-      <tr>
-        <td colspan="9" class="text-center text-warning py-4">
-          No orders found.
-        </td>
-      </tr>
-      <% } %>
-    </tbody>
-  </table>
-
-  <nav aria-label="Page navigation">
-    <ul class="pagination justify-content-center mt-4">
-      <li class="page-item <%= _page <= 1 ? 'disabled' : '' %>">
-        <a class="page-link" href="/admin/orders?<%= _q ? 'q=' + _q + '&' : '' %><%= _status && _status !== 'all' ? 'status=' + _status + '&' : '' %>page=<%= _page - 1 %>&limit=<%= _limit %>">
-          <i class="material-icons" style="font-size:16px;">Prev</i>
-        </a>
-      </li>
-
-      <% for (let p=1; p <=totalPages; p++) { %>
-      <li class="page-item <%= p === _page ? 'active' : '' %>">
-        <a class="page-link" href="/admin/orders?<%= _q ? 'q=' + _q + '&' : '' %><%= _status && _status !== 'all' ? 'status=' + _status + '&' : '' %>page=<%= p %>&limit=<%= _limit %>">
-          <%= p %>
-        </a>
-      </li>
       <% } %>
 
-      <li class="page-item <%= _page >= totalPages ? 'disabled' : '' %>">
-        <a class="page-link" href="/admin/orders?<%= _q ? 'q=' + _q + '&' : '' %><%= _status && _status !== 'all' ? 'status=' + _status + '&' : '' %>page=<%= _page + 1 %>&limit=<%= _limit %>">
-          <i class="material-icons" style="font-size:16px;">Next</i>
-        </a>
-      </li>
-    </ul>
-  </nav>
-</div>
-        </div>
+      <div class="table-wrap">
+        <table class="table table-custom align-middle mb-0">
+          <thead>
+            <tr>
+              <th>SL No</th>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Products</th>
+              <th>Date</th>
+              <th>No of Products</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (orders.length) { %>
+            <% orders.forEach((order, i) => { %>
+            <tr>
+              <td>
+                <%= (_page - 1) * _limit + i + 1 %>
+              </td>
+              <td><strong>#<%= order.displayOrderId||order._id.toString().slice(-8).toUpperCase() %></strong></td>
+              <td>
+                <%= order.user?.name || '—' %>
+              </td>
+              <td>
+                <%= order.items?.map(item=> item.name).join(', ') || '—' %>
+              </td>
+              <td>
+                <%= new Date(order.placedAt || order.createdAt).toLocaleDateString() %>
+              </td>
+              <td>
+                <%= order.items?.length || 0 %>
+              </td>
+              <td>
+                <% const orderDiscount = order.discount || 0; %>
+                <% if (orderDiscount > 0) { %>
+                  <div class="amount-with-discount">
+                    <div class="original-amount">₹<%= (order.originalTotal || 0).toLocaleString() %></div>
+                    <div class="paid-amount">₹<%= (order.actualAmountPaid || 0).toLocaleString() %></div>
+                    <small class="discount-info">(-₹<%= orderDiscount.toLocaleString() %>)</small>
+                  </div>
+                <% } else { %>
+                  ₹<%= (order.totalAmount || 0).toLocaleString() %>
+                <% } %>
+              </td>
+              <td>
+                <div class="status-container">
+                  <% if (order.status === 'Cancelled') { %>
+                  <span class="status-cancelled">Cancelled</span>
+                  <% } else if (order.status === 'Placed') { %>
+                  <span class="status-placed">Placed</span>
+                  <% } else if (order.status === 'Processing') { %>
+                  <span class="status-processing">Processing</span>
+                  <% } else if (order.status === 'Shipped') { %>
+                  <span class="status-shipped">Shipped</span>
+                  <% } else if (order.status === 'Out for Delivery') { %>
+                  <span class="status-out-for-delivery">Out for Delivery</span>
+                  <% } else if (order.status === 'Delivered') { %>
+                  <span class="status-delivered">Delivered</span>
+                  <% } else { %>
+                  <span class="status-pending">
+                    <%= order.status %>
+                  </span>
+                  <% } %>
+                 
+                  <% 
+                    const items = order.items || [];
+                    const cancelledItems = items.filter(item => (item.status || order.status) === 'Cancelled');
+                    const deliveredItems = items.filter(item => (item.status || order.status) === 'Delivered');
+                    const totalItems = items.length;
+             
+                    const hasMixedStatuses = items.some(item => 
+                      item.status && item.status !== order.status
+                    );
+                  %>
+                  
+                  <% if (hasMixedStatuses) { %>
+                    <div class="mixed-status-info">
+                      <% if (cancelledItems.length > 0 && cancelledItems.length < totalItems) { %>
+                        <small class="text-warning">
+                          (<%= cancelledItems.length %>/<%= totalItems %> cancelled)
+                        </small>
+                      <% } %>
+                      <% if (deliveredItems.length > 0 && deliveredItems.length < totalItems) { %>
+                        <small class="text-success">
+                          (<%= deliveredItems.length %>/<%= totalItems %> delivered)
+                        </small>
+                      <% } %>
+                    </div>
+                  <% } %>
+                  
+                  <% const returnItem = (order.items || []).find(it => it.returnRequest && it.returnRequest.status); %>
+                  <% if (returnItem && returnItem.returnRequest && returnItem.returnRequest.status) { %>
+                  <% const rs = String(returnItem.returnRequest.status || '').toLowerCase(); %>
+                  <% if (rs === 'requested') { %>
+                  <span class="return-requested return-<%= rs %>">
+                    Refund Requested
+                  </span>
+                  <% } else if (rs === 'refunded') { %>
+                  <span class="return-accepted return-<%= rs %>">
+                    Refunded
+                  </span>
+                  <% } else if (rs === 'rejected') { %>
+                  <span class="return-rejected return-<%= rs %>">
+                    Rejected
+                  </span>
+                  <% } else { %>
+                  <span class="return-badge return-<%= rs %>">
+                    <%= rs.charAt(0).toUpperCase() + rs.slice(1) %>
+                  </span>
+                  <% } %>
+                  <% } %>
+                </div>
+              </td>
+              <td>
+                <a href="/admin/orders/<%= order._id %>" class="btn btn-sm btn-outline-primary">View</a>
+              </td>
+            </tr>
+            <% }) %>
+            <% } else { %>
+            <tr>
+              <td colspan="9" class="text-center text-warning py-4">
+                No orders found.
+              </td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+
+        <nav aria-label="Page navigation">
+          <ul class="pagination justify-content-center mt-4">
+            <li class="page-item <%= _page <= 1 ? 'disabled' : '' %>">
+              <a class="page-link" href="/admin/orders?<%= _q ? 'q=' + _q + '&' : '' %><%= _status && _status !== 'all' ? 'status=' + _status + '&' : '' %>page=<%= _page - 1 %>&limit=<%= _limit %>">
+                <i class="material-icons" style="font-size:16px;">Prev</i>
+              </a>
+            </li>
+
+            <% for (let p=1; p <=totalPages; p++) { %>
+            <li class="page-item <%= p === _page ? 'active' : '' %>">
+              <a class="page-link" href="/admin/orders?<%= _q ? 'q=' + _q + '&' : '' %><%= _status && _status !== 'all' ? 'status=' + _status + '&' : '' %>page=<%= p %>&limit=<%= _limit %>">
+                <%= p %>
+              </a>
+            </li>
+            <% } %>
+
+            <li class="page-item <%= _page >= totalPages ? 'disabled' : '' %>">
+              <a class="page-link" href="/admin/orders?<%= _q ? 'q=' + _q + '&' : '' %><%= _status && _status !== 'all' ? 'status=' + _status + '&' : '' %>page=<%= _page + 1 %>&limit=<%= _limit %>">
+                <i class="material-icons" style="font-size:16px;">Next</i>
+              </a>
+            </li>
+          </ul>
+        </nav>
       </div>
+    </div>
+  </div>
 
-    </section>
-
+</section>
 
 
     <footer class="main-footer font-xs text-center py-3">

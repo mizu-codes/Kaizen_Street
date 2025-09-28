@@ -325,7 +325,6 @@
         /* PC/Desktop specific background sizing */
         @media (min-width: 1024px) {
             .anime-bg-image {
-                background-size: contain;
                 background-repeat: no-repeat;
                 background-position: center;
             }
@@ -649,241 +648,247 @@
                 </div>
             </div>
         </div>
-        <section class="mt-50 mb-50">
-            <div class="container">
-                <div class="row mb-50">
-                    <div class="col-md-6 col-sm-12 col-xs-12">
-                        <div class="detail-gallery">
-                            <span class="zoom-icon"><i class="fi-rs-search"></i></span>
+       <section class="mt-50 mb-50">
+    <div class="container">
+        <div class="row mb-50">
+            <div class="col-md-6 col-sm-12 col-xs-12">
+                <div class="detail-gallery">
+                    <span class="zoom-icon"><i class="fi-rs-search"></i></span>
 
-                            <div class="product-image-slider">
-                                <% product.productImage.forEach((img, index)=> { %>
-                                    <div class="zoom-container" style="position: relative;">
-                                        <img src="<%= img %>" alt="product image <%= index+1 %>" class="zoom-image"
-                                            style="width: 100%; height: auto;">
-
-                                    </div>
-                                    <% }); %>
+                    <div class="product-image-slider">
+                        <% product.productImage.forEach((img, index)=> { %>
+                            <div class="zoom-container" style="position: relative;">
+                                <img src="<%= img %>" alt="product image <%= index+1 %>" class="zoom-image"
+                                    style="width: 100%; height: auto;">
                             </div>
-
-                            <div class="slider-nav-thumbnails pl-15 pr-15">
-                                <% product.productImage.forEach((img, index)=> { %>
-                                    <div>
-                                        <img src="<%= img %>" alt="product thumbnail <%= index+1 %>"
-                                            style="width: 100%; object-fit: cover;">
-                                    </div>
-                                    <% }); %>
-                            </div>
-                        </div>
-
+                        <% }); %>
                     </div>
-                    <div class="col-md-6 col-sm-12 col-xs-12">
-                        <div class="detail-info">
-                            <h2 class="title-detail">
-                                <%= product.productName %>
-                            </h2>
-                            <div class="product-detail-rating">
-                                <div class="pro-details-brand">
-                                    <span> Category: <a href="/shop?category=<%= product.categoryName %>">
-                                            <%= product.categoryName %>
-                                        </a></span>
-                                </div>
-                                <div class="product-rate-cover text-end">
 
-                                </div>
+                    <div class="slider-nav-thumbnails pl-15 pr-15">
+                        <% product.productImage.forEach((img, index)=> { %>
+                            <div>
+                                <img src="<%= img %>" alt="product thumbnail <%= index+1 %>"
+                                    style="width: 100%; object-fit: cover;">
                             </div>
-                            <div class="clearfix product-price-cover">
-                                <div class="product-price primary-color float-left">
-                                    <ins><span class="text-brand">₹<%= product.discountPrice.toFixed(2) %></span></ins>
-
-                                    <% if (product.regularPrice && product.regularPrice> product.discountPrice) { %>
-                                        <ins>
-                                            <span class="old-price font-md ml-15">₹<%= product.regularPrice.toFixed(2)
-                                                    %></span>
-                                        </ins>
-                                        <span class="save-price font-md color3 ml-15">
-                                            <%= product.discountPercentage %>% Off
-                                        </span>
-                                        <% } %>
-                                </div>
-                            </div>
-                            <div class="bt-1 border-color-1 mt-15 mb-15"></div>
-                            <form id="addToCartForm">
-                                <div class="attr-detail attr-size">
-                                    <strong class="mr-10">Size</strong>
-                                    <ul class="list-filter size-filter font-small" id="sizeSelector">
-                                        <% product.size.forEach(size=> { %>
-                                            <li><a href="#" data-size="<%= size %>">
-                                                    <%= size %>
-                                                </a></li>
-                                            <% }) %>
-                                    </ul>
-                                    <input type="hidden" id="selectedSize" name="size">
-                                </div>
-
-                                <div class="bt-1 border-color-1 mt-30 mb-30">
-                                    <p>
-                                        Availability:
-                                        <span class="in-stock text-success ml-5" id="availabilityText">
-                                            Select a size
-                                        </span>
-                                    </p>
-                                </div>
-
-                                <div class="detail-extralink">
-                                    <div class="product-extra-link2">
-                                        <button type="submit" class="button button-add-to-cart"
-                                            style="margin-bottom: 20px;">
-                                            Add to cart
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
+                        <% }); %>
                     </div>
                 </div>
-
-                <div class="row">
-                    <div class="col-lg-10 m-auto entry-main-content">
-                        <h2 class="section-title style-1 mb-30">Description</h2>
-                        <div class="description mb-50">
-                            <p>
-                                <%= product.description %>
-                            </p>
-                            <h4 class="mt-30" style="font-size: medium;">Specifications</h4>
-                            <ul class="product-more-infor mt-30">
-                                <% if (product.specifications) { %>
-                                    <% product.specifications.split(/\r?\n/).forEach(spec=> { %>
-                                        <li>
-                                            <%= spec.trim() %>
-                                        </li>
-                                        <% }) %>
-                                            <% } else { %>
-                                                <li>No specifications provided.</li>
-                                                <% } %>
+            </div>
+            <div class="col-md-6 col-sm-12 col-xs-12">
+                <div class="detail-info">
+                    <h2 class="title-detail">
+                        <%= product.productName %>
+                    </h2>
+                    <div class="product-detail-rating">
+                        <div class="pro-details-brand">
+                            <span> Category: <a href="/shop?category=<%= product.categoryName %>">
+                                    <%= product.categoryName %>
+                                </a></span>
+                        </div>
+                        <div class="product-rate-cover text-end">
+                        </div>
+                    </div>
+                    
+                    <div class="clearfix product-price-cover">
+                        <div class="product-price primary-color float-left">
+                            <% if (product.offer && product.offer.hasOffer) { %>
+                                <ins><span class="text-brand">₹<%= product.offer.finalPrice.toFixed(2) %></span></ins>
+                                <ins>
+                                    <span class="old-price font-md ml-15">₹<%= product.offer.originalPrice.toFixed(2) %></span>
+                                </ins>
+                                <span class="save-price font-md color3 ml-15">
+                                    <%= product.offer.discountPercentage %>% Off
+                                    <% if (product.offer.offerType === 'category') { %>
+                                        (Category Offer)
+                                    <% } else { %>
+                                        (Product Offer)
+                                    <% } %>
+                                </span>
+                            <% } else { %>
+                                <ins><span class="text-brand">₹<%= product.regularPrice.toFixed(2) %></span></ins>
+                                <% if (product.discountPrice && product.discountPrice < product.regularPrice) { %>
+                                    <ins>
+                                        <span class="old-price font-md ml-15">₹<%= product.regularPrice.toFixed(2) %></span>
+                                    </ins>
+                                <% } %>
+                            <% } %>
+                        </div>
+                    </div>
+                    
+                    <div class="bt-1 border-color-1 mt-15 mb-15"></div>
+                    <form id="addToCartForm">
+                        <div class="attr-detail attr-size">
+                            <strong class="mr-10">Size</strong>
+                            <ul class="list-filter size-filter font-small" id="sizeSelector">
+                                <% product.size.forEach(size=> { %>
+                                    <li><a href="#" data-size="<%= size %>">
+                                            <%= size %>
+                                        </a></li>
+                                <% }) %>
                             </ul>
-
-
+                            <input type="hidden" id="selectedSize" name="size">
                         </div>
-                    </div>
+
+                        <div class="bt-1 border-color-1 mt-30 mb-30">
+                            <p>
+                                Availability:
+                                <span class="in-stock text-success ml-5" id="availabilityText">
+                                    Select a size
+                                </span>
+                            </p>
+                        </div>
+
+                        <div class="detail-extralink">
+                            <div class="product-extra-link2">
+                                <button type="submit" class="button button-add-to-cart"
+                                    style="margin-bottom: 20px;">
+                                    Add to cart
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <div class="social-icons single-share">
-                    <ul class="text-grey-5 d-inline-block">
-                        <li><strong class="mr-10">Share this:</strong></li>
-                        <li class="social-facebook"><a href="#"><img src="/imgs/theme/icons/icon-facebook.svg"
-                                    alt=""></a></li>
-                        <li class="social-twitter"> <a href="#"><img src="/imgs/theme/icons/icon-twitter.svg"
-                                    alt=""></a></li>
-                        <li class="social-instagram"><a href="#"><img src="/imgs/theme/icons/icon-instagram.svg"
-                                    alt=""></a></li>
-                        <li class="social-linkedin"><a href="#"><img src="/imgs/theme/icons/icon-pinterest.svg"
-                                    alt=""></a></li>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-10 m-auto entry-main-content">
+                <h2 class="section-title style-1 mb-30">Description</h2>
+                <div class="description mb-50">
+                    <p>
+                        <%= product.description %>
+                    </p>
+                    <h4 class="mt-30" style="font-size: medium;">Specifications</h4>
+                    <ul class="product-more-infor mt-30">
+                        <% if (product.specifications) { %>
+                            <% product.specifications.split(/\r?\n/).forEach(spec=> { %>
+                                <li>
+                                    <%= spec.trim() %>
+                                </li>
+                            <% }) %>
+                        <% } else { %>
+                            <li>No specifications provided.</li>
+                        <% } %>
                     </ul>
                 </div>
-                <div class="row mt-60">
-                    <div class="col-12">
-                        <h3 class="section-title style-1 mb-30">Related products</h3>
-                    </div>
-                    <div class="col-12">
-                        <div class="row related-products">
-                            <% relatedProducts.forEach(p=> { %>
-                                <div class="col-lg-3 col-md-4 col-12 col-sm-6">
-                                    <div class="product-cart-wrap small hover-up">
-                                        <div class="product-img-action-wrap">
-                                            <div class="product-img product-img-zoom">
-                                                <a href="/shop/product/<%= p._id %>">
-                                                    <img class="default-img" src="<%= p.productImage[0] %>"
-                                                        alt="<%= p.productName %>">
-                                                    <% if (p.productImage[1]) { %>
-                                                        <img class="hover-img" src="<%= p.productImage[1] %>"
-                                                            alt="<%= p.productName %> hover">
-                                                        <% } %>
-                                                </a>
-                                            </div>
-                                            <div class="product-action-1">
-              <a 
-                href="javascript:void(0);" 
-                aria-label="Add To Wishlist"
-                class="action-btn small hover-up add-to-wishlist-btn"
-                data-product-id="<%= p._id %>"
-                <%= wishlistIds.includes(p._id.toString()) ? 'aria-disabled="true" class="added"' : '' %>
-              >
-                <i class="fi-rs-heart"></i>
-              </a>
             </div>
-                                            <% if (p.discountPercentage> 50) { %>
-                                                <div class="product-badges product-badges-position product-badges-mrg">
-                                                    <span class="hot">Hot</span>
-                                                </div>
-                                                <% } else if (p.discountPercentage> 0) { %>
-                                                    <div
-                                                        class="product-badges product-badges-position product-badges-mrg">
-                                                        <span class="sale">Sale</span>
-                                                    </div>
-                                                    <% } else { %>
-                                                        <div
-                                                            class="product-badges product-badges-position product-badges-mrg">
-                                                            <span class="best">Best Sell</span>
-                                                        </div>
-                                                        <% } %>
+        </div>
+        
+        <div class="social-icons single-share">
+            <ul class="text-grey-5 d-inline-block">
+                <li><strong class="mr-10">Share this:</strong></li>
+                <li class="social-facebook"><a href="#"><img src="/imgs/theme/icons/icon-facebook.svg" alt=""></a></li>
+                <li class="social-twitter"> <a href="#"><img src="/imgs/theme/icons/icon-twitter.svg" alt=""></a></li>
+                <li class="social-instagram"><a href="#"><img src="/imgs/theme/icons/icon-instagram.svg" alt=""></a></li>
+                <li class="social-linkedin"><a href="#"><img src="/imgs/theme/icons/icon-pinterest.svg" alt=""></a></li>
+            </ul>
+        </div>
+     
+        <div class="row mt-60">
+            <div class="col-12">
+                <h3 class="section-title style-1 mb-30">Related products</h3>
+            </div>
+            <div class="col-12">
+                <div class="row related-products">
+                    <% relatedProducts.forEach(p=> { %>
+                        <div class="col-lg-3 col-md-4 col-12 col-sm-6">
+                            <div class="product-cart-wrap small hover-up">
+                                <div class="product-img-action-wrap">
+                                    <div class="product-img product-img-zoom">
+                                        <a href="/shop/product/<%= p._id %>">
+                                            <img class="default-img" src="<%= p.productImage[0] %>"
+                                                alt="<%= p.productName %>">
+                                            <% if (p.productImage[1]) { %>
+                                                <img class="hover-img" src="<%= p.productImage[1] %>"
+                                                    alt="<%= p.productName %> hover">
+                                            <% } %>
+                                        </a>
+                                    </div>
+                                    <div class="product-action-1">
+                                        <a 
+                                            href="javascript:void(0);" 
+                                            aria-label="Add To Wishlist"
+                                            class="action-btn small hover-up add-to-wishlist-btn"
+                                            data-product-id="<%= p._id %>"
+                                            <%= wishlistIds.includes(p._id.toString()) ? 'aria-disabled="true" class="added"' : '' %>
+                                        >
+                                            <i class="fi-rs-heart"></i>
+                                        </a>
+                                    </div>
+                                   
+                                    <% if (p.offer && p.offer.hasOffer) { %>
+                                        <div class="product-badges product-badges-position product-badges-mrg">
+                                            <span class="<%= p.offer.discountPercentage > 50 ? 'hot' : p.offer.discountPercentage > 0 ? 'sale' : 'best' %>">
+                                                <% if (p.offer.discountPercentage > 50) { %>
+                                                    Hot
+                                                <% } else if (p.offer.discountPercentage > 0) { %>
+                                                    Sale
+                                                <% } else { %>
+                                                    Best Sell
+                                                <% } %>
+                                            </span>
                                         </div>
-                                        <div class="product-content-wrap">
-                                            <h2><a href="/shop/product/<%= p._id %>">
-                                                    <%= p.productName %>
-                                                </a></h2>
-                                            <div class="product-category-link m-2">
-                                                <span>Category: </span>
-                                                <a href="/shop?category=<%= p.categoryName %>"
-                                                    class="text-brand fw-bold">
-                                                    <%= p.categoryName %>
-                                                </a>
-                                            </div>
-                                            <div class="product-price">
-                                                <span>₹<%= p.discountPrice %></span>
-                                                <% if (p.discountPercentage> 0) { %>
-                                                    <span class="old-price">₹<%= p.regularPrice %></span>
-                                                    <% } %>
-                                            </div>
-                                        </div>
+                                    <% } %>
+                                </div>
+                                <div class="product-content-wrap">
+                                    <h2><a href="/shop/product/<%= p._id %>">
+                                            <%= p.productName %>
+                                        </a></h2>
+                                    <div class="product-category-link m-2">
+                                        <span>Category: </span>
+                                        <a href="/shop?category=<%= p.categoryName %>" class="text-brand fw-bold">
+                                            <%= p.categoryName %>
+                                        </a>
+                                    </div>
+                                   
+                                    <div class="product-price">
+                                        <% if (p.offer && p.offer.hasOffer) { %>
+                                            <span>₹<%= p.offer.finalPrice %></span>
+                                            <span class="old-price">₹<%= p.offer.originalPrice %></span>
+                                        <% } else { %>
+                                            <span>₹<%= p.regularPrice %></span>
+                                            <% if (p.discountPrice && p.discountPrice < p.regularPrice) { %>
+                                                <span class="old-price">₹<%= p.regularPrice %></span>
+                                            <% } %>
+                                        <% } %>
                                     </div>
                                 </div>
-                                <% }); %>
+                            </div>
                         </div>
-                    </div>
+                    <% }); %>
                 </div>
+            </div>
+        </div>
 
-                <div class="banner-img banner-big wow fadeIn f-none animated mt-50">
-                    <div class="anime-bg-image"></div>
-                    <div class="overlay"></div>
-                    <div class="aesthetic-particles">
-                        <div class="particle"></div>
-                        <div class="particle"></div>
-                        <div class="particle"></div>
-                        <div class="particle"></div>
-                        <div class="particle"></div>
-                        <div class="particle"></div>
-                        <div class="particle"></div>
-                        <div class="particle"></div>
-                        <div class="particle"></div>
-                    </div>
-                    <div class="anime-stars">
-                        <div class="star">✨</div>
-                        <div class="star">⭐</div>
-                        <div class="star">✨</div>
-                        <div class="star">⭐</div>
-                        <div class="star">✨</div>
-                    </div>
-                    <div class="aesthetic-frame"></div>
-                    <div class="banner-text">
-                        <h4 class="mb-15 mt-40">街改 Explore the Anime culture</h4><br>
-                        <h1 class="fw-600 mb-20">Kaizen your Style,<br>transform your confidence</h1>
-                    </div>
-                </div>
+        <div class="banner-img banner-big wow fadeIn f-none animated mt-50">
+            <div class="anime-bg-image"></div>
+            <div class="overlay"></div>
+            <div class="aesthetic-particles">
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
             </div>
+            <div class="anime-stars">
+                <div class="star">✨</div>
+                <div class="star">⭐</div>
+                <div class="star">✨</div>
+                <div class="star">⭐</div>
+                <div class="star">✨</div>
             </div>
+            <div class="aesthetic-frame"></div>
+            <div class="banner-text">
+                <h4 class="mb-15 mt-40">街改 Explore the Anime culture</h4><br>
+                <h1 class="fw-600 mb-20">Kaizen your Style,<br>transform your confidence</h1>
             </div>
-            </div>
-        </section>
+        </div>
+    </div>
+</section>
     </main>
     <footer class="main">
         <section class="section-padding footer-mid">
@@ -1149,9 +1154,7 @@
     </script>
 
     <script>
-  // Wait for the DOM so you’re guaranteed .add-to-wishlist-btn exists
   document.addEventListener('DOMContentLoaded', () => {
-    // 1) Attach click handlers
     document.querySelectorAll('.add-to-wishlist-btn').forEach(btn => {
       btn.addEventListener('click', async function (e) {
         e.preventDefault();
@@ -1174,13 +1177,11 @@
               timer: 1200,
               customClass: { popup: 'swal-responsive' }
             });
-
-            // 2) Dispatch updated count
+            
             document.dispatchEvent(new CustomEvent('wishlist:updated', {
               detail: { count: data.itemCount }
             }));
-
-            // 3) Disable/toggle styling so the user knows it’s added
+         
             btn.classList.add('added');
             btn.setAttribute('aria-disabled', 'true');
           } else {
@@ -1193,8 +1194,7 @@
         }
       });
     });
-
-    // 4) Listen for count updates and patch the badge
+   
     document.addEventListener('wishlist:updated', (e) => {
       const el = document.getElementById('wishlistItemCount');
       if (el && e.detail && typeof e.detail.count === 'number') {

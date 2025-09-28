@@ -7,13 +7,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta property="og:title" content="">
-    <meta property="og:type" content="">
-    <meta property="og:url" content="">
-    <meta property="og:image" content="">
-    <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/kaizenicon.svg">
-    <!-- Template CSS -->
     <link rel="stylesheet" href="/css/main.css?v=3.4">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.4.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -30,12 +24,12 @@
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
-    color: #888; /* Change this to black */
+    color: #888; 
     z-index: 10;
 }
 
 .password-toggle:hover {
-    color: #333333; /* Slightly lighter on hover */
+    color: #333333; 
 }
 
 </style>
@@ -43,214 +37,260 @@
 </head>
 
 <body>
-    <main class="main">
-        <section class="signup-wrapper">
-            <div class="container">
-                <!-- 2) Center a “card” container -->
-                <div class="signup-card mx-auto">
-                    <div class="row g-0"><!-- g-0 removes Bootstrap’s default gutter -->
-
-                        <!-- RIGHT COLUMN: CREATE ACCOUNT -->
-                        <div class="col-lg-6 signup-form-col">
-                            <div class="p-4 p-lg-5">
-                                <div class="logo-signup-img">
-                                    <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+   <main class="main">
+    <section class="signup-wrapper">
+        <div class="container">
+            <div class="signup-card mx-auto">
+                <div class="row g-0">
+                
+                    <div class="col-lg-6 signup-form-col">
+                        <div class="p-4 p-lg-5">
+                            <div class="logo-signup-img">
+                                <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+                            </div>
+                            <h3 class="signup-headline mb-4">Create an Account</h3>
+                            <form id="signupForm" method="POST" action="/signup" novalidate>
+                                <div class="mb-3">
+                                    <input type="text" id="name" name="name" placeholder="Username" required
+                                        class="form-control signup-input" />
+                                    <div class="invalid-feedback">
+                                        Username must be at least 2 letters (letters and spaces only).
+                                    </div>
                                 </div>
-                                <h3 class="signup-headline mb-4">Create an Account</h3>
-                                <form id="signupForm" method="POST" action="/signup" novalidate>
-                                    <!-- 1) USERNAME -->
-                                    <div class="mb-3">
-                                        <input type="text" id="name" name="name" placeholder="Username" required
-                                            class="form-control signup-input" />
-                                        <div class="invalid-feedback">
-                                            Username must be at least 2 letters (letters and spaces only).
-                                        </div>
+                                <div class="mb-3">
+                                    <input type="email" id="email" name="email" placeholder="Email" required class="form-control signup-input" />
+                                    <div class="invalid-feedback">
+                                        Please enter a valid email address.
                                     </div>
+                                </div>
+                        
+                                <div class="mb-3">
+                                    <input type="tel" id="phone" name="phone" placeholder="Phone Number" required pattern="[6-9][0-9]{9}"
+                                        class="form-control signup-input" />
+                                    <div class="invalid-feedback">
+                                        Please enter a valid 10‑digit phone number.
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <input type="text" id="referralCode" name="referralCode" placeholder="Referral Code (Optional)" 
+                                        class="form-control signup-input" style="text-transform: uppercase;" maxlength="8" />
+                                    <div class="invalid-feedback" id="referralFeedback">
+                                        Invalid referral code.
+                                    </div>
+                                    <div class="valid-feedback" id="referralSuccess" style="display: none;">
+                                        Valid referral code! You'll receive ₹100 wallet credit.
+                                    </div>
+                                </div>
+                    
+                                <div class="mb-3 position-relative">
+                                    <input type="password" id="password" name="password" placeholder="Password" required minlength="8"
+                                        class="form-control signup-input" />
+                                        <span class="password-toggle" onclick="togglePassword('password')">
+                                            <i class="fas fa-eye" id="password-eye"></i>
+                                        </span>
+                                    <div class="invalid-feedback">
+                                        Password must be at least 8 characters and include uppercase, lowercase, a
+                                        number, and a special
+                                        character.
+                                    </div>
+                                </div>
 
-                                    <!-- 2) EMAIL -->
-                                    <div class="mb-3">
-                                        <input type="email" id="email" name="email" placeholder="Email" required class="form-control signup-input" />
-                                        <div class="invalid-feedback">
-                                            Please enter a valid email address.
-                                        </div>
+                                <div class="mb-3 position-relative">
+                                    <input type="password" id="confirmPassword" name="confirmPassword"
+                                        placeholder="Confirm Password" required class="form-control signup-input" />
+                                        <span class="password-toggle" onclick="togglePassword('confirmPassword')">
+                                            <i class="fas fa-eye" id="confirmPassword-eye"></i>
+                                        </span>
+                                    <div class="invalid-feedback" id="confirmFeedback">
+                                        Passwords do not match.
                                     </div>
-                                    
-                                    <!-- 3) PHONE -->
-                                    <div class="mb-3">
-                                        <input type="tel" id="phone" name="phone" placeholder="Phone Number" required pattern="[6-9][0-9]{9}"
-                                            class="form-control signup-input" />
-                                        <div class="invalid-feedback">
-                                            Please enter a valid 10‑digit phone number.
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- 3) PASSWORD -->
-                                    <div class="mb-3 position-relative">
-                                        <input type="password" id="password" name="password" placeholder="Password" required minlength="8"
-                                            class="form-control signup-input" />
-                                            <span class="password-toggle" onclick="togglePassword('password')">
-                                                <i class="fas fa-eye" id="password-eye"></i>
-                                            </span>
-                                        <div class="invalid-feedback">
-                                            Password must be at least 8 characters and include uppercase, lowercase, a
-                                            number, and a special
-                                            character.
-                                        </div>
-                                    </div>
+                                </div>
+                             
+                                <div class="d-grid mb-4">
+                                    <button type="submit" class="btn btn-signup">
+                                        Signup
+                                    </button>
+                                </div>
+          
+                                <div class="divider-or text-center mb-3">
+                                    <span>or</span>
+                                </div>
 
-                                    <!-- 4) CONFIRM PASSWORD -->
-                                    <div class="mb-3 position-relative">
-                                        <input type="password" id="confirmPassword" name="confirmPassword"
-                                            placeholder="Confirm Password" required class="form-control signup-input" />
-                                            <span class="password-toggle" onclick="togglePassword('confirmPassword')">
-                                                <i class="fas fa-eye" id="confirmPassword-eye"></i>
-                                            </span>
-                                        <div class="invalid-feedback" id="confirmFeedback">
-                                            Passwords do not match.
-                                        </div>
-                                    </div>
+                                <div class="d-grid gap-2 mt-4">
+                                    <a href="/auth/google" class="btn btn-google d-flex align-items-center"
+                                        onclick="location.href='/auth/google'">
+                                        <img src="/imgs/theme/icons8-google.svg" alt="Google" class="google-icon" />
+                                        <span class="google-text">Login with Google</span>
+                                </a>
+                                </div>
 
-                                    <!-- 6) SUBMIT BUTTON -->
-                                    <div class="d-grid mb-4">
-                                        <button type="submit" class="btn btn-signup">
-                                            Signup
-                                        </button>
-                                    </div>
+                                <p class="text-center mt-4 text-muted">
+                                    Already have an account?
+                                    <a href="/login" class="link-login">Sign in now</a>
+                                </p>
+                            </form>
 
-                                    <!-- 7) OR DIVIDER -->
-                                    <div class="divider-or text-center mb-3">
-                                        <span>or</span>
-                                    </div>
-
-                                    <!-- 8) GOOGLE BUTTON -->
-                                    <div class="d-grid gap-2 mt-4">
-                                        <a href="/auth/google" class="btn btn-google d-flex align-items-center"
-                                            onclick="location.href='/auth/google'">
-                                            <img src="/imgs/theme/icons8-google.svg" alt="Google" class="google-icon" />
-                                            <span class="google-text">Login with Google</span>
-                                    </a>
-                                    </div>
-
-                                    <p class="text-center mt-4 text-muted">
-                                        Already have an account?
-                                        <a href="/login" class="link-login">Sign in now</a>
-                                    </p>
-                                </form>
-
-                                <% if (typeof showUserExistsPopup !=='undefined' && showUserExistsPopup) { %>
-                                    <script>
-                                        document.addEventListener('DOMContentLoaded', function () {
-                                            Swal.fire({
-                                                title: 'User Already Exists!',
-                                                text: 'Please try signing in instead.',
-                                                icon: 'error',
-                                                
-                                                width: '350px',
-                                                background: '#fff',
-                                                color: '#333',
-                                                iconColor: '#e74c3c',
-                                                confirmButtonColor: '#e74c3c',
-                                              
-                                                customClass: {
-                                                    popup: 'rounded-4 shadow',
-                                                    title: 'fw-semibold fs-5',
-                                                    confirmButton: 'btn btn-danger px-4 py-2'
-                                                }
-                                            });
+                            <% if (typeof showUserExistsPopup !=='undefined' && showUserExistsPopup) { %>
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function () {
+                                        Swal.fire({
+                                            title: 'User Already Exists!',
+                                            text: 'Please try signing in instead.',
+                                            icon: 'error',
+                                            
+                                            width: '350px',
+                                            background: '#fff',
+                                            color: '#333',
+                                            iconColor: '#e74c3c',
+                                            confirmButtonColor: '#e74c3c',
+                                          
+                                            customClass: {
+                                                popup: 'rounded-4 shadow',
+                                                title: 'fw-semibold fs-5',
+                                                confirmButton: 'btn btn-danger px-4 py-2'
+                                            }
                                         });
-                                    </script>
-                                    <% } %>
+                                    });
+                                </script>
+                            <% } %>
 
-                                        <script>
-                                            document.addEventListener('DOMContentLoaded', function () {
-                                                const form = document.getElementById('signupForm');
-                                                const nameInput = document.getElementById('name');
-                                                const emailInput = document.getElementById('email');
-                                                const passwordInput = document.getElementById('password');
-                                                const confirmPasswordInput = document.getElementById('confirmPassword');
-                                                const phoneInput = document.getElementById('phone'); 
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    const form = document.getElementById('signupForm');
+                                    const nameInput = document.getElementById('name');
+                                    const emailInput = document.getElementById('email');
+                                    const passwordInput = document.getElementById('password');
+                                    const confirmPasswordInput = document.getElementById('confirmPassword');
+                                    const phoneInput = document.getElementById('phone');
+                                    const referralCodeInput = document.getElementById('referralCode');
+                                    
+                                    let referralCodeValid = null; 
 
-                                                form.addEventListener('submit', function (e) {
-                                                    let valid = true;
-
-                                                    [nameInput, emailInput, passwordInput, confirmPasswordInput].forEach(
-                                                        input => input.classList.remove('is-invalid')
-                                                    );
-
-                                                    const nameValue = nameInput.value.trim();
-                                                    const nameRegex = /^[A-Za-z\s]{2,}$/;
-                                                    if (!nameRegex.test(nameValue)) {
-                                                        nameInput.classList.add('is-invalid');
-                                                        valid = false;
-                                                    }
-
-
-                                                    if (!emailInput.checkValidity()) {
-                                                        emailInput.classList.add('is-invalid');
-                                                        valid = false;
-                                                    }
-
-
-                                                    const pwd = passwordInput.value;
-                                                    const pwdRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-                                                    if (!pwdRegex.test(pwd)) {
-                                                        passwordInput.classList.add('is-invalid');
-                                                        valid = false;
-                                                    }
-
-
-                                                    if (passwordInput.value !== confirmPasswordInput.value) {
-                                                        confirmPasswordInput.classList.add('is-invalid');
-                                                        document.getElementById('confirmFeedback').textContent = 'Passwords do not match.';
-                                                        valid = false;
-                                                    }
-                                                      
-                                                    const phoneValue = phoneInput.value.trim();
-                                                    const phoneRegex = /^[6-9]\d{9}$/;
-                                                    if (!phoneRegex.test(phoneValue)) {
-                                                        phoneInput.classList.add('is-invalid');
-                                                        valid = false;
-                                                     }
-
-                                                    if (!valid) {
-                                                        e.preventDefault();
-                                                        e.stopPropagation();
-                                                    }
-                                                });
-
-                                                [nameInput, emailInput, passwordInput, confirmPasswordInput,phoneInput].forEach(
-                                                    input => {
-                                                        input.addEventListener('input', () => {
-                                                            input.classList.remove('is-invalid');
-                                                        });
-                                                        if (input.type === 'checkbox') {
-                                                            input.addEventListener('change', () => {
-                                                                input.classList.remove('is-invalid');
-                                                            });
-                                                        }
-                                                    }
-                                                );
+                                    referralCodeInput.addEventListener('input', function() {
+                                        const code = this.value.trim().toUpperCase();
+                                        this.value = code;
+                                        
+                                        if (code.length === 0) {
+                                            this.classList.remove('is-valid', 'is-invalid');
+                                            document.getElementById('referralSuccess').style.display = 'none';
+                                            referralCodeValid = null;
+                                            return;
+                                        }
+                                        
+                                        if (code.length >= 6) {
+                                            fetch('/validate-referral-code', {
+                                                method: 'POST',
+                                                headers: {
+                                                    'Content-Type': 'application/json',
+                                                },
+                                                body: JSON.stringify({ referralCode: code })
+                                            })
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                if (data.valid) {
+                                                    this.classList.remove('is-invalid');
+                                                    this.classList.add('is-valid');
+                                                    document.getElementById('referralSuccess').style.display = 'block';
+                                                    referralCodeValid = true;
+                                                } else {
+                                                    this.classList.remove('is-valid');
+                                                    this.classList.add('is-invalid');
+                                                    document.getElementById('referralFeedback').textContent = data.message || 'Invalid referral code.';
+                                                    document.getElementById('referralSuccess').style.display = 'none';
+                                                    referralCodeValid = false;
+                                                }
+                                            })
+                                            .catch(error => {
+                                                console.error('Error validating referral code:', error);
+                                                this.classList.remove('is-valid');
+                                                referralCodeValid = null;
                                             });
-                                        </script>
-                            </div>
+                                        }
+                                    });
+
+                                    form.addEventListener('submit', function (e) {
+                                        let valid = true;
+
+                                        [nameInput, emailInput, passwordInput, confirmPasswordInput, phoneInput].forEach(
+                                            input => input.classList.remove('is-invalid')
+                                        );
+
+                                        const nameValue = nameInput.value.trim();
+                                        const nameRegex = /^[A-Za-z\s]{2,}$/;
+                                        if (!nameRegex.test(nameValue)) {
+                                            nameInput.classList.add('is-invalid');
+                                            valid = false;
+                                        }
+
+                                        if (!emailInput.checkValidity()) {
+                                            emailInput.classList.add('is-invalid');
+                                            valid = false;
+                                        }
+
+                                        const pwd = passwordInput.value;
+                                        const pwdRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+                                        if (!pwdRegex.test(pwd)) {
+                                            passwordInput.classList.add('is-invalid');
+                                            valid = false;
+                                        }
+
+                                        if (passwordInput.value !== confirmPasswordInput.value) {
+                                            confirmPasswordInput.classList.add('is-invalid');
+                                            document.getElementById('confirmFeedback').textContent = 'Passwords do not match.';
+                                            valid = false;
+                                        }
+                                          
+                                        const phoneValue = phoneInput.value.trim();
+                                        const phoneRegex = /^[6-9]\d{9}$/;
+                                        if (!phoneRegex.test(phoneValue)) {
+                                            phoneInput.classList.add('is-invalid');
+                                            valid = false;
+                                        }
+                                      
+                                        const referralCode = referralCodeInput.value.trim();
+                                        if (referralCode.length > 0 && referralCodeValid === false) {
+                                            referralCodeInput.classList.add('is-invalid');
+                                            valid = false;
+                                        }
+
+                                        if (!valid) {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                        }
+                                    });
+
+                                    [nameInput, emailInput, passwordInput, confirmPasswordInput, phoneInput].forEach(
+                                        input => {
+                                            input.addEventListener('input', () => {
+                                                input.classList.remove('is-invalid');
+                                            });
+                                            if (input.type === 'checkbox') {
+                                                input.addEventListener('change', () => {
+                                                    input.classList.remove('is-invalid');
+                                                });
+                                            }
+                                        }
+                                    );
+                                });
+                            </script>
                         </div>
-
-                        <!-- LEFT COLUMN: LOGIN -->
-                        <div class="col-lg-6 signup-form-col">
-                            <div class="p-4 p-lg-5"><!-- padding wrapper -->
-                                <div class="text-center mt-4">
-                                    <img src="imgs/anime/signup.png" alt="Login Banner" class="img-fluid rounded"
-                                        style="max-width: 90%; height: auto; margin-top: 80px;" />
-                                </div>
-
-                            </div>
-                        </div>
-
                     </div>
-                </div><!-- /.signup-card -->
-            </div><!-- /.container -->
-        </section>
-    </main>
+                   
+                    <div class="col-lg-6 signup-form-col">
+                        <div class="p-4 p-lg-5">
+                            <div class="text-center mt-4">
+                                <img src="imgs/anime/signup.png" alt="Login Banner" class="img-fluid rounded"
+                                    style="max-width: 90%; height: auto; margin-top: 80px;" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
 
 
     <footer class="main">
@@ -267,7 +307,6 @@
     </footer>
 
 
-    <!-- Vendor JS-->
     <script src="/js/vendor/modernizr-3.6.0.min.js"></script>
     <script src="/js/vendor/jquery-3.6.0.min.js"></script>
     <script src="/js/vendor/jquery-migrate-3.3.0.min.js"></script>
@@ -287,7 +326,6 @@
     <script src="/js/plugins/scrollup.js"></script>
     <script src="/js/plugins/jquery.vticker-min.js"></script>
     <script src="/js/plugins/jquery.theia.sticky.js"></script>
-    <!-- Template  JS -->
     <script src="/js/main.js?v=3.4"></script>
 
     <script>

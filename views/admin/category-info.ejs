@@ -11,12 +11,55 @@
 
   <style>
     .swal-responsive {
-      width: 90% !important;
-      max-width: 320px !important;
-      padding: 1.2rem !important;
-      border-radius: 10px;
-      font-size: 0.95rem;
-    }
+            width: 90% !important;
+            max-width: 320px !important;
+            padding: 1.2rem !important;
+            border-radius: 10px;
+            font-size: 0.95rem;
+        }
+
+          .swal2-popup.swal-responsive {
+            color: #333 !important;
+            border: 2px solid rgba(0, 0, 0, 0.1) !important;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+            backdrop-filter: blur(10px) !important;
+        }
+
+        .swal2-title {
+            color: #e74c3c !important;
+            font-weight: 600 !important;
+            text-shadow: none !important;
+        }
+
+        .swal2-content {
+            color: #666 !important;
+        }
+
+        .swal2-confirm {
+            background: #3BB77E !important;
+            border: none !important;
+            border-radius: 8px !important;
+            padding: 12px 30px !important;
+            font-weight: 600 !important;
+            color: white !important;
+            box-shadow: 0 4px 15px rgba(59, 183, 126, 0.3) !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .swal2-confirm:hover {
+            background: #2a9d5f !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 6px 20px rgba(59, 183, 126, 0.4) !important;
+        }
+
+        .swal2-icon.swal2-error {
+            border-color: #e74c3c !important;
+            color: #e74c3c !important;
+        }
+
+        .swal2-icon.swal2-error .swal2-x-mark {
+            color: #e74c3c !important;
+        }
 
     .table-wrap {
       overflow-x: auto;
@@ -60,6 +103,39 @@
     .btn-sm {
       font-size: 0.75rem;
       padding: 0.15rem 0.65rem;
+    }
+
+    .offer-badge {
+      background: pink;
+      color: white;
+      padding: 2px 5px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      display: inline-block;
+    }
+
+    .add-offer-btn {
+      background: #2b8a8e;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+
+    .add-offer-btn:hover {
+      background: #1e6a6e;
+    }
+
+    .remove-offer-btn {
+      background: transparent;
+      border: none;
+      color: #dc3545;
+      font-size: 1.2rem;
+      margin-left: 2px;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -115,12 +191,18 @@
             <span class="text">Transactions</span>
           </a>
         </li>
-         <li class="menu-item">
+         <li class="menu-item ">
           <a class="menu-link" href="/admin/coupons">
-            <i class="icon material-icons md-account_balance_wallet"></i>
+            <i class="icon material-icons md-local_offer"></i>
             <span class="text">Coupons</span>
           </a>
         </li>
+         <li class="menu-item">
+          <a class="menu-link" href="/admin/sales-report">
+            <i class="icon material-icons md-assessment"></i>
+            <span class="text">Sales Report</span>
+          </a>
+          </li>
       </ul>
     </nav>
   </aside>
@@ -179,17 +261,6 @@
                 <option value="inactive">Inactive</option>
               </select>
             </div>
-            <div class="col-md-2">
-              <label class="form-label">Offer</label>
-              <select name="offerId" class="form-select">
-                <option value="">No Offer</option>
-                <% offers.forEach(offer=>{ %>
-                  <option value="<%= offer._id %>">
-                    <%= offer.title %>
-                  </option>
-                  <% }) %>
-              </select>
-            </div>
             <div class="d-flex justify-content-center">
               <button type="submit" class="btn btn-primary btn-sm">
                 <i class="material-icons md-add_box mt-1" style="font-size:1.2rem;"></i>
@@ -197,21 +268,7 @@
               </button>
             </div>
           </form>
-          <div class="row justify-content-center mb-4">
-            <div class="col-12 col-md-4">
-              <% if (message) { %>
-                <div class="alert alert-success text-center text-nowrap mt-2" style="font-size:0.75rem;">
-                  <%= message %>
-                </div>
-                <% } %>
-                  <% if (error) { %>
-                    <div class="alert alert-danger text-center text-nowrap mt-2" style="font-size:0.75rem;">
-                      <%= error %>
-                    </div>
-                    <% } %>
-            </div>
-          </div>
-
+          <!-- Removed flash message divs -->
         </div>
       </div>
 
@@ -256,7 +313,16 @@
                           <%= cat.itemCount || 0 %>
                         </td>
                         <td>
-                          <%= cat.offerId ? cat.offerId.title : '—' %>
+                          <% if (cat.categoryOffer && cat.categoryOffer > 0) { %>
+                            <span class="offer-badge">
+                              <%= cat.categoryOffer %>% Off
+                              <button class="remove-offer-btn" onclick="removeOffer('<%= cat._id %>')">×</button>
+                            </span>
+                          <% } else { %>
+                            <button class="add-offer-btn" onclick="openOfferModal('<%= cat._id %>', '<%= cat.categoryName %>')">
+                              Add Offer
+                            </button>
+                          <% } %>
                         </td>
                         <td>
                           <%= new Date(cat.createdAt).toLocaleDateString() %>
@@ -265,21 +331,20 @@
                           <button type="button" class="btn btn-sm btn-outline-primary me-1"
                             onclick="toggleEdit('<%= cat._id %>')">Edit</button>
                           <form
-  action="/admin/toggleStatus/<%= cat._id %>?q=<%= q %>&page=<%= page %>"
-  method="POST"
-  class="d-inline"
->
-  <% if (cat.status === 'active') { %>
-    <button type="submit" class="btn btn-sm btn-outline-danger">
-      Deactivate
-    </button>
-  <% } else { %>
-    <button type="submit" class="btn btn-sm btn-outline-success">
-      Activate
-    </button>
-  <% } %>
-</form>
-
+                            action="/admin/toggleStatus/<%= cat._id %>?q=<%= q %>&page=<%= page %>"
+                            method="POST"
+                            class="d-inline"
+                          >
+                            <% if (cat.status === 'active') { %>
+                              <button type="submit" class="btn btn-sm btn-outline-danger">
+                                Deactivate
+                              </button>
+                            <% } else { %>
+                              <button type="submit" class="btn btn-sm btn-outline-success">
+                                Activate
+                              </button>
+                            <% } %>
+                          </form>
                         </td>
                       </tr>
                       <tr id="edit-<%= cat._id %>" style="display:none;">
@@ -292,13 +357,7 @@
                             value="<%= cat.categoryDescription %>" class="form-control form-control-sm" required /></td>
                         <td></td>
                         <td></td>
-                        <td><select form="edit-<%= cat._id %>-form" name="offerId" class="form-select form-select-sm">
-                            <option value="">No Offer</option>
-                            <% offers.forEach(offer=>{ %><option value="<%= offer._id %>" <%=cat.offerId &&
-                                cat.offerId._id.toString()===offer._id.toString()? 'selected' :''%>><%= offer.title %>
-                              </option>
-                              <% }) %>
-                          </select></td>
+                        <td></td>
                         <td></td>
                         <td class="text-end">
                           <div class="d-flex justify-content-end align-items-center gap-2">
@@ -350,8 +409,34 @@
     </footer>
   </main>
 
-
-
+  <!-- Add Offer Modal -->
+  <div class="modal fade" id="offerModal" tabindex="-1" aria-labelledby="offerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="offerModalLabel">Add Offer</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="offerForm" method="POST">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="categoryName" class="form-label">Category</label>
+              <input type="text" class="form-control" id="categoryNameDisplay" readonly>
+            </div>
+            <div class="mb-3">
+              <label for="discountPercentage" class="form-label">Discount %</label>
+              <input type="number" class="form-control" id="discountPercentage" name="categoryOffer" 
+                     min="1" max="100" required placeholder="Enter discount percentage">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Add Offer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 
   <script src="/assets2/js/vendors/jquery-3.6.0.min.js"></script>
   <script src="/assets2/js/vendors/bootstrap.bundle.min.js"></script>
@@ -366,8 +451,71 @@
       viewRow.style.display = viewRow.style.display === 'none' ? '' : 'none';
       editRow.style.display = editRow.style.display === 'none' ? '' : 'none';
     }
-  </script>
 
+    function openOfferModal(categoryId, categoryName) {
+      document.getElementById('categoryNameDisplay').value = categoryName;
+      document.getElementById('offerForm').action = `/admin/addCategoryOffer/${categoryId}?q=<%= q %>&page=<%= page %>`;
+      const modal = new bootstrap.Modal(document.getElementById('offerModal'));
+      modal.show();
+    }
+
+    function removeOffer(categoryId) {
+      Swal.fire({
+        title: 'Remove Offer?',
+        text: 'Are you sure you want to remove this offer?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, remove it!',
+       customClass: {
+                            popup: 'swal-responsive'
+                        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const form = document.createElement('form');
+          form.method = 'POST';
+          form.action = `/admin/removeCategoryOffer/${categoryId}?q=<%= q %>&page=<%= page %>`;
+          document.body.appendChild(form);
+          form.submit();
+        }
+      });
+    }
+  
+    document.addEventListener('DOMContentLoaded', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const successMessage = urlParams.get('success');
+      const errorMessage = urlParams.get('error');
+
+      if (successMessage) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: successMessage,
+          timer: 3000,
+          showConfirmButton: false,
+          customClass: {
+                            popup: 'swal-responsive'
+                        }
+        });
+        window.history.replaceState({}, document.title, window.location.pathname + '?q=<%= q %>&page=<%= page %>');
+      }
+
+      if (errorMessage) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text: errorMessage,
+          timer: 4000,
+          showConfirmButton: false,
+          customClass: {
+                            popup: 'swal-responsive'
+                        }
+        });
+        window.history.replaceState({}, document.title, window.location.pathname + '?q=<%= q %>&page=<%= page %>');
+      }
+    });
+  </script>
 
 </body>
 

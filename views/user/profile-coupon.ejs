@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Available Coupons</title>
+  <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/kaizenicon.svg">
+  <link rel="stylesheet" href="/css/main.css?v=3.4">
+
+    <style>
+
+         .profile-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  padding: 0 2rem;
+  z-index: 3;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 1.5rem;
+  background: rgba(248, 255, 254, 0.95);
+  border: 2px solid #e0e4e8;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  
+  /* Added hover effect that was missing */
+}
+
+.stat-item:hover {
+  transform: scale(1.05);
+  border-color: #3BB77E;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 12px 35px rgba(59, 183, 126, 0.2);
+}
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #3BB77E;
+      margin-bottom: 0.2rem;
+      line-height: 1;
+    }
+    
+             .profile-header {
+      padding: 50px 20px;
+      border-bottom: 1px solid #e0e4e8;
+      color: #333;
+      text-align: center;
+      position: relative;
+      min-height: 300px;
+      overflow: hidden;
+    }
+
+    .profile-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('/imgs/theme/coupon.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    /* Fallback overlay for better text readability */
+    .profile-header::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .profile-header > * {
+      position: relative;
+      z-index: 2;
+    }
+   
+
+    /* Coupon-specific styles */
+    .coupons-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 24px;
+      margin-top: 2rem;
+    }
+
+    .coupon-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+
+    .coupon-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .coupon-card.active {
+      border-color: #3BB77E;
+    }
+
+    .coupon-card.expired {
+      opacity: 0.6;
+      background: #f8f9fa;
+    }
+
+    .coupon-card.upcoming {
+      border-color: #ffc107;
+    }
+
+    .coupon-card.exhausted,
+    .coupon-card.inactive {
+      opacity: 0.6;
+      background: #f8f9fa;
+    }
+
+    .coupon-header {
+      background: linear-gradient(135deg, #3BB77E, #2a9d8f);
+      color: white;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+
+    .coupon-card.expired .coupon-header {
+      background: linear-gradient(135deg, #6c757d, #495057);
+    }
+
+    .coupon-card.upcoming .coupon-header {
+      background: linear-gradient(135deg, #ffc107, #e0a800);
+    }
+
+    .coupon-discount {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .discount-symbol {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .discount-amount {
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .discount-text {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-left: 4px;
+    }
+
+    .coupon-status {
+      background: rgba(255,255,255,0.2);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .coupon-status.active {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .coupon-status.expired {
+      background: rgba(220,53,69,0.2);
+      color: #dc3545;
+    }
+
+    .coupon-status.upcoming {
+      background: rgba(255,193,7,0.2);
+      color: #856404;
+    }
+
+    .coupon-body {
+      padding: 20px;
+    }
+
+    .coupon-name {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .coupon-description {
+      color: #666;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+
+    .coupon-details {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .detail-label {
+      color: #666;
+      font-size: 0.85rem;
+    }
+
+    .detail-value {
+      color: #333;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .coupon-footer {
+      padding: 16px 20px;
+      background: #f8f9fa;
+      border-top: 1px solid #e9ecef;
+    }
+
+    .coupon-code-section {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .coupon-code-input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background: white;
+      font-weight: 600;
+      font-family: monospace;
+      font-size: 0.9rem;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+
+    .copy-code-btn {
+      background: #3BB77E;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .copy-code-btn:hover:not(:disabled) {
+      background: #2a9d8f;
+      transform: scale(1.05);
+    }
+
+    .copy-code-btn:disabled {
+      background: #6c757d;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .use-coupon-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #3BB77E;
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .use-coupon-btn:hover {
+      background: #2a9d8f;
+      color: white;
+      text-decoration: none;
+      transform: scale(1.02);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+    }
+
+    .empty-icon {
+      font-size: 4rem;
+      color: #ddd;
+      margin-bottom: 1rem;
+    }
+
+    .empty-state h3 {
+      color: #333;
+      margin-bottom: 1rem;
+    }
+
+    .empty-state p {
+      margin-bottom: 2rem;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    @media (max-width: 768px) {
+      .coupons-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      
+      .coupon-header {
+        padding: 16px;
+      }
+      
+      .discount-amount {
+        font-size: 1.5rem;
+      }
+      
+      .coupon-body {
+        padding: 16px;
+      }
+      
+      .coupon-footer {
+        padding: 12px 16px;
+      }
+    }
+
+    @media (max-width: 768px) {
+  .profile-header {
+    padding: 30px 15px;       
+    min-height: 200px;        
+    position: relative;
+  }
+
+  .profile-stats {
+    position: relative;         
+    top: auto;                
+    left: auto;
+    right: auto;
+    transform: none;          
+    padding: 0.8rem;          
+    justify-content: space-around;  
+    margin-top: 1rem;
+    gap: 5rem;                   
+  }
+
+  .stat-item {
+    width: 80px;              
+    height: 80px;
+    padding: 2rem;
+    margin: 0 0.5rem;         
+  }
+
+  .stat-number {
+    font-size: 1.4rem;       
+    margin-bottom: 0.1rem;
+  }
+
+  .stat-label {
+    font-size: 0.65rem;       
+    line-height: 1;
+  }
+}
+  </style>
+  
+</head>
+
+<body>
+
+  <header class="header-area header-style-1 header-height-2">
+    <div class="header-top header-top-ptb-1 d-none d-lg-block">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-xl-3 col-lg-4">
+            <div class="header-info">
+            </div>
+          </div>
+          <div class="col-xl-6 col-lg-4">
+            <div class="text-center">
+            </div>
+          </div>
+          <div class="col-xl-3 col-lg-4">
+            <div class="header-info header-info-right">
+              <% if (user) { %>
+                <div class="dropdown">
+                  <a href="#" class="sign-in-link">
+                    <%= user.name %>
+                  </a>
+                  <div class="dropdown-content">
+                    <a href="/userProfile">Profile</a>
+                    <a href="/logout">Logout</a>
+                  </div>
+                </div>
+                <% } else { %>
+                  <ul>
+                    <li>
+                      <i class="fi-rs-user"></i>
+                      <a href="/login">Log In</a>
+                    </li>
+                  </ul>
+                  <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
+      <div class="container">
+        <div class="header-wrap">
+          <div class="logo logo-width-1">
+            <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+          </div>
+          <div class="header-right">
+            <div class="search-style-2"></div>
+            <div class="header-action-right">
+              <div class="header-action-2">
+                <div class="header-action-icon-2">
+                  <a href="/wishlist">
+                    <img class="svgInject" alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
+                    <span id="wishlistItemCount" class="pro-count blue">
+                                            <%= typeof locals.wishlistItemCount !== 'undefined' ? locals.wishlistItemCount : 0 %>
+                                        </span>
+                  </a>
+                </div>
+                <div class="header-action-icon-2">
+                  <a class="mini-cart-icon" href="/cart">
+                    <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
+                    <span id="cartItemCount" class="pro-count blue">
+                                            <%= typeof locals.cartItemCount !=='undefined' ? locals.cartItemCount : 0 %>
+                                        </span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="header-bottom header-bottom-bg-color sticky-bar">
+      <div class="container">
+        <div class="header-wrap header-space-between position-relative">
+          <div class="logo logo-width-1 d-block d-lg-none">
+            <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+          </div>
+          <div class="header-nav d-none d-lg-flex">
+            <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
+              <nav>
+                <ul>
+                  <li><a href="/">Home</a></li>
+                  <li><a href="/shop">Shop</a></li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+          <div class="header-action-right d-block d-lg-none">
+            <div class="header-action-2">
+              <div class="header-action-icon-2">
+                <a href="/wishlist">
+                  <img alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
+                  <span id="wishlistItemCount" class="pro-count blue">
+                                            <%= typeof locals.wishlistItemCount !== 'undefined' ? locals.wishlistItemCount : 0 %>
+                                        </span>
+                </a>
+              </div>
+              <div class="header-action-icon-2">
+                <a class="mini-cart-icon" href="/cart">
+                  <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
+                  <span id="cartItemCount" class="pro-count blue">
+                                            <%= typeof locals.cartItemCount !=='undefined' ? locals.cartItemCount : 0 %>
+                                        </span>
+                </a>
+              <div class="header-action-icon-2 d-block d-lg-none">
+                <div class="burger-icon burger-icon-white">
+                  <span class="burger-icon-top"></span>
+                  <span class="burger-icon-mid"></span>
+                  <span class="burger-icon-bottom"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-header breadcrumb-wrap">
+    <div class="container">
+      <div class="breadcrumb" aria-label="Breadcrumb navigation">
+        <a href="/" rel="nofollow">Home</a>
+        <span></span> My Coupons
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-container">
+    <div class="profile-layout">
+      <button class="mobile-sidebar-toggle" onclick="toggleSidebar()">
+        <span>
+          <i class="fi-rs-menu"></i>
+          My Account Menu
+        </span>
+        <i class="fi-rs-angle-down toggle-icon"></i>
+      </button>
+
+       <aside class="profile-sidebar" id="profileSidebar">
+        <h4>My Account</h4>
+        <ul>
+          <li>
+            <a href="/userProfile">
+              <i class="fi-rs-user"></i> My Profile
+            </a>
+          </li>
+          <li>
+            <a href="/orders">
+              <i class="fi-rs-shopping-bag"></i> My Orders
+            </a>
+          </li>
+          <li>
+            <a href="/profile/addresses">
+              <i class="fi-rs-marker"></i> My Addresses
+            </a>
+          </li>
+          <li>
+            <a href="/wallet">
+              <i class="fi-rs-credit-card"></i> My Wallet
+            </a>
+          </li>
+            <li>
+            <a href="/profile/coupons" class="active">
+              <i class="fi-rs-badge"></i> My Coupons
+            </a>
+          </li>
+          <li>
+            <a href="/profile/security">
+              <i class="fi-rs-shield-check"></i> Security Settings
+            </a>
+          </li>
+          <li>
+            <a href="/logout">
+              <i class="fi-rs-sign-out"></i> Logout
+            </a>
+          </li>
+        </ul>
+      </aside>
+
+      <main class="profile-content">
+        <div class="profile-header">
+          <div class="welcome-section">
+            <div class="profile-avatar-container">
+              <i class="fi-rs-tag" style="font-size: 3rem; color: #3BB77E;"></i>
+            </div>
+
+            <div class="profile-stats">
+              <div class="stat-item">
+                <div class="stat-number">
+                         <%= (locals.coupons && locals.coupons.length) ? locals.coupons.length : 0 %>
+                </div>
+                <div class="stat-label">Available</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-number">
+                    <% 
+                    let usedCount = 0;
+                    if (locals.user && locals.user.appliedCoupons) {
+                      usedCount = locals.user.appliedCoupons.length;
+                    } else if (locals.coupons) {
+                      usedCount = locals.coupons.reduce((total, coupon) => {
+                        return total + (coupon.appliedUsers ? coupon.appliedUsers.length : 0);
+                      }, 0);
+                    }
+                  %>
+                  <%= usedCount %>
+                </div>
+                <div class="stat-label">Used</div>
+              </div>
+            </div>
+          </div>
+        </div>
+  <div class="profile-body">
+          <% if (locals.coupons && locals.coupons.length > 0) { %>
+            <div class="coupons-grid">
+              <% locals.coupons.forEach(function(coupon) { 
+                const now = new Date();
+                const activeDate = new Date(coupon.activeDate);
+                const expireDate = new Date(coupon.expireDate);
+                const isActive = now >= activeDate && now <= expireDate && coupon.status === 'active';
+                const isExpired = now > expireDate;
+                const isUpcoming = now < activeDate;
+                const remainingUses = coupon.limit - (coupon.appliedUsers ? coupon.appliedUsers.length : 0);
+                
+                let statusClass = 'active';
+                let statusText = 'Active';
+                
+                if (isExpired) {
+                  statusClass = 'expired';
+                  statusText = 'Expired';
+                } else if (isUpcoming) {
+                  statusClass = 'upcoming';
+                  statusText = 'Upcoming';
+                } else if (remainingUses <= 0) {
+                  statusClass = 'exhausted';
+                  statusText = 'Exhausted';
+                } else if (coupon.status === 'inactive') {
+                  statusClass = 'inactive';
+                  statusText = 'Inactive';
+                }
+              %>
+                <div class="coupon-card <%= statusClass %>">
+                  <div class="coupon-header">
+                    <div class="coupon-discount">
+                      <span class="discount-symbol">₹</span>
+                      <span class="discount-amount"><%= coupon.discountPrice %></span>
+                      <span class="discount-text">OFF</span>
+                    </div>
+                    <div class="coupon-status <%= statusClass %>">
+                      <%= statusText %>
+                    </div>
+                  </div>
+                  
+                  <div class="coupon-body">
+                    <h3 class="coupon-name"><%= coupon.couponName %></h3>
+                    <% if (coupon.description) { %>
+                      <p class="coupon-description"><%= coupon.description %></p>
+                    <% } %>
+                    
+                    <div class="coupon-details">
+                      <div class="detail-row">
+                        <span class="detail-label">Minimum Purchase:</span>
+                        <span class="detail-value">₹<%= coupon.minimumPrice %></span>
+                      </div>
+                      <div class="detail-row">
+                        <span class="detail-label">Valid Until:</span>
+                        <span class="detail-value"><%= expireDate.toLocaleDateString() %></span>
+                      </div>
+                      <div class="detail-row">
+                        <span class="detail-label">Uses Remaining:</span>
+                        <span class="detail-value"><%= remainingUses > 0 ? remainingUses : 0 %></span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="coupon-footer">
+                    <div class="coupon-code-section">
+                      <input type="text" 
+                             value="<%= coupon.couponCode %>" 
+                             class="coupon-code-input" 
+                             id="code-<%= coupon._id %>"
+                             readonly>
+                      <button class="copy-code-btn" 
+                              onclick="copyCouponCode('<%= coupon._id %>')"
+                              <%= !isActive || remainingUses <= 0 ? 'disabled' : '' %>>
+                        <i class="fi-rs-copy"></i>
+                        <span class="copy-text">Copy</span>
+                      </button>
+                    </div>
+                    
+                    <% if (isActive && remainingUses > 0) { %>
+                      <a href="/shop?coupon=<%= coupon.couponCode %>" class="use-coupon-btn">
+                        <i class="fi-rs-shopping-cart"></i>
+                        Shop Now
+                      </a>
+                    <% } %>
+                  </div>
+                </div>
+              <% }) %>
+            </div>
+          <% } else { %>
+            <div class="empty-state">
+              <div class="empty-icon">
+                <i class="fi-rs-tag"></i>
+              </div>
+              <h3>No Coupons Available</h3>
+              <p>There are currently no active coupons available. Check back later for amazing deals!</p>
+              <a href="/shop" class="btn btn-outline-primary">
+                <i class="fi-rs-shopping-bag"></i>
+                Continue Shopping
+              </a>
+            </div>
+          <% } %>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <footer class="main">
+    <section class="newsletter p-30 text-white wow fadeIn animated">
+      <div class="floating-elements">
+        <div class="floating-element">桜</div>
+        <div class="floating-element">桜</div>
+        <div class="floating-element">⚡</div>
+        <div class="floating-element">🌸</div>
+      </div>
+    </section>
+    <section class="section-padding footer-mid">
+      <div class="container pt-15 pb-20">
+        <div class="row">
+          <div class="col-lg-4 col-md-6">
+            <div class="widget-about font-md mb-md-5 mb-lg-0">
+              <div class="logo logo-width-1 wow fadeIn animated">
+                <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+              </div>
+              <h5 class="mt-20 mb-10 fw-600 text-grey-4 wow fadeIn animated">Contact</h5>
+              <p class="wow fadeIn animated">
+                <strong>Address: </strong>562 Wellington Road, Street 32, San Francisco
+              </p>
+              <p class="wow fadeIn animated">
+                <strong>Phone: </strong>+01 2222 365 /(+91) 01 2345 6789
+              </p>
+              <p class="wow fadeIn animated">
+                <strong>Hours: </strong>10:00 - 18:00, Mon - Sat
+              </p>
+              <h5 class="mb-10 mt-30 fw-600 text-grey-4 wow fadeIn animated">Follow Us</h5>
+              <div class="mobile-social-icon wow fadeIn animated mb-sm-5 mb-md-0">
+                <a href="#"><img src="/imgs/theme/icons/icon-facebook.svg" alt=""></a>
+                <a href="#"><img src="/imgs/theme/icons/icon-twitter.svg" alt=""></a>
+                <a href="#"><img src="/imgs/theme/icons/icon-instagram.svg" alt=""></a>
+                <a href="#"><img src="/imgs/theme/icons/icon-pinterest.svg" alt=""></a>
+                <a href="#"><img src="/imgs/theme/icons/icon-youtube.svg" alt=""></a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-3">
+            <h5 class="widget-title wow fadeIn animated">About</h5>
+            <ul class="footer-list wow fadeIn animated mb-sm-5 mb-md-0">
+              <li><a href="#">About Us</a></li>
+              <li><a href="#">Delivery Information</a></li>
+              <li><a href="#">Privacy Policy</a></li>
+              <li><a href="#">Terms &amp; Conditions</a></li>
+              <li><a href="#">Contact Us</a></li>
+              <li><a href="#">Support Center</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-2  col-md-3">
+            <h5 class="widget-title wow fadeIn animated">My Account</h5>
+            <ul class="footer-list wow fadeIn animated">
+              <li><a href="#">Sign In</a></li>
+              <li><a href="#">View Cart</a></li>
+              <li><a href="#">My Wishlist</a></li>
+              <li><a href="#">Track My Order</a></li>
+              <li><a href="#">Help</a></li>
+              <li><a href="#">Order</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-4">
+            <h5 class="widget-title wow fadeIn animated">Install App</h5>
+            <div class="row">
+              <div class="col-md-8 col-lg-12">
+                <p class="wow fadeIn animated">From App Store or Google Play</p>
+                <div class="download-app wow fadeIn animated">
+                  <a href="#" class="hover-up mb-sm-4 mb-lg-0"><img class="active" src="/imgs/theme/app-store.jpg"
+                      alt=""></a>
+                  <a href="#" class="hover-up"><img src="/imgs/theme/google-play.jpg" alt=""></a>
+                </div>
+              </div>
+              <div class="col-md-4 col-lg-12 mt-md-3 mt-lg-0">
+                <p class="mb-20 wow fadeIn animated">Secured Payment Gateways</p>
+                <img class="wow fadeIn animated" src="/imgs/theme/payment-method.png" alt="">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="container pb-20 wow fadeIn animated">
+      <div class="row">
+        <div class="col-12 mb-20">
+          <div class="footer-bottom"></div>
+        </div>
+        <div class="col-lg-6">
+          <p class="float-md-left font-sm text-muted mb-0">&copy; 2025, <strong class="text-brand">Kaizen
+              Street</strong>
+        </div>
+        <div class="col-lg-6">
+          <p class="text-lg-end text-start font-sm text-muted mb-0">All rights reserved</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/wishlist-count-updater.js"></script>
+  <script src="/js/cart-count-updater.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById('profileSidebar');
+      const toggle = document.querySelector('.mobile-sidebar-toggle');
+
+      sidebar.classList.toggle('show');
+      toggle.classList.toggle('active');
+    }
+
+    document.addEventListener('click', function (event) {
+      const sidebar = document.getElementById('profileSidebar');
+      const toggle = document.querySelector('.mobile-sidebar-toggle');
+
+      if (window.innerWidth <= 991 &&
+        !sidebar.contains(event.target) &&
+        !toggle.contains(event.target) &&
+        sidebar.classList.contains('show')) {
+        sidebar.classList.remove('show');
+        toggle.classList.remove('active');
+      }
+    });
+
+    window.addEventListener('resize', function () {
+      const sidebar = document.getElementById('profileSidebar');
+      const toggle = document.querySelector('.mobile-sidebar-toggle');
+
+      if (window.innerWidth > 991) {
+        sidebar.classList.remove('show');
+        toggle.classList.remove('active');
+      }
+    });
+
+    function copyCouponCode(couponId) {
+      const codeInput = document.getElementById(`code-${couponId}`);
+      const copyBtn = codeInput.nextElementSibling;
+      const copyText = copyBtn.querySelector('.copy-text');
+
+      codeInput.select();
+      codeInput.setSelectionRange(0, 99999); 
+
+      try {
+        document.execCommand('copy');
+     
+        copyText.textContent = 'Copied!';
+        copyBtn.style.background = '#28a745';
+ 
+        setTimeout(() => {
+          copyText.textContent = 'Copy';
+          copyBtn.style.background = '';
+        }, 2000);
+      
+        showMessage('Coupon copied to clipboard!!', 'success');
+      } catch (err) {
+        console.error('Could not copy text: ', err);
+        showMessage('Failed to copy coupon code', 'error');
+      }
+    }
+
+    function showMessage(message, type = 'info') {
+      const toast = document.createElement('div');
+      toast.className = `toast-message toast-${type}`;
+      toast.textContent = message;
+      toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#17a2b8'};
+        color: white;
+        padding: 10px 18px;
+        border-radius: 5px;
+        z-index: 10000;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      `;
+
+      document.body.appendChild(toast);
+    
+      setTimeout(() => toast.style.opacity = '1', 100);
+   
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => document.body.removeChild(toast), 300);
+      }, 1500);
+    }
+
+    document.documentElement.style.scrollBehavior = 'smooth';
+   
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      const couponCards = document.querySelectorAll('.coupon-card');
+      couponCards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+        observer.observe(card);
+      });
+    });
+    
+  </script>
+</body>
+
+</html>

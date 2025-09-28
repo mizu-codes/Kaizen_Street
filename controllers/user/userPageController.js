@@ -4,11 +4,62 @@ const Category = require('../../models/categorySchema');
 const Cart = require('../../models/cartSchema');
 const Wishlist = require('../../models/wishlistSchema');
 
+
+function getBestOfferForProduct(product) {
+    try {
+        const productOffer = product.productOffer || 0;
+        const categoryOffer = product.category?.categoryOffer || 0;
+
+        const maxOffer = Math.max(productOffer, categoryOffer);
+
+        if (maxOffer === 0) {
+            return {
+                hasOffer: false,
+                discountPercentage: 0,
+                offerType: null,
+                originalPrice: product.regularPrice,
+                finalPrice: product.regularPrice,
+                discountAmount: 0
+            };
+        }
+
+        let offerType;
+        if (categoryOffer > productOffer) {
+            offerType = 'category';
+        } else if (productOffer > categoryOffer) {
+            offerType = 'product';
+        } else {
+            offerType = 'category';
+        }
+
+        const discountAmount = (product.regularPrice * maxOffer) / 100;
+        const finalPrice = product.regularPrice - discountAmount;
+
+        return {
+            hasOffer: true,
+            discountPercentage: maxOffer,
+            offerType: offerType,
+            originalPrice: product.regularPrice,
+            finalPrice: Math.round(finalPrice * 100) / 100,
+            discountAmount: Math.round(discountAmount * 100) / 100
+        };
+
+    } catch (error) {
+        console.error('Error calculating best offer for product:', error);
+        return {
+            hasOffer: false,
+            discountPercentage: 0,
+            offerType: null,
+            originalPrice: product.regularPrice,
+            finalPrice: product.regularPrice,
+            discountAmount: 0
+        };
+    }
+}
+
 const loadHomepage = async (req, res) => {
     try {
-
         const userId = req.session.userId;
-
         const categories = await Category.find({ status: 'active' }).lean();
 
         let productData = await Product.find({
@@ -23,17 +74,23 @@ const loadHomepage = async (req, res) => {
             ]
         }).populate({
             path: 'category',
-            select: 'categoryName',
+            select: 'categoryName categoryOffer',
             match: { status: 'active' }
         }).lean();
 
         productData = productData.filter(p => p.category);
-
         productData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         productData = productData.slice(0, 4);
 
-        let wishlistIds = [];
+        const productsWithOffers = productData.map(product => {
+            const offerInfo = getBestOfferForProduct(product);
+            return {
+                ...product,
+                offer: offerInfo
+            };
+        });
 
+        let wishlistIds = [];
         if (userId) {
             const wishlist = await Wishlist.findOne({ userId }).lean();
             if (wishlist?.items) {
@@ -41,7 +98,7 @@ const loadHomepage = async (req, res) => {
             }
         }
 
-        return res.render('home', { products: productData, categories, wishlistIds });
+        return res.render('home', { products: productsWithOffers, categories, wishlistIds });
     } catch (error) {
         console.log('Home page load error:', error);
         return res.status(500).send('Server error');
@@ -50,9 +107,7 @@ const loadHomepage = async (req, res) => {
 
 const loadShoppingPage = async (req, res) => {
     try {
-
         const userId = req.session.userId;
-
         const perPage = 6;
         const page = Math.max(parseInt(req.query.page) || 1, 1);
         const search = (req.query.search || '').trim();
@@ -63,7 +118,6 @@ const loadShoppingPage = async (req, res) => {
         const maxPrice = parseFloat(req.query.maxPrice) || 5000;
 
         let wishlistIds = [];
-
         if (userId) {
             const wishlist = await Wishlist.findOne({ userId }).lean();
             if (wishlist?.items) {
@@ -73,7 +127,7 @@ const loadShoppingPage = async (req, res) => {
 
         const filter = {
             isBlocked: false,
-            status: 'active', 
+            status: 'active',
             $or: [
                 { "stock.S": { $gt: 0 } },
                 { "stock.M": { $gt: 0 } },
@@ -127,25 +181,33 @@ const loadShoppingPage = async (req, res) => {
 
         const categories = await Category.find({ status: 'active' }).lean();
 
-    let products = await Product.find(filter)
-      .populate({
-        path:   'category',
-        select: 'categoryName status',
-        match:  { status: 'active' }
-      })
-      .sort(sortCriteria)
-      .skip(perPage * (page - 1))
-      .limit(perPage)
-      .lean();
-      
-    products = products.filter(p => p.category);
+        let products = await Product.find(filter)
+            .populate({
+                path: 'category',
+                select: 'categoryName status categoryOffer',
+                match: { status: 'active' }
+            })
+            .sort(sortCriteria)
+            .skip(perPage * (page - 1))
+            .limit(perPage)
+            .lean();
 
-    const count = await Product.countDocuments(filter);
-    const pages = Math.ceil(count / perPage);
+        products = products.filter(p => p.category);
+
+        const productsWithOffers = products.map(product => {
+            const offerInfo = getBestOfferForProduct(product);
+            return {
+                ...product,
+                offer: offerInfo
+            };
+        });
+
+        const count = await Product.countDocuments(filter);
+        const pages = Math.ceil(count / perPage);
 
         res.render('shop', {
             categories,
-            products,
+            products: productsWithOffers,
             search,
             category,
             sort: sortOption,
@@ -166,7 +228,7 @@ const loadShoppingPage = async (req, res) => {
             wishlistIds
         });
     } catch (error) {
-        console.error('Shope page error:', error);
+        console.error('Shop page error:', error);
         res.redirect('/pageNotFound');
     }
 };
@@ -188,53 +250,40 @@ const loadProductDetails = async (req, res) => {
                 { "stock.XXL": { $gt: 0 } }
             ]
         }).populate({
-            path:  'category',
-            select:'categoryName status',
-            match: { status: 'active' }    
+            path: 'category',
+            select: 'categoryName status categoryOffer',
+            match: { status: 'active' }
         });
 
-        if (!productDoc) {
+        if (!productDoc || productDoc.isBlocked || !productDoc.category) {
             return res.status(404).render('page-404', { message: 'Product not found' });
         }
 
-        if (productDoc.isBlocked) {
-            return res.status(404).render('page-404', { message: 'Product not found' });
-        }
-
-        if (!productDoc.category) {
-            return res.status(404).render('page-404', { message: 'Product not found' });
-        }
-
-        const regularPrice = productDoc.regularPrice;
-        const discountPrice = productDoc.discountPrice;
-        const discountPercentage = regularPrice > discountPrice
-            ? Math.round((1 - discountPrice / regularPrice) * 100)
-            : 0;
+        const offerInfo = getBestOfferForProduct(productDoc);
 
         const relatedDocs = await Product.find({
             category: productDoc.category._id,
             _id: { $ne: productDoc._id },
             isBlocked: false,
             status: 'active'
-         }).populate({
+        }).populate({
             path: 'category',
-            match: { status: 'active' } 
+            select: 'categoryName categoryOffer',
+            match: { status: 'active' }
         })
-        .sort({ createdAt: -1 })
-        .lean();
-        
+            .sort({ createdAt: -1 })
+            .lean();
+
         const filtered = relatedDocs.filter(p => p.category);
         const relatedProducts = filtered.map(p => {
-            const discountPercent = p.regularPrice > p.discountPrice
-                ? Math.round((1 - p.discountPrice / p.regularPrice) * 100)
-                : 0;
+            const relatedOfferInfo = getBestOfferForProduct(p);
             return {
                 _id: p._id,
                 productName: p.productName,
                 productImage: p.productImage.slice(0, 2),
                 regularPrice: p.regularPrice,
                 discountPrice: p.discountPrice,
-                discountPercentage: discountPercent
+                offer: relatedOfferInfo
             };
         });
 
@@ -243,14 +292,15 @@ const loadProductDetails = async (req, res) => {
             productName: productDoc.productName,
             category: productDoc.category._id,
             categoryName: productDoc.category.categoryName,
-            regularPrice,
-            discountPrice,
-            discountPercentage,
+            regularPrice: productDoc.regularPrice,
+            discountPrice: productDoc.discountPrice,
+            productOffer: productDoc.productOffer,
             description: productDoc.description,
             specifications: productDoc.specifications || '',
             size: productDoc.size || [],
             stock: productDoc.stock || {},
-            productImage: productDoc.productImage.slice(0, 5)
+            productImage: productDoc.productImage.slice(0, 5),
+            offer: offerInfo
         };
 
         let cartCount = 0;
@@ -275,7 +325,7 @@ const loadProductDetails = async (req, res) => {
             pageTitle: product.productName,
             selectedSize: null,
             cartItemCount: cartCount,
-            wishlistIds,             
+            wishlistIds,
             isInWishlist: wishlistIds.includes(product._id.toString())
         });
 
@@ -285,9 +335,8 @@ const loadProductDetails = async (req, res) => {
     }
 };
 
-
 module.exports = {
     loadHomepage,
     loadShoppingPage,
     loadProductDetails,
-}
+};
