@@ -38,7 +38,7 @@ const orderItemSubschema = new Schema(
     },
     status: {
       type: String,
-      enum: ["Placed", "Processing", "Shipped", "Out for Delivery", "Delivered", "Cancelled", "Returned"],
+      enum: ["Placed", "Processing", "Shipped", "Out for Delivery", "Delivered", "Cancelled", "Returned", "Payment Failed"],
       default: "Placed",
     },
     cancellationReason: {
@@ -104,6 +104,17 @@ const orderSchema = new Schema(
       default: 0,
       min: 0,
     },
+    coupon: {
+      couponId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Coupon'
+      },
+      couponCode: String,
+      discountAmount: {
+        type: Number,
+        default: 0
+      }
+    },
     totalAmount: {
       type: Number,
       required: true,
@@ -144,6 +155,7 @@ const orderSchema = new Schema(
         "Delivered",
         "Cancelled",
         "Returned",
+        "Payment Failed"
       ],
       default: "Placed",
     },

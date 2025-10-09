@@ -10,6 +10,261 @@
   <link rel="stylesheet" href="/css/main.css?v=3.4">
 </head>
 <style>
+  .compact-alert {
+    width: 90% !important;
+    max-width: 320px !important;
+    padding: 1.5rem !important;
+    border-radius: 10px !important;
+  }
+
+  .compact-alert .swal2-icon {
+    width: 60px !important;
+    height: 60px !important;
+    margin: 1rem auto !important;
+  }
+
+  .compact-alert .swal2-title {
+    font-size: 20px !important;
+    padding: 0.5rem 0 !important;
+  }
+
+  .compact-alert .swal2-html-container {
+    font-size: 14px !important;
+    margin: 0.5rem 0 1rem 0 !important;
+  }
+
+  .bottom-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    width: 100%;
+  }
+
+  .btn-back-to-orders {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    text-decoration: none;
+    border: none;
+    padding: 12px 32px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
+
+  .btn-back-to-orders:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+  }
+
+  .btn-retry-payment {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    width: auto;
+    margin-top: 12px;
+  }
+
+  .btn-retry-payment:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+  }
+
+  .btn-retry-payment:active,
+  .btn-back-to-orders:active {
+    transform: translateY(0);
+  }
+
+  .btn-retry-payment i,
+  .btn-back-to-orders i {
+    font-size: 18px;
+  }
+
+
+  .btn-retry-payment::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+  }
+
+  .btn-retry-payment:hover::before {
+    left: 100%;
+  }
+
+  .btn-retry-payment:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  }
+
+  .btn-retry-payment:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  }
+
+  .swal2-popup.swal-responsive {
+    color: #333 !important;
+    border: 2px solid rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+    backdrop-filter: blur(10px) !important;
+  }
+
+  .swal2-title {
+    color: #e74c3c !important;
+    font-weight: 600 !important;
+    text-shadow: none !important;
+  }
+
+  .swal2-content {
+    color: #666 !important;
+  }
+
+  .swal2-confirm {
+    background: #3BB77E !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 12px 30px !important;
+    font-weight: 600 !important;
+    color: white !important;
+    box-shadow: 0 4px 15px rgba(59, 183, 126, 0.3) !important;
+    transition: all 0.3s ease !important;
+  }
+
+  .swal2-confirm:hover {
+    background: #2a9d5f !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 20px rgba(59, 183, 126, 0.4) !important;
+  }
+
+  .swal2-icon.swal2-error {
+    border-color: #e74c3c !important;
+    color: #e74c3c !important;
+  }
+
+  .swal2-icon.swal2-error .swal2-x-mark {
+    color: #e74c3c !important;
+  }
+
+  .swal-responsive {
+    width: 90% !important;
+    max-width: 320px !important;
+    padding: 1.2rem !important;
+    border-radius: 10px;
+    font-size: 0.95rem;
+  }
+
+  .payment-failed-section {
+    margin-top: 20px;
+    animation: slideInUp 0.5s ease-out;
+  }
+
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .payment-failed-section>div {
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
+    border: 2px solid #dc3545;
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.1);
+  }
+
+  .payment-failed-section h4 {
+    color: #dc3545;
+    margin-bottom: 12px;
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .payment-failed-section p {
+    color: #666;
+    margin-bottom: 20px;
+    font-size: 14px;
+    line-height: 1.6;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Status badge for Payment Failed */
+  .status-badge.status-payment-failed {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .btn-retry-payment {
+      width: 100%;
+      justify-content: center;
+      padding: 12px 24px;
+      font-size: 15px;
+    }
+  }
+
+  /* Loading animation for retry button */
+  .btn-retry-payment.loading {
+    pointer-events: none;
+    opacity: 0.7;
+  }
+
+  .btn-retry-payment.loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 0.6s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
   .pricing-info {
     font-size: 0.85em;
     margin-top: 5px;
@@ -844,8 +1099,8 @@
 
         <div class="profile-body">
           <% if (order) { %>
-            <%  const originalTotal=order.items.reduce((sum,
-              item)=> sum + (item.subtotal || (item.price * item.quantity)), 0);
+            <% const originalTotal=order.items.reduce((sum, item)=> sum + (item.subtotal || (item.price *
+              item.quantity)), 0);
               const orderDiscount = order.discount || 0;
               const actualAmountPaid = originalTotal - orderDiscount;
               %>
@@ -897,9 +1152,8 @@
                   <div class="items-section">
                     <h4>Order Items</h4>
                     <% order.items.forEach((item, index)=> { %>
-                      <% const
-                        itemOriginalSubtotal=item.subtotal || (item.price * item.quantity); let itemActualPaid; if
-                        (orderDiscount> 0 && originalTotal > 0) {
+                      <% const itemOriginalSubtotal=item.subtotal || (item.price * item.quantity); let itemActualPaid;
+                        if (orderDiscount> 0 && originalTotal > 0) {
                         const itemDiscountProportion = itemOriginalSubtotal / originalTotal;
                         const itemDiscountAmount = orderDiscount * itemDiscountProportion;
                         itemActualPaid = itemOriginalSubtotal - itemDiscountAmount;
@@ -1042,10 +1296,18 @@
                     </div>
                   </div>
 
+
                   <div class="bottom-actions">
                     <a href="/orders" class="btn-back-to-orders">
                       <i class="fi-rs-arrow-left"></i> Back to Orders
                     </a>
+
+                    <% if (order.status==='Payment Failed' && order.paymentMethod==='razorpay' ) { %>
+                      <button onclick="retryPayment('<%= order._id %>')" class="btn-retry-payment">
+                        <i class="fi-rs-refresh"></i>
+                        Retry Payment
+                      </button>
+                      <% } %>
                   </div>
                 </div>
               </div>
@@ -1168,6 +1430,7 @@
   <script src="/js/cart-count-updater.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
   <script>
     function toggleSidebar() {
@@ -1318,7 +1581,7 @@
         } = await Swal.fire({
           title: 'Return Item Request',
           html: `<p style="margin-bottom: 15px;"><strong>${itemName}</strong></p>
-                       <p style="margin-bottom: 15px; font-size: 14px; color: #666;">Please select a reason for returning this item:</p>`,
+                         <p style="margin-bottom: 15px; font-size: 14px; color: #666;">Please select a reason for returning this item:</p>`,
           input: 'select',
           inputOptions: RETURN_REASONS,
           inputPlaceholder: 'Select a reason',
@@ -1371,10 +1634,10 @@
           const confirmed = await Swal.fire({
             title: 'Confirm Return Request',
             html: `<p><strong>Item:</strong> ${itemName}</p>
-                           <p><strong>Reason:</strong> ${finalReason}</p>
-                           <p style="margin-top: 15px; font-size: 14px; color: #666;">
-                               Your return request will be reviewed by our team. You'll be notified once it's processed.
-                           </p>`,
+                             <p><strong>Reason:</strong> ${finalReason}</p>
+                             <p style="margin-top: 15px; font-size: 14px; color: #666;">
+                                 Your return request will be reviewed by our team. You'll be notified once it's processed.
+                             </p>`,
             icon: 'question',
             iconColor: '#088178',
             showCancelButton: true,
@@ -1410,9 +1673,9 @@
               icon: 'success',
               title: 'Return Request Submitted',
               html: `<p>Your return request for <strong>${itemName}</strong> has been submitted successfully.</p>
-                               <p style="margin-top: 10px; font-size: 14px; color: #666;">
-                                   You'll receive an update within 24-48 hours.
-                               </p>`,
+                                 <p style="margin-top: 10px; font-size: 14px; color: #666;">
+                                     You'll receive an update within 24-48 hours.
+                                 </p>`,
               confirmButtonText: 'OK',
               confirmButtonColor: '#28a745',
               customClass: {
@@ -1440,10 +1703,191 @@
         }
       });
     });
+
+
+    async function retryPayment(orderId) {
+      const swalOpts = { customClass: { popup: 'compact-alert' } };
+
+      try {
+        Swal.fire({
+          title: 'Processing...',
+          text: 'Creating payment order',
+          allowOutsideClick: false,
+          showConfirmButton: false,
+          willOpen: () => Swal.showLoading(),
+          ...swalOpts
+        });
+
+        const orderRes = await fetch(`/orders/retry-payment/${orderId}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        let orderData;
+        try {
+          orderData = await orderRes.json();
+        } catch (parseErr) {
+          console.error('Failed to parse /orders/retry-payment response', parseErr);
+          Swal.close();
+          return Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Invalid response from server. Check console/network tab.',
+            ...swalOpts
+          });
+        }
+
+        Swal.close();
+
+        if (!orderRes.ok || !orderData.success) {
+          console.error('Retry-payment failed:', {
+            status: orderRes.status,
+            body: orderData
+          });
+
+          return Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: orderData?.message || 'Failed to create payment order.',
+            ...swalOpts
+          });
+        }
+
+        const razorpayAmount = orderData.amount;
+
+        sessionStorage.setItem(
+          'failedOrderDetails',
+          JSON.stringify({
+            orderId,
+            amount: orderData.amount / 100,
+            razorpayOrderId: orderData.razorpayOrderId
+          })
+        );
+
+        const options = {
+          key: orderData.key,
+          amount: razorpayAmount,
+          currency: 'INR',
+          order_id: orderData.razorpayOrderId,
+          name: 'Kaizen Street',
+          description: 'Order Payment Retry',
+          image: '/assets2/imgs/theme/kaizenicon.svg',
+
+          method: {
+            netbanking: true,
+            card: false,
+            wallet: false,
+            upi: false,
+            paylater: false,
+            emi: false
+          },
+
+          handler: async function (response) {
+            Swal.fire({
+              title: 'Verifying Payment...',
+              text: 'Please wait while we confirm your payment',
+              allowOutsideClick: false,
+              showConfirmButton: false,
+              willOpen: () => Swal.showLoading(),
+              ...swalOpts
+            });
+
+            try {
+              const verifyData = {
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature,
+                orderId
+              };
+
+              const verifyRes = await fetch('/orders/verify-retry-payment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(verifyData)
+              });
+
+              const verifyResponseData = await verifyRes.json();
+              Swal.close();
+
+              if (verifyRes.ok && verifyResponseData.success) {
+                sessionStorage.removeItem('failedOrderDetails');
+                await Swal.fire({
+                  icon: 'success',
+                  title: 'Payment Successful!',
+                  text: 'Your payment has been processed successfully.',
+                  showConfirmButton: false,
+                  timer: 2000,
+                  customClass: {
+                    popup: 'swal-responsive'
+                  }
+                });
+                window.location.href = `/checkout/order-success/${orderId}`;
+              } else {
+                console.error('verify-retry-payment failure:', verifyResponseData);
+                return Swal.fire({
+                  icon: 'error',
+                  title: 'Verification Failed',
+                  text: verifyResponseData.message || 'Payment verification failed',
+                  ...swalOpts
+                });
+              }
+            } catch (error) {
+              console.error('Payment verification error:', error);
+              Swal.close();
+              Swal.fire({
+                icon: 'error',
+                title: 'Verification Error',
+                text: 'Something went wrong during verification',
+                ...swalOpts
+              });
+            }
+          },
+          modal: {
+            ondismiss: function () {
+              Swal.fire({
+                icon: 'info',
+                title: 'Payment Cancelled',
+                text: 'You can retry the payment anytime from your order details.',
+                ...swalOpts
+              });
+            }
+          },
+          theme: { color: '#3399cc' },
+          retry: { enabled: true, max_count: 3 },
+          timeout: 600,
+          remember_customer: false
+        };
+
+        const rzp = new Razorpay(options);
+
+        rzp.on('payment.failed', function (response) {
+          console.error('Payment failed event:', response);
+          Swal.fire({
+            icon: 'error',
+            title: 'Payment Failed',
+            text: response?.error?.description || 'Payment could not be processed',
+            confirmButtonText: 'Try Again',
+            showCancelButton: true,
+            cancelButtonText: 'Close',
+            ...swalOpts
+          }).then((result) => {
+            if (result.isConfirmed) retryPayment(orderId);
+          });
+        });
+
+        rzp.open();
+      } catch (err) {
+        console.error('Retry payment error (outer):', err);
+        Swal.close();
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: err?.message || 'Something went wrong. Please try again.',
+          ...swalOpts
+        });
+      }
+    }
   </script>
 
-
-
 </body>
-
 </html>

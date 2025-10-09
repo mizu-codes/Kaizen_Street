@@ -9,8 +9,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/kaizenicon.svg">
     <link rel="stylesheet" href="/css/main.css?v=3.4">
     <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
-    <style>
-        
+    <style>   
         .coupon-help-text {
             font-size: 13px;
             color: #6c757d;
@@ -1970,22 +1969,22 @@
             if (couponForm) couponForm.style.display = 'none';
 
             const appliedCouponHTML = `
-        <div class="applied-coupon" id="appliedCouponDisplay">
-            <div class="applied-coupon-info">
-                <div class="coupon-icon success">
-                    <i class="ri-checkbox-circle-fill"></i>
+            <div class="applied-coupon" id="appliedCouponDisplay">
+                <div class="applied-coupon-info">
+                    <div class="coupon-icon success">
+                        <i class="ri-checkbox-circle-fill"></i>
+                    </div>
+                    <div class="coupon-details">
+                        <h4>${couponData.couponName}</h4>
+                        <p class="coupon-code">Code: ${couponData.couponCode}</p>
+                        <p class="discount-amount">You saved ₹${couponData.discount}</p>
+                    </div>
                 </div>
-                <div class="coupon-details">
-                    <h4>${couponData.couponName}</h4>
-                    <p class="coupon-code">Code: ${couponData.couponCode}</p>
-                    <p class="discount-amount">You saved ₹${couponData.discount}</p>
-                </div>
+                <button class="remove-coupon-btn" onclick="removeCoupon()">
+                    <i class="ri-close-line"></i>
+                </button>
             </div>
-            <button class="remove-coupon-btn" onclick="removeCoupon()">
-                <i class="ri-close-line"></i>
-            </button>
-        </div>
-    `;
+        `;
 
             couponContainer.innerHTML = appliedCouponHTML;
         }
@@ -1994,23 +1993,23 @@
             const couponContainer = document.getElementById('couponContainer');
 
             const couponFormHTML = `
-        <div class="coupon-form" id="couponForm">
-            <div class="coupon-input-container">
-                <input type="text" 
-                       id="couponCodeInput" 
-                       placeholder="Enter coupon code" 
-                       class="coupon-input"
-                       maxlength="20">
-                <button type="button" 
-                        class="apply-coupon-btn" 
-                        id="applyCouponBtn"
-                        onclick="applyCoupon()">
-                    Apply
-                </button>
+            <div class="coupon-form" id="couponForm">
+                <div class="coupon-input-container">
+                    <input type="text" 
+                           id="couponCodeInput" 
+                           placeholder="Enter coupon code" 
+                           class="coupon-input"
+                           maxlength="20">
+                    <button type="button" 
+                            class="apply-coupon-btn" 
+                            id="applyCouponBtn"
+                            onclick="applyCoupon()">
+                        Apply
+                    </button>
+                </div>
+                <div class="coupon-message-text" id="couponMessage" style="display: none; color: #dc3545; font-size: 12px; margin-top: 6px;"></div>
             </div>
-            <div class="coupon-message-text" id="couponMessage" style="display: none; color: #dc3545; font-size: 12px; margin-top: 6px;"></div>
-        </div>
-    `;
+        `;
 
             couponContainer.innerHTML = couponFormHTML;
 
@@ -2285,6 +2284,13 @@
 
                     const razorpayAmount = currentTotal * 100;
 
+                    sessionStorage.setItem('failedOrderDetails', JSON.stringify({
+                        addressId: orderData_response.addressId,
+                        amount: currentTotal,
+                        couponData: orderData.couponData || null,
+                        razorpayOrderId: orderData_response.orderId
+                    }));
+
                     const options = {
                         key: orderData_response.key,
                         amount: razorpayAmount,
@@ -2322,7 +2328,6 @@
                                     addressId: orderData_response.addressId
                                 };
 
-
                                 if (appliedCouponData) {
                                     verifyData.couponData = orderData.couponData;
                                 }
@@ -2337,6 +2342,8 @@
                                 verifySwal.close();
 
                                 if (verifyRes.ok && verifyResponseData.success) {
+                                    sessionStorage.removeItem('failedOrderDetails');
+
                                     await Swal.fire({
                                         icon: 'success',
                                         title: 'Payment Successful!',
@@ -2347,33 +2354,45 @@
                                     });
                                     window.location.href = `/checkout/order-success/${verifyResponseData.orderId}`;
                                 } else {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Payment Verification Failed',
-                                        text: verifyResponseData.message || 'Payment could not be verified.',
-                                        ...swalOpts
-                                    });
+                                    verifySwal.close();
+
+                                    const orderDetails = JSON.parse(sessionStorage.getItem('failedOrderDetails') || '{}');
+                                    const couponCode = orderDetails.couponData?.couponCode || '';
+
+                                    let failureUrl = `/checkout/order-failed?reason=verification_failed&orderId=${response.razorpay_order_id}`;
+                                    if (couponCode) {
+                                        failureUrl += `&couponCode=${encodeURIComponent(couponCode)}`;
+                                    }
+
+                                    window.location.href = failureUrl;
                                 }
                             } catch (error) {
                                 console.error('Payment verification error:', error);
                                 verifySwal.close();
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Verification Error',
-                                    text: 'Something went wrong during payment verification.',
-                                    ...swalOpts
-                                });
+
+                                const orderDetails = JSON.parse(sessionStorage.getItem('failedOrderDetails') || '{}');
+                                const couponCode = orderDetails.couponData?.couponCode || '';
+
+                                let failureUrl = `/checkout/order-failed?reason=verification_error&orderId=${response.razorpay_order_id}`;
+                                if (couponCode) {
+                                    failureUrl += `&couponCode=${encodeURIComponent(couponCode)}`;
+                                }
+
+                                window.location.href = failureUrl;
                             }
                         },
 
                         modal: {
                             ondismiss: function () {
-                                Swal.fire({
-                                    icon: 'warning',
-                                    title: 'Payment Cancelled',
-                                    text: 'You cancelled the payment process.',
-                                    ...swalOpts
-                                });
+                                const orderDetails = JSON.parse(sessionStorage.getItem('failedOrderDetails') || '{}');
+                                const couponCode = orderDetails.couponData?.couponCode || '';
+
+                                let failureUrl = `/checkout/order-failed?reason=cancelled&orderId=${orderData_response.orderId}`;
+                                if (couponCode) {
+                                    failureUrl += `&couponCode=${encodeURIComponent(couponCode)}`;
+                                }
+
+                                window.location.href = failureUrl;
                             }
                         },
 
@@ -2391,16 +2410,47 @@
                     };
 
                     const rzp = new Razorpay(options);
+
+                    rzp.on('payment.failed', function (response) {
+                        console.error('Payment failed:', response.error);
+
+                        const orderDetails = JSON.parse(sessionStorage.getItem('failedOrderDetails') || '{}');
+                        const couponCode = orderDetails.couponData?.couponCode || '';
+
+                        const failureDetails = {
+                            code: response.error.code,
+                            description: response.error.description,
+                            source: response.error.source,
+                            step: response.error.step,
+                            reason: response.error.reason,
+                            orderId: orderData_response.orderId,
+                            metadata: response.error.metadata
+                        };
+
+                        sessionStorage.setItem('paymentFailureDetails', JSON.stringify(failureDetails));
+
+                        let failureUrl = `/checkout/order-failed?reason=payment_failed&orderId=${orderData_response.orderId}&code=${response.error.code}`;
+                        if (couponCode) {
+                            failureUrl += `&couponCode=${encodeURIComponent(couponCode)}`;
+                        }
+
+                        window.location.href = failureUrl;
+                    });
+
                     rzp.open();
 
                 } catch (err) {
                     console.error('Razorpay error:', err);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Payment Error',
-                        text: 'Failed to initialize payment. Please try again.',
-                        ...swalOpts
-                    });
+
+                    const orderDetails = JSON.parse(sessionStorage.getItem('failedOrderDetails') || '{}');
+                    const couponCode = orderDetails.couponData?.couponCode || '';
+
+                    let failureUrl = '/checkout/order-failed?reason=initialization_error';
+                    if (couponCode) {
+                        failureUrl += `&couponCode=${encodeURIComponent(couponCode)}`;
+                    }
+
+                    window.location.href = failureUrl;
                 }
                 return;
             }

@@ -478,7 +478,7 @@
                                     <% } %>
                         </div>
                     </div>
-
+    
                 </div>
             </div>
         </div>
@@ -498,18 +498,17 @@
                                         <circle cx="11" cy="11" r="8"></circle>
                                         <path d="m21 21-4.35-4.35"></path>
                                     </svg>
-                                    <input type="text" class="search-input" placeholder="Search for items..."
-                                        name="search" id="searchInput" autocomplete="off">
+                                    <input type="text" class="search-input" placeholder="Search for items..." name="search"
+                                        id="searchInput" autocomplete="off">
                                     <button type="9" class="search-button" aria-label="Search">
-                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                                            stroke-linejoin="round">
+                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="m9 18 6-6-6-6" />
                                         </svg>
                                     </button>
-                                    <button type="button" id="clear-search" class="search-clear"
-                                        aria-label="Clear search" onclick="document.getElementById('searchInput').value = '' 
-            " style="background:none;border:none;font-size:20px;cursor:pointer;position:absolute;right:60px;top:50%;transform:translateY(-50%);padding:0;margin:0;line-height:1;color:#555;">&times;</button>
+                                    <button type="button" id="clear-search" class="search-clear" aria-label="Clear search"
+                                        onclick="document.getElementById('searchInput').value = '' 
+                " style="background:none;border:none;font-size:20px;cursor:pointer;position:absolute;right:60px;top:50%;transform:translateY(-50%);padding:0;margin:0;line-height:1;color:#555;">&times;</button>
                                 </form>
                             </div>
                         </div>
@@ -518,13 +517,17 @@
                                 <div class="header-action-icon-2">
                                     <a href="/wishlist">
                                         <img class="svgInject" alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
-                                         <span id="wishlistItemCount" class="pro-count blue"><%= wishlistItemCount %></span>
+                                        <span id="wishlistItemCount" class="pro-count blue">
+                                            <%= wishlistItemCount %>
+                                        </span>
                                     </a>
                                 </div>
                                 <div class="header-action-icon-2">
                                     <a class="mini-cart-icon" href="/cart">
                                         <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
-                                        <span id="cartItemCount" class="pro-count blue"><%= cartItemCount %></span>
+                                        <span id="cartItemCount" class="pro-count blue">
+                                            <%= cartItemCount %>
+                                        </span>
                                     </a>
                                 </div>
                             </div>
@@ -540,7 +543,7 @@
                         <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
                     </div>
                     <div class="header-nav d-none d-lg-flex">
-
+    
                         <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
                             <nav>
                                 <ul>
@@ -555,13 +558,17 @@
                             <div class="header-action-icon-2">
                                 <a href="/wishlist">
                                     <img alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
-                                     <span id="wishlistItemCount" class="pro-count blue"><%= wishlistItemCount %></span>
+                                    <span id="wishlistItemCount" class="pro-count blue">
+                                        <%= wishlistItemCount %>
+                                    </span>
                                 </a>
                             </div>
                             <div class="header-action-icon-2">
                                 <a class="mini-cart-icon" href="/cart">
                                     <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
-                                      <span id="cartItemCount" class="pro-count blue"><%= cartItemCount %></span>
+                                    <span id="cartItemCount" class="pro-count blue">
+                                        <%= cartItemCount %>
+                                    </span>
                                 </a>
                             </div>
                             <div class="header-action-icon-2 d-block d-lg-none">
@@ -1114,7 +1121,21 @@
                     });
 
                     const data = await res.json();
-                    console.log('🎯 Add‐to‐Cart response:', data);
+
+                    if (data.redirect) {
+                        await Swal.fire({
+                            icon: 'info',
+                            title: 'Login Required',
+                            text: data.message || 'Please login to add items to cart.',
+                            showConfirmButton: true,
+                            confirmButtonText: 'Go to Login',
+                            customClass: {
+                                popup: 'swal-responsive'
+                            }
+                        });
+                        window.location.href = data.redirect;
+                        return;
+                    }
 
                     if (!res.ok) throw new Error(data.message || `HTTP ${res.status}`);
 
@@ -1131,11 +1152,9 @@
 
                     $submitBtn.prop('disabled', false).text('Add to cart');
 
-                    console.log('🎯 Dispatching cart:updated with', data.cartCount);
-
                     document.dispatchEvent(new CustomEvent('cart:updated', {
-  detail: { count: data.cartCount }
-}));
+                        detail: { count: data.cartCount }
+                    }));
 
                 } catch (error) {
                     console.error('Add to cart error:', error);
@@ -1151,58 +1170,56 @@
                 }
             })
         });
-    </script>
 
-    <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.add-to-wishlist-btn').forEach(btn => {
-      btn.addEventListener('click', async function (e) {
-        e.preventDefault();
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.add-to-wishlist-btn').forEach(btn => {
+                btn.addEventListener('click', async function (e) {
+                    e.preventDefault();
 
-        const productId = this.dataset.productId;
+                    const productId = this.dataset.productId;
 
-        try {
-          const res = await fetch(`/wishlist/add/${productId}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({})
-          });
-          const data = await res.json();
+                    try {
+                        const res = await fetch(`/wishlist/add/${productId}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({})
+                        });
+                        const data = await res.json();
 
-          if (res.ok) {
-            Swal.fire({
-              icon: 'success',
-              title: 'Added to Wishlist!',
-              showConfirmButton: false,
-              timer: 1200,
-              customClass: { popup: 'swal-responsive' }
+                        if (res.ok) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Added to Wishlist!',
+                                showConfirmButton: false,
+                                timer: 1200,
+                                customClass: { popup: 'swal-responsive' }
+                            });
+
+                            document.dispatchEvent(new CustomEvent('wishlist:updated', {
+                                detail: { count: data.itemCount }
+                            }));
+
+                            btn.classList.add('added');
+                            btn.setAttribute('aria-disabled', 'true');
+                        } else {
+                            Swal.fire('Oops!', data.message, 'error');
+                        }
+
+                    } catch (err) {
+                        console.error(err);
+                        Swal.fire('Error', 'Server error', 'error');
+                    }
+                });
             });
-            
-            document.dispatchEvent(new CustomEvent('wishlist:updated', {
-              detail: { count: data.itemCount }
-            }));
-         
-            btn.classList.add('added');
-            btn.setAttribute('aria-disabled', 'true');
-          } else {
-            Swal.fire('Oops!', data.message, 'error');
-          }
 
-        } catch (err) {
-          console.error(err);
-          Swal.fire('Error', 'Server error', 'error');
-        }
-      });
-    });
-   
-    document.addEventListener('wishlist:updated', (e) => {
-      const el = document.getElementById('wishlistItemCount');
-      if (el && e.detail && typeof e.detail.count === 'number') {
-        el.textContent = e.detail.count;
-      }
-    });
-  });
-</script>
+            document.addEventListener('wishlist:updated', (e) => {
+                const el = document.getElementById('wishlistItemCount');
+                if (el && e.detail && typeof e.detail.count === 'number') {
+                    el.textContent = e.detail.count;
+                }
+            });
+        });
+    </script>
 
 
 </body>

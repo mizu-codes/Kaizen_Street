@@ -23,8 +23,8 @@ router.get('/pageNotFound', errorController.pageNotFound);
 
 router.get('/', userPageController.loadHomepage);
 router.get('/shop', userPageController.loadShoppingPage);
-router.get('/products/:productId', userAuth, userPageController.loadProductDetails);
-router.get('/shop/product/:productId', userAuth, userPageController.loadProductDetails);
+router.get('/products/:productId', userPageController.loadProductDetails);
+router.get('/shop/product/:productId', userPageController.loadProductDetails);
 
 router.get('/signup', authController.loadSignup);
 router.post('/signup', authController.signup);
@@ -80,6 +80,9 @@ router.delete('/wishlist/delete/:productId', userAuth, wishlistController.remove
 router.get('/checkout/place-order', userAuth, checkoutController.loadCheckoutPage);
 router.post('/checkout/place-order', userAuth, checkoutController.placeOrder);
 router.get('/checkout/order-success/:orderId', userAuth, checkoutController.orderSuccessPage);
+router.get('/checkout/order-failed', userAuth, checkoutController.orderFailedPage);
+router.post('/checkout/retry-payment', userAuth, checkoutController.retryPayment);
+
 router.patch('/checkout/set-default/:id', userAuth, checkoutController.setDefaultAddress);
 router.delete('/checkout/address/:id', userAuth, checkoutController.deleteAddress);
 router.get('/checkout/add-address', userAuth, addressController.addAddress);
@@ -91,6 +94,8 @@ router.post("/checkout/verify-payment", userAuth, checkoutController.verifyRazor
 router.post('/checkout/apply-coupon', userAuth, checkoutController.applyCoupon);
 router.delete('/checkout/remove-coupon', userAuth, checkoutController.removeCoupon);
 router.get('/checkout/validate-coupon', userAuth, checkoutController.validateCoupon);
+router.post('/orders/retry-payment/:orderId', userAuth, checkoutController.retryPaymentOrders);
+router.post('/orders/verify-retry-payment', userAuth, checkoutController.verifyRetryPayment);
 
 router.get('/orders', userAuth, orderController.loadOrderPage);
 router.get('/orders/:orderId', userAuth, orderController.loadOrderDetailsPage);

@@ -2,15 +2,67 @@
 <html lang="en">
 
 <head>
-      <meta charset="UTF-8" />
+    <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Order Success</title>
+    <title>Order Failed</title>
     <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/kaizenicon.svg">
     <link rel="stylesheet" href="/css/main.css?v=3.4">
     <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        .success-container {
+        .swal2-popup.swal-responsive {
+            color: #333 !important;
+            border: 2px solid rgba(0, 0, 0, 0.1) !important;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+            backdrop-filter: blur(10px) !important;
+        }
+
+        .swal2-title {
+            color: #e74c3c !important;
+            font-weight: 600 !important;
+            text-shadow: none !important;
+        }
+
+        .swal2-content {
+            color: #666 !important;
+        }
+
+        .swal2-confirm {
+            background: #3BB77E !important;
+            border: none !important;
+            border-radius: 8px !important;
+            padding: 12px 30px !important;
+            font-weight: 600 !important;
+            color: white !important;
+            box-shadow: 0 4px 15px rgba(59, 183, 126, 0.3) !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .swal2-confirm:hover {
+            background: #2a9d5f !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 6px 20px rgba(59, 183, 126, 0.4) !important;
+        }
+
+        .swal2-icon.swal2-error {
+            border-color: #e74c3c !important;
+            color: #e74c3c !important;
+        }
+
+        .swal2-icon.swal2-error .swal2-x-mark {
+            color: #e74c3c !important;
+        }
+
+        .swal-responsive {
+            width: 90% !important;
+            max-width: 320px !important;
+            padding: 1.2rem !important;
+            border-radius: 10px;
+            font-size: 0.95rem;
+        }
+
+        .failed-container {
             max-width: 1000px;
             width: 100%;
             display: grid;
@@ -36,31 +88,32 @@
             margin-bottom: 8px;
         }
 
-        .congratulations {
+        .payment-failed-title {
             font-size: 32px;
             font-weight: 700;
-           background-color: black;
+            background: linear-gradient(135deg, #ff1744 0%, #f50057 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 20px;
         }
 
-        .order-info {
+        .error-info {
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
 
-        .order-status {
+        .error-message {
             font-size: 18px;
             font-weight: 500;
             color: #333;
         }
 
-        .delivery-date {
+        .error-description {
             font-size: 16px;
             color: #666;
+            line-height: 1.6;
         }
 
         .buttons {
@@ -69,60 +122,56 @@
             margin-top: 8px;
         }
 
-        .btn {
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: 500;
-            text-decoration: none;
-            cursor: pointer;
-            border: none;
-            transition: all 0.2s ease;
-            display: inline-block;
-            text-align: center;
-            min-width: 120px;
-        }
-
-        .success-btn-primary {
+        .failed-btn-primary {
             background: linear-gradient(135deg, #ff1744 0%, #f50057 50%, #c51162 100%);
             color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 14px;
+            border: 2px solid #ff1744;
+            padding: 8px 13px;
+            border-radius: 6px;
+            font-size: 13px;
             font-weight: 500;
             text-decoration: none;
             cursor: pointer;
-            border: none;
             transition: all 0.2s ease;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             text-align: center;
-            min-width: 140px;
+            white-space: nowrap;
         }
 
-        .success-btn-primary:hover {
+        .failed-btn-primary:hover {
             background: linear-gradient(135deg, #e91e63 0%, #ad1457 50%, #880e4f 100%);
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(255, 23, 68, 0.3);
             color: white;
         }
 
-        .success-btn-secondary {
+        .failed-btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .failed-btn-secondary {
             background-color: transparent;
             color: #ff1744;
             border: 2px solid #ff1744;
-            padding: 10px 22px;
-            border-radius: 8px;
-            font-size: 14px;
+            padding: 8px 13px;
+            border-radius: 6px;
+            font-size: 13px;
             font-weight: 500;
             text-decoration: none;
             cursor: pointer;
             transition: all 0.2s ease;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             text-align: center;
-            min-width: 140px;
+            white-space: nowrap;
         }
 
-        .success-btn-secondary:hover {
+        .failed-btn-secondary:hover {
             background: linear-gradient(135deg, #ff1744 0%, #f50057 50%, #c51162 100%);
             color: white;
             transform: translateY(-1px);
@@ -134,23 +183,61 @@
             flex-direction: column;
             align-items: center;
         }
-        
+
+        .image-section img {
+            opacity: 0;
+            transform: translateY(50px) scale(0.8) rotateX(20deg);
+            animation: bounceInUp 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.3s forwards;
+            filter: blur(10px);
+        }
+
+        @keyframes bounceInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(50px) scale(0.8) rotateX(20deg);
+                filter: blur(10px);
+            }
+
+            60% {
+                opacity: 1;
+                transform: translateY(-10px) scale(1.05) rotateX(-5deg);
+                filter: blur(0);
+            }
+
+            80% {
+                transform: translateY(5px) scale(0.98) rotateX(2deg);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1) rotateX(0deg);
+                filter: blur(0);
+            }
+        }
+
         .main-content {
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: calc(100vh - 200px); 
+            min-height: calc(100vh - 200px);
             padding: 40px 0;
         }
 
+        .error-code {
+            font-size: 12px;
+            color: #999;
+            font-family: monospace;
+            margin-top: 8px;
+        }
+
         @media (max-width: 768px) {
-            .success-container {
+            .failed-container {
                 grid-template-columns: 1fr;
                 gap: 40px;
                 padding: 40px 20px;
             }
 
-            .congratulations {
+            .payment-failed-title {
                 font-size: 28px;
             }
 
@@ -162,7 +249,7 @@
 </head>
 
 <body>
-   
+
     <header class="header-area header-style-1 header-height-2">
         <div class="header-top header-top-ptb-1 d-none d-lg-block">
             <div class="container">
@@ -282,7 +369,7 @@
         </div>
     </header>
 
-       <div class="mobile-header-active mobile-header-wrapper-style">
+    <div class="mobile-header-active mobile-header-wrapper-style">
         <div class="mobile-header-wrapper-inner">
             <div class="mobile-header-top">
                 <div class="mobile-header-logo">
@@ -297,18 +384,12 @@
             </div>
             <div class="mobile-header-content-area">
                 <div class="mobile-menu-wrap mobile-header-border">
-                    <div class="main-categori-wrap mobile-header-border">
-                    </div>
                     <nav>
                         <ul class="mobile-menu">
-                            <li class="menu-item-has-children"><span class="menu-expand"></span><a href="/">Home</a>
-                            </li>
-                            <li class="menu-item-has-children"><span class="menu-expand"></span><a
-                                    href="shop-grid-right.html">shop</a>
-                            </li>
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/shop">Shop</a></li>
                         </ul>
                     </nav>
-                    <!-- mobile menu end -->
                 </div>
                 <div class="mobile-header-info-wrap mobile-header-border">
                     <div class="single-mobile-header-info">
@@ -327,32 +408,45 @@
         </div>
     </div>
 
-      <div class="main-content">
-        <div class="success-container">
+    <div class="main-content">
+        <div class="failed-container">
             <div class="content">
                 <div>
-                    <div class="status-title">Order status</div>
-                    <h1 class="congratulations">Congratulations..!</h1>
+                    <h1 class="payment-failed-title">Payment Failed!!</h1>
                 </div>
 
-                <div class="order-info">
-                    <div class="order-status">Your order is placed</div>
-                    <div class="delivery-date">Item will be delivered on 30th October 2025</div>
+                <div class="error-info">
+                    <div class="error-message">
+                        <%= errorMessage %>
+                    </div>
+                    <div class="error-description">
+                        Don't worry! Your order hasn't been placed and no amount has been deducted from your account.
+                    </div>
+                    <% if (errorCode) { %>
+                        <div class="error-code">Error Code: <%= errorCode %>
+                        </div>
+                        <% } %>
                 </div>
 
-              <div class="buttons">
-                    <a href="/shop" class="success-btn-primary">Continue Shopping</a>
-                    <a href="/orders" class="success-btn-secondary">View orders</a>
+                <div class="buttons">
+                    <% if (hasItems) { %>
+                        <button onclick="retryPayment()" class="failed-btn-primary" id="retryBtn">
+                            <i class="ri-refresh-line"></i> Retry Payment
+                        </button>
+                        <% } %>
+                            <a href="/orders" class="failed-btn-secondary">
+                                View Order Details
+                            </a>
                 </div>
             </div>
 
             <div class="image-section text-center">
-                <img src="/imgs/anime/order-success.png" alt="Order Success" class="img-fluid" style="max-width: 300px;">
+                <img src="/imgs/theme/order-fail.png" alt="Payment Failed" class="img-fluid" style="max-width: 300px;">
             </div>
         </div>
     </div>
 
-     <footer class="main">
+    <footer class="main">
         <section class="section-padding footer-mid">
             <div class="container pt-15 pb-20">
                 <div class="row">
@@ -389,7 +483,7 @@
                             <li><a href="#">Support Center</a></li>
                         </ul>
                     </div>
-                    <div class="col-lg-2  col-md-3">
+                    <div class="col-lg-2 col-md-3">
                         <h5 class="widget-title wow fadeIn animated">My Account</h5>
                         <ul class="footer-list wow fadeIn animated">
                             <li><a href="#">Sign In</a></li>
@@ -427,7 +521,7 @@
                 </div>
                 <div class="col-lg-6">
                     <p class="float-md-left font-sm text-muted mb-0">&copy; 2025, <strong class="text-brand">Kaizen
-                            Street</strong>
+                            Street</strong></p>
                 </div>
                 <div class="col-lg-6">
                     <p class="text-lg-end text-start font-sm text-muted mb-0">All rights reserved</p>
@@ -436,7 +530,7 @@
         </div>
     </footer>
 
-     <script src="/js/vendor/modernizr-3.6.0.min.js"></script>
+    <script src="/js/vendor/modernizr-3.6.0.min.js"></script>
     <script src="/js/vendor/jquery-3.6.0.min.js"></script>
     <script src="/js/vendor/jquery-migrate-3.3.0.min.js"></script>
     <script src="/js/vendor/bootstrap.bundle.min.js"></script>
@@ -460,10 +554,85 @@
     <script src="/js/shop.js?v=3.4"></script>
 
     <script>
-        window.history.pushState(null, '', window.location.href);
+        async function retryPayment() {
+            const retryBtn = document.getElementById('retryBtn');
+            const originalText = retryBtn.innerHTML;
 
+            try {
+                retryBtn.disabled = true;
+                retryBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Validating...';
+
+                const orderDetails = sessionStorage.getItem('failedOrderDetails');
+
+                if (!orderDetails) {
+                    window.location.href = '/cart';
+                    return;
+                }
+
+                const parsedDetails = JSON.parse(orderDetails);
+
+                const res = await fetch('/checkout/retry-payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        addressId: parsedDetails.addressId,
+                        couponData: parsedDetails.couponData
+                    })
+                });
+
+                const data = await res.json();
+
+                if (data.success && data.canRetry) {
+                    await Swal.fire({
+                        icon: 'info',
+                        title: 'Redirecting...',
+                        text: 'Taking you back to checkout',
+                        timer: 1500,
+                        showConfirmButton: false,
+                        customClass: {
+                            popup: 'swal-responsive'
+                        }
+                    });
+
+                    window.location.href = '/checkout/place-order';
+                } else {
+                    throw new Error(data.message || 'Unable to retry payment');
+                }
+
+            } catch (error) {
+                console.error('Retry payment error:', error);
+
+                await Swal.fire({
+                    icon: 'error',
+                    title: 'Cannot Retry',
+                    text: error.message || 'Please go to checkout and try again.',
+                    confirmButtonText: 'Go to Checkout',
+                    customClass: {
+                        popup: 'swal-responsive'
+                    }
+                });
+
+                sessionStorage.removeItem('failedOrderDetails');
+                sessionStorage.removeItem('paymentFailureDetails');
+
+                window.location.href = '/checkout/place-order';
+
+            } finally {
+                retryBtn.disabled = false;
+                retryBtn.innerHTML = originalText;
+            }
+        }
+
+        window.history.pushState(null, '', window.location.href);
         window.addEventListener('popstate', function () {
-            window.location.replace('/pageNotFound');
+            window.history.pushState(null, '', window.location.href);
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const failureDetails = sessionStorage.getItem('paymentFailureDetails');
+            if (failureDetails) {
+                console.log('Payment Failure Details:', JSON.parse(failureDetails));
+            }
         });
     </script>
 

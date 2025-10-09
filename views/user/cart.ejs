@@ -930,7 +930,7 @@
         </div>
     </footer>
 
-     <div id="preloader-active">
+    <div id="preloader-active">
         <div class="preloader d-flex align-items-center justify-content-center">
             <div class="preloader-inner position-relative">
                 <div class="text-center">
@@ -945,7 +945,7 @@
         </div>
     </div>
 
-   
+
     <script src="/js/vendor/jquery-3.6.0.min.js"></script>
     <script src="/js/main.js?v=3.4"></script>
     <script src="/js/shop.js?v=3.4"></script>
@@ -1095,6 +1095,51 @@
 
         function proceedToCheckout() {
             window.location.href = '/checkout/place-order';
+        }
+
+
+        async function addToCartHandler(productId, size) {
+            try {
+                const res = await fetch(`/cart/add/${productId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ size })
+                });
+
+                const data = await res.json();
+
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                    return;
+                }
+
+                if (!res.ok) {
+                    throw new Error(data.message);
+                }
+
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'Added to Cart!',
+                    text: data.message,
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+
+
+                if (data.cartCount !== undefined) {
+                    const cartBadge = document.querySelector('.cart-count');
+                    if (cartBadge) {
+                        cartBadge.textContent = data.cartCount;
+                    }
+                }
+
+            } catch (err) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: err.message || 'Something went wrong'
+                });
+            }
         }
 
     </script>

@@ -9,47 +9,46 @@
   <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/kaizenicon.svg">
   <link rel="stylesheet" href="/css/main.css?v=3.4">
 
-    <style>
+  <style>
+    .profile-stats {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 2rem;
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      transform: translateY(-50%);
+      padding: 0 2rem;
+      z-index: 3;
+    }
 
-         .profile-stats {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 2rem;
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  transform: translateY(-50%);
-  padding: 0 2rem;
-  z-index: 3;
-}
+    .stat-item {
+      text-align: center;
+      padding: 1.5rem;
+      background: rgba(248, 255, 254, 0.95);
+      border: 2px solid #e0e4e8;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+      width: 120px;
+      height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 
-.stat-item {
-  text-align: center;
-  padding: 1.5rem;
-  background: rgba(248, 255, 254, 0.95);
-  border: 2px solid #e0e4e8;
-  border-radius: 50%;
-  transition: all 0.3s ease;
-  width: 120px;
-  height: 120px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-  
-  /* Added hover effect that was missing */
-}
+      /* Added hover effect that was missing */
+    }
 
-.stat-item:hover {
-  transform: scale(1.05);
-  border-color: #3BB77E;
-  background: rgba(255, 255, 255, 0.98);
-  box-shadow: 0 12px 35px rgba(59, 183, 126, 0.2);
-}
+    .stat-item:hover {
+      transform: scale(1.05);
+      border-color: #3BB77E;
+      background: rgba(255, 255, 255, 0.98);
+      box-shadow: 0 12px 35px rgba(59, 183, 126, 0.2);
+    }
 
     .stat-number {
       font-size: 2rem;
@@ -58,8 +57,8 @@
       margin-bottom: 0.2rem;
       line-height: 1;
     }
-    
-             .profile-header {
+
+    .profile-header {
       padding: 50px 20px;
       border-bottom: 1px solid #e0e4e8;
       color: #333;
@@ -92,11 +91,11 @@
       height: 100%;
     }
 
-    .profile-header > * {
+    .profile-header>* {
       position: relative;
       z-index: 2;
     }
-   
+
 
     /* Coupon-specific styles */
     .coupons-grid {
@@ -109,7 +108,7 @@
     .coupon-card {
       background: white;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       overflow: hidden;
       transition: all 0.3s ease;
       border: 2px solid transparent;
@@ -117,7 +116,7 @@
 
     .coupon-card:hover {
       transform: translateY(-4px);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     }
 
     .coupon-card.active {
@@ -181,7 +180,7 @@
     }
 
     .coupon-status {
-      background: rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.2);
       padding: 4px 12px;
       border-radius: 20px;
       font-size: 0.85rem;
@@ -191,16 +190,16 @@
     }
 
     .coupon-status.active {
-      background: rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.2);
     }
 
     .coupon-status.expired {
-      background: rgba(220,53,69,0.2);
+      background: rgba(220, 53, 69, 0.2);
       color: #dc3545;
     }
 
     .coupon-status.upcoming {
-      background: rgba(255,193,7,0.2);
+      background: rgba(255, 193, 7, 0.2);
       color: #856404;
     }
 
@@ -348,62 +347,62 @@
         grid-template-columns: 1fr;
         gap: 16px;
       }
-      
+
       .coupon-header {
         padding: 16px;
       }
-      
+
       .discount-amount {
         font-size: 1.5rem;
       }
-      
+
       .coupon-body {
         padding: 16px;
       }
-      
+
       .coupon-footer {
         padding: 12px 16px;
       }
     }
 
     @media (max-width: 768px) {
-  .profile-header {
-    padding: 30px 15px;       
-    min-height: 200px;        
-    position: relative;
-  }
+      .profile-header {
+        padding: 30px 15px;
+        min-height: 200px;
+        position: relative;
+      }
 
-  .profile-stats {
-    position: relative;         
-    top: auto;                
-    left: auto;
-    right: auto;
-    transform: none;          
-    padding: 0.8rem;          
-    justify-content: space-around;  
-    margin-top: 1rem;
-    gap: 5rem;                   
-  }
+      .profile-stats {
+        position: relative;
+        top: auto;
+        left: auto;
+        right: auto;
+        transform: none;
+        padding: 0.8rem;
+        justify-content: space-around;
+        margin-top: 1rem;
+        gap: 5rem;
+      }
 
-  .stat-item {
-    width: 80px;              
-    height: 80px;
-    padding: 2rem;
-    margin: 0 0.5rem;         
-  }
+      .stat-item {
+        width: 80px;
+        height: 80px;
+        padding: 2rem;
+        margin: 0 0.5rem;
+      }
 
-  .stat-number {
-    font-size: 1.4rem;       
-    margin-bottom: 0.1rem;
-  }
+      .stat-number {
+        font-size: 1.4rem;
+        margin-bottom: 0.1rem;
+      }
 
-  .stat-label {
-    font-size: 0.65rem;       
-    line-height: 1;
-  }
-}
+      .stat-label {
+        font-size: 0.65rem;
+        line-height: 1;
+      }
+    }
   </style>
-  
+
 </head>
 
 <body>
@@ -459,16 +458,17 @@
                   <a href="/wishlist">
                     <img class="svgInject" alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
                     <span id="wishlistItemCount" class="pro-count blue">
-                                            <%= typeof locals.wishlistItemCount !== 'undefined' ? locals.wishlistItemCount : 0 %>
-                                        </span>
+                      <%= typeof locals.wishlistItemCount !=='undefined' ? locals.wishlistItemCount : 0 %>
+                    </span>
+
                   </a>
                 </div>
                 <div class="header-action-icon-2">
                   <a class="mini-cart-icon" href="/cart">
                     <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
                     <span id="cartItemCount" class="pro-count blue">
-                                            <%= typeof locals.cartItemCount !=='undefined' ? locals.cartItemCount : 0 %>
-                                        </span>
+                      <%= typeof locals.cartItemCount !=='undefined' ? locals.cartItemCount : 0 %>
+                    </span>
                   </a>
                 </div>
               </div>
@@ -499,17 +499,55 @@
                 <a href="/wishlist">
                   <img alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
                   <span id="wishlistItemCount" class="pro-count blue">
-                                            <%= typeof locals.wishlistItemCount !== 'undefined' ? locals.wishlistItemCount : 0 %>
-                                        </span>
+                    <%= typeof locals.wishlistItemCount !=='undefined' ? locals.wishlistItemCount : 0 %>
+                  </span>
                 </a>
               </div>
               <div class="header-action-icon-2">
                 <a class="mini-cart-icon" href="/cart">
                   <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
                   <span id="cartItemCount" class="pro-count blue">
-                                            <%= typeof locals.cartItemCount !=='undefined' ? locals.cartItemCount : 0 %>
-                                        </span>
+                    <%= typeof locals.cartItemCount !=='undefined' ? locals.cartItemCount : 0 %>
+                  </span>
                 </a>
+                <div class="cart-dropdown-wrap cart-dropdown-hm2">
+                  <ul>
+                    <li>
+                      <div class="shopping-cart-img">
+                        <a href="shop-product-right.html"><img alt="Evara" src="/imgs/shop/thumbnail-3.jpg"></a>
+                      </div>
+                      <div class="shopping-cart-title">
+                        <h4><a href="shop-product-right.html">Plain Striola Shirts</a></h4>
+                        <h3><span>1 × </span>$800.00</h3>
+                      </div>
+                      <div class="shopping-cart-delete">
+                        <a href="#"><i class="fi-rs-cross-small"></i></a>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="shopping-cart-img">
+                        <a href="shop-product-right.html"><img alt="Evara" src="/imgs/shop/thumbnail-4.jpg"></a>
+                      </div>
+                      <div class="shopping-cart-title">
+                        <h4><a href="shop-product-right.html">Macbook Pro 2022</a></h4>
+                        <h3><span>1 × </span>$3500.00</h3>
+                      </div>
+                      <div class="shopping-cart-delete">
+                        <a href="#"><i class="fi-rs-cross-small"></i></a>
+                      </div>
+                    </li>
+                  </ul>
+                  <div class="shopping-cart-footer">
+                    <div class="shopping-cart-total">
+                      <h4>Total <span>$383.00</span></h4>
+                    </div>
+                    <div class="shopping-cart-button">
+                      <a href="shop-cart.html">View cart</a>
+                      <a href="shop-checkout.html">Checkout</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div class="header-action-icon-2 d-block d-lg-none">
                 <div class="burger-icon burger-icon-white">
                   <span class="burger-icon-top"></span>
@@ -543,7 +581,7 @@
         <i class="fi-rs-angle-down toggle-icon"></i>
       </button>
 
-       <aside class="profile-sidebar" id="profileSidebar">
+      <aside class="profile-sidebar" id="profileSidebar">
         <h4>My Account</h4>
         <ul>
           <li>
@@ -566,7 +604,7 @@
               <i class="fi-rs-credit-card"></i> My Wallet
             </a>
           </li>
-            <li>
+          <li>
             <a href="/profile/coupons" class="active">
               <i class="fi-rs-badge"></i> My Coupons
             </a>
@@ -594,130 +632,116 @@
             <div class="profile-stats">
               <div class="stat-item">
                 <div class="stat-number">
-                         <%= (locals.coupons && locals.coupons.length) ? locals.coupons.length : 0 %>
+                  <%= (locals.coupons && locals.coupons.length) ? locals.coupons.length : 0 %>
                 </div>
                 <div class="stat-label">Available</div>
               </div>
               <div class="stat-item">
                 <div class="stat-number">
-                    <% 
-                    let usedCount = 0;
-                    if (locals.user && locals.user.appliedCoupons) {
-                      usedCount = locals.user.appliedCoupons.length;
-                    } else if (locals.coupons) {
-                      usedCount = locals.coupons.reduce((total, coupon) => {
-                        return total + (coupon.appliedUsers ? coupon.appliedUsers.length : 0);
-                      }, 0);
+                  <% let usedCount=0; if (locals.user && locals.user.appliedCoupons) {
+                    usedCount=locals.user.appliedCoupons.length; } else if (locals.coupons) {
+                    usedCount=locals.coupons.reduce((total, coupon)=> {
+                    return total + (coupon.appliedUsers ? coupon.appliedUsers.length : 0);
+                    }, 0);
                     }
-                  %>
-                  <%= usedCount %>
+                    %>
+                    <%= usedCount %>
                 </div>
                 <div class="stat-label">Used</div>
               </div>
             </div>
           </div>
         </div>
-  <div class="profile-body">
-          <% if (locals.coupons && locals.coupons.length > 0) { %>
+        <div class="profile-body">
+          <% if (locals.coupons && locals.coupons.length> 0) { %>
             <div class="coupons-grid">
-              <% locals.coupons.forEach(function(coupon) { 
-                const now = new Date();
-                const activeDate = new Date(coupon.activeDate);
-                const expireDate = new Date(coupon.expireDate);
-                const isActive = now >= activeDate && now <= expireDate && coupon.status === 'active';
-                const isExpired = now > expireDate;
-                const isUpcoming = now < activeDate;
-                const remainingUses = coupon.limit - (coupon.appliedUsers ? coupon.appliedUsers.length : 0);
-                
-                let statusClass = 'active';
-                let statusText = 'Active';
-                
-                if (isExpired) {
-                  statusClass = 'expired';
-                  statusText = 'Expired';
-                } else if (isUpcoming) {
-                  statusClass = 'upcoming';
-                  statusText = 'Upcoming';
-                } else if (remainingUses <= 0) {
-                  statusClass = 'exhausted';
-                  statusText = 'Exhausted';
-                } else if (coupon.status === 'inactive') {
-                  statusClass = 'inactive';
-                  statusText = 'Inactive';
-                }
-              %>
-                <div class="coupon-card <%= statusClass %>">
-                  <div class="coupon-header">
-                    <div class="coupon-discount">
-                      <span class="discount-symbol">₹</span>
-                      <span class="discount-amount"><%= coupon.discountPrice %></span>
-                      <span class="discount-text">OFF</span>
-                    </div>
-                    <div class="coupon-status <%= statusClass %>">
-                      <%= statusText %>
-                    </div>
-                  </div>
-                  
-                  <div class="coupon-body">
-                    <h3 class="coupon-name"><%= coupon.couponName %></h3>
-                    <% if (coupon.description) { %>
-                      <p class="coupon-description"><%= coupon.description %></p>
-                    <% } %>
-                    
-                    <div class="coupon-details">
-                      <div class="detail-row">
-                        <span class="detail-label">Minimum Purchase:</span>
-                        <span class="detail-value">₹<%= coupon.minimumPrice %></span>
+              <% locals.coupons.forEach(function(coupon) { const now=new Date(); const activeDate=new
+                Date(coupon.activeDate); const expireDate=new Date(coupon.expireDate); const isActive=now>= activeDate
+                && now <= expireDate && coupon.status==='active' ; const isExpired=now> expireDate;
+                  const isUpcoming = now < activeDate; const remainingUses=coupon.limit - (coupon.appliedUsers ?
+                    coupon.appliedUsers.length : 0); let statusClass='active' ; let statusText='Active' ; if (isExpired)
+                    { statusClass='expired' ; statusText='Expired' ; } else if (isUpcoming) { statusClass='upcoming' ;
+                    statusText='Upcoming' ; } else if (remainingUses <=0) { statusClass='exhausted' ;
+                    statusText='Exhausted' ; } else if (coupon.status==='inactive' ) { statusClass='inactive' ;
+                    statusText='Inactive' ; } %>
+                    <div class="coupon-card <%= statusClass %>">
+                      <div class="coupon-header">
+                        <div class="coupon-discount">
+                          <span class="discount-symbol">₹</span>
+                          <span class="discount-amount">
+                            <%= coupon.discountPrice %>
+                          </span>
+                          <span class="discount-text">OFF</span>
+                        </div>
+                        <div class="coupon-status <%= statusClass %>">
+                          <%= statusText %>
+                        </div>
                       </div>
-                      <div class="detail-row">
-                        <span class="detail-label">Valid Until:</span>
-                        <span class="detail-value"><%= expireDate.toLocaleDateString() %></span>
+
+                      <div class="coupon-body">
+                        <h3 class="coupon-name">
+                          <%= coupon.couponName %>
+                        </h3>
+                        <% if (coupon.description) { %>
+                          <p class="coupon-description">
+                            <%= coupon.description %>
+                          </p>
+                          <% } %>
+
+                            <div class="coupon-details">
+                              <div class="detail-row">
+                                <span class="detail-label">Minimum Purchase:</span>
+                                <span class="detail-value">₹<%= coupon.minimumPrice %></span>
+                              </div>
+                              <div class="detail-row">
+                                <span class="detail-label">Valid Until:</span>
+                                <span class="detail-value">
+                                  <%= expireDate.toLocaleDateString() %>
+                                </span>
+                              </div>
+                              <div class="detail-row">
+                                <span class="detail-label">Uses Remaining:</span>
+                                <span class="detail-value">
+                                  <%= remainingUses> 0 ? remainingUses : 0 %>
+                                </span>
+                              </div>
+                            </div>
                       </div>
-                      <div class="detail-row">
-                        <span class="detail-label">Uses Remaining:</span>
-                        <span class="detail-value"><%= remainingUses > 0 ? remainingUses : 0 %></span>
+
+                      <div class="coupon-footer">
+                        <div class="coupon-code-section">
+                          <input type="text" value="<%= coupon.couponCode %>" class="coupon-code-input"
+                            id="code-<%= coupon._id %>" readonly>
+                          <button class="copy-code-btn" onclick="copyCouponCode('<%= coupon._id %>')" <%=!isActive ||
+                            remainingUses <=0 ? 'disabled' : '' %>>
+                            <i class="fi-rs-copy"></i>
+                            <span class="copy-text">Copy</span>
+                          </button>
+                        </div>
+
+                        <% if (isActive && remainingUses> 0) { %>
+                          <a href="/shop?coupon=<%= coupon.couponCode %>" class="use-coupon-btn">
+                            <i class="fi-rs-shopping-cart"></i>
+                            Shop Now
+                          </a>
+                          <% } %>
                       </div>
                     </div>
-                  </div>
-                  
-                  <div class="coupon-footer">
-                    <div class="coupon-code-section">
-                      <input type="text" 
-                             value="<%= coupon.couponCode %>" 
-                             class="coupon-code-input" 
-                             id="code-<%= coupon._id %>"
-                             readonly>
-                      <button class="copy-code-btn" 
-                              onclick="copyCouponCode('<%= coupon._id %>')"
-                              <%= !isActive || remainingUses <= 0 ? 'disabled' : '' %>>
-                        <i class="fi-rs-copy"></i>
-                        <span class="copy-text">Copy</span>
-                      </button>
-                    </div>
-                    
-                    <% if (isActive && remainingUses > 0) { %>
-                      <a href="/shop?coupon=<%= coupon.couponCode %>" class="use-coupon-btn">
-                        <i class="fi-rs-shopping-cart"></i>
-                        Shop Now
-                      </a>
-                    <% } %>
-                  </div>
+                    <% }) %>
+            </div>
+            <% } else { %>
+              <div class="empty-state">
+                <div class="empty-icon">
+                  <i class="fi-rs-tag"></i>
                 </div>
-              <% }) %>
-            </div>
-          <% } else { %>
-            <div class="empty-state">
-              <div class="empty-icon">
-                <i class="fi-rs-tag"></i>
+                <h3>No Coupons Available</h3>
+                <p>There are currently no active coupons available. Check back later for amazing deals!</p>
+                <a href="/shop" class="btn btn-outline-primary">
+                  <i class="fi-rs-shopping-bag"></i>
+                  Continue Shopping
+                </a>
               </div>
-              <h3>No Coupons Available</h3>
-              <p>There are currently no active coupons available. Check back later for amazing deals!</p>
-              <a href="/shop" class="btn btn-outline-primary">
-                <i class="fi-rs-shopping-bag"></i>
-                Continue Shopping
-              </a>
-            </div>
-          <% } %>
+              <% } %>
         </div>
       </main>
     </div>
@@ -862,19 +886,19 @@
       const copyText = copyBtn.querySelector('.copy-text');
 
       codeInput.select();
-      codeInput.setSelectionRange(0, 99999); 
+      codeInput.setSelectionRange(0, 99999);
 
       try {
         document.execCommand('copy');
-     
+
         copyText.textContent = 'Copied!';
         copyBtn.style.background = '#28a745';
- 
+
         setTimeout(() => {
           copyText.textContent = 'Copy';
           copyBtn.style.background = '';
         }, 2000);
-      
+
         showMessage('Coupon copied to clipboard!!', 'success');
       } catch (err) {
         console.error('Could not copy text: ', err);
@@ -901,9 +925,9 @@
       `;
 
       document.body.appendChild(toast);
-    
+
       setTimeout(() => toast.style.opacity = '1', 100);
-   
+
       setTimeout(() => {
         toast.style.opacity = '0';
         setTimeout(() => document.body.removeChild(toast), 300);
@@ -911,7 +935,7 @@
     }
 
     document.documentElement.style.scrollBehavior = 'smooth';
-   
+
     const observerOptions = {
       threshold: 0.1,
       rootMargin: '0px 0px -50px 0px'
@@ -925,7 +949,7 @@
         }
       });
     }, observerOptions);
-    
+
     document.addEventListener('DOMContentLoaded', () => {
       const couponCards = document.querySelectorAll('.coupon-card');
       couponCards.forEach((card, index) => {
@@ -935,7 +959,7 @@
         observer.observe(card);
       });
     });
-    
+
   </script>
 </body>
 
