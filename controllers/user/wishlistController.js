@@ -54,14 +54,14 @@ const loadWishlistPage = async (req, res) => {
     try {
         const userId = req.session.userId;
 
-          const wishlistDoc = await Wishlist.findOne({ userId }).populate({
-      path: 'items.productId',
-      populate: {
-        path:  'category',
-        model: 'Category',
-        match: { status: 'active' }
-      }
-    });
+        const wishlistDoc = await Wishlist.findOne({ userId }).populate({
+            path: 'items.productId',
+            populate: {
+                path: 'category',
+                model: 'Category',
+                match: { status: 'active' }
+            }
+        });
 
         if (!wishlistDoc || wishlistDoc.items.length === 0) {
             return res.render('wishlist', {
@@ -142,8 +142,35 @@ const removeFromWishlist = async (req, res) => {
     }
 };
 
+const getProductStock = async (req, res) => {
+    try {
+        const { productId } = req.params;
+
+        const product = await Product.findById(productId);
+        if (!product || product.isBlocked || product.status !== 'active') {
+            return res.status(404).json({
+                success: false,
+                message: 'Product not available.'
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            stock: product.stock || {}
+        });
+
+    } catch (error) {
+        console.error('getProductStock error:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Server error occurred.'
+        });
+    }
+};
+
 module.exports = {
     addToWishlist,
     loadWishlistPage,
-    removeFromWishlist
+    removeFromWishlist,
+    getProductStock
 }

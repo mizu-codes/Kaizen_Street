@@ -175,7 +175,7 @@ const deleteCoupon = async (req, res) => {
 
         const deleted = await Coupon.findByIdAndDelete(id).lean();
         if (!deleted) return res.status(404).json({ success: false, message: 'Coupon not found' });
-        
+
         return res.json({ success: true, message: 'Coupon deleted' });
     } catch (err) {
         console.error('Error in deleteCoupon:', err);
@@ -274,7 +274,7 @@ const updateCoupon = async (req, res) => {
         };
 
         const coupon = await Coupon.findByIdAndUpdate(id, updateData, { new: true });
-        
+
         if (!coupon) return res.status(404).json({ success: false, message: 'Coupon not found' });
 
         res.json({ success: true, message: 'Coupon updated successfully' });

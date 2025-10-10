@@ -10,6 +10,36 @@
   <link href="/assets2/css/main.css" rel="stylesheet" type="text/css" />
 
   <style>
+
+    .item-action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.item-action-buttons .btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.12rem;
+      text-decoration: none;
+      white-space: nowrap;
+      width: fit-content;
+    font-size: 11px;
+    padding: 5px 10px;
+}
+
+.return-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.return-actions .btn {
+    flex: 1;
+}
+
     .item-pricing-info {
       margin-top: 0.5rem;
       padding: 0.5rem;
@@ -54,12 +84,6 @@
       background-color: #f8f9fa;
       border-radius: 4px;
       border-left: 3px solid #6c63ff;
-    }
-
-    .return-actions {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
     }
 
     @media (max-width: 768px) {
@@ -661,6 +685,10 @@
                                         </button>
                                       </div>
                                       <% } %>
+                                       <% if (itemStatusLower !== 'cancelled' && itemStatusLower !== 'delivered' && (!item.returnRequest || item.returnRequest.status !== 'requested')) { %>
+            <button class="btn btn-sm btn-primary" onclick="updateItemStatus('<%= order._id %>', '<%= item._id %>', '<%= itemStatus %>')">
+                <i class="material-icons md-edit" ></i>Update Status</button>
+        <% } %>           
                                   </div>
                                 </div>
                               </div>
@@ -711,21 +739,8 @@
                             </span>
                           </div>
                           <div class="info-row">
-                            <span class="info-label">Overall Order Status:</span>
                             <span class="info-value">
                               <span class="status-wrapper">
-                                <span
-                                  class="status-badge status-<%= order.status.toLowerCase().replace(/\s+/g, '-') %>">
-                                  <% if (order.status && order.status.toLowerCase()==='delivered' ) { %>
-                                    <svg class="badge-check" viewBox="0 0 24 24" width="16" height="16"
-                                      aria-hidden="true">
-                                      <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round" fill="none" />
-                                    </svg>
-                                    <% } %>
-                                      <%= order.status %>
-                                </span>
-
                                 <% const items=order.items || []; const statusSummary={}; items.forEach(item=> {
                                   const status = item.status || order.status;
                                   statusSummary[status] = (statusSummary[status] || 0) + 1;
@@ -796,12 +811,29 @@
                     </div>
                   </div>
 
-                  <div class="content-header-right">
-                    <button class="btn btn-update" onclick="updateOrderStatus()">
+              <div class="content-header-right">
+                <% const orderItems=order.items || []; const allItemStatuses=orderItems.map(item=> item.status || order.status);
+                  const uniqueItemStatuses = [...new Set(allItemStatuses)];
+                  const allItemsSameStatus = uniqueItemStatuses.length === 1;
+                  const allItemsDelivered = allItemStatuses.every(s => s === 'Delivered');
+                  const allItemsCancelled = allItemStatuses.every(s => s === 'Cancelled');
+              
+                  const disableOverallUpdate = !allItemsSameStatus || allItemsDelivered || allItemsCancelled;
+                  %>
+              
+                  <% if (disableOverallUpdate) { %>
+                    <button class="btn btn-update" disabled style="opacity: 0.5; cursor: not-allowed;"
+                      title="<%= allItemsDelivered ? 'All items delivered' : allItemsCancelled ? 'All items cancelled' : 'Items have different statuses. Update individually.' %>">
                       <i class="material-icons md-edit"></i>
                       Update Overall Status
                     </button>
-                  </div>
+                    <% } else { %>
+                      <button class="btn btn-update" onclick="updateOrderStatus()">
+                        <i class="material-icons md-edit"></i>
+                        Update Overall Status
+                      </button>
+                      <% } %>
+              </div>
 
                   <div class="d-flex align-items-center">
                     <a href="/admin/orders" class="btn-back">
@@ -843,6 +875,82 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <script>
+
+    async function updateItemStatus(orderId, itemId, currentStatus) {
+    if (!orderId || !itemId) {
+        return Swal.fire('Error', 'Missing order or item information', 'error');
+    }
+
+    const statusOptions = {
+        'Placed': 'Order Placed',
+        'Processing': 'Processing',
+        'Shipped': 'Shipped',
+        'Out for Delivery': 'Out for Delivery',
+        'Delivered': 'Delivered'
+    };
+
+    delete statusOptions['Cancelled'];
+
+    const { value: selected } = await Swal.fire({
+        title: 'Update Item Status',
+        input: 'select',
+        inputOptions: statusOptions,
+        inputValue: currentStatus,
+        showCancelButton: true,
+        confirmButtonText: 'Update Status',
+        confirmButtonColor: '#6c63ff',
+        inputValidator: (value) => !value && 'You need to select a status!'
+    });
+
+    if (!selected) return;
+
+    Swal.fire({
+        title: 'Updating...',
+        text: 'Please wait...',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => Swal.showLoading()
+    });
+
+    try {
+        const resp = await fetch(`/admin/orders/${orderId}/items/${itemId}/status`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ status: selected })
+        });
+
+        let body;
+        try {
+            body = await resp.json();
+        } catch (e) {
+            throw new Error('Invalid server response');
+        }
+
+        if (!resp.ok) {
+            throw new Error(body?.message || `HTTP ${resp.status}`);
+        }
+
+        await Swal.fire({
+            title: 'Success!',
+            text: body.message || 'Item status updated successfully',
+            icon: 'success',
+            confirmButtonColor: '#6c63ff'
+        });
+
+        location.reload();
+
+    } catch (err) {
+        console.error('Item status update error:', err);
+        Swal.fire({
+            title: 'Error',
+            text: err.message || 'Failed to update item status',
+            icon: 'error'
+        });
+    }
+}
+
     async function handleReturnRequest(orderId, itemId, action) {
       console.log('handleReturnRequest called with:', { orderId, itemId, action });
 
@@ -949,26 +1057,23 @@
       badge.textContent = newStatus;
     }
 
-    async function updateOrderStatus() {
-      const currentStatus = '<%= order ? order.status : "Placed" %>';
-      const orderId = '<%= order ? order._id : "" %>';
+ async function updateOrderStatus() {
+    const currentStatus = '<%= order ? order.status : "Placed" %>';
+    const orderId = '<%= order ? order._id : "" %>';
 
-      if (!orderId) {
+    if (!orderId) {
         return Swal.fire('Error', 'Order ID not found', 'error');
-      }
+    }
 
-      const statusOptions = {
+    const statusOptions = {
         'Placed': 'Order Placed',
         'Processing': 'Processing',
         'Shipped': 'Shipped',
         'Out for Delivery': 'Out for Delivery',
-        'Delivered': 'Delivered',
-        'Cancelled': 'Cancelled'
-      };
+        'Delivered': 'Delivered'
+    };
 
-      const {
-        value: selected
-      } = await Swal.fire({
+    const { value: selected } = await Swal.fire({
         title: 'Update Order Status',
         input: 'select',
         inputOptions: statusOptions,
@@ -977,64 +1082,73 @@
         confirmButtonText: 'Update Status',
         confirmButtonColor: '#6c63ff',
         inputValidator: (value) => !value && 'You need to select a status!'
-      });
+    });
 
-      if (!selected) return;
+    if (!selected) return;
 
-      Swal.fire({
+    Swal.fire({
         title: 'Updating...',
         allowOutsideClick: false,
         didOpen: () => Swal.showLoading()
-      });
+    });
 
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-      try {
+    try {
         const resp = await fetch(`/admin/orders/${orderId}/status`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            status: selected
-          }),
-          signal: controller.signal
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ status: selected }),
+            signal: controller.signal
         });
 
         clearTimeout(timeoutId);
 
         let body = null;
         try {
-          body = await resp.json();
+            body = await resp.json();
         } catch (e) {
-          body = null;
+            body = null;
         }
 
         if (!resp.ok) {
-          const msg = body?.message || body?.error || `HTTP ${resp.status}`;
-          throw new Error(msg);
+            const msg = body?.message || body?.error || `HTTP ${resp.status}`;
+            throw new Error(msg);
         }
 
         updateStatusUI(selected);
 
         await Swal.fire({
-          title: 'Success',
-          text: 'Order status updated successfully',
-          icon: 'success',
-          confirmButtonColor: '#6c63ff'
+            title: 'Success',
+            text: body.message || 'Order status updated successfully',
+            icon: 'success',
+            confirmButtonColor: '#6c63ff'
         });
 
-      } catch (err) {
-        const message = err.name === 'AbortError' ? 'Request timed out' : (err.message || 'Something went wrong');
+        location.reload();
+
+    } catch (err) {
+        const message = err.name === 'AbortError' 
+            ? 'Request timed out' 
+            : (err.message || 'Something went wrong');
+        
         console.error('Status update error:', err);
-        Swal.fire('Error', message, 'error');
-      } finally {
+        
+        await Swal.fire({
+            title: 'Error',
+            text: message,
+            icon: 'error',
+            confirmButtonColor: '#dc3545'
+        });
+    } finally {
         try {
-          Swal.close();
+            Swal.close();
         } catch (e) { }
-      }
     }
+}
 
     (function setupPolling() {
       if (!('<%= order ? order._id : "" %>')) return;
@@ -1084,8 +1198,7 @@
         <p><strong>Product:</strong> ${productName}</p>
         <p><strong>Reason:</strong> ${reason}</p>
         <p style="color: #666; font-size: 0.9em;">Order ID: ${orderId}</p>
-        <p style="color: #666; font-size: 0.9em;">Item ID: ${itemId}</p>
-      `,
+        <p style="color: #666; font-size: 0.9em;">Item ID: ${itemId}</p>`,
             icon: 'info',
             showCancelButton: true,
             confirmButtonText: 'Approve',

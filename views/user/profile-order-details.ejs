@@ -1136,12 +1136,6 @@
                       </span>
                     </div>
                     <div class="summary-item">
-                      <span>Overall Order Status:</span>
-                      <span class="status-badge status-<%= order.status.toLowerCase().replace(/\s+/g, '-') %>">
-                        <%= order.status %>
-                      </span>
-                    </div>
-                    <div class="summary-item">
                       <span>Total Items:</span>
                       <span>
                         <%= order.items.length %>
@@ -1489,7 +1483,6 @@
       other: 'Other reason'
     };
 
-
     document.querySelectorAll('.btn-cancel').forEach((btn) => {
       btn.addEventListener('click', async () => {
         const itemId = btn.dataset.itemId;
@@ -1534,18 +1527,20 @@
           const result = await res.json();
 
           if (result.success) {
+            const itemRow = btn.closest('.item-row');
 
-            const parent = btn.closest('.item-actions');
-            if (parent) {
-              const statusEl = parent.querySelector('.order-status');
-              if (statusEl) {
-                statusEl.textContent = 'Cancelled';
-                statusEl.classList.remove('status-placed', 'status-processing');
-                statusEl.classList.add('status-cancelled');
+            if (itemRow) {
+              const statusBadge = itemRow.querySelector('.status-badge');
+
+              if (statusBadge) {
+                statusBadge.textContent = 'Cancelled';
+                statusBadge.className = 'status-badge status-cancelled';
               }
-              btn.disabled = true;
-              btn.classList.add('faded');
             }
+
+            btn.disabled = true;
+            btn.classList.add('faded');
+
             Swal.fire({
               icon: 'success',
               title: 'Item Cancelled',
@@ -1581,7 +1576,7 @@
         } = await Swal.fire({
           title: 'Return Item Request',
           html: `<p style="margin-bottom: 15px;"><strong>${itemName}</strong></p>
-                         <p style="margin-bottom: 15px; font-size: 14px; color: #666;">Please select a reason for returning this item:</p>`,
+                           <p style="margin-bottom: 15px; font-size: 14px; color: #666;">Please select a reason for returning this item:</p>`,
           input: 'select',
           inputOptions: RETURN_REASONS,
           inputPlaceholder: 'Select a reason',
@@ -1634,10 +1629,10 @@
           const confirmed = await Swal.fire({
             title: 'Confirm Return Request',
             html: `<p><strong>Item:</strong> ${itemName}</p>
-                             <p><strong>Reason:</strong> ${finalReason}</p>
-                             <p style="margin-top: 15px; font-size: 14px; color: #666;">
-                                 Your return request will be reviewed by our team. You'll be notified once it's processed.
-                             </p>`,
+                               <p><strong>Reason:</strong> ${finalReason}</p>
+                               <p style="margin-top: 15px; font-size: 14px; color: #666;">
+                                   Your return request will be reviewed by our team. You'll be notified once it's processed.
+                               </p>`,
             icon: 'question',
             iconColor: '#088178',
             showCancelButton: true,
@@ -1669,20 +1664,34 @@
           const result = await res.json();
 
           if (result.success) {
+            const itemRow = btn.closest('.item-row');
+
+            if (itemRow) {
+              const statusBadge = itemRow.querySelector('.status-badge');
+
+              btn.style.display = 'none';
+
+              const itemActions = itemRow.querySelector('.item-actions');
+              if (itemActions && !itemActions.querySelector('.return-status')) {
+                const returnStatusDiv = document.createElement('div');
+                returnStatusDiv.className = 'return-status';
+                returnStatusDiv.innerHTML = '<span class="return-requested return-requested">Refund Requested</span>';
+                itemActions.insertBefore(returnStatusDiv, btn);
+              }
+            }
+
             Swal.fire({
               icon: 'success',
               title: 'Return Request Submitted',
               html: `<p>Your return request for <strong>${itemName}</strong> has been submitted successfully.</p>
-                                 <p style="margin-top: 10px; font-size: 14px; color: #666;">
-                                     You'll receive an update within 24-48 hours.
-                                 </p>`,
+                                   <p style="margin-top: 10px; font-size: 14px; color: #666;">
+                                       You'll receive an update within 24-48 hours.
+                                   </p>`,
               confirmButtonText: 'OK',
               confirmButtonColor: '#28a745',
               customClass: {
                 popup: 'swal-responsive'
               }
-            }).then(() => {
-              location.reload();
             });
           } else {
             Swal.fire({

@@ -76,6 +76,7 @@ router.delete('/cart/delete-quantity', userAuth, cartController.deleteQuantity);
 router.get('/wishlist', userAuth, wishlistController.loadWishlistPage);
 router.post('/wishlist/add/:productId', userAuth, wishlistController.addToWishlist);
 router.delete('/wishlist/delete/:productId', userAuth, wishlistController.removeFromWishlist);
+router.get('/api/product/:productId/stock', userAuth, wishlistController.getProductStock);
 
 router.get('/checkout/place-order', userAuth, checkoutController.loadCheckoutPage);
 router.post('/checkout/place-order', userAuth, checkoutController.placeOrder);

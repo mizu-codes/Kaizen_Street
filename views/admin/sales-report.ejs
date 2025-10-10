@@ -385,131 +385,257 @@
             </div>
         </header>
 
-        <section class="content-main">
-            <div class="content-header d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <h2 class="content-title card-title">Sales Report</h2>
-                    <p class="mb-0 text-muted">Generate comprehensive sales analytics and reports</p>
+       <section class="content-main">
+    <div class="content-header d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="content-title card-title">Sales Report</h2>
+            <p class="mb-0 text-muted">Generate comprehensive sales analytics and reports</p>
+        </div>
+
+        <div class="card filter-section-card" style="padding: 15px; min-width: 400px;">
+            <form id="reportForm" action="/admin/sales-report" method="GET" class="d-flex align-items-end gap-3">
+                <div style="min-width: 100px;">
+                    <label class="form-label fw-semibold" style="font-size: 12px; margin-bottom: 5px;">Report Type</label>
+                    <select class="form-select form-select-sm" id="reportType" name="reportType" style="min-width: 100px; height: 38px;">
+                        <option value="daily" <%= typeof reportType !== 'undefined' && reportType === 'daily' ? 'selected' : '' %>>Daily</option>
+                        <option value="weekly" <%= typeof reportType !== 'undefined' && reportType === 'weekly' ? 'selected' : '' %>>Weekly</option>
+                        <option value="monthly" <%= typeof reportType === 'undefined' || reportType === 'monthly' ? 'selected' : '' %>>Monthly</option>
+                        <option value="yearly" <%= typeof reportType !== 'undefined' && reportType === 'yearly' ? 'selected' : '' %>>Yearly</option>
+                        <option value="custom" <%= typeof reportType !== 'undefined' && reportType === 'custom' ? 'selected' : '' %>>Custom</option>
+                    </select>
                 </div>
 
-                <div class="card filter-section-card" style="padding: 15px; min-width: 500px;">
-                    <form id="reportForm" class="d-flex align-items-end gap-2">
-                        <div>
-                            <label class="form-label fw-semibold" style="font-size: 12px;">Report Type</label>
-                            <select class="form-select form-select-sm" id="reportType" style="min-width: 100px;">
-                                <option value="daily">Daily</option>
-                                <option value="weekly">Weekly</option>
-                                <option value="monthly" selected>Monthly</option>
-                                <option value="yearly">Yearly</option>
-                                <option value="custom">Custom</option>
-                            </select>
-                        </div>
-
-                        <div id="customDateSection" style="display: none;">
-                            <label class="form-label fw-semibold" style="font-size: 12px;">Date Range</label>
-                            <input type="text" class="form-control form-control-sm" id="dateRange"
-                                placeholder="Select range" readonly style="min-width: 120px;">
-                        </div>
-
-                        <button type="submit" class="btn btn-sm btn-custom btn-primary-custom">
-                            <i class="material-icons md-search" style="font-size: 16px;"></i>
-                        </button>
-
-                        <button type="button" class="btn btn-sm btn-custom btn-success-custom"
-                            onclick="downloadReport('pdf')">
-                            PDF
-                        </button>
-
-                        <button type="button" class="btn btn-sm btn-custom btn-info-custom"
-                            onclick="downloadReport('excel')">
-                            Excel
-                        </button>
-                    </form>
+               <div id="dateRangeContainer" <% if (typeof reportType !== 'undefined' && reportType === 'custom') { %>style="display: block;"<% } else { %> style="display: none;"<% } %>>
+                    <label class="form-label fw-semibold" style="font-size: 12px; margin-bottom: 5px;">Date Range</label>
+                    <div class="d-flex gap-2">
+                        <input type="date" class="form-control form-control-sm" id="startDate" name="startDate" 
+                               value="<%= typeof startDate !== 'undefined' ? startDate : '' %>" 
+                               placeholder="dd-mm-yyyy" style="min-width: 140px; height: 38px;">
+                        <input type="date" class="form-control form-control-sm" id="endDate" name="endDate" 
+                               value="<%= typeof endDate !== 'undefined' ? endDate : '' %>" 
+                               placeholder="dd-mm-yyyy" style="min-width: 140px; height: 38px;">
+                    </div>
                 </div>
+
+                <div style="margin-top: auto;">
+                    <button type="submit" class="btn btn-sm btn-custom btn-primary-custom" style="height: 38px; padding: 0 20px;">
+                        <i class="material-icons md-search" style="font-size: 18px;"></i>
+                    </button>
+                </div>
+
+                <div style="margin-top: auto;">
+                    <button type="button" class="btn btn-sm btn-custom btn-success-custom" 
+                            onclick="downloadReport('pdf')" style="height: 38px; padding: 0 20px;">
+                        PDF
+                    </button>
+                </div>
+
+                <div style="margin-top: auto;">
+                    <button type="button" class="btn btn-sm btn-custom btn-info-custom" 
+                            onclick="downloadReport('excel')" style="height: 38px; padding: 0 20px;">
+                        Excel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <% if (typeof reportData !== 'undefined' && reportData && reportData.statistics) { %>
+        <div class="date-range-display" style="display: block;">
+            <i class="material-icons md-date_range" style="margin-right: 10px;"></i>
+            <span id="dateRangeText">
+                Report Period: 
+                <% if (dateRange.reportType === 'daily') { %>
+                    Today: <%= dateRange.start %>
+                <% } else if (dateRange.reportType === 'weekly') { %>
+                    This Week: <%= dateRange.start %> - <%= dateRange.end %>
+                <% } else if (dateRange.reportType === 'monthly') { %>
+                    This Month: <%= dateRange.start %> - <%= dateRange.end %>
+                <% } else if (dateRange.reportType === 'yearly') { %>
+                    This Year: <%= dateRange.start %> - <%= dateRange.end %>
+                <% } else { %>
+                    Custom: <%= dateRange.start %> - <%= dateRange.end %>
+                <% } %>
+            </span>
+        </div>
+
+        <div class="stats-grid" id="statsSection" style="display: grid;">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="material-icons md-shopping_cart"></i>
+                </div>
+                <div class="stat-value" id="totalOrders"><%= reportData.statistics.totalOrders %></div>
+                <div class="stat-label">Total Orders</div>
             </div>
 
-            <div class="loading" id="loading">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
+            <div class="stat-card revenue">
+                <div class="stat-icon">
+                    <i class="material-icons md-attach_money"></i>
                 </div>
-                <p class="mt-3">Generating report...</p>
+                <div class="stat-value" id="totalRevenue">₹<%= reportData.statistics.totalRevenue.toLocaleString('en-IN') %></div>
+                <div class="stat-label">Total Revenue</div>
             </div>
 
-            <div class="date-range-display" id="dateRangeDisplay" style="display: none;">
-                <i class="material-icons md-date_range" style="margin-right: 10px;"></i>
-                <span id="dateRangeText">Report Period: January 1, 2024 - January 31, 2024</span>
+            <div class="stat-card discount">
+                <div class="stat-icon">
+                    <i class="material-icons md-local_offer"></i>
+                </div>
+                <div class="stat-value" id="totalDiscounts">₹<%= reportData.statistics.totalDiscounts.toLocaleString('en-IN') %></div>
+                <div class="stat-label">Total Discounts</div>
             </div>
 
-            <div class="stats-grid" id="statsSection">
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="material-icons md-shopping_cart"></i>
-                    </div>
-                    <div class="stat-value" id="totalOrders">0</div>
-                    <div class="stat-label">Total Orders</div>
+            <div class="stat-card net">
+                <div class="stat-icon">
+                    <i class="material-icons md-trending_up"></i>
                 </div>
-
-                <div class="stat-card revenue">
-                    <div class="stat-icon">
-                        <i class="material-icons md-attach_money"></i>
-                    </div>
-                    <div class="stat-value" id="totalRevenue">₹0</div>
-                    <div class="stat-label">Total Revenue</div>
-                </div>
-
-                <div class="stat-card discount">
-                    <div class="stat-icon">
-                        <i class="material-icons md-local_offer"></i>
-                    </div>
-                    <div class="stat-value" id="totalDiscounts">₹0</div>
-                    <div class="stat-label">Total Discounts</div>
-                </div>
-
-                <div class="stat-card net">
-                    <div class="stat-icon">
-                        <i class="material-icons md-trending_up"></i>
-                    </div>
-                    <div class="stat-value" id="netSales">₹0</div>
-                    <div class="stat-label">Net Sales</div>
-                </div>
+                <div class="stat-value" id="netSales">₹<%= reportData.statistics.netSales.toLocaleString('en-IN') %></div>
+                <div class="stat-label">Net Sales</div>
             </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Order Details</h4>
-                </div>
-                <div class="card-body">
-                    <div class="table-wrap">
-                        <table class="table table-custom align-middle mb-0" id="ordersTable">
-                            <thead>
+        </div>
+    <% } %>
+  
+<% if (typeof reportData !== 'undefined' && reportData && reportData.orders && reportData.orders.length > 0) { %>
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Order Details</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-wrap">
+                <table class="table table-custom align-middle mb-0" id="ordersTable">
+                    <thead>
+                        <tr>
+                            <th>SL No</th>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Products</th>
+                            <th>Date</th>
+                            <th>No of Products</th>
+                            <th>Amount</th>
+                            <th>Payment</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <% reportData.orders.forEach(function(order, index) { %>
+                            <% var slNo=((currentPage - 1) * 10) + index + 1; var statusClass='status-' +
+                                order.status.toLowerCase().replace(/\s+/g, '-' ); var productNames=order.products; if
+                                (productNames.length> 20) {
+                                productNames = productNames.substring(0, 20) + '...';
+                                }
+                                %>
                                 <tr>
-                                    <th>SL No</th>
-                                    <th>Order ID</th>
-                                    <th>Customer</th>
-                                    <th>Products</th>
-                                    <th>Date</th>
-                                    <th>No of Products</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
+                                    <td>
+                                        <%= slNo %>
+                                    </td>
+                                    <td><strong>#<%= order.orderId %></strong></td>
+                                    <td>
+                                        <%= order.customer.name %>
+                                    </td>
+                                    <td title="<%= order.products.join(', ') %>">
+                                        <% const shortNames=order.products.slice(0, 2).join(', '); 
+                    const remaining = order.products.length - 2; %>
+                <%= shortNames %><%= remaining > 0 ? ' +' + remaining + ' more' : '' %>
+                                    </td>
+                                    <td>
+                                        <%= moment(order.date).format('DD/MM/YYYY') %>
+                                    </td>
+                                    <td>
+                                        <%= order.itemCount %>
+                                    </td>
+                                    <td>
+                                        <% if (order.discount> 0) { %>
+                                            <div class="amount-with-discount">
+                                                <div class="original-amount">₹<%= order.originalAmount.toLocaleString('en-IN') %>
+                                                </div>
+                                                <div class="paid-amount">₹<%= order.finalAmount.toLocaleString('en-IN') %>
+                                                </div>
+                                                <small class="discount-info">(-₹<%= order.discount.toLocaleString('en-IN') %>
+                                                        )</small>
+                                            </div>
+                                            <% } else { %>
+                                                ₹<%= order.finalAmount.toLocaleString('en-IN') %>
+                                                    <% } %>
+                                    </td>
+                                    <td>
+                                        <%= order.paymentMethod ? order.paymentMethod : 'N/A' %>
+                                    </td>
+                                    <td><span class="status-badge <%= statusClass %>">
+                                            <%= order.status %>
+                                        </span></td>
                                 </tr>
-                            </thead>
-                            <tbody id="ordersTableBody">
-                            </tbody>
-                        </table>
+                                <% }); %>
+                    </tbody>
+                </table>
+            </div>
+            <% if (totalPages> 1) { %>
+                <nav aria-label="Page navigation" id="paginationSection">
+                    <ul class="pagination justify-content-center mt-4" id="paginationList">
+                        <li class="page-item <%= currentPage <= 1 ? 'disabled' : '' %>">
+                            <a class="page-link"
+                                href="?reportType=<%= typeof reportType !== 'undefined' ? reportType : 'monthly' %>&page=<%= currentPage - 1 %><%= typeof startDate !== 'undefined' && startDate ? '&startDate=' + startDate : '' %><%= typeof endDate !== 'undefined' && endDate ? '&endDate=' + endDate : '' %>">
+                                <i class="material-icons" style="font-size:16px;"></i> Prev
+                            </a>
+                        </li>
+            
+                        <% const startPage=Math.max(1, currentPage - 2); const endPage=Math.min(totalPages, currentPage + 2); %>
+            
+                            <% if (startPage> 1) { %>
+                                <li class="page-item">
+                                    <a class="page-link"
+                                        href="?reportType=<%= typeof reportType !== 'undefined' ? reportType : 'monthly' %>&page=1<%= typeof startDate !== 'undefined' && startDate ? '&startDate=' + startDate : '' %><%= typeof endDate !== 'undefined' && endDate ? '&endDate=' + endDate : '' %>">1</a>
+                                </li>
+                                <% if (startPage> 2) { %>
+                                    <li class="page-item disabled">
+                                        <span class="page-link">...</span>
+                                    </li>
+                                    <% } %>
+                                        <% } %>
+            
+                                            <% for (let i=startPage; i <=endPage; i++) { %>
+                                                <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                                    <a class="page-link"
+                                                        href="?reportType=<%= typeof reportType !== 'undefined' ? reportType : 'monthly' %>&page=<%= i %><%= typeof startDate !== 'undefined' && startDate ? '&startDate=' + startDate : '' %><%= typeof endDate !== 'undefined' && endDate ? '&endDate=' + endDate : '' %>">
+                                                        <%= i %>
+                                                    </a>
+                                                </li>
+                                                <% } %>
+            
+                                                    <% if (endPage < totalPages) { %>
+                                                        <% if (endPage < totalPages - 1) { %>
+                                                            <li class="page-item disabled">
+                                                                <span class="page-link">...</span>
+                                                            </li>
+                                                            <% } %>
+                                                                <li class="page-item">
+                                                                    <a class="page-link"
+                                                                        href="?reportType=<%= typeof reportType !== 'undefined' ? reportType : 'monthly' %>&page=<%= totalPages %><%= typeof startDate !== 'undefined' && startDate ? '&startDate=' + startDate : '' %><%= typeof endDate !== 'undefined' && endDate ? '&endDate=' + endDate : '' %>">
+                                                                        <%= totalPages %>
+                                                                    </a>
+                                                                </li>
+                                                                <% } %>
+            
+                                                                    <li
+                                                                        class="page-item <%= currentPage >= totalPages ? 'disabled' : '' %>">
+                                                                        <a class="page-link"
+                                                                            href="?reportType=<%= typeof reportType !== 'undefined' ? reportType : 'monthly' %>&page=<%= currentPage + 1 %><%= typeof startDate !== 'undefined' && startDate ? '&startDate=' + startDate : '' %><%= typeof endDate !== 'undefined' && endDate ? '&endDate=' + endDate : '' %>">
+                                                                            Next <i class="material-icons"
+                                                                                style="font-size:16px;"></i>
+                                                                        </a>
+                                                                    </li>
+                    </ul>
+                </nav>
+                <% } %>
                     </div>
-                    <nav aria-label="Page navigation" id="paginationSection" style="display: none;">
-                        <ul class="pagination justify-content-center mt-4" id="paginationList"></ul>
-                    </nav>
-                </div>
-            </div>
+                    </div>
+                    <% } else if (typeof reportData !=='undefined' && reportData) { %>
+                        <div class="no-data" id="noDataSection" style="display: block;">
+                            <i class="material-icons md-assessment"></i>
+                            <h4>No Sales Data Found</h4>
+                            <p>No orders were found for the selected period. Try adjusting your filters.</p>
+                        </div>
+                        <% } %>
 
-            <div class="no-data" id="noDataSection" style="display: none;">
-                <i class="material-icons md-assessment"></i>
-                <h4>No Sales Data Found</h4>
-                <p>No orders were found for the selected period. Try adjusting your filters.</p>
-            </div>
-
-        </section>
+</section>
 
         <footer class="main-footer font-xs text-center py-3">
             <div>&copy;
@@ -527,275 +653,57 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/daterangepicker/3.1.0/daterangepicker.min.js"></script>
 
     <script>
-        let currentPage = 1;
-        let totalPages = 1;
-        let currentOrders = [];
-        const ordersPerPage = 10;
-     
-        $(document).ready(function () {
-            $('#dateRange').daterangepicker({
-                opens: 'left',
-                locale: {
-                    format: 'YYYY-MM-DD'
-                },
-                ranges: {
-                    'Today': [moment(), moment()],
-                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                    'This Month': [moment().startOf('month'), moment().endOf('month')],
-                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                }
-            });
-        });
-     
         document.getElementById('reportType').addEventListener('change', function () {
-            const customSection = document.getElementById('customDateSection');
-            customSection.style.display = this.value === 'custom' ? 'block' : 'none';
-        });
-      
-        document.getElementById('reportForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-            currentPage = 1;
-            generateReport();
-        });
-
-        function generateReport() {
-            console.log('Generating report...');
-     
-            document.getElementById('loading').style.display = 'block';
-            document.getElementById('statsSection').style.display = 'none';
-            document.getElementById('noDataSection').style.display = 'none';
-            document.querySelector('.card').style.display = 'none';
-            document.getElementById('dateRangeDisplay').style.display = 'none';
-
-            const reportType = document.getElementById('reportType').value;
-            let requestData = { reportType };
-           
-            if (reportType === 'custom') {
-                const dateRange = $('#dateRange').data('daterangepicker');
-                if (dateRange) {
-                    requestData.startDate = dateRange.startDate.format('YYYY-MM-DD');
-                    requestData.endDate = dateRange.endDate.format('YYYY-MM-DD');
-                } else {
-                    alert('Please select a date range for custom reports.');
-                    document.getElementById('loading').style.display = 'none';
-                    return;
-                }
-            }
-
-            console.log('Request data:', requestData);
-            
-            fetch('/admin/sales-report/generate', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(requestData)
-            })
-                .then(response => {
-                    console.log('Response status:', response.status);
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Received data:', data);
-                    document.getElementById('loading').style.display = 'none';
-
-                    if (data.success) {
-                        let dateRangeText = '';
-                        switch (reportType) {
-                            case 'daily':
-                                dateRangeText = `Today: ${data.dateRange.formatted.start}`;
-                                break;
-                            case 'weekly':
-                                dateRangeText = `This Week: ${data.dateRange.formatted.start} - ${data.dateRange.formatted.end}`;
-                                break;
-                            case 'monthly':
-                                dateRangeText = `This Month: ${data.dateRange.formatted.start} - ${data.dateRange.formatted.end}`;
-                                break;
-                            case 'yearly':
-                                dateRangeText = `This Year: ${data.dateRange.formatted.start} - ${data.dateRange.formatted.end}`;
-                                break;
-                            case 'custom':
-                                dateRangeText = `Custom: ${data.dateRange.formatted.start} - ${data.dateRange.formatted.end}`;
-                                break;
-                        }
-
-                        document.getElementById('dateRangeText').textContent = `Report Period: ${dateRangeText}`;
-                        document.getElementById('dateRangeDisplay').style.display = 'block';
-                        document.getElementById('statsSection').style.display = 'grid';
-                      
-                        updateStatistics(data.data.statistics);
-                        
-                        currentOrders = data.data.orders || [];
-                        setupPagination();
-                        displayOrdersPage(currentPage);
-                    } else {
-                        console.error('Error in response:', data.message);
-                        Swal.fire('Error', 'Error generating report: ' + (data.message || 'Unknown error'), 'error');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    document.getElementById('loading').style.display = 'none';
-                    Swal.fire('Error', 'Error generating report. Please try again. Error: ' + error.message, 'error');
-                });
-        }
-
-        function updateStatistics(stats) {
-            document.getElementById('totalOrders').textContent = stats.totalOrders || 0;
-            document.getElementById('totalRevenue').textContent = `₹${(stats.totalRevenue || 0).toLocaleString()}`;
-            document.getElementById('totalDiscounts').textContent = `₹${(stats.totalDiscounts || 0).toLocaleString()}`;
-            document.getElementById('netSales').textContent = `₹${(stats.netSales || 0).toLocaleString()}`;
-        }
-
-        function setupPagination() {
-            totalPages = Math.ceil(currentOrders.length / ordersPerPage);
-
-            if (currentOrders.length === 0) {
-                document.querySelector('.card').style.display = 'none';
-                document.getElementById('noDataSection').style.display = 'block';
-                return;
-            }
-
-            document.querySelector('.card').style.display = 'block';
-            document.getElementById('noDataSection').style.display = 'none';
-            
-            if (totalPages > 1) {
-                document.getElementById('paginationSection').style.display = 'block';
-                renderPagination();
+            const dateRangeContainer = document.getElementById('dateRangeContainer');
+            if (this.value === 'custom') {
+                dateRangeContainer.style.display = 'block';
             } else {
-                document.getElementById('paginationSection').style.display = 'none';
+                dateRangeContainer.style.display = 'none';
             }
-        }
-
-        function displayOrdersPage(page) {
-            const tbody = document.getElementById('ordersTableBody');
-            tbody.innerHTML = '';
-
-            const startIndex = (page - 1) * ordersPerPage;
-            const endIndex = startIndex + ordersPerPage;
-            const pageOrders = currentOrders.slice(startIndex, endIndex);
-
-            pageOrders.forEach((order, index) => {
-                const slNo = startIndex + index + 1;
-                const statusClass = `status-${order.status.toLowerCase().replace(/\s+/g, '-')}`;
-                
-                let amountDisplay;
-                if (order.discount > 0) {
-                    amountDisplay = `
-            <div class="amount-with-discount">
-              <div class="original-amount">₹${order.originalAmount.toLocaleString()}</div>
-              <div class="paid-amount">₹${order.finalAmount.toLocaleString()}</div>
-              <small class="discount-info">(-₹${order.discount.toLocaleString()})</small>
-            </div>
-          `;
-                } else {
-                    amountDisplay = `₹${order.finalAmount.toLocaleString()}`;
-                }
-
-                const row = `
-          <tr>
-            <td>${slNo}</td>
-            <td><strong>#${order.orderId}</strong></td>
-            <td>${order.customer.name}</td>
-            <td title="${order.products}">${order.products.length > 30 ? order.products.substring(0, 30) + '...' : order.products}</td>
-            <td>${moment(order.date).format('DD/MM/YYYY')}</td>
-            <td>${order.itemCount}</td>
-            <td>${amountDisplay}</td>
-            <td><span class="status-badge ${statusClass}">${order.status}</span></td>
-          </tr>
-        `;
-                tbody.innerHTML += row;
-            });
-
-            console.log(`Displayed ${pageOrders.length} orders on page ${page}`);
-        }
-
-        function renderPagination() {
-            const paginationList = document.getElementById('paginationList');
-            paginationList.innerHTML = '';
-
-            const prevClass = currentPage <= 1 ? 'disabled' : '';
-            paginationList.innerHTML += `<li class="page-item ${prevClass}">
-          <a class="page-link" href="#" onclick="changePage(${currentPage - 1})">
-            <i class="material-icons" style="font-size:16px;">Prev</i>
-          </a>
-        </li>`;
-            let startPage = Math.max(1, currentPage - 2);
-            let endPage = Math.min(totalPages, currentPage + 2);
-
-            if (startPage > 1) {
-                paginationList.innerHTML += `<li class="page-item"><a class="page-link" href="#" onclick="changePage(1)">1</a></li>`;
-                if (startPage > 2) {
-                    paginationList.innerHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
-                }
-            }
-
-            for (let i = startPage; i <= endPage; i++) {
-                const activeClass = i === currentPage ? 'active' : '';
-                paginationList.innerHTML += `
-          <li class="page-item ${activeClass}">
-            <a class="page-link" href="#" onclick="changePage(${i})">${i}</a>
-          </li>
-        `;
-            }
-
-            if (endPage < totalPages) {
-                if (endPage < totalPages - 1) {
-                    paginationList.innerHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
-                }
-                paginationList.innerHTML += `<li class="page-item"><a class="page-link" href="#" onclick="changePage(${totalPages})">${totalPages}</a></li>`;
-            }
-        
-            const nextClass = currentPage >= totalPages ? 'disabled' : '';
-            paginationList.innerHTML += `
-        <li class="page-item ${nextClass}">
-          <a class="page-link" href="#" onclick="changePage(${currentPage + 1})">
-            <i class="material-icons" style="font-size:16px;">Next</i>
-          </a>
-        </li>
-      `;
-        }
-
-        function changePage(page) {
-            if (page < 1 || page > totalPages || page === currentPage) return;
-
-            currentPage = page;
-            displayOrdersPage(currentPage);
-            renderPagination();
-          
-            document.getElementById('ordersTable').scrollIntoView({ behavior: 'smooth' });
-        }
+        });
 
         function downloadReport(format) {
             const reportType = document.getElementById('reportType').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
             let params = new URLSearchParams();
             params.append('reportType', reportType);
             params.append('format', format);
 
             if (reportType === 'custom') {
-                const dateRange = $('#dateRange').data('daterangepicker');
-                if (dateRange) {
-                    params.append('startDate', dateRange.startDate.format('YYYY-MM-DD'));
-                    params.append('endDate', dateRange.endDate.format('YYYY-MM-DD'));
+                if (!startDate || !endDate) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Missing Dates',
+                        text: 'Please select both start date and end date for custom reports.'
+                    });
+                    return;
+                }
+                params.append('startDate', startDate);
+                params.append('endDate', endDate);
+            }
+
+            window.location.href = `/admin/sales-report/download?${params.toString()}`;
+        }
+
+        document.getElementById('reportForm').addEventListener('submit', function (e) {
+            const reportType = document.getElementById('reportType').value;
+
+            if (reportType === 'custom') {
+                const startDate = document.getElementById('startDate').value;
+                const endDate = document.getElementById('endDate').value;
+
+                if (!startDate || !endDate) {
+                    e.preventDefault();
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Missing Dates',
+                        text: 'Please select both start date and end date for custom reports.'
+                    });
+                    return false;
                 }
             }
-       
-            document.getElementById('loading').style.display = 'block';
-           
-            window.location.href = `/admin/sales-report/download?${params.toString()}`;
-           
-            setTimeout(() => {
-                document.getElementById('loading').style.display = 'none';
-            }, 2000);
-        }
-        
-        window.addEventListener('load', function () {
-            generateReport();
         });
     </script>
 

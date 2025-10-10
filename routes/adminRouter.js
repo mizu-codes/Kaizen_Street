@@ -40,6 +40,7 @@ router.get('/orders', adminAuth, orderController.loadOrderPage);
 router.get('/orders/:orderId', adminAuth, orderController.loadOrderDetailsPage);
 router.patch('/orders/:orderId/status', adminAuth, orderController.changeOrderStatus);
 router.patch('/returns/:orderId/:itemId', adminAuth, orderController.updateReturnRequest);
+router.patch('/orders/:orderId/items/:itemId/status', adminAuth, orderController.updateItemStatus);
 
 router.get('/transactions', adminAuth, transactionController.loadTransactionsPage);
 router.get('/transactions/:id', adminAuth, transactionController.getTransactionDetails);

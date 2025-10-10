@@ -9,6 +9,103 @@
     <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/kaizenicon.svg">
     <link rel="stylesheet" href="/css/main.css?v=3.4">
     <style>
+
+         .add-to-cart-btn {
+         flex: 1;
+            padding: 6px 12px;
+            background: linear-gradient(135deg, #ff1744 0%, #f50057 50%, #c51162 100%);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            white-space: nowrap;
+            min-height: 32px;
+    }
+
+    .add-to-cart-btn:hover {
+        transform: translateY(-1px);
+            color: white;
+            box-shadow: 0 6px 15px rgba(255, 23, 68, 0.3);
+    }
+
+    .add-to-cart-btn:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* Size selector in SweetAlert */
+    .size-selector {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 20px 0;
+        flex-wrap: wrap;
+    }
+
+    .size-option {
+        width: 50px;
+        height: 50px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        background: white;
+    }
+
+    .size-option:hover {
+        border-color: #3ed092;
+        transform: scale(1.05);
+    }
+
+    .size-option.selected {
+        border-color: #3ed092;
+        background:#3ed092;
+        color: white;
+    }
+
+    .size-option.out-of-stock {
+        opacity: 0.3;
+        cursor: not-allowed;
+        position: relative;
+    }
+
+    .size-option.out-of-stock::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: red;
+        transform: rotate(-45deg);
+    }
+
+    .stock-info {
+        margin-top: 15px;
+        padding: 10px;
+        background: #f0f9ff;
+        border-radius: 8px;
+        font-size: 14px;
+        color: #0369a1;
+    }
+
+    .stock-info.out-of-stock {
+        background: #fef2f2;
+        color: #991b1b;
+    }
+
         .swal2-popup.swal-responsive {
             color: #333 !important;
             border: 2px solid rgba(0, 0, 0, 0.1) !important;
@@ -512,7 +609,7 @@
                         <div class="header-action-right">
                             <div class="header-action-2">
                                 <div class="header-action-icon-2">
-                                    <a href="shop-wishlist.html">
+                                    <a href="/wishlist">
                                         <img class="svgInject" alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
                                         <span id="wishlistItemCount" class="pro-count blue">
                                             <%= typeof locals.wishlistItemCount !=='undefined' ?
@@ -593,83 +690,80 @@
         </div>
     </div>
 
-    <div class="wishlist-container">
-        <div class="wishlist-content">
-            <div class="wishlist-header">
-                <h1 class="wishlist-title">Discover Items In Your Wishlist</h1>
-                <p class="wishlist-subtitle">Save your favorite items and move them to cart when you're ready to
-                    purchase</p>
-            </div>
+<div class="wishlist-container">
+    <div class="wishlist-content">
+        <div class="wishlist-header">
+            <h1 class="wishlist-title">Discover Items In Your Wishlist</h1>
+            <p class="wishlist-subtitle">Save your favorite items and move them to cart when you're ready to
+                purchase</p>
+        </div>
 
-            <% if (items && items.length> 0) { %>
+        <% if (items && items.length> 0) { %>
 
-                <div class="wishlist-grid">
-                    <% items.forEach(item=> { %>
-                        <div class="wishlist-item" data-product-id="<%= item._id %>">
-                            <div class="item-image-container">
+            <div class="wishlist-grid">
+                <% items.forEach(item=> { %>
+                    <div class="wishlist-item" data-product-id="<%= item._id %>">
+                        <div class="item-image-container">
+                            <a href="/products/<%= item._id %>">
                                 <img src="<%= item.productImage %>" alt="<%= item.productName %>" class="item-image"
                                     onerror="this.src='/imgs/theme/placeholder.jpg'">
-                                <div class="heart-icon filled" >
-                                    ❤️
-                                </div>
+                            </a>
+                            <div class="heart-icon filled">❤️</div>
+                        </div>
+
+                        <div class="item-details">
+                            <div class="item-category">
+                                <%= item.categoryName %>
+                            </div>
+                            <h3 class="item-name">
+                                <%= item.productName %>
+                            </h3>
+
+                            <div class="item-price-section d-flex align-items-center gap-2 mt-2">
+                                <% if (item.originalPrice && item.originalPrice> item.discountPrice) { %>
+                                    <span class="text-muted" style="text-decoration: line-through; font-size: 0.9rem;">
+                                        ₹<%= item.originalPrice %>
+                                    </span>
+                                    <% } %>
+                                        <span class="fw-bold text-dark" style="font-size: 1.1rem;">
+                                            ₹<%= item.discountPrice %>
+                                        </span>
                             </div>
 
-                            <div class="item-details">
-                                <div class="item-category">
-                                    <%= item.categoryName %>
-                                </div>
-                                <h3 class="item-name">
-                                    <%= item.productName %>
-                                </h3>
+                            <div class="item-actions">
+                                <button class="add-to-cart-btn"
+                                    onclick="addToCartFromWishlist('<%= item._id %>', '<%= item.productName %>')">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                        <path
+                                            d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z" />
+                                    </svg>
+                                    Add to Cart
+                                </button>
 
-                                <div class="item-price-section d-flex align-items-center gap-2 mt-2">
-                                    <% if (item.originalPrice && item.originalPrice> item.discountPrice) { %>
-                                        <span class="text-muted"
-                                            style="text-decoration: line-through; font-size: 0.9rem;">
-                                            ₹<%= item.originalPrice %>
-                                        </span>
-                                        <% } %>
-                                            <span class="fw-bold text-dark" style="font-size: 1.1rem;">
-                                                ₹<%= item.discountPrice %>
-                                            </span>
-                                </div>
-
-
-
-                                <div class="item-actions">
-                                    <button class="move-to-cart-btn"
-                                        onclick="window.location.href='/shop/product/<%= item._id %>'">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                                            <path
-                                                d="M14,3V5H17.59L7.76,14.83L9.17,16.24L19,6.41V10H21V3M19,19H5V5H12V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V12H19V19Z" />
-                                        </svg>
-                                        View Product
-                                    </button>
-
-                                    <button class="remove-from-wishlist-btn"
-                                        onclick="removeFromWishlist('<%= item._id %>')">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                                            <path
-                                                d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
-                                        </svg>
-                                    </button>
-                                </div>
+                                <button class="remove-from-wishlist-btn"
+                                    onclick="removeFromWishlist('<%= item._id %>')">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                        <path
+                                            d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
+                                    </svg>
+                                </button>
                             </div>
                         </div>
-                        <% }) %>
-                </div>
-                <% } else { %>
-                    <div class="empty-wishlist">
-                        <div class="empty-wishlist-icon">💝</div>
-                        <h3>Your wishlist is empty</h3>
-                        <p>Add items you love to your wishlist and shop them later!</p>
-                        <a href="/shop" class="continue-shopping-btn">
-                            Start Shopping
-                        </a>
                     </div>
-                    <% } %>
-        </div>
+                    <% }) %>
+            </div>
+            <% } else { %>
+                <div class="empty-wishlist">
+                    <div class="empty-wishlist-icon">💝</div>
+                    <h3>Your wishlist is empty</h3>
+                    <p>Add items you love to your wishlist and shop them later!</p>
+                    <a href="/shop" class="continue-shopping-btn">
+                        Start Shopping
+                    </a>
+                </div>
+                <% } %>
     </div>
+</div>
 
 
     <footer class="main">
@@ -775,6 +869,155 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
+
+        async function fetchProductStock(productId) {
+            try {
+                const res = await fetch(`/api/product/${productId}/stock`);
+                if (!res.ok) throw new Error('Failed to fetch stock');
+                const data = await res.json();
+                return data.stock || {};
+            } catch (error) {
+                console.error('Error fetching stock:', error);
+                return null;
+            }
+        }
+
+        async function addToCartFromWishlist(productId, productName) {
+            try {
+                const stock = await fetchProductStock(productId);
+
+                if (!stock) {
+                    return Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Unable to fetch product stock. Please try again.',
+                        customClass: { popup: 'swal-responsive' }
+                    });
+                }
+
+                const sizes = ['S', 'M', 'L', 'XL', 'XXL'];
+                let selectedSize = null;
+
+                const sizeOptionsHtml = sizes.map(size => {
+                    const qty = stock[size] || 0;
+                    const outOfStock = qty === 0;
+                    return `<div class="size-option ${outOfStock ? 'out-of-stock' : ''}" 
+                             data-size="${size}" 
+                             data-stock="${qty}"
+                             ${outOfStock ? 'style="pointer-events: none;"' : ''}>
+                            ${size}
+                        </div>`;
+                }).join('');
+                const { isConfirmed } = await Swal.fire({
+                    title: `Select a size:`,
+                    html: `<div class="size-selector">
+                            ${sizeOptionsHtml}
+                        </div>
+                        <div class="stock-info" id="stockInfo" style="display: none;">
+                            Select a size to see availability
+                        </div>`,
+                    showCancelButton: true,
+                    confirmButtonText: 'Add to Cart',
+                    cancelButtonText: 'Cancel',
+                    confirmButtonColor: '#667eea',
+                    cancelButtonColor: '#6c757d',
+                    customClass: { popup: 'swal-responsive' },
+                    preConfirm: () => {
+                        if (!selectedSize) {
+                            Swal.showValidationMessage('Please select a size');
+                            return false;
+                        }
+                        return selectedSize;
+                    },
+                    didOpen: () => {
+                        document.querySelectorAll('.size-option:not(.out-of-stock)').forEach(option => {
+                            option.addEventListener('click', function () {
+                                document.querySelectorAll('.size-option').forEach(opt =>
+                                    opt.classList.remove('selected')
+                                );
+
+                                this.classList.add('selected');
+                                selectedSize = this.dataset.size;
+
+                                const stockQty = this.dataset.stock;
+                                const stockInfo = document.getElementById('stockInfo');
+                                stockInfo.style.display = 'block';
+                                stockInfo.classList.remove('out-of-stock');
+                                stockInfo.style.color = '#ff4757';
+                                stockInfo.textContent = `${stockQty} items available in stock`;
+                            });
+                        });
+                    }
+                });
+
+                if (!isConfirmed || !selectedSize) return;
+
+                Swal.fire({
+                    title: 'Adding to Cart...',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    willOpen: () => Swal.showLoading(),
+                    customClass: { popup: 'swal-responsive' }
+                });
+
+                const response = await fetch(`/cart/add/${productId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({ size: selectedSize })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to add to cart');
+                }
+
+                await fetch(`/wishlist/delete/${productId}`, {
+                    method: 'DELETE'
+                });
+
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'Added to Cart!',
+                    text: `${productName} (Size: ${selectedSize}) has been added to your cart and removed from wishlist.`,
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: { popup: 'swal-responsive' }
+                });
+
+                const card = document.querySelector(`[data-product-id="${productId}"]`);
+                if (card) {
+                    card.style.transition = 'all 0.3s ease';
+                    card.style.opacity = '0';
+                    card.style.transform = 'scale(0.8)';
+                    setTimeout(() => card.remove(), 300);
+                }
+
+                document.dispatchEvent(new CustomEvent('cart:updated', {
+                    detail: { count: data.cartCount }
+                }));
+
+                setTimeout(() => {
+                    if (document.querySelectorAll('.wishlist-item').length === 0) {
+                        location.reload();
+                    }
+                }, 500);
+
+            } catch (error) {
+                console.error('Add to cart error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: error.message || 'Failed to add to cart. Please try again.',
+                    customClass: { popup: 'swal-responsive' }
+                });
+            }
+        }
+
         async function removeFromWishlist(productId) {
             const confirmResult = await Swal.fire({
                 title: 'Remove from Wishlist?',

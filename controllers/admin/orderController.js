@@ -244,6 +244,24 @@ const changeOrderStatus = async (req, res) => {
       const order = await Order.findById(orderId).session(session);
       if (!order) throw new Error('Order not found');
 
+      const itemStatuses = order.items.map(item => item.status || order.status);
+      const uniqueStatuses = [...new Set(itemStatuses)];
+
+      if (uniqueStatuses.length > 1) {
+        throw new Error('Cannot update overall status when items have different statuses. Please update items individually.');
+      }
+
+      const allDelivered = itemStatuses.every(s => s === 'Delivered');
+      const allCancelled = itemStatuses.every(s => s === 'Cancelled');
+
+      if (allDelivered && status !== 'Delivered') {
+        throw new Error('Cannot change status - all items are already delivered');
+      }
+
+      if (allCancelled && status !== 'Cancelled') {
+        throw new Error('Cannot change status - all items are cancelled');
+      }
+
       order.status = status;
 
       order.items.forEach(item => {
@@ -272,11 +290,103 @@ const changeOrderStatus = async (req, res) => {
     });
 
     session.endSession();
-    return res.json({ success: true, status, message: 'Order status updated and synced with all items' });
+    return res.json({
+      success: true,
+      status,
+      message: 'Order status updated and synced with all items'
+    });
   } catch (err) {
     session.endSession();
     console.error('changeOrderStatus error:', err);
-    return res.status(500).json({ success: false, message: 'Internal server error' });
+    return res.status(500).json({
+      success: false,
+      message: err.message || 'Internal server error'
+    });
+  }
+};
+
+const updateItemStatus = async (req, res) => {
+  const { orderId, itemId } = req.params;
+  const { status } = req.body;
+
+  if (!status) {
+    return res.status(400).json({ success: false, message: 'Status is required' });
+  }
+
+  if (!VALID_STATUSES.includes(status)) {
+    return res.status(400).json({ success: false, message: 'Invalid status value' });
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(orderId) || !mongoose.Types.ObjectId.isValid(itemId)) {
+    return res.status(400).json({ success: false, message: 'Invalid ID format' });
+  }
+
+  const session = await mongoose.startSession();
+  try {
+    await session.withTransaction(async () => {
+      const order = await Order.findById(orderId).session(session);
+      if (!order) throw new Error('Order not found');
+
+      const item = order.items.id(itemId);
+      if (!item) throw new Error('Item not found in order');
+
+      if (item.status === 'Cancelled') {
+        throw new Error('Cannot update status of cancelled item');
+      }
+
+      if (item.returnRequest && item.returnRequest.status === 'requested') {
+        throw new Error('Cannot update status while return is pending');
+      }
+
+      item.status = status;
+
+      if (status === 'Shipped' && !item.shippedAt) {
+        item.shippedAt = new Date();
+      } else if (status === 'Delivered' && !item.deliveredAt) {
+        item.deliveredAt = new Date();
+      } else if (status === 'Out for Delivery' && !item.outForDeliveryAt) {
+        item.outForDeliveryAt = new Date();
+      }
+
+      const allItemStatuses = order.items.map(i => i.status);
+      const allDelivered = allItemStatuses.every(s => s === 'Delivered');
+      const allCancelled = allItemStatuses.every(s => s === 'Cancelled');
+      const anyShipped = allItemStatuses.some(s => s === 'Shipped' || s === 'Out for Delivery' || s === 'Delivered');
+
+      if (allDelivered) {
+        order.status = 'Delivered';
+      } else if (allCancelled) {
+        order.status = 'Cancelled';
+      } else if (anyShipped) {
+        order.status = 'Shipped';
+      } else {
+        order.status = 'Processing';
+      }
+
+      order.history = order.history || [];
+      order.history.push({
+        by: req.session?.userId || null,
+        action: `item-status->${status} (Item: ${item.name})`,
+        timestamp: new Date()
+      });
+
+      await order.save({ session });
+    });
+
+    session.endSession();
+    return res.json({
+      success: true,
+      status,
+      message: 'Item status updated successfully'
+    });
+
+  } catch (err) {
+    session.endSession();
+    console.error('updateItemStatus error:', err);
+    return res.status(500).json({
+      success: false,
+      message: err.message || 'Internal server error'
+    });
   }
 };
 
@@ -467,5 +577,6 @@ module.exports = {
   loadOrderPage,
   loadOrderDetailsPage,
   changeOrderStatus,
+  updateItemStatus,
   updateReturnRequest
 }

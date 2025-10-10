@@ -291,25 +291,44 @@ const returnOrderItem = async (req, res) => {
         const item = order.items.find(it => String(it._id) === String(itemId));
         if (!item) return res.status(404).json({ success: false, message: 'Item not in order' });
 
-        const itemStatus = (order.status || '').toLowerCase();
-        if (itemStatus !== 'delivered') return res.status(400).json({
-            success: false, message: 'Only delivered items can be returned'
-        });
+
+        const itemStatus = (item.status || order.status || '').toLowerCase();
+
+        if (itemStatus !== 'delivered') {
+            return res.status(400).json({
+                success: false,
+                message: 'Only delivered items can be returned'
+            });
+        }
+
+        if (itemStatus === 'cancelled') {
+            return res.status(400).json({
+                success: false,
+                message: 'Cannot return a cancelled item'
+            });
+        }
 
         const existing = await returnAndRefund.findOne({ order: orderId, itemId });
         if (existing) return res.status(400).json({
             success: false, message: 'Return request already exists'
         });
-        if (item.returnRequest && item.returnRequest.status) return res.status(400).json({
-            success: false, message: 'Return already requested'
-        });
+
+        if (item.returnRequest && item.returnRequest.status) {
+            return res.status(400).json({
+                success: false, message: 'Return already requested'
+            });
+        }
 
         const deliveryDate = item.deliveredAt || order.updatedAt || order.placedAt || order.createdAt;
         const daysSinceDelivery = Math.floor((Date.now() - new Date(deliveryDate)) / (1000 * 60 * 60 * 24));
         const returnWindowDays = 7;
-        if (daysSinceDelivery > returnWindowDays) return res.status(400).json({
-            success: false, message: `Return window expired (${returnWindowDays} days)`
-        });
+
+        if (daysSinceDelivery > returnWindowDays) {
+            return res.status(400).json({
+                success: false,
+                message: `Return window expired (${returnWindowDays} days)`
+            });
+        }
 
         const originalItemSubtotal = item.subtotal ?? (item.price * item.quantity);
         const orderTotalOriginal = order.items.reduce((sum, orderItem) =>
@@ -364,11 +383,15 @@ const returnOrderItem = async (req, res) => {
     } catch (err) {
         console.error('returnOrderItem error', err);
         try { await session.endSession(); } catch (e) { }
-        if (err && err.code === 11000) return res.status(400).json({ success: false, message: 'Duplicate return request' });
+        if (err && err.code === 11000) {
+            return res.status(400).json({
+                success: false,
+                message: 'Duplicate return request'
+            });
+        }
         return res.status(500).json({ success: false, message: 'Server error' });
     }
 };
-
 
 module.exports = {
     loadOrderPage,
