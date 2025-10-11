@@ -309,10 +309,76 @@ const deleteQuantity = async (req, res) => {
     }
 }
 
+const checkCartStock = async (req, res) => {
+    try {
+        const userId = req.session.userId;
+        if (!userId) {
+            return res.status(401).json({ success: false, message: 'Please log in first.' });
+        }
+
+        const cart = await Cart.findOne({ userId }).populate({
+            path: 'items.productId',
+            select: 'productName stock isBlocked status'
+        });
+
+        if (!cart || cart.items.length === 0) {
+            return res.json({ success: true, outOfStock: [] });
+        }
+
+        const outOfStockItems = [];
+
+        for (let item of cart.items) {
+            const product = item.productId;
+
+            if (!product || product.isBlocked || product.status !== 'active') {
+                outOfStockItems.push({
+                    productId: item.productId._id,
+                    productName: product?.productName || 'Unknown Product',
+                    size: item.size,
+                    requestedQty: item.quantity,
+                    availableStock: 0,
+                    reason: 'Product unavailable'
+                });
+                continue;
+            }
+
+            const size = item.size;
+            const currentStock = product.stock[size] || 0;
+
+            if (currentStock < item.quantity) {
+                outOfStockItems.push({
+                    productId: product._id,
+                    productName: product.productName,
+                    size: size,
+                    requestedQty: item.quantity,
+                    availableStock: currentStock,
+                    reason: currentStock === 0 ? 'Out of stock' : 'Insufficient stock'
+                });
+            }
+        }
+
+        if (outOfStockItems.length > 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Some items in your cart are out of stock',
+                outOfStock: outOfStockItems
+            });
+        }
+
+        return res.json({ success: true, outOfStock: [] });
+
+    } catch (error) {
+        console.error('checkCartStock error:', error);
+        return res.status(500).json({ success: false, message: 'Server error occurred.' });
+    }
+};
+
+
 module.exports = {
     addToCart,
     loadCartPage,
     updateQuantity,
-    deleteQuantity
+    deleteQuantity,
+    checkCartStock
 }
 

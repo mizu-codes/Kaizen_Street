@@ -10,6 +10,10 @@
     <link rel="stylesheet" href="/css/main.css?v=3.4">
     <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
     <style>   
+
+     .swal-rounded {
+    border-radius: 15px !important;
+}
         .coupon-help-text {
             font-size: 13px;
             color: #6c757d;
@@ -1969,22 +1973,22 @@
             if (couponForm) couponForm.style.display = 'none';
 
             const appliedCouponHTML = `
-            <div class="applied-coupon" id="appliedCouponDisplay">
-                <div class="applied-coupon-info">
-                    <div class="coupon-icon success">
-                        <i class="ri-checkbox-circle-fill"></i>
+                <div class="applied-coupon" id="appliedCouponDisplay">
+                    <div class="applied-coupon-info">
+                        <div class="coupon-icon success">
+                            <i class="ri-checkbox-circle-fill"></i>
+                        </div>
+                        <div class="coupon-details">
+                            <h4>${couponData.couponName}</h4>
+                            <p class="coupon-code">Code: ${couponData.couponCode}</p>
+                            <p class="discount-amount">You saved ₹${couponData.discount}</p>
+                        </div>
                     </div>
-                    <div class="coupon-details">
-                        <h4>${couponData.couponName}</h4>
-                        <p class="coupon-code">Code: ${couponData.couponCode}</p>
-                        <p class="discount-amount">You saved ₹${couponData.discount}</p>
-                    </div>
+                    <button class="remove-coupon-btn" onclick="removeCoupon()">
+                        <i class="ri-close-line"></i>
+                    </button>
                 </div>
-                <button class="remove-coupon-btn" onclick="removeCoupon()">
-                    <i class="ri-close-line"></i>
-                </button>
-            </div>
-        `;
+            `;
 
             couponContainer.innerHTML = appliedCouponHTML;
         }
@@ -1993,23 +1997,23 @@
             const couponContainer = document.getElementById('couponContainer');
 
             const couponFormHTML = `
-            <div class="coupon-form" id="couponForm">
-                <div class="coupon-input-container">
-                    <input type="text" 
-                           id="couponCodeInput" 
-                           placeholder="Enter coupon code" 
-                           class="coupon-input"
-                           maxlength="20">
-                    <button type="button" 
-                            class="apply-coupon-btn" 
-                            id="applyCouponBtn"
-                            onclick="applyCoupon()">
-                        Apply
-                    </button>
+                <div class="coupon-form" id="couponForm">
+                    <div class="coupon-input-container">
+                        <input type="text" 
+                               id="couponCodeInput" 
+                               placeholder="Enter coupon code" 
+                               class="coupon-input"
+                               maxlength="20">
+                        <button type="button" 
+                                class="apply-coupon-btn" 
+                                id="applyCouponBtn"
+                                onclick="applyCoupon()">
+                            Apply
+                        </button>
+                    </div>
+                    <div class="coupon-message-text" id="couponMessage" style="display: none; color: #dc3545; font-size: 12px; margin-top: 6px;"></div>
                 </div>
-                <div class="coupon-message-text" id="couponMessage" style="display: none; color: #dc3545; font-size: 12px; margin-top: 6px;"></div>
-            </div>
-        `;
+            `;
 
             couponContainer.innerHTML = couponFormHTML;
 
@@ -2137,18 +2141,15 @@
             }
             const addressId = defaultCard.dataset.addressId;
 
-
             const finalTotalElement = document.getElementById('finalTotalAmount');
             const currentTotal = finalTotalElement ?
                 parseFloat(finalTotalElement.textContent.replace('₹', '').replace(',', '')) :
                 parseFloat(document.querySelector('.order-total')?.textContent?.replace('₹', '').replace(',', '') || 0);
 
-
             const orderData = {
                 addressId,
                 paymentMethod
             };
-
 
             if (appliedCouponData) {
                 orderData.couponData = {
@@ -2158,6 +2159,45 @@
                     originalTotal: appliedCouponData.originalTotal,
                     finalTotal: appliedCouponData.finalTotal
                 };
+            }
+
+            function showStockError(data) {
+                if (data.outOfStock && data.outOfStock.length > 0) {
+                    let outOfStockMessage = '<div style="text-align: left; font-size: 14px;">The following items are out of stock:<br><br>';
+
+                    data.outOfStock.forEach(item => {
+                        const shortName = item.productName.split(' ').slice(0, 3).join(' ');
+                        if (item.availableStock === 0) {
+                            outOfStockMessage += `<div style="margin-bottom: 8px;">• <strong>${shortName}</strong> (Size: ${item.size}) - Out of stock</div>`;
+                        } else {
+                            outOfStockMessage += `<div style="margin-bottom: 8px;">• <strong>${shortName}</strong> (Size: ${item.size})<br>&nbsp;&nbsp;&nbsp;Only ${item.availableStock} available (You have ${item.requestedQty})</div>`;
+                        }
+                    });
+
+                    outOfStockMessage += '<br>Please update your cart.</div>';
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Stock Unavailable',
+                        html: outOfStockMessage,
+                        confirmButtonText: 'Go to Cart',
+                        width: '450px',
+                        customClass: {
+                            popup: 'swal-rounded'
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '/cart';
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: data.message || 'Failed to place order.',
+                        ...swalOpts
+                    });
+                }
             }
 
             if (paymentMethod === 'cod') {
@@ -2179,12 +2219,7 @@
                         });
                         window.location.href = `/checkout/order-success/${data.orderId}`;
                     } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: data.message || 'Failed to place order.',
-                            ...swalOpts
-                        });
+                        showStockError(data);
                     }
                 } catch (err) {
                     console.error(err);
@@ -2231,12 +2266,7 @@
                         });
                         window.location.href = `/checkout/order-success/${data.orderId}`;
                     } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Payment Failed',
-                            text: data.message || 'Wallet payment failed.',
-                            ...swalOpts
-                        });
+                        showStockError(data);
                     }
                 } catch (err) {
                     console.error('Wallet payment error:', err);
@@ -2274,12 +2304,8 @@
                     loadingSwal.close();
 
                     if (!orderRes.ok || !orderData_response.success) {
-                        return Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: orderData_response.message || 'Failed to create payment order.',
-                            ...swalOpts
-                        });
+                        showStockError(orderData_response);
+                        return;
                     }
 
                     const razorpayAmount = currentTotal * 100;
@@ -2374,20 +2400,6 @@
                                 const couponCode = orderDetails.couponData?.couponCode || '';
 
                                 let failureUrl = `/checkout/order-failed?reason=verification_error&orderId=${response.razorpay_order_id}`;
-                                if (couponCode) {
-                                    failureUrl += `&couponCode=${encodeURIComponent(couponCode)}`;
-                                }
-
-                                window.location.href = failureUrl;
-                            }
-                        },
-
-                        modal: {
-                            ondismiss: function () {
-                                const orderDetails = JSON.parse(sessionStorage.getItem('failedOrderDetails') || '{}');
-                                const couponCode = orderDetails.couponData?.couponCode || '';
-
-                                let failureUrl = `/checkout/order-failed?reason=cancelled&orderId=${orderData_response.orderId}`;
                                 if (couponCode) {
                                     failureUrl += `&couponCode=${encodeURIComponent(couponCode)}`;
                                 }

@@ -292,17 +292,29 @@ const placeOrder = async (req, res) => {
 
         const finalAmount = totalAmount - discount;
 
+        const outOfStockItems = [];
+
         for (let item of validCartItems) {
             const product = item.productId;
             const size = item.size;
             const currentStock = product.stock[size] || 0;
 
             if (currentStock < item.quantity) {
-                return res.status(400).json({
-                    success: false,
-                    message: `Not enough stock for ${product.productName} - Size ${size}`
+                outOfStockItems.push({
+                    productName: product.productName,
+                    size: size,
+                    requestedQty: item.quantity,
+                    availableStock: currentStock
                 });
             }
+        }
+
+        if (outOfStockItems.length > 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Some items in your cart are out of stock',
+                outOfStock: outOfStockItems
+            });
         }
 
         if (paymentMethod === 'wallet') {
@@ -639,15 +651,29 @@ const createRazorpayOrder = async (req, res) => {
             return product && !product.isBlocked && product.status === 'active' && product.category;
         });
 
+        const outOfStockItems = [];
+
         for (let item of validItems) {
             const product = item.productId;
             const size = item.size;
-            if ((product.stock[size] || 0) < item.quantity) {
-                return res.status(400).json({
-                    success: false,
-                    message: `Not enough stock for ${product.productName} - Size ${size}`,
+            const currentStock = product.stock[size] || 0;
+
+            if (currentStock < item.quantity) {
+                outOfStockItems.push({
+                    productName: product.productName,
+                    size: size,
+                    requestedQty: item.quantity,
+                    availableStock: currentStock
                 });
             }
+        }
+
+        if (outOfStockItems.length > 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Some items in your cart are out of stock',
+                outOfStock: outOfStockItems
+            });
         }
 
         const itemsWithOffers = validItems.map(item => {

@@ -34,10 +34,10 @@ const loadCouponPage = async (req, res) => {
         }
 
         return res.render('profile-coupon', {
-            coupons,
-            user: user || null,
-            userId: userId || null,
-            usedCouponsCount,
+            coupons: coupons || [],
+            user: user,
+            userId: userId,
+            usedCouponsCount: usedCouponsCount,
             wishlistItemCount: req.session?.wishlistItemCount || 0,
             cartItemCount: req.session?.cartItemCount || 0
         });
@@ -46,11 +46,11 @@ const loadCouponPage = async (req, res) => {
         return res.render('profile-coupon', {
             coupons: [],
             user: null,
-            userId: req.session?.userId || null,
+            userId: req.session?.userId,
             usedCouponsCount: 0,
             wishlistItemCount: 0,
             cartItemCount: 0,
-            error: ['Failed to load coupons']
+            error: 'Failed to load coupons'
         });
     }
 };

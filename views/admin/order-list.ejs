@@ -403,24 +403,23 @@
               </td>
               <td>
                 <div class="status-container">
-                  <% if (order.status === 'Cancelled') { %>
+                <% if (order.displayStatus==='Cancelled' ) { %>
                   <span class="status-cancelled">Cancelled</span>
-                  <% } else if (order.status === 'Placed') { %>
-                  <span class="status-placed">Placed</span>
-                  <% } else if (order.status === 'Processing') { %>
-                  <span class="status-processing">Processing</span>
-                  <% } else if (order.status === 'Shipped') { %>
-                  <span class="status-shipped">Shipped</span>
-                  <% } else if (order.status === 'Out for Delivery') { %>
-                  <span class="status-out-for-delivery">Out for Delivery</span>
-                  <% } else if (order.status === 'Delivered') { %>
-                  <span class="status-delivered">Delivered</span>
-                  <% } else { %>
-                  <span class="status-pending">
-                    <%= order.status %>
-                  </span>
-                  <% } %>
-                 
+                  <% } else if (order.displayStatus==='Placed' ) { %>
+                    <span class="status-placed">Placed</span>
+                    <% } else if (order.displayStatus==='Processing' ) { %>
+                      <span class="status-processing">Processing</span>
+                      <% } else if (order.displayStatus==='Shipped' ) { %>
+                        <span class="status-shipped">Shipped</span>
+                        <% } else if (order.displayStatus==='Out for Delivery' ) { %>
+                          <span class="status-out-for-delivery">Out for Delivery</span>
+                          <% } else if (order.displayStatus==='Delivered' ) { %>
+                            <span class="status-delivered">Delivered</span>
+                            <% } else { %>
+                              <span class="status-pending">
+                                <%= order.displayStatus %>
+                              </span>
+                              <% } %>
                   <% 
                     const items = order.items || [];
                     const cancelledItems = items.filter(item => (item.status || order.status) === 'Cancelled');
@@ -494,12 +493,13 @@
             </li>
 
             <% for (let p=1; p <=totalPages; p++) { %>
-            <li class="page-item <%= p === _page ? 'active' : '' %>">
-              <a class="page-link" href="/admin/orders?<%= _q ? 'q=' + _q + '&' : '' %><%= _status && _status !== 'all' ? 'status=' + _status + '&' : '' %>page=<%= p %>&limit=<%= _limit %>">
-                <%= p %>
-              </a>
-            </li>
-            <% } %>
+              <li class="page-item <%= p === parseInt(_page) ? 'active' : '' %>">
+                <a class="page-link"
+                  href="/admin/orders?<%= _q ? 'q=' + _q + '&' : '' %><%= _status && _status !== 'all' ? 'status=' + _status + '&' : '' %>page=<%= p %>&limit=<%= _limit %>">
+                  <%= p %>
+                </a>
+              </li>
+              <% } %>
 
             <li class="page-item <%= _page >= totalPages ? 'disabled' : '' %>">
               <a class="page-link" href="/admin/orders?<%= _q ? 'q=' + _q + '&' : '' %><%= _status && _status !== 'all' ? 'status=' + _status + '&' : '' %>page=<%= _page + 1 %>&limit=<%= _limit %>">

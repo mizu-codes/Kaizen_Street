@@ -68,6 +68,7 @@ router.delete('/profile/address/:id', userAuth, addressController.deleteAddress)
 router.get('/profile/edit-address/:id', userAuth, addressController.editAddressPage);
 router.patch('/profile/edit-address/:id', userAuth, addressController.updateAddress);
 
+router.get('/cart/check-stock', userAuth, cartController.checkCartStock);
 router.get('/cart', userAuth, cartController.loadCartPage);
 router.post('/cart/add/:productId', userAuth, cartController.addToCart);
 router.post('/cart/update-quantity', userAuth, cartController.updateQuantity);

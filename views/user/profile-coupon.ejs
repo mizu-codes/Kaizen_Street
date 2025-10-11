@@ -10,6 +10,19 @@
   <link rel="stylesheet" href="/css/main.css?v=3.4">
 
   <style>
+    .coupon-card.premium {
+      border-color: black;
+      box-shadow: 0 4px 20px rgba(255, 215, 0, 0.2);
+    }
+  
+    .coupon-card.premium .coupon-header {
+      background: linear-gradient(135deg, #434343 0%, #000000 100%);
+    }
+  
+    .coupon-card.premium:hover {
+      box-shadow: 0 8px 30px rgba(255, 215, 0, 0.3);
+    }
+  
     .profile-stats {
       display: flex;
       justify-content: space-between;
@@ -23,7 +36,7 @@
       padding: 0 2rem;
       z-index: 3;
     }
-
+  
     .stat-item {
       text-align: center;
       padding: 1.5rem;
@@ -39,17 +52,15 @@
       align-items: center;
       backdrop-filter: blur(10px);
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-
-      /* Added hover effect that was missing */
     }
-
+  
     .stat-item:hover {
       transform: scale(1.05);
       border-color: #3BB77E;
       background: rgba(255, 255, 255, 0.98);
       box-shadow: 0 12px 35px rgba(59, 183, 126, 0.2);
     }
-
+  
     .stat-number {
       font-size: 2rem;
       font-weight: 700;
@@ -57,7 +68,7 @@
       margin-bottom: 0.2rem;
       line-height: 1;
     }
-
+  
     .profile-header {
       padding: 50px 20px;
       border-bottom: 1px solid #e0e4e8;
@@ -67,7 +78,7 @@
       min-height: 300px;
       overflow: hidden;
     }
-
+  
     .profile-header::before {
       content: '';
       position: absolute;
@@ -80,8 +91,7 @@
       background-position: center;
       background-repeat: no-repeat;
     }
-
-    /* Fallback overlay for better text readability */
+   
     .profile-header::after {
       content: '';
       position: absolute;
@@ -90,288 +100,312 @@
       width: 100%;
       height: 100%;
     }
-
+  
     .profile-header>* {
       position: relative;
       z-index: 2;
     }
-
-
-    /* Coupon-specific styles */
+  
+    
     .coupons-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-      gap: 24px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
       margin-top: 2rem;
     }
-
+  
     .coupon-card {
       background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
       overflow: hidden;
       transition: all 0.3s ease;
       border: 2px solid transparent;
     }
-
+  
     .coupon-card:hover {
       transform: translateY(-4px);
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     }
-
+  
     .coupon-card.active {
-      border-color: #3BB77E;
+      box-shadow: 0 4px 20px rgba(59, 183, 126, 0.15);
     }
-
+  
     .coupon-card.expired {
       opacity: 0.6;
       background: #f8f9fa;
     }
-
+  
     .coupon-card.upcoming {
       border-color: #ffc107;
+      box-shadow: 0 4px 20px rgba(255, 193, 7, 0.15);
     }
-
+  
     .coupon-card.exhausted,
     .coupon-card.inactive {
       opacity: 0.6;
       background: #f8f9fa;
     }
-
+   
     .coupon-header {
       background: linear-gradient(135deg, #3BB77E, #2a9d8f);
       color: white;
-      padding: 20px;
+      padding: 14px 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       position: relative;
     }
-
+  
     .coupon-card.expired .coupon-header {
       background: linear-gradient(135deg, #6c757d, #495057);
     }
-
+  
     .coupon-card.upcoming .coupon-header {
       background: linear-gradient(135deg, #ffc107, #e0a800);
     }
-
+  
     .coupon-discount {
       display: flex;
       align-items: baseline;
       gap: 4px;
     }
-
+  
     .discount-symbol {
-      font-size: 1.2rem;
+      font-size: 1rem;
       font-weight: 600;
     }
-
+  
     .discount-amount {
-      font-size: 2rem;
+      font-size: 1.6rem;
       font-weight: 700;
       line-height: 1;
     }
-
+  
     .discount-text {
-      font-size: 1rem;
+      font-size: 0.85rem;
       font-weight: 600;
       margin-left: 4px;
     }
-
+   
     .coupon-status {
       background: rgba(255, 255, 255, 0.2);
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.85rem;
+      padding: 3px 10px;
+      border-radius: 16px;
+      font-size: 0.7rem;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.3px;
     }
-
+  
     .coupon-status.active {
       background: rgba(255, 255, 255, 0.2);
     }
-
+  
     .coupon-status.expired {
       background: rgba(220, 53, 69, 0.2);
       color: #dc3545;
     }
-
+  
     .coupon-status.upcoming {
       background: rgba(255, 193, 7, 0.2);
       color: #856404;
     }
-
+  
     .coupon-body {
-      padding: 20px;
+      padding: 14px 16px;
     }
-
+  
     .coupon-name {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: #333;
-      margin-bottom: 8px;
-    }
-
-    .coupon-description {
-      color: #666;
       font-size: 0.9rem;
-      margin-bottom: 16px;
-      line-height: 1.4;
+      font-weight: 700;
+      color: #2d3436;
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+ 
+    .coupon-name::after {
+      content: '';
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(to right, #3BB77E, transparent);
+      margin-left: 12px;
+    }
+  
+    .coupon-description {
+      color: #555;
+      font-size: 0.8rem;
+      margin-bottom: 12px;
+      line-height: 1.5;
+      font-weight: 400;
+      letter-spacing: 0.2px;
     }
 
     .coupon-details {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
     }
-
+  
     .detail-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-
+  
     .detail-label {
       color: #666;
-      font-size: 0.85rem;
+      font-size: 0.75rem;
     }
-
+  
     .detail-value {
       color: #333;
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
     }
-
+  
+  
     .coupon-footer {
-      padding: 16px 20px;
+      padding: 12px 16px;
       background: #f8f9fa;
       border-top: 1px solid #e9ecef;
     }
-
+  
     .coupon-code-section {
       display: flex;
-      gap: 8px;
-      margin-bottom: 12px;
+      gap: 6px;
+      margin-bottom: 10px;
     }
-
+  
     .coupon-code-input {
       flex: 1;
-      padding: 8px 12px;
+      padding: 6px 10px;
       border: 1px solid #ddd;
-      border-radius: 6px;
+      border-radius: 5px;
       background: white;
       font-weight: 600;
       font-family: monospace;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       text-align: center;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
     }
-
+    
     .copy-code-btn {
       background: #3BB77E;
       color: white;
       border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
+      padding: 6px 12px;
+      border-radius: 5px;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 4px;
-      font-size: 0.85rem;
+      gap: 3px;
+      font-size: 0.75rem;
       font-weight: 600;
       transition: all 0.2s ease;
     }
-
+  
     .copy-code-btn:hover:not(:disabled) {
       background: #2a9d8f;
       transform: scale(1.05);
     }
-
+  
     .copy-code-btn:disabled {
       background: #6c757d;
       cursor: not-allowed;
       opacity: 0.6;
     }
-
+  
     .use-coupon-btn {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       background: #3BB77E;
       color: white;
       text-decoration: none;
-      padding: 10px 20px;
-      border-radius: 20px;
+      padding: 8px 16px;
+      border-radius: 16px;
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       transition: all 0.2s ease;
       width: 100%;
       justify-content: center;
     }
-
+  
     .use-coupon-btn:hover {
       background: #2a9d8f;
       color: white;
       text-decoration: none;
       transform: scale(1.02);
     }
-
+  
     .empty-state {
       text-align: center;
       padding: 60px 20px;
       color: #666;
     }
-
+  
     .empty-icon {
       font-size: 4rem;
       color: #ddd;
       margin-bottom: 1rem;
     }
-
+  
     .empty-state h3 {
       color: #333;
       margin-bottom: 1rem;
     }
-
+  
     .empty-state p {
       margin-bottom: 2rem;
       max-width: 400px;
       margin-left: auto;
       margin-right: auto;
     }
-
+  
     @media (max-width: 768px) {
       .coupons-grid {
         grid-template-columns: 1fr;
-        gap: 16px;
+        gap: 12px;
       }
-
+  
       .coupon-header {
-        padding: 16px;
+        padding: 12px 14px;
       }
-
+  
       .discount-amount {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
       }
-
+  
       .coupon-body {
-        padding: 16px;
+        padding: 12px 14px;
       }
-
+  
       .coupon-footer {
-        padding: 12px 16px;
+        padding: 10px 14px;
+      }
+  
+      .coupon-name {
+        font-size: 0.9rem;
+      }
+  
+      .coupon-description {
+        font-size: 0.75rem;
       }
     }
-
+  
     @media (max-width: 768px) {
       .profile-header {
         padding: 30px 15px;
         min-height: 200px;
         position: relative;
       }
-
+  
       .profile-stats {
         position: relative;
         top: auto;
@@ -383,19 +417,19 @@
         margin-top: 1rem;
         gap: 5rem;
       }
-
+  
       .stat-item {
         width: 80px;
         height: 80px;
         padding: 2rem;
         margin: 0 0.5rem;
       }
-
+  
       .stat-number {
         font-size: 1.4rem;
         margin-bottom: 0.1rem;
       }
-
+  
       .stat-label {
         font-size: 0.65rem;
         line-height: 1;
@@ -571,181 +605,116 @@
     </div>
   </div>
 
-  <div class="profile-container">
-    <div class="profile-layout">
-      <button class="mobile-sidebar-toggle" onclick="toggleSidebar()">
-        <span>
-          <i class="fi-rs-menu"></i>
-          My Account Menu
-        </span>
-        <i class="fi-rs-angle-down toggle-icon"></i>
-      </button>
 
-      <aside class="profile-sidebar" id="profileSidebar">
-        <h4>My Account</h4>
-        <ul>
-          <li>
-            <a href="/userProfile">
-              <i class="fi-rs-user"></i> My Profile
-            </a>
-          </li>
-          <li>
-            <a href="/orders">
-              <i class="fi-rs-shopping-bag"></i> My Orders
-            </a>
-          </li>
-          <li>
-            <a href="/profile/addresses">
-              <i class="fi-rs-marker"></i> My Addresses
-            </a>
-          </li>
-          <li>
-            <a href="/wallet">
-              <i class="fi-rs-credit-card"></i> My Wallet
-            </a>
-          </li>
-          <li>
-            <a href="/profile/coupons" class="active">
-              <i class="fi-rs-badge"></i> My Coupons
-            </a>
-          </li>
-          <li>
-            <a href="/profile/security">
-              <i class="fi-rs-shield-check"></i> Security Settings
-            </a>
-          </li>
-          <li>
-            <a href="/logout">
-              <i class="fi-rs-sign-out"></i> Logout
-            </a>
-          </li>
-        </ul>
-      </aside>
+<div class="profile-container">
+  <div class="profile-layout">
+    <button class="mobile-sidebar-toggle" onclick="toggleSidebar()">
+      <span>
+        <i class="fi-rs-menu"></i>
+        My Account Menu
+      </span>
+      <i class="fi-rs-angle-down toggle-icon"></i>
+    </button>
 
-      <main class="profile-content">
-        <div class="profile-header">
-          <div class="welcome-section">
-            <div class="profile-avatar-container">
-              <i class="fi-rs-tag" style="font-size: 3rem; color: #3BB77E;"></i>
+    <aside class="profile-sidebar" id="profileSidebar">
+      <h4>My Account</h4>
+      <ul>
+        <li><a href="/userProfile"><i class="fi-rs-user"></i> My Profile</a></li>
+        <li><a href="/orders"><i class="fi-rs-shopping-bag"></i> My Orders</a></li>
+        <li><a href="/profile/addresses"><i class="fi-rs-marker"></i> My Addresses</a></li>
+        <li><a href="/wallet"><i class="fi-rs-credit-card"></i> My Wallet</a></li>
+        <li><a href="/profile/coupons" class="active"><i class="fi-rs-badge"></i> My Coupons</a></li>
+        <li><a href="/profile/security"><i class="fi-rs-shield-check"></i> Security Settings</a></li>
+        <li><a href="/logout"><i class="fi-rs-sign-out"></i> Logout</a></li>
+      </ul>
+    </aside>
+
+    <main class="profile-content">
+      <div class="profile-header">
+        <div class="welcome-section">
+          <div class="profile-avatar-container">
+            <i class="fi-rs-tag" style="font-size: 3rem; color: #3BB77E;"></i>
+          </div>
+          <div class="profile-stats">
+            <div class="stat-item">
+              <div class="stat-number">
+                <%= (locals.coupons && locals.coupons.length) ? locals.coupons.length : 0 %>
+              </div>
+              <div class="stat-label">Available</div>
             </div>
-
-            <div class="profile-stats">
-              <div class="stat-item">
-                <div class="stat-number">
-                  <%= (locals.coupons && locals.coupons.length) ? locals.coupons.length : 0 %>
-                </div>
-                <div class="stat-label">Available</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-number">
-                  <% let usedCount=0; if (locals.user && locals.user.appliedCoupons) {
-                    usedCount=locals.user.appliedCoupons.length; } else if (locals.coupons) {
-                    usedCount=locals.coupons.reduce((total, coupon)=> {
-                    return total + (coupon.appliedUsers ? coupon.appliedUsers.length : 0);
-                    }, 0);
+            <div class="stat-item">
+              <div class="stat-number">
+                <% 
+                var usedCount = 0; 
+                if (locals.user && locals.user.appliedCoupons) {
+                  usedCount = locals.user.appliedCoupons.length; 
+                } else if (locals.coupons) {
+                  for (var i = 0; i < locals.coupons.length; i++) {
+                    if (locals.coupons[i].appliedUsers) {
+                      usedCount += locals.coupons[i].appliedUsers.length;
                     }
-                    %>
-                    <%= usedCount %>
-                </div>
-                <div class="stat-label">Used</div>
+                  }
+                }
+                %>
+                <%= usedCount %>
               </div>
+              <div class="stat-label">Used</div>
             </div>
           </div>
         </div>
-        <div class="profile-body">
-          <% if (locals.coupons && locals.coupons.length> 0) { %>
-            <div class="coupons-grid">
-              <% locals.coupons.forEach(function(coupon) { const now=new Date(); const activeDate=new
-                Date(coupon.activeDate); const expireDate=new Date(coupon.expireDate); const isActive=now>= activeDate
-                && now <= expireDate && coupon.status==='active' ; const isExpired=now> expireDate;
-                  const isUpcoming = now < activeDate; const remainingUses=coupon.limit - (coupon.appliedUsers ?
-                    coupon.appliedUsers.length : 0); let statusClass='active' ; let statusText='Active' ; if (isExpired)
-                    { statusClass='expired' ; statusText='Expired' ; } else if (isUpcoming) { statusClass='upcoming' ;
-                    statusText='Upcoming' ; } else if (remainingUses <=0) { statusClass='exhausted' ;
-                    statusText='Exhausted' ; } else if (coupon.status==='inactive' ) { statusClass='inactive' ;
-                    statusText='Inactive' ; } %>
-                    <div class="coupon-card <%= statusClass %>">
-                      <div class="coupon-header">
-                        <div class="coupon-discount">
-                          <span class="discount-symbol">₹</span>
-                          <span class="discount-amount">
-                            <%= coupon.discountPrice %>
-                          </span>
-                          <span class="discount-text">OFF</span>
-                        </div>
-                        <div class="coupon-status <%= statusClass %>">
-                          <%= statusText %>
-                        </div>
-                      </div>
+      </div>
 
-                      <div class="coupon-body">
-                        <h3 class="coupon-name">
-                          <%= coupon.couponName %>
-                        </h3>
-                        <% if (coupon.description) { %>
-                          <p class="coupon-description">
-                            <%= coupon.description %>
-                          </p>
-                          <% } %>
-
-                            <div class="coupon-details">
-                              <div class="detail-row">
-                                <span class="detail-label">Minimum Purchase:</span>
-                                <span class="detail-value">₹<%= coupon.minimumPrice %></span>
-                              </div>
-                              <div class="detail-row">
-                                <span class="detail-label">Valid Until:</span>
-                                <span class="detail-value">
-                                  <%= expireDate.toLocaleDateString() %>
-                                </span>
-                              </div>
-                              <div class="detail-row">
-                                <span class="detail-label">Uses Remaining:</span>
-                                <span class="detail-value">
-                                  <%= remainingUses> 0 ? remainingUses : 0 %>
-                                </span>
-                              </div>
-                            </div>
-                      </div>
-
-                      <div class="coupon-footer">
-                        <div class="coupon-code-section">
-                          <input type="text" value="<%= coupon.couponCode %>" class="coupon-code-input"
-                            id="code-<%= coupon._id %>" readonly>
-                          <button class="copy-code-btn" onclick="copyCouponCode('<%= coupon._id %>')" <%=!isActive ||
-                            remainingUses <=0 ? 'disabled' : '' %>>
-                            <i class="fi-rs-copy"></i>
-                            <span class="copy-text">Copy</span>
-                          </button>
-                        </div>
-
-                        <% if (isActive && remainingUses> 0) { %>
-                          <a href="/shop?coupon=<%= coupon.couponCode %>" class="use-coupon-btn">
-                            <i class="fi-rs-shopping-cart"></i>
-                            Shop Now
-                          </a>
-                          <% } %>
-                      </div>
-                    </div>
-                    <% }) %>
-            </div>
-            <% } else { %>
-              <div class="empty-state">
-                <div class="empty-icon">
-                  <i class="fi-rs-tag"></i>
-                </div>
-                <h3>No Coupons Available</h3>
-                <p>There are currently no active coupons available. Check back later for amazing deals!</p>
-                <a href="/shop" class="btn btn-outline-primary">
-                  <i class="fi-rs-shopping-bag"></i>
-                  Continue Shopping
-                </a>
+      <div class="profile-body"><% var showCoupons = locals.coupons && locals.coupons.length > 0; %><% if (showCoupons) { %>
+        <div class="coupons-grid"><% for (var idx = 0; idx < locals.coupons.length; idx++) { var coupon = locals.coupons[idx]; var now = new Date(); var activeDate = new Date(coupon.activeDate); var expireDate = new Date(coupon.expireDate); var isActive = now >= activeDate && now <= expireDate && coupon.status === 'active'; var isExpired = now > expireDate; var isUpcoming = now < activeDate; var appliedUsersCount = coupon.appliedUsers ? coupon.appliedUsers.length : 0; var remainingUses = coupon.limit - appliedUsersCount; var statusClass = 'active'; var statusText = 'Active'; if (isExpired) { statusClass = 'expired'; statusText = 'Expired'; } else if (isUpcoming) { statusClass = 'upcoming'; statusText = 'Upcoming'; } else if (remainingUses <= 0) { statusClass = 'exhausted'; statusText = 'Exhausted'; } else if (coupon.status === 'inactive') { statusClass = 'inactive'; statusText = 'Inactive'; } var isPremium = coupon.minimumPrice >= 3500; var isDisabled = !isActive || remainingUses <= 0; %>
+          <div class="coupon-card <%= statusClass %> <%= isPremium ? 'premium' : '' %>">
+            <div class="coupon-header">
+              <div class="coupon-discount">
+                <span class="discount-symbol">₹</span>
+                <span class="discount-amount"><%= coupon.discountPrice %></span>
+                <span class="discount-text">OFF</span>
               </div>
-              <% } %>
-        </div>
-      </main>
-    </div>
+              <div class="coupon-status <%= statusClass %>"><%= statusText %></div>
+            </div>
+            <div class="coupon-body">
+              <h3 class="coupon-name"><%= coupon.couponName %></h3><% if (coupon.description) { %>
+              <p class="coupon-description"><%= coupon.description %></p><% } %>
+              <div class="coupon-details">
+                <div class="detail-row">
+                  <span class="detail-label">Minimum Purchase:</span>
+                  <span class="detail-value">₹<%= coupon.minimumPrice %></span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Valid Until:</span>
+                  <span class="detail-value"><%= expireDate.toLocaleDateString() %></span>
+                </div>
+              </div>
+            </div>
+            <div class="coupon-footer">
+              <div class="coupon-code-section">
+                <input type="text" value="<%= coupon.couponCode %>" class="coupon-code-input" id="code-<%= coupon._id %>" readonly>
+                <button class="copy-code-btn" onclick="copyCouponCode('<%= coupon._id %>')" <%= isDisabled ? 'disabled' : '' %>>
+                  <i class="fi-rs-copy"></i>
+                  <span class="copy-text">Copy</span>
+                </button>
+              </div>
+            </div>
+          </div><% } %>
+        </div><% } %><% if (!showCoupons) { %>
+        <div class="empty-state">
+          <div class="empty-icon">
+            <i class="fi-rs-tag"></i>
+          </div>
+          <h3>No Coupons Available</h3>
+          <p>There are currently no active coupons available. Check back later for amazing deals!</p>
+          <a href="/shop" class="btn btn-outline-primary">
+            <i class="fi-rs-shopping-bag"></i>
+            Continue Shopping
+          </a>
+        </div><% } %>
+      </div>
+    </main>
   </div>
+</div>
 
   <footer class="main">
     <section class="newsletter p-30 text-white wow fadeIn animated">
@@ -911,18 +880,18 @@
       toast.className = `toast-message toast-${type}`;
       toast.textContent = message;
       toast.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: ${type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#17a2b8'};
-        color: white;
-        padding: 10px 18px;
-        border-radius: 5px;
-        z-index: 10000;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      `;
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: ${type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#17a2b8'};
+          color: white;
+          padding: 10px 18px;
+          border-radius: 5px;
+          z-index: 10000;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        `;
 
       document.body.appendChild(toast);
 

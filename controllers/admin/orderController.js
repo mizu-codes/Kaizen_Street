@@ -142,6 +142,39 @@ const loadOrderPage = async (req, res) => {
       order.originalTotal = originalTotal;
       order.actualAmountPaid = actualAmountPaid;
 
+      const statusPriority = {
+        'Delivered': 5,
+        'Out for Delivery': 4,
+        'Shipped': 3,
+        'Processing': 2,
+        'Placed': 1,
+        'Cancelled': 0
+      };
+
+      if (order.items && order.items.length > 0) {
+        const itemStatuses = order.items.map(item => item.status || order.status);
+        const allDelivered = itemStatuses.every(s => s === 'Delivered');
+        const allCancelled = itemStatuses.every(s => s === 'Cancelled');
+
+        if (allDelivered) {
+          order.displayStatus = 'Delivered';
+        } else if (allCancelled) {
+          order.displayStatus = 'Cancelled';
+        } else {
+          const activeItems = itemStatuses.filter(s => s !== 'Cancelled');
+          if (activeItems.length > 0) {
+            const highestStatus = activeItems.reduce((max, current) =>
+              (statusPriority[current] || 0) > (statusPriority[max] || 0) ? current : max
+            );
+            order.displayStatus = highestStatus;
+          } else {
+            order.displayStatus = 'Processing';
+          }
+        }
+      } else {
+        order.displayStatus = order.status;
+      }
+
       return order;
     });
 
@@ -149,6 +182,7 @@ const loadOrderPage = async (req, res) => {
 
     res.render('order-list', {
       orders: processedOrders,
+      page: page,
       _page: page,
       _limit: limit,
       totalPages: totalPages,
@@ -348,19 +382,34 @@ const updateItemStatus = async (req, res) => {
         item.outForDeliveryAt = new Date();
       }
 
+      // Calculate order status based on item statuses
       const allItemStatuses = order.items.map(i => i.status);
       const allDelivered = allItemStatuses.every(s => s === 'Delivered');
       const allCancelled = allItemStatuses.every(s => s === 'Cancelled');
-      const anyShipped = allItemStatuses.some(s => s === 'Shipped' || s === 'Out for Delivery' || s === 'Delivered');
+
+      const statusPriority = {
+        'Delivered': 5,
+        'Out for Delivery': 4,
+        'Shipped': 3,
+        'Processing': 2,
+        'Placed': 1,
+        'Cancelled': 0
+      };
 
       if (allDelivered) {
         order.status = 'Delivered';
       } else if (allCancelled) {
         order.status = 'Cancelled';
-      } else if (anyShipped) {
-        order.status = 'Shipped';
       } else {
-        order.status = 'Processing';
+        const activeItems = allItemStatuses.filter(s => s !== 'Cancelled');
+        if (activeItems.length > 0) {
+          const highestStatus = activeItems.reduce((max, current) =>
+            (statusPriority[current] || 0) > (statusPriority[max] || 0) ? current : max
+          );
+          order.status = highestStatus;
+        } else {
+          order.status = 'Processing';
+        }
       }
 
       order.history = order.history || [];
