@@ -582,6 +582,74 @@
       font-size: 0.875rem;
     }
   }
+
+  .pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+    padding: 1rem 0;
+  }
+
+  .pagination {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .page-btn,
+  .page-num {
+    padding: 0.5rem 0.8rem;
+    border: 1px solid #e0e0e0;
+    background: white;
+    color: #333;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 0.8rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .page-btn:hover:not(:disabled),
+  .page-num:hover:not(.active) {
+    background: #f5f5f5;
+    border-color: #088178;
+    color: #088178;
+  }
+
+  .page-num.active {
+    background: #088178;
+    color: white;
+    border-color: #088178;
+    font-weight: 600;
+  }
+
+  .page-btn:disabled {
+    color: #999;
+    background: #f5f5f5;
+    cursor: not-allowed;
+  }
+
+  .page-dots {
+    padding: 0.5rem;
+    color: #999;
+  }
+
+  @media (max-width: 768px) {
+    .pagination {
+      gap: 0.2rem;
+    }
+
+    .page-btn,
+    .page-num {
+      padding: 0.3rem 0.6rem;
+      font-size: 0.75rem;
+    }
+  }
 </style>
 
 <body>
@@ -776,133 +844,191 @@
           </form>
         </div>
 
-        
-<div class="profile-body">
-  <div class="profile-section">
-    <div class="orders-grid" id="ordersGrid">
-      <% if (orders && orders.length> 0) { %>
-        <% orders.forEach(order=> { %>
-          <% const orderOriginalTotal=order.items.reduce((sum, item)=> sum + (item.subtotal || (item.price *
-            item.quantity)), 0);
-            const orderDiscount = order.discount || 0;
-            const orderActualTotal = orderOriginalTotal - orderDiscount;
-            %>
 
-            <div class="order-card" data-order-id="<%= order._id %>" data-status="<%= order.status.toLowerCase() %>">
-              <div class="order-body">
-                <div class="order-id-section">
-                  <div class="order-actions">
-                    <button class="btn-track-order" onclick="redirectToOrderDetails('<%= order._id %>')">
-                      <i class="fi-rs-document"></i> View Order
-                    </button>
-                  </div>
-                  <div class="order-id">
-                    <i class="fi-rs-receipt"></i>
-                    Order #<%= order.displayOrderId %>
-                  </div>
-                  <div class="order-date">
-                    <i class="fi-rs-calendar"></i>
-                    Placed on <% if (order.createdAt) { %>
-                      <%= order.createdAt.toLocaleString('en-US', { year: 'numeric' , month: 'long' , day: 'numeric' ,
-                        hour: '2-digit' , minute: '2-digit' , hour12: true }) %>
-                        <% } else { %> Recently <% } %>
-                  </div>
+        <div class="profile-body">
+          <div class="profile-section">
+            <div class="orders-grid" id="ordersGrid">
+              <% if (orders && orders.length> 0) { %>
+                <% orders.forEach(order=> { %>
+                  <% const orderOriginalTotal=order.items.reduce((sum, item)=> sum + (item.subtotal || (item.price *
+                    item.quantity)), 0);
+                    const orderDiscount = order.discount || 0;
+                    const orderActualTotal = orderOriginalTotal - orderDiscount;
+                    %>
 
-                </div>
+                    <div class="order-card" data-order-id="<%= order._id %>"
+                      data-status="<%= order.status.toLowerCase() %>">
+                      <div class="order-body">
+                        <div class="order-id-section">
+                          <div class="order-actions">
+                            <button class="btn-track-order" onclick="redirectToOrderDetails('<%= order._id %>')">
+                              <i class="fi-rs-document"></i> View Order
+                            </button>
+                          </div>
+                          <div class="order-id">
+                            <i class="fi-rs-receipt"></i>
+                            Order #<%= order.displayOrderId %>
+                          </div>
+                          <div class="order-date">
+                            <i class="fi-rs-calendar"></i>
+                            Placed on <% if (order.createdAt) { %>
+                              <%= order.createdAt.toLocaleString('en-US', { year: 'numeric' , month: 'long' ,
+                                day: 'numeric' , hour: '2-digit' , minute: '2-digit' , hour12: true }) %>
+                                <% } else { %> Recently <% } %>
+                          </div>
 
-                <% const currency=(v)=> {
-                  let n = Number(v);
-                  if (!isFinite(n)) n = 0;
-                  return n.toLocaleString('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 2 });
-                  };
-                  %>
+                        </div>
 
-                  <div class="order-items">
-                    <% order.items.forEach((item, index)=> { %>
-                      <% const itemOriginalSubtotal=(typeof item.subtotal==='number' && isFinite(item.subtotal)) ?
-                        item.subtotal : (Number(item.price) || 0) * (Number(item.quantity) || 0); let
-                        itemDiscountAmount=0; if (orderDiscount> 0 && orderOriginalTotal > 0) {
-                        const itemDiscountProportion = itemOriginalSubtotal / orderOriginalTotal;
-                        itemDiscountAmount = orderDiscount * itemDiscountProportion;
-                        }
-                        let itemActualPaid = itemOriginalSubtotal - itemDiscountAmount;
+                        <% const currency=(v)=> {
+                          let n = Number(v);
+                          if (!isFinite(n)) n = 0;
+                          return n.toLocaleString('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits:
+                          2 });
+                          };
+                          %>
 
-                        const round2 = (v) => Math.round((Number(v) || 0) * 100) / 100;
-                        itemDiscountAmount = round2(itemDiscountAmount);
-                        itemActualPaid = round2(itemActualPaid);
-                        %>
+                          <div class="order-items">
+                            <% order.items.forEach((item, index)=> { %>
+                              <% const itemOriginalSubtotal=(typeof item.subtotal==='number' && isFinite(item.subtotal))
+                                ? item.subtotal : (Number(item.price) || 0) * (Number(item.quantity) || 0); let
+                                itemDiscountAmount=0; if (orderDiscount> 0 && orderOriginalTotal > 0) {
+                                const itemDiscountProportion = itemOriginalSubtotal / orderOriginalTotal;
+                                itemDiscountAmount = orderDiscount * itemDiscountProportion;
+                                }
+                                let itemActualPaid = itemOriginalSubtotal - itemDiscountAmount;
 
-                        <div class="order-item" data-item-id="<%= item._id %>">
-                          <img src="<%= item.image || '/imgs/placeholder.jpg' %>" alt="<%= item.name %>"
-                            class="item-image" onerror="this.src='/imgs/placeholder.jpg'" />
+                                const round2 = (v) => Math.round((Number(v) || 0) * 100) / 100;
+                                itemDiscountAmount = round2(itemDiscountAmount);
+                                itemActualPaid = round2(itemActualPaid);
+                                %>
 
-                          <div class="item-details">
-                            <div class="item-name">
-                              <%= item.name %>
-                            </div>
+                                <div class="order-item" data-item-id="<%= item._id %>">
+                                  <img src="<%= item.image || '/imgs/placeholder.jpg' %>" alt="<%= item.name %>"
+                                    class="item-image" onerror="this.src='/imgs/placeholder.jpg'" />
 
-                            <div class="item-meta">
-                              <span><i class="fi-rs-resize"></i> Size: <%= item.size || 'Standard' %></span>
-                              |
-                              <span><i class="fi-rs-box"></i> Qty: <%= item.quantity %></span>
-                            </div>
+                                  <div class="item-details">
+                                    <div class="item-name">
+                                      <%= item.name %>
+                                    </div>
 
-                            <div class="item-price">
-                              <% if (orderDiscount> 0 && orderOriginalTotal > 0) { %>
-                                <div class="price-with-discount">
-                                  <span class="original-price">
-                                    <%= currency(itemOriginalSubtotal) %>
-                                  </span>
+                                    <div class="item-meta">
+                                      <span><i class="fi-rs-resize"></i> Size: <%= item.size || 'Standard' %></span>
+                                      |
+                                      <span><i class="fi-rs-box"></i> Qty: <%= item.quantity %></span>
+                                    </div>
 
-                                  <div class="summary-row discount-row">
-                                    <span>Coupon Discount:</span>
-                                    <span>-<%= currency(itemDiscountAmount) %></span>
+                                    <div class="item-price">
+                                      <% if (orderDiscount> 0 && orderOriginalTotal > 0) { %>
+                                        <div class="price-with-discount">
+                                          <span class="original-price">
+                                            <%= currency(itemOriginalSubtotal) %>
+                                          </span>
+
+                                          <div class="summary-row discount-row">
+                                            <span>Coupon Discount:</span>
+                                            <span>-<%= currency(itemDiscountAmount) %></span>
+                                          </div>
+
+                                          <span class="paid-price">
+                                            <% if (order.status==='Payment Failed' ) { %>
+                                              Due: <%= currency(itemActualPaid) %>
+                                                <% } else { %>
+                                                  Paid: <%= currency(itemActualPaid) %>
+                                                    <% } %>
+                                          </span>
+                                        </div>
+                                        <% } else { %>
+                                          <%= currency(item.price) %> × <%= item.quantity %> = <%=
+                                                currency(itemOriginalSubtotal) %>
+                                                <% } %>
+                                    </div>
                                   </div>
 
-                                  <span class="paid-price">
-                                    <% if (order.status==='Payment Failed' ) { %>
-                                      Due: <%= currency(itemActualPaid) %>
-                                        <% } else { %>
-                                          Paid: <%= currency(itemActualPaid) %>
-                                            <% } %>
-                                  </span>
+                                  <div
+                                    class="order-status status-<%= (item.status || order.status).toLowerCase().replace(/\s+/g, '-') %>">
+                                    <%= item.status || order.status %>
+                                  </div>
                                 </div>
-                                <% } else { %>
-                                  <%= currency(item.price) %> × <%= item.quantity %> = <%=
-                                        currency(itemOriginalSubtotal) %>
-                                        <% } %>
-                            </div>
+                                <% }); %>
                           </div>
 
-                          <div
-                            class="order-status status-<%= (item.status || order.status).toLowerCase().replace(/\s+/g, '-') %>">
-                            <%= item.status || order.status %>
+                      </div>
+                    </div>
+                    <% }); %>
+                      <% } else { %>
+                        <div class="no-orders">
+                          <div class="icon-container">
+                            <i class="fas fa-shopping-bag"></i>
                           </div>
+                          <h3>No Orders Found</h3>
+                          <p>
+                            You haven't placed any orders yet. Start shopping to see
+                            your orders here!
+                          </p>
+                          <a href="/shop" class="btn-shop-now">
+                            <i class="fas fa-shopping-cart"></i> Start Shopping
+                          </a>
                         </div>
-                        <% }); %>
-                  </div>
-
-              </div>
+                        <% } %>
             </div>
-            <% }); %>
-              <% } else { %>
-                <div class="no-orders">
-                  <div class="icon-container">
-                    <i class="fas fa-shopping-bag"></i>
-                  </div>
-                  <h3>No Orders Found</h3>
-                  <p>
-                    You haven't placed any orders yet. Start shopping to see
-                    your orders here!
-                  </p>
-                  <a href="/shop" class="btn-shop-now">
-                    <i class="fas fa-shopping-cart"></i> Start Shopping
-                  </a>
+            <% if (totalPages> 1) { %>
+              <div class="pagination-container">
+                <div class="pagination">
+                  <% if (currentPage> 1) { %>
+                    <a href="?page=<%= currentPage - 1 %><%= q ? '&q=' + encodeURIComponent(q) : '' %>"
+                      class="page-btn prev-btn">
+                      <i class="fi-rs-angle-left"></i> Previous
+                    </a>
+                    <% } else { %>
+                      <button class="page-btn prev-btn" disabled>
+                        <i class="fi-rs-angle-left"></i> Previous
+                      </button>
+                      <% } %>
+
+                        <% const maxVisible=5; let startPage=Math.max(1, currentPage - Math.floor(maxVisible / 2)); let
+                          endPage=Math.min(totalPages, startPage + maxVisible - 1); if (endPage - startPage < maxVisible
+                          - 1) { startPage=Math.max(1, endPage - maxVisible + 1); } %>
+
+                          <% if (startPage> 1) { %>
+                            <a href="?page=1<%= q ? '&q=' + encodeURIComponent(q) : '' %>" class="page-num">1</a>
+                            <% if (startPage> 2) { %>
+                              <span class="page-dots">...</span>
+                              <% } %>
+                                <% } %>
+
+                                  <% for (let i=startPage; i <=endPage; i++) { %>
+                                    <a href="?page=<%= i %><%= q ? '&q=' + encodeURIComponent(q) : '' %>"
+                                      class="page-num <%= i === currentPage ? 'active' : '' %>">
+                                      <%= i %>
+                                    </a>
+                                    <% } %>
+
+                                      <% if (endPage < totalPages) { %>
+                                        <% if (endPage < totalPages - 1) { %>
+                                          <span class="page-dots">...</span>
+                                          <% } %>
+                                            <a href="?page=<%= totalPages %><%= q ? '&q=' + encodeURIComponent(q) : '' %>"
+                                              class="page-num">
+                                              <%= totalPages %>
+                                            </a>
+                                            <% } %>
+
+
+                                              <% if (currentPage < totalPages) { %>
+                                                <a href="?page=<%= currentPage + 1 %><%= q ? '&q=' + encodeURIComponent(q) : '' %>"
+                                                  class="page-btn next-btn">
+                                                  Next <i class="fi-rs-angle-right"></i>
+                                                </a>
+                                                <% } else { %>
+                                                  <button class="page-btn next-btn" disabled>
+                                                    Next <i class="fi-rs-angle-right"></i>
+                                                  </button>
+                                                  <% } %>
                 </div>
-                <% } %>
-    </div>
-  </div>
-</div>
+              </div>
+              <% } %>
+          </div>
+        </div>
 
       </main>
     </div>

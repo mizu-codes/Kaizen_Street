@@ -382,7 +382,6 @@ const updateItemStatus = async (req, res) => {
         item.outForDeliveryAt = new Date();
       }
 
-      // Calculate order status based on item statuses
       const allItemStatuses = order.items.map(i => i.status);
       const allDelivered = allItemStatuses.every(s => s === 'Delivered');
       const allCancelled = allItemStatuses.every(s => s === 'Cancelled');

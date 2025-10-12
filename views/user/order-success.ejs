@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-      <meta charset="UTF-8" />
+    <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Order Success</title>
@@ -10,6 +10,161 @@
     <link rel="stylesheet" href="/css/main.css?v=3.4">
     <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
     <style>
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ff1744;
+            opacity: 0;
+            animation: confetti-fall 2s ease-out forwards;
+        }
+
+        /* Circle shape */
+        .confetti.circle {
+            border-radius: 50%;
+        }
+
+        /* Triangle shape */
+        .confetti.triangle {
+            width: 0;
+            height: 0;
+            background: transparent;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 10px solid;
+            border-bottom-color: inherit;
+        }
+
+        .confetti.triangle::before {
+            content: '';
+            border-bottom-color: var(--confetti-color);
+        }
+
+        /* Line shape */
+        .confetti.line {
+            width: 3px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 1;
+            }
+        }
+
+        .success-container {
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.5s forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .status-title {
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out 1s forwards;
+        }
+
+        .congratulations {
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out 1.2s forwards;
+        }
+
+        .order-info {
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out 1.4s forwards;
+        }
+
+        .buttons {
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out 1.6s forwards;
+        }
+       
+        .image-section {
+            opacity: 0;
+            animation: fadeInRight 0.8s ease-out 1s forwards;
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .image-section img {
+            animation: float 3s ease-in-out infinite 1.8s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .success-btn-primary,
+        .success-btn-secondary {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .success-btn-primary::before,
+        .success-btn-secondary::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .success-btn-primary:hover::before,
+        .success-btn-secondary:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
         .success-container {
             max-width: 1000px;
             width: 100%;
@@ -39,7 +194,7 @@
         .congratulations {
             font-size: 32px;
             font-weight: 700;
-           background-color: black;
+            background-color: black;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -134,12 +289,12 @@
             flex-direction: column;
             align-items: center;
         }
-        
+
         .main-content {
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: calc(100vh - 200px); 
+            min-height: calc(100vh - 200px);
             padding: 40px 0;
         }
 
@@ -162,7 +317,9 @@
 </head>
 
 <body>
-   
+
+    <div class="confetti-container" id="confettiContainer"></div>
+
     <header class="header-area header-style-1 header-height-2">
         <div class="header-top header-top-ptb-1 d-none d-lg-block">
             <div class="container">
@@ -208,27 +365,6 @@
                     </div>
                     <div class="header-right">
                         <div class="search-style-2"></div>
-                        <div class="header-action-right">
-                            <div class="header-action-2">
-                                <div class="header-action-icon-2">
-                                    <a href="/wishlist">
-                                        <img class="svgInject" alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
-                                        <span id="wishlistItemCount" class="pro-count blue">
-                                            <%= typeof locals.wishlistItemCount !=='undefined' ?
-                                                locals.wishlistItemCount : 0 %>
-                                        </span>
-                                    </a>
-                                </div>
-                                <div class="header-action-icon-2">
-                                    <a class="mini-cart-icon" href="/cart">
-                                        <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
-                                        <span id="cartItemCount" class="pro-count blue">
-                                            <%= typeof locals.cartItemCount !=='undefined' ? locals.cartItemCount : 0 %>
-                                        </span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -241,12 +377,6 @@
                     </div>
                     <div class="header-nav d-none d-lg-flex">
                         <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
-                            <nav>
-                                <ul>
-                                    <li><a href="/">Home</a></li>
-                                    <li><a href="/shop">Shop</a></li>
-                                </ul>
-                            </nav>
                         </div>
                     </div>
                     <div class="header-action-right d-block d-lg-none">
@@ -282,7 +412,7 @@
         </div>
     </header>
 
-       <div class="mobile-header-active mobile-header-wrapper-style">
+    <div class="mobile-header-active mobile-header-wrapper-style">
         <div class="mobile-header-wrapper-inner">
             <div class="mobile-header-top">
                 <div class="mobile-header-logo">
@@ -327,7 +457,7 @@
         </div>
     </div>
 
-      <div class="main-content">
+    <div class="main-content">
         <div class="success-container">
             <div class="content">
                 <div>
@@ -340,19 +470,20 @@
                     <div class="delivery-date">Item will be delivered on 30th October 2025</div>
                 </div>
 
-              <div class="buttons">
+                <div class="buttons">
                     <a href="/shop" class="success-btn-primary">Continue Shopping</a>
                     <a href="/orders" class="success-btn-secondary">View orders</a>
                 </div>
             </div>
 
             <div class="image-section text-center">
-                <img src="/imgs/anime/order-success.png" alt="Order Success" class="img-fluid" style="max-width: 300px;">
+                <img src="/imgs/anime/order-success.png" alt="Order Success" class="img-fluid"
+                    style="max-width: 300px;">
             </div>
         </div>
     </div>
 
-     <footer class="main">
+    <footer class="main">
         <section class="section-padding footer-mid">
             <div class="container pt-15 pb-20">
                 <div class="row">
@@ -436,7 +567,7 @@
         </div>
     </footer>
 
-     <script src="/js/vendor/modernizr-3.6.0.min.js"></script>
+    <script src="/js/vendor/modernizr-3.6.0.min.js"></script>
     <script src="/js/vendor/jquery-3.6.0.min.js"></script>
     <script src="/js/vendor/jquery-migrate-3.3.0.min.js"></script>
     <script src="/js/vendor/bootstrap.bundle.min.js"></script>
@@ -460,10 +591,43 @@
     <script src="/js/shop.js?v=3.4"></script>
 
     <script>
-        window.history.pushState(null, '', window.location.href);
+        function createConfetti() {
+            const container = document.getElementById('confettiContainer');
+            const colors = ['#ff1744', '#4CAF50', '#2196F3', '#FFC107', '#9C27B0', '#FF5722'];
+            const shapes = ['circle', 'triangle', 'line'];
 
-        window.addEventListener('popstate', function () {
-            window.location.replace('/pageNotFound');
+            for (let i = 0; i < 80; i++) {
+                setTimeout(function () {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+
+                    const shape = shapes[Math.floor(Math.random() * shapes.length)];
+                    confetti.classList.add(shape);
+
+                    confetti.style.left = Math.random() * 100 + '%';
+                    
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.backgroundColor = color;
+                    confetti.style.borderBottomColor = color;
+
+                    const size = Math.random() * 5 + 5;
+                    confetti.style.width = size + 'px';
+                    confetti.style.height = size + 'px';
+
+                    confetti.style.animationDelay = Math.random() * 0.1 + 's';
+                    confetti.style.animationDuration = (Math.random() * 1 + 1.5) + 's';
+
+                    container.appendChild(confetti);
+
+                    setTimeout(function () {
+                        confetti.remove();
+                    }, 3500);
+                }, i * 15);
+            }
+        }
+
+        window.addEventListener('load', function () {
+            setTimeout(createConfetti, 50);
         });
     </script>
 
