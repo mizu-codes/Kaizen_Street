@@ -1091,11 +1091,17 @@
             <h3><i class="fi-rs-receipt"></i> Order Details</h3>
           </div>
           <div class="header-actions">
-            <a href="/orders/<%= order._id %>/invoice" class="btn-download-invoice">
-              <i class="fi-rs-download"></i> Download Invoice
-            </a>
+            <% const validStatuses=['placed', 'processing' , 'shipped' , 'out for delivery' , 'delivered' ]; const
+              orderStatus=(order.status || '' ).toLowerCase(); const isPaid=order.paymentStatus==='paid' ||
+              order.paymentMethod==='cod' ; const canDownloadInvoice=validStatuses.includes(orderStatus) && isPaid; %>
+          
+              <% if (canDownloadInvoice) { %>
+                <a href="/orders/<%= order._id %>/invoice" class="btn-download-invoice">
+                  <i class="fi-rs-download"></i> Download Invoice
+                </a>
+                <% } %>
           </div>
-        </div>
+          </div>
 
         <div class="profile-body">
           <% if (order) { %>

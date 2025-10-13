@@ -1,6 +1,27 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
+async function generateUniqueReferralCode() {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let referralCode;
+    let isUnique = false;
+
+    while (!isUnique) {
+        referralCode = '';
+        for (let i = 0; i < 8; i++) {
+            referralCode += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+
+        const UserModel = mongoose.models.User || mongoose.model('User');
+        const existingUser = await UserModel.findOne({ referalCode: referralCode });
+        if (!existingUser) {
+            isUnique = true;
+        }
+    }
+
+    return referralCode;
+}
+
 const userSchema = new Schema({
     name: {
         type: String,
@@ -78,31 +99,16 @@ const userSchema = new Schema({
 })
 
 userSchema.pre('save', async function (next) {
-    if (this.isNew && !this.referalCode) {
-        this.referalCode = await generateUniqueReferralCode();
+    try {
+        if (!this.referalCode || this.referalCode === 'undefined' || this.referalCode === '') {
+            this.referalCode = await generateUniqueReferralCode();
+        }
+        next();
+    } catch (error) {
+        console.error('Error in pre-save hook:', error);
+        next(error);
     }
-    next();
 });
-
-async function generateUniqueReferralCode() {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let referralCode;
-    let isUnique = false;
-
-    while (!isUnique) {
-        referralCode = '';
-        for (let i = 0; i < 8; i++) {
-            referralCode += characters.charAt(Math.floor(Math.random() * characters.length));
-        }
-
-        const existingUser = await mongoose.model('User').findOne({ referalCode: referralCode });
-        if (!existingUser) {
-            isUnique = true;
-        }
-    }
-
-    return referralCode;
-}
 
 const User = mongoose.model('User', userSchema);
 module.exports = User

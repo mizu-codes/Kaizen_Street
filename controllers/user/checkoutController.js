@@ -122,10 +122,19 @@ const loadCheckoutPage = async (req, res) => {
             .lean();
 
         if (!cartDoc || cartDoc.items.length === 0) {
+            // Get available coupons count even for empty cart
+            const now = new Date();
+            const availableCouponsCount = await Coupon.countDocuments({
+                status: 'active',
+                activeDate: { $lte: now },
+                expireDate: { $gte: now }
+            });
+
             return res.render('checkout', {
                 addresses,
                 cart: { items: [], discount: 0, total: 0 },
-                walletBalance
+                walletBalance,
+                availableCouponsCount  // ← Add this
             });
         }
 
@@ -163,10 +172,20 @@ const loadCheckoutPage = async (req, res) => {
         const discount = cartDoc.discount || 0;
         const total = rawTotal - discount;
 
+        // ✅ GET AVAILABLE COUPONS COUNT
+        const now = new Date();
+        const availableCouponsCount = await Coupon.countDocuments({
+            status: 'active',
+            activeDate: { $lte: now },
+            expireDate: { $gte: now },
+            limit: { $gt: 0 }  // Only count coupons that still have usage limit
+        });
+
         return res.render('checkout', {
             addresses,
             cart: { items, discount, total, rawTotal },
-            walletBalance
+            walletBalance,
+            availableCouponsCount  // ← Add this
         });
 
     } catch (error) {

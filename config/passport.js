@@ -3,7 +3,6 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require('../models/userSchema');
 require('dotenv').config();
 
-
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -16,6 +15,7 @@ passport.use(new GoogleStrategy({
             if (!user) {
                 const email = profile.emails[0].value;
                 user = await User.findOne({ email, isAdmin: false });
+
                 if (user) {
                     user.googleId = profile.id;
                     await user.save();
@@ -23,13 +23,15 @@ passport.use(new GoogleStrategy({
             }
 
             if (!user) {
-                user = await User.create({
+                user = new User({
                     name: profile.displayName,
                     email: profile.emails[0].value,
                     googleId: profile.id,
                     isBlocked: false,
                     isAdmin: false
                 });
+
+                await user.save();
             }
 
             if (user.isBlocked) {
@@ -37,23 +39,26 @@ passport.use(new GoogleStrategy({
             }
 
             return done(null, user);
+
         } catch (err) {
+            console.error('Google Auth Error:', err);
             return done(err, null);
         }
     }
 ));
 
-
 passport.serializeUser((user, done) => {
     done(null, user.id);
 });
 
-passport.deserializeUser((id, done) => {
-    User.findById(id)
-        .then(user => done(null, user))
-        .catch(error => done(error, null));
+passport.deserializeUser(async (id, done) => {
+    try {
+        const user = await User.findById(id);
+        done(null, user);
+    } catch (error) {
+        console.error('Deserialize error:', error);
+        done(error, null);
+    }
 });
-
-
 
 module.exports = passport;

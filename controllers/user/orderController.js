@@ -47,8 +47,6 @@ const loadOrderPage = async (req, res) => {
 
             order.displayOrderId = order._id.toString().slice(-8).toUpperCase();
 
-            console.log(`Order ${order.displayOrderId}: discount = ${order.discount || 0}`);
-
             return order;
         });
 
@@ -126,14 +124,6 @@ const cancelOrderItem = async (req, res) => {
             }
 
             refundAmount = Math.max(0, Math.round(refundAmount * 100) / 100);
-
-            console.log('Refund Calculation Debug:', {
-                itemId,
-                originalItemSubtotal,
-                orderTotalOriginal,
-                orderDiscount,
-                calculatedRefundAmount: refundAmount
-            });
 
             itemDoc.status = 'Cancelled';
             itemDoc.cancellationReason = reason;
@@ -213,10 +203,6 @@ const cancelOrderItem = async (req, res) => {
                 }], { session });
             }
 
-            if (paymentMethod === 'cod') {
-                console.log('COD order cancelled - no refund required');
-            }
-
             const allCancelled = orderDoc.items.every(it => String(it.status).toLowerCase() === 'cancelled');
             if (allCancelled) {
                 orderDoc.status = 'Cancelled';
@@ -244,8 +230,20 @@ const downloadInvoicePDF = async (req, res) => {
         const userId = req.session.userId;
         const orderId = req.params.orderId;
 
-        const order = await Order.findOne({ _id: orderId, user: userId }).populate('address')
+        const order = await Order.findOne({ _id: orderId, user: userId }).populate('address');
         if (!order) return res.status(404).send('Order not found');
+
+        const validStatuses = ['placed', 'processing', 'shipped', 'out for delivery', 'delivered'];
+        const orderStatus = (order.status || '').toLowerCase();
+
+        if (!validStatuses.includes(orderStatus)) {
+            return res.status(400).send('Invoice not available for this order status');
+        }
+
+        const isPaid = order.paymentStatus === 'paid' || order.paymentMethod === 'cod';
+        if (!isPaid) {
+            return res.status(400).send('Invoice not available for unpaid orders');
+        }
 
         const doc = new PDFDocument({ margin: 50 });
 
@@ -253,6 +251,7 @@ const downloadInvoicePDF = async (req, res) => {
         res.setHeader('Content-Disposition', `attachment; filename=Invoice-${orderId}.pdf`);
 
         doc.pipe(res);
+
 
         doc.fontSize(20).text('Kaizen Street Online Shopping - Invoice', { align: 'center' });
         doc.moveDown();
@@ -272,13 +271,13 @@ const downloadInvoicePDF = async (req, res) => {
 
         doc.fontSize(14).text('Items', { underline: true });
         order.items.forEach((item, i) => {
-            doc.fontSize(12).text(`${i + 1}. ${item.name} (${item.size}) - ₹${item.price} x ${item.quantity} = ₹${item.subtotal}`);
+            doc.fontSize(12).text(`${i + 1}. ${item.name} (${item.size}) - Rs. ${item.price} x ${item.quantity} = Rs. ${item.subtotal}`);
         });
 
         doc.moveDown();
-        doc.text(`Subtotal: ₹${order.items.reduce((sum, i) => sum + i.subtotal, 0)}`);
-        doc.text(`Discount: ₹${order.discount}`);
-        doc.text(`Total Amount: ₹${order.totalAmount}`, { bold: true });
+        doc.text(`Subtotal: Rs. ${order.items.reduce((sum, i) => sum + i.subtotal, 0)}`);
+        doc.text(`Discount: Rs. ${order.discount}`);
+        doc.text(`Total Amount: Rs. ${order.totalAmount}`, { bold: true });
 
         doc.end();
     } catch (err) {
