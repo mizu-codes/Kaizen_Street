@@ -1,12 +1,14 @@
 const express = require('express');
 const app = express();
 const path = require('path');
+const cookieParser = require('cookie-parser');
 const loadUserData = require('./middlewares/userMiddleware');
 const userRouter = require('./routes/userRouter');
+const googleRouter = require('./routes/googleRouter');
 const adminRouter = require('./routes/adminRouter');
 const Cart = require('./models/cartSchema');
-const Wishlist=require('./models/wishlistSchema');
-const env = require('dotenv').config();
+const Wishlist = require('./models/wishlistSchema');
+require('dotenv').config();
 const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('./config/passport');
@@ -16,15 +18,18 @@ db()
 app.use(express.json({ limit: '50mb' }))
 app.use(express.urlencoded({ extended: true, limit: '50mb' }))
 
+app.use(cookieParser(process.env.SESSION_SECRET));
+
 app.use((req, res, next) => {
   res.set('cache-control', 'no-store')
   next();
 })
 
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'mySecret',
+  name: 'kaizen.sid',
+  secret: process.env.SESSION_SECRET,
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: {
     secure: false,
     httpOnly: true,
@@ -33,15 +38,14 @@ app.use(session({
 }))
 
 app.use(flash());
-
 app.use(passport.initialize());
 app.use(passport.session());
-
 app.use(loadUserData);
 
-app.set('view engine', 'ejs')
-app.set('views', [path.join(__dirname, 'views/user'), path.join(__dirname, 'views/admin')])
-app.use(express.static(path.join(__dirname, 'public')));
+app.use((req, res, next) => {
+  res.locals.currentPath = req.path;
+  next();
+});
 
 app.use(async (req, res, next) => {
   let count = 0;
@@ -67,38 +71,25 @@ app.use(async (req, res, next) => {
   next();
 });
 
+app.set('view engine', 'ejs')
+app.set('views', [path.join(__dirname, 'views/user'), path.join(__dirname, 'views/admin')])
+app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/', googleRouter);
 app.use('/', userRouter);
 app.use('/admin', adminRouter);
-
-app.use('/admin/products', adminRouter);
-
-app.put('/products/:id', (req, res) => {
-  console.log('Request body:', req.body);
-});
 
 app.use((err, req, res, next) => {
   if (err.type === 'entity.too.large') {
     console.error('Request body too large:', err);
     return res.status(413).send('Payload too large. Try a smaller image.');
   }
-  next(err);
+  console.error(err);
+  if (res.headersSent) return next(err);
+  res.status(err.status || 500).send(err.message || 'Internal Server Error');
 });
 
-app.get('/signup', (req, res) => {
-  res.render('signup');
-});
-
-app.get('/login', (req, res) => {
-  res.render('login');
-});
-
-app.use((req, res, next) => {
-  res.locals.currentPath = req.path;
-  next();
-});
-
-const PORT = 3000 || process.env.PORT;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`server running on ${PORT}`)
 })

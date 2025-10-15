@@ -93,6 +93,7 @@ const login = async (req, res) => {
                 showLoginError: true
             });
         }
+
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.render('login', {
@@ -101,8 +102,36 @@ const login = async (req, res) => {
             });
         }
 
-        req.session.userId = user._id;
-        return res.redirect('/');
+        const adminId = req.session.admin;
+
+        req.session.regenerate((err) => {
+            if (err) {
+                console.error('Session regeneration error:', err);
+                return res.status(500).render('login', {
+                    message: 'Login failed. Please try again later.',
+                    showLoginError: true
+                });
+            }
+
+            if (adminId) {
+                req.session.admin = adminId;
+            }
+
+            req.session.userId = user._id;
+
+            req.session.save((saveErr) => {
+                if (saveErr) {
+                    console.error('Session save error:', saveErr);
+                    return res.status(500).render('login', {
+                        message: 'Login failed. Please try again later.',
+                        showLoginError: true
+                    });
+                }
+              
+                return res.redirect('/');
+            });
+        });
+
     } catch (err) {
         console.error('login error:', err);
         return res.status(500).render('login', {
@@ -172,8 +201,14 @@ const signup = async (req, res) => {
         req.session.userOtp = otp;
         req.session.userData = { name, email, password, phone, referralCode: referralCode?.trim().toUpperCase() || null }
 
-        res.render('verify-otp');
-        console.log('OTP sent', otp)
+        req.session.save((err) => {
+            if (err) {
+                console.error('Session save error:', err);
+                return res.status(500).send('Session error');
+            }
+            res.render('verify-otp');
+            console.log('OTP sent', otp);
+        });
 
     } catch (error) {
         console.log('signup error', error);
@@ -307,19 +342,44 @@ const verifyOtp = async (req, res) => {
                 }
             }
 
-            req.session.userId = savedUser._id;
-            req.session.userOtp = null;
-            req.session.userData = null;
+            const adminId = req.session.admin;
 
-            const message = referrer ?
-                'Account created successfully! ₹100 referral credit has been added to your wallet.' :
-                'Account created successfully!';
+            req.session.regenerate((err) => {
+                if (err) {
+                    console.error('Session regeneration error:', err);
+                    return res.status(500).json({
+                        success: false,
+                        message: 'Session error occurred'
+                    });
+                }
 
-            res.json({
-                success: true,
-                redirectUrl: '/',
-                message: message
+                if (adminId) {
+                    req.session.admin = adminId;
+                }
+
+                req.session.userId = savedUser._id;
+
+                const message = referrer ?
+                    'Account created successfully! ₹100 referral credit has been added to your wallet.' :
+                    'Account created successfully!';
+
+                req.session.save((saveErr) => {
+                    if (saveErr) {
+                        console.error('Session save error:', saveErr);
+                        return res.status(500).json({
+                            success: false,
+                            message: 'Session error occurred'
+                        });
+                    }
+
+                    res.json({
+                        success: true,
+                        redirectUrl: '/',
+                        message: message
+                    });
+                });
             });
+
         } else {
             res.status(400).json({ success: false, message: 'Invalid OTP, Please try again' });
         }
@@ -328,7 +388,7 @@ const verifyOtp = async (req, res) => {
         console.error('Error Verifying OTP', error);
         return res.status(500).json({ success: false, message: 'An error occurred' })
     }
-}
+};
 
 const resendOtp = async (req, res) => {
     try {
@@ -343,33 +403,59 @@ const resendOtp = async (req, res) => {
         console.log('Sending email to:', email);
 
         const emailSent = await sendVerificationEmail(email, otp);
+
         if (emailSent) {
-            console.log('Resend OTP:', otp);
-            res.status(200).json({ success: true, message: 'OTP Resend Successfully' });
+            req.session.save((err) => {
+                if (err) {
+                    console.error('Session save error:', err);
+                    return res.status(500).json({
+                        success: false,
+                        message: 'Session error occurred'
+                    });
+                }
+                console.log('Resend OTP:', otp);
+                res.status(200).json({ success: true, message: 'OTP Resend Successfully' });
+            });
         } else {
-            res.status(500).json({ success: false, message: 'Failed to resend OTP.Please try again' });
+            res.status(500).json({ success: false, message: 'Failed to resend OTP. Please try again' });
         }
 
     } catch (error) {
         console.error('Error resending OTP', error);
-        res.status(500).json({ success: false, message: 'Internal Server Error.Please try again' })
+        res.status(500).json({ success: false, message: 'Internal Server Error. Please try again' })
     }
 }
 
 const logout = async (req, res) => {
     try {
-        req.session.destroy((err) => {
-            if (err) {
-                console.log('Session destruction error', error.message);
-                return res.redirect('/pageNotFound');
-            }
-            return res.redirect('login')
-        })
+        const adminId = req.session.admin;
+
+        delete req.session.userId;
+
+        if (adminId) {
+            req.session.save((err) => {
+                if (err) {
+                    console.error('Session save error:', err);
+                    res.clearCookie('kaizen.sid');
+                    return res.redirect('/');
+                }
+                return res.redirect('/');
+            });
+        } else {
+            req.session.destroy((err) => {
+                if (err) {
+                    console.log('Session destruction error', err.message);
+                    return res.redirect('/pageNotFound');
+                }
+                res.clearCookie('kaizen.sid');
+                return res.redirect('/');
+            });
+        }
     } catch (error) {
         console.log('logout error', error);
-        res.redirect('/pageNotFound')
+        res.redirect('/pageNotFound');
     }
-}
+};
 
 module.exports = {
     loadSignup,
