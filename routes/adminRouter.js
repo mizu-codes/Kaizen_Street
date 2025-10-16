@@ -31,7 +31,7 @@ router.post('/addCategoryOffer/:id', adminAuth, categoryController.addCategoryOf
 router.post('/removeCategoryOffer/:id', adminAuth, categoryController.removeCategoryOffer);
 
 router.get('/addProducts', adminAuth, addController.getProductAddPage);
-router.post('/addProducts', adminAuth, addController.addNewProduct);
+router.post('/addProducts', adminAuth, upload.array('images', 3), addController.addNewProduct);
 router.get('/products', adminAuth, listController.listProducts);
 router.post('/products/block/:id', adminAuth, listController.toggleBlockProduct);
 router.post('/products/edit/:id', adminAuth, upload.array('productImages', 3), editController.updateProduct);

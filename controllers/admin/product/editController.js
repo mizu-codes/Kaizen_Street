@@ -1,5 +1,20 @@
 const Product = require('../../../models/productSchema');
 const cloudinary = require('../../../middlewares/cloudinary');
+const streamifier = require('streamifier');
+
+
+const uploadToCloudinary = (buffer) => {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      { folder: 'kaizen_products' },
+      (error, result) => {
+        if (error) reject(error);
+        else resolve(result);
+      }
+    );
+    streamifier.createReadStream(buffer).pipe(uploadStream);
+  });
+};
 
 const updateProduct = async (req, res) => {
   try {
@@ -8,9 +23,8 @@ const updateProduct = async (req, res) => {
       productName,
       description,
       regularPrice,
-      discountPercent,
-      discountPrice,
       productOffer,
+      discountPrice,
       category,
       specifications,
       hasNewImages,
@@ -41,40 +55,29 @@ const updateProduct = async (req, res) => {
     if (!product) throw new Error('Product not found');
 
     let finalImages = [];
-
     let parsedExistingImages = {};
+    let parsedImageIndexes = [];
+
     try {
       parsedExistingImages = existingImages ? JSON.parse(existingImages) : {};
-    } catch (error) {
-      console.warn('Error parsing existing images:', error);
-    }
-
-    let parsedImageIndexes = [];
-    try {
       parsedImageIndexes = imageIndexes ? JSON.parse(imageIndexes) : [];
     } catch (error) {
-      console.warn('Error parsing image indexes:', error);
+      console.warn('Error parsing image data:', error);
     }
+
+    console.log('Has new images:', hasNewImages);
+    console.log('Files received:', req.files?.length || 0);
+    console.log('Image indexes:', parsedImageIndexes);
+    console.log('Existing images:', Object.keys(parsedExistingImages));
 
     if (hasNewImages === 'true' && req.files && req.files.length > 0) {
       const uploadedImages = [];
 
       for (const file of req.files) {
         try {
-          const b64 = file.buffer.toString("base64");
-          const dataURI = `data:${file.mimetype};base64,${b64}`;
-
-          const uploadResult = await cloudinary.uploader.upload(dataURI, {
-            folder: 'kaizen_products',
-            quality: 'auto',
-            fetch_format: 'auto',
-            resource_type: 'image',
-            transformation: [
-              { width: 800, height: 800, crop: 'pad', background: 'white' }
-            ]
-          });
-
+          const uploadResult = await uploadToCloudinary(file.buffer);
           uploadedImages.push(uploadResult.secure_url);
+          console.log('Uploaded image:', uploadResult.secure_url);
         } catch (uploadErr) {
           console.error('Error uploading image:', uploadErr);
           throw new Error(`Failed to upload image: ${uploadErr.message}`);
@@ -86,11 +89,9 @@ const updateProduct = async (req, res) => {
         if (parsedImageIndexes.includes(i)) {
           if (parsedExistingImages[`image${i}`]) {
             finalImages.push(parsedExistingImages[`image${i}`]);
-          } else {
-            if (newImageIndex < uploadedImages.length) {
-              finalImages.push(uploadedImages[newImageIndex]);
-              newImageIndex++;
-            }
+          } else if (newImageIndex < uploadedImages.length) {
+            finalImages.push(uploadedImages[newImageIndex]);
+            newImageIndex++;
           }
         }
       }
@@ -111,12 +112,13 @@ const updateProduct = async (req, res) => {
       throw new Error('At least one image is required');
     }
 
+    console.log('Final images:', finalImages);
+
     const updateData = {
       productName: productName.trim(),
       description: description.trim(),
       regularPrice: Number(regularPrice),
       discountPrice: Number(discountPrice),
-      discountPercent: Number(discountPercent || 0),
       productOffer: Number(productOffer || 0),
       stock,
       size,
@@ -134,25 +136,32 @@ const updateProduct = async (req, res) => {
       throw new Error('Failed to update product');
     }
 
+    console.log('Product updated successfully');
+
+    const page = req.query.page || req.body.page || 1;
+    const limit = req.query.limit || req.body.limit || 10;
+    const search = req.query.search || req.body.search || '';
+
+    const qs = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+      search: search.toString()
+    }).toString();
+
+    return res.status(200).json({
+      success: true,
+      message: 'Product updated successfully!',
+      redirectUrl: `/admin/products?${qs}`
+    });
+
   } catch (err) {
     console.error('Error updating product:', err);
 
-    if (req.xhr || req.headers.accept?.indexOf('json') > -1) {
-      return res.status(400).json({ error: err.message });
-    }
+    return res.status(400).json({
+      success: false,
+      message: err.message || 'Failed to update product'
+    });
   }
-
-  const page = req.query.page || req.body.page || 1;
-  const limit = req.query.limit || req.body.limit || 10;
-  const search = req.query.search || req.body.search || '';
-
-  const qs = new URLSearchParams({
-    page: page.toString(),
-    limit: limit.toString(),
-    search: search.toString()
-  }).toString();
-
-  res.redirect(`/admin/products?${qs}`);
 };
 
 module.exports = {

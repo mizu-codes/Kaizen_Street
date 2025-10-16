@@ -38,19 +38,13 @@
     document.addEventListener('DOMContentLoaded', () => {
         let cropper = null;
         let currentSlot = null;
+        const croppedBlobs = {};
 
         window.triggerFile = i => {
             const input = document.getElementById(`fileInput${i}`);
             if (!input) return console.warn('file input not found for slot', i);
-            input.setAttribute('accept', 'image/*'); // keep hint
             input.click();
         };
-
-        function isImageFile(file) {
-            if (!file) return false;
-            if (file.type && file.type.startsWith('image/')) return true;
-            return /\.(jpe?g|png|gif|webp|svg)$/i.test(file.name);
-        }
 
         window.loadCropper = (e, i) => {
             currentSlot = i;
@@ -58,14 +52,20 @@
             const file = fileInput && fileInput.files && fileInput.files[0];
             if (!file) return;
 
+
             const isByType = file.type && file.type.startsWith('image/');
-            const isByExt = /\.(jpe?g|png|gif|webp|svg)$/i.test(file.name);
+            const isByExt = /\.(jpe?g|png|gif|webp)$/i.test(file.name);
             if (!isByType && !isByExt) {
                 try { fileInput.value = ''; } catch (err) { }
 
-                const msg = 'Please select an image file (jpg, png, gif, webp, svg).';
+                const msg = 'Please select an image file (jpg, png, gif, webp).';
                 if (typeof Swal !== 'undefined') {
-                    Swal.fire({ icon: 'error', title: 'Invalid file', text: msg, customClass: { popup: 'swal-responsive'}});
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid file',
+                        text: msg,
+                        customClass: { popup: 'swal-responsive' }
+                    });
                 } else {
                     alert(msg);
                 }
@@ -77,6 +77,7 @@
                 console.error('cropImage element not found');
                 return;
             }
+
             try {
                 const url = URL.createObjectURL(file);
                 imgEl.src = url;
@@ -123,29 +124,23 @@
                 if (!cropper || currentSlot == null) return;
 
                 cropper.getCroppedCanvas({ width: 800, height: 800 }).toBlob(blob => {
-                    const reader = new FileReader();
-                    reader.onload = () => {
-                        const dataURL = reader.result;
+                    croppedBlobs[currentSlot] = blob;
 
-                        const hidden = document.getElementById(`croppedImage${currentSlot}`);
-                        if (hidden) hidden.value = dataURL;
+                    const dataURL = URL.createObjectURL(blob);
+                    const slot = document.getElementById(`slot-${currentSlot}`);
+                    if (slot) {
+                        const img = slot.querySelector('img');
+                        if (img) img.src = dataURL;
+                        const btn = slot.querySelector('button');
+                        if (btn) btn.style.display = 'none';
+                        slot.classList.add('has-image');
+                    }
 
-                        const slot = document.getElementById(`slot-${currentSlot}`);
-                        if (slot) {
-                            const img = slot.querySelector('img');
-                            if (img) img.src = dataURL;
-                            const btn = slot.querySelector('button');
-                            if (btn) btn.style.display = 'none';
-                            slot.classList.add('has-image');
-                        }
+                    updateState();
 
-                        try { if (typeof updateState === 'function') updateState(); } catch (err) { }
-
-                        const modal = document.getElementById('cropModal');
-                        const bs = bootstrap.Modal.getInstance(modal);
-                        if (bs) bs.hide();
-                    };
-                    reader.readAsDataURL(blob);
+                    const modal = document.getElementById('cropModal');
+                    const bs = bootstrap.Modal.getInstance(modal);
+                    if (bs) bs.hide();
 
                     try {
                         cropper.destroy();
@@ -153,22 +148,13 @@
                     } catch (err) { }
                 }, 'image/jpeg', 0.85);
             });
-        } else {
-            console.warn('Save button with id "cropAndSave" not found — please ensure your modal save button has id="cropAndSave"');
         }
 
-        const addForm = document.getElementById('productAddForm');
         const submitBtn = document.getElementById('submitBtn');
-
-        if (!addForm || !submitBtn) {
-            console.error('Form or submit button not found! Make sure IDs match.');
-            return;
-        }
+        const productForm = document.querySelector('form');
 
         function updateState() {
-            const allImages = [0, 1, 2].every(i =>
-                !!document.getElementById(`croppedImage${i}`).value
-            );
+            const allImages = [0, 1, 2].every(i => croppedBlobs.hasOwnProperty(i));
 
             const fields = ['productName', 'regularPrice', 'status', 'category'];
             const sizeFields = ['S', 'M', 'L', 'XL', 'XXL'].map(s => document.getElementById(`stock_${s}`));
@@ -180,6 +166,7 @@
 
             const ok = allImages && allFields && oneSizeHasStock;
             submitBtn.disabled = !ok;
+
             const imgErr = document.getElementById('img-error');
             if (imgErr) imgErr.style.display = allImages ? 'none' : 'block';
         }
@@ -191,43 +178,95 @@
 
         updateState();
 
-        addForm.addEventListener('submit', (e) => {
+        productForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
             if (submitBtn.disabled) {
-                console.warn('Duplicate submit blocked');
-                e.preventDefault();
+                console.warn('Form validation failed');
                 return;
             }
 
             submitBtn.disabled = true;
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Uploading...';
+
+            try {
+                const formData = new FormData();
+
+                formData.append('productName', document.getElementById('productName').value);
+                formData.append('description', document.getElementById('description').value);
+                formData.append('specifications', document.getElementById('specifications').value);
+                formData.append('category', document.getElementById('category').value);
+                formData.append('regularPrice', document.getElementById('regularPrice').value);
+                formData.append('productOffer', document.getElementById('productOffer').value);
+                formData.append('discountPrice', document.getElementById('discountPrice').value);
+                formData.append('status', document.getElementById('status').value);
+
+                ['S', 'M', 'L', 'XL', 'XXL'].forEach(size => {
+                    formData.append(`stock_${size}`, document.getElementById(`stock_${size}`).value);
+                });
+
+                [0, 1, 2].forEach(i => {
+                    if (croppedBlobs[i]) {
+                        formData.append('images', croppedBlobs[i], `product-${i}.jpg`);
+                    }
+                });
+
+                const response = await fetch('/admin/addProducts', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: data.message,
+                        timer: 2000,
+                        showConfirmButton: false,
+                        customClass: { popup: 'swal-responsive' }
+                    });
+
+                    window.location.href = data.redirectUrl;
+                } else {
+                    throw new Error(data.message);
+                }
+
+            } catch (error) {
+                console.error('Form submission error:', error);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Upload Failed',
+                    text: error.message || 'Something went wrong. Please try again.',
+                    confirmButtonColor: '#dc3545',
+                    customClass: { popup: 'swal-responsive' }
+                });
+            }
         });
-
     });
-
 
     const regInput = document.getElementById('regularPrice');
     const offInput = document.getElementById('productOffer');
     const discHidden = document.getElementById('discountPrice');
-    const submitBtn = document.getElementById('submitBtn');
 
     function recalc() {
         const base = parseFloat(regInput.value) || 0;
         const pct = parseFloat(offInput.value) || 0;
-
         const clamped = Math.min(Math.max(pct, 0), 100);
-
         const discounted = base * (1 - clamped / 100);
         discHidden.value = discounted.toFixed(2);
-
-
-        submitBtn.disabled = !(base > 0 && clamped >= 0);
     }
 
     regInput.addEventListener('input', recalc);
     offInput.addEventListener('input', recalc);
-
-
     recalc();
 </script>
+
 </body>
 
 </html>

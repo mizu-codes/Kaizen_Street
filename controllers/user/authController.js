@@ -127,7 +127,7 @@ const login = async (req, res) => {
                         showLoginError: true
                     });
                 }
-              
+
                 return res.redirect('/');
             });
         });
@@ -371,7 +371,6 @@ const verifyOtp = async (req, res) => {
                             message: 'Session error occurred'
                         });
                     }
-
                     res.json({
                         success: true,
                         redirectUrl: '/',

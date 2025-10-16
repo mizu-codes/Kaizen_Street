@@ -1,6 +1,7 @@
 const Product = require('../../../models/productSchema');
 const Category = require('../../../models/categorySchema');
 const cloudinary = require('../../../middlewares/cloudinary');
+const streamifier = require('streamifier')
 
 
 const getProductAddPage = async (req, res) => {
@@ -13,30 +14,50 @@ const getProductAddPage = async (req, res) => {
     res.render('product-add', {
       title: 'Add New Product',
       categories,
-      message: req.flash('message')[0] || null,
-      error: req.flash('error')[0] || null,
       old: {}
     });
   } catch (err) {
     console.error('Error loading Add Product page:', err);
-    req.flash('error', 'Unable to load form.');
-    return res.redirect('/admin/products');
+    res.render('product-add', {
+      title: 'Add New Product',
+      categories: [],
+      old: {},
+      errorMessage: 'Unable to load form.'
+    });
   }
 };
 
+
+const uploadToCloudinary = (buffer) => {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      { folder: 'kaizen_products' },
+      (error, result) => {
+        if (error) reject(error);
+        else resolve(result);
+      }
+    );
+    streamifier.createReadStream(buffer).pipe(uploadStream);
+  });
+};
+
+
 const addNewProduct = async (req, res) => {
+  console.log('=== REQUEST RECEIVED ===');
+  console.log('Body:', req.body);
+  console.log('Files:', req.files);
+  console.log('Files length:', req.files ? req.files.length : 0);
+
   try {
     const {
       productName,
       description,
       regularPrice,
-      discountPercent,
       discountPrice,
       productOffer,
       status,
       category,
-      specifications,
-      images
+      specifications
     } = req.body;
 
     const stock = {
@@ -51,55 +72,36 @@ const addNewProduct = async (req, res) => {
       .filter(([_, qty]) => qty > 0)
       .map(([s]) => s);
 
-    const categories = await Category.find({ status: 'active' }).lean();
-
     if (!productName || !regularPrice || !discountPrice || !status || !category || size.length === 0) {
-      req.flash('error', 'Please fill all required fields.');
-      return res.render('product-add', {
-        title: 'Add New Product',
-        categories,
-        error: req.flash('error')[0],
-        message: null,
-        old: req.body
+      return res.status(400).json({
+        success: false,
+        message: 'Please fill all required fields and ensure at least one size has stock.'
       });
     }
 
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'At least one image is required.'
+      });
+    }
+
+    console.log('Processing images:', req.files.length);
+
     let imageUrls = [];
 
-    if (images) {
-      const arr = Array.isArray(images) ? images : [images];
-      const validImages = arr.filter(img => img && img.trim() !== '');
+    try {
+      const uploadPromises = req.files.map(file => uploadToCloudinary(file.buffer));
+      const uploadResults = await Promise.all(uploadPromises);
+      imageUrls = uploadResults.map(r => r.secure_url);
 
-      console.log('Processing images:', validImages.length);
-
-      if (validImages.length === 0) {
-        req.flash('error', 'At least one image is required.');
-        return res.render('product-add', {
-          title: 'Add New Product',
-          categories,
-          error: req.flash('error')[0],
-          message: null,
-          old: req.body
-        });
-      }
-
-      try {
-        const uploadResults = await Promise.all(
-          validImages.map(dataURL => cloudinary.uploader.upload(dataURL, { folder: 'kaizen_products' }))
-        );
-        imageUrls = uploadResults.map(r => r.secure_url);
-        console.log('Images uploaded successfully:', imageUrls.length);
-      } catch (uploadError) {
-        console.error('Image upload error:', uploadError);
-        req.flash('error', 'Failed to upload images. Please try again.');
-        return res.render('product-add', {
-          title: 'Add New Product',
-          categories,
-          error: req.flash('error')[0],
-          message: null,
-          old: req.body
-        });
-      }
+      console.log('Images uploaded successfully:', imageUrls.length);
+    } catch (uploadError) {
+      console.error('Image upload error:', uploadError);
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to upload images. Please try again.'
+      });
     }
 
     const newProduct = new Product({
@@ -107,8 +109,7 @@ const addNewProduct = async (req, res) => {
       description,
       regularPrice,
       discountPrice,
-      discountPercent,
-      productOffer,
+      productOffer: productOffer || 0,
       stock,
       size,
       status,
@@ -121,12 +122,18 @@ const addNewProduct = async (req, res) => {
     await newProduct.save();
     console.log('Product saved successfully with images:', newProduct.productImage);
 
-    req.flash('message', 'Product added successfully');
-    res.redirect('/admin/products');
+    return res.status(200).json({
+      success: true,
+      message: 'Product added successfully!',
+      redirectUrl: '/admin/products'
+    });
+
   } catch (error) {
     console.error('Error adding product:', error);
-    req.flash('error', 'Something went wrong. Try again.');
-    res.redirect('/admin/products/add');
+    return res.status(500).json({
+      success: false,
+      message: 'Something went wrong. Please try again.'
+    });
   }
 };
 

@@ -1,4 +1,4 @@
-const Product  = require('../../../models/productSchema');
+const Product = require('../../../models/productSchema');
 const Category = require('../../../models/categorySchema');
 
 const listProducts = async (req, res) => {
@@ -32,14 +32,20 @@ const listProducts = async (req, res) => {
       totalPages,
       limit,
       search,
-      message: req.flash('message')[0] || null,
-      error: req.flash('error')[0] || null,
       categories
     });
   } catch (error) {
     console.error('Error listing products:', error);
-    req.flash('error', 'Could not load products.');
-    res.redirect('/admin');
+    res.render('product-list', {
+      title: 'Product List',
+      products: [],
+      currentPage: 1,
+      totalPages: 0,
+      limit: 10,
+      search: '',
+      categories: [],
+      errorMessage: 'Could not load products.'
+    });
   }
 };
 
@@ -47,29 +53,41 @@ const toggleBlockProduct = async (req, res) => {
   try {
     const { id } = req.params;
     const p = await Product.findById(id);
+
     if (!p) {
-      req.flash('error', 'Product not found');
-    } else {
-      p.isBlocked = !p.isBlocked;
-      await p.save();
-      req.flash('message', p.isBlocked ? 'Product blocked' : 'Product unblocked');
+      return res.status(404).json({
+        success: false,
+        message: 'Product not found'
+      });
     }
+
+    p.isBlocked = !p.isBlocked;
+    await p.save();
 
     const qs = new URLSearchParams({
       page: req.query.page || 1,
       limit: req.query.limit || 10,
       search: req.query.search || ''
     }).toString();
-    res.redirect(`/admin/products?${qs}`);
+
+    return res.status(200).json({
+      success: true,
+      message: p.isBlocked ? 'Product blocked successfully' : 'Product unblocked successfully',
+      isBlocked: p.isBlocked,
+      redirectUrl: `/admin/products?${qs}`
+    });
+
   } catch (error) {
     console.error('Error toggling product block status:', error);
-    req.flash('error', 'Failed to update product status');
-    res.redirect('/admin/products');
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to update product status'
+    });
   }
 };
 
 
-module.exports={
-    listProducts,
-    toggleBlockProduct 
+module.exports = {
+  listProducts,
+  toggleBlockProduct
 }
