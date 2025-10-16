@@ -20,11 +20,31 @@ const loadSignup = async (req, res) => {
 
 const loadLogin = (req, res) => {
     try {
-        return res.render('login')
+        let message = null;
+        let showLoginError = false;
+
+        if (req.query.error === 'blocked' && req.query.message) {
+            message = decodeURIComponent(req.query.message);
+            showLoginError = true;
+        } else if (req.query.error === 'auth_failed') {
+            message = 'Google authentication failed. Please try again.';
+            showLoginError = true;
+        } else if (req.query.error === 'login_failed') {
+            message = 'Login failed. Please try again.';
+            showLoginError = true;
+        } else if (req.query.error === 'session_error') {
+            message = 'Session error occurred. Please try again.';
+            showLoginError = true;
+        }
+
+        return res.render('login', {
+            message: message,
+            showLoginError: showLoginError
+        });
     }
     catch (error) {
         console.log('Login page not loading', error);
-        return res.status(500).send('Server error')
+        return res.status(500).send('Server error');
     }
 }
 

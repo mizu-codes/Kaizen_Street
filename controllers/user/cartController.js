@@ -83,7 +83,9 @@ const addToCart = async (req, res) => {
             return res.status(400).json({ message: 'Product category is not available.' });
         }
 
-        if ((product.stock?.[size] || 0) < 1) {
+        const availableStock = product.stock?.[size] || 0;
+
+        if (availableStock < 1) {
             return res.status(400).json({ message: 'Product is out of stock for this size.' });
         }
 
@@ -101,11 +103,13 @@ const addToCart = async (req, res) => {
 
         if (existing) {
             if (existing.quantity >= 5) {
-                return res.status(400).json({ message: 'Max quantity (5) reached.' });
+                return res.status(400).json({ message: 'Maximum quantity (5) reached for this item.' });
             }
 
-            if (product.stock[size] < 1) {
-                return res.status(400).json({ message: 'Not enough stock.' });
+            if (existing.quantity + 1 > availableStock) {
+                return res.status(400).json({
+                    message: `Only ${availableStock} items available in stock. You already have ${existing.quantity} in your cart.`
+                });
             }
 
             existing.quantity += 1;
@@ -138,9 +142,11 @@ const addToCart = async (req, res) => {
             console.log('Wishlist update failed:', wishlistError);
         }
 
+        const remainingStock = availableStock - (existing ? existing.quantity : 1);
+
         return res.status(200).json({
             message: 'Product added to cart successfully.',
-            remainingStock: product.stock[size],
+            remainingStock: remainingStock,
             cartCount
         });
 
@@ -372,7 +378,6 @@ const checkCartStock = async (req, res) => {
         return res.status(500).json({ success: false, message: 'Server error occurred.' });
     }
 };
-
 
 module.exports = {
     addToCart,

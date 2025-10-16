@@ -68,6 +68,7 @@ const userAuth = async (req, res, next) => {
 
 const adminAuth = async (req, res, next) => {
     try {
+
         if (!req.session || !req.session.admin) {
             return res.redirect('/admin/login');
         }
@@ -78,12 +79,12 @@ const adminAuth = async (req, res, next) => {
         });
 
         if (!adminUser) {
-            return req.session.destroy((err) => {
+            req.session.destroy((err) => {
                 if (err) {
                     console.error('Session destruction error:', err);
                 }
-                return res.redirect('/admin/login');
             });
+            return res.redirect('/admin/login');
         }
         next();
 

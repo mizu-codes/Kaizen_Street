@@ -9,16 +9,15 @@ const loadUserData = async (req, res, next) => {
             userData = await User.findById(sessionUserId);
 
             if (userData && userData.isBlocked) {
-                req.session.destroy((err) => {
+                return req.session.destroy((err) => {
                     if (err) {
                         console.error('Error destroying session for blocked user:', err);
                     }
+                    res.locals.user = null;
+                    return next();
                 });
-                res.locals.user = null;
-                return next();
             }
         }
-
         res.locals.user = userData;
         next();
     } catch (error) {

@@ -14,32 +14,49 @@ router.get('/auth/google', (req, res, next) => {
 });
 
 router.get('/auth/google/callback',
-    passport.authenticate('google', { failureRedirect: '/signup' }),
-    (req, res) => {
-        const adminId = req.signedCookies.temp_admin;
-
-        res.clearCookie('temp_admin');
-
-        req.session.regenerate((err) => {
+    (req, res, next) => {
+        passport.authenticate('google', (err, user, info) => {
             if (err) {
-                console.error('Session regeneration error:', err);
-                return res.redirect('/signup');
+                console.error('Google auth error:', err);
+                return res.redirect('/login?error=auth_failed');
             }
 
-            if (adminId) {
-                req.session.admin = adminId;
+            if (!user) {
+                const message = info?.message || 'Authentication failed';
+                return res.redirect(`/login?error=blocked&message=${encodeURIComponent(message)}`);
             }
 
-            req.session.userId = req.user._id;
-
-            req.session.save((saveErr) => {
-                if (saveErr) {
-                    console.error('Session save error:', saveErr);
-                    return res.redirect('/signup');
+            req.logIn(user, (loginErr) => {
+                if (loginErr) {
+                    console.error('Login error:', loginErr);
+                    return res.redirect('/login?error=login_failed');
                 }
-                return res.redirect('/');
+
+                const adminId = req.signedCookies.temp_admin;
+                res.clearCookie('temp_admin');
+
+                req.session.regenerate((sessionErr) => {
+                    if (sessionErr) {
+                        console.error('Session regeneration error:', sessionErr);
+                        return res.redirect('/login?error=session_error');
+                    }
+
+                    if (adminId) {
+                        req.session.admin = adminId;
+                    }
+
+                    req.session.userId = user._id;
+
+                    req.session.save((saveErr) => {
+                        if (saveErr) {
+                            console.error('Session save error:', saveErr);
+                            return res.redirect('/login?error=session_error');
+                        }
+                        return res.redirect('/');
+                    });
+                });
             });
-        });
+        })(req, res, next);
     }
 );
 

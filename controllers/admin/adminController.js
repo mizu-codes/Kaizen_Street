@@ -92,7 +92,7 @@ const login = async (req, res) => {
 
 const loadDashboard = async (req, res) => {
     try {
-        if (!req.session.admin) {
+        if (!req.session || !req.session.admin) {
             return res.redirect('/admin/login');
         }
 

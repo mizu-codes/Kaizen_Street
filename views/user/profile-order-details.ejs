@@ -717,7 +717,7 @@
   }
 
   .btn-cancel {
-    background: rgb(8, 129, 120);
+    background: #e53935;
     color: white;
     border: none;
     padding: 0.5rem 1rem;
@@ -728,13 +728,14 @@
   }
 
   .btn-cancel:hover {
-    background: rgb(6, 103, 96);
-    box-shadow: 0 0 25px rgba(8, 129, 120, 1);
+    background: #c62828;
+    transform: translateY(-1px);
   }
 
   .btn-cancel.faded {
-    opacity: 0.3;
+    opacity: 0.5;
     filter: grayscale(100%);
+    cursor: not-allowed;
   }
 
   .btn-cancel.faded::after {

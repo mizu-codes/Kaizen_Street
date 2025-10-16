@@ -67,8 +67,7 @@
             border-radius: 10px;
             font-size: 0.95rem;
         }
-
-        /* Additional styles for better integration */
+       
         .filter-buttons {
             display: flex;
             gap: 10px;
@@ -489,7 +488,9 @@
             <div class="col-lg-9">
                 <div class="shop-product-fillter">
                     <div class="totall-product">
-                        <p>We found <strong class="text-brand"><%= count %></strong> items for you!</p>
+                        <p>We found <strong class="text-brand">
+                                <%= count %>
+                            </strong> items for you!</p>
                     </div>
                     <div class="sort-by-product-area">
                         <div class="sort-by-cover">
@@ -498,38 +499,43 @@
                                     <span><i class="fi-rs-apps-sort"></i>Sort by:</span>
                                 </div>
                                 <div class="sort-by-dropdown-wrap">
-                                    <span>Featured <i class="fi-rs-angle-small-down"></i></span>
+                                    <span>
+                                        <% let sortLabel='Featured' ; if (sort==='low-to-high' ) sortLabel='Price: Low to High' ; else
+                                            if (sort==='high-to-low' ) sortLabel='Price: High to Low' ; else if (sort==='a-to-z' )
+                                            sortLabel='Name: A to Z' ; else if (sort==='z-to-a' ) sortLabel='Name: Z to A' ; %>
+                                            <%= sortLabel %> <i class="fi-rs-angle-small-down"></i>
+                                    </span>
                                 </div>
                             </div>
                             <div class="sort-by-dropdown">
                                 <ul>
                                     <li>
-                                        <a class="<%= sort === 'low-to-high' ? 'active' : '' %>" 
-                                           href="?<%= search ? 'search=' + encodeURIComponent(search) + '&' : '' %><%= category ? 'category=' + category + '&' : '' %><%= minPrice ? 'minPrice=' + minPrice + '&' : '' %><%= maxPrice ? 'maxPrice=' + maxPrice + '&' : '' %>sort=low-to-high">
+                                        <a class="<%= sort === 'low-to-high' ? 'active' : '' %>"
+                                            href="?<%= search ? 'search=' + encodeURIComponent(search) + '&' : '' %><%= category ? 'category=' + category + '&' : '' %><%= minPrice ? 'minPrice=' + minPrice + '&' : '' %><%= maxPrice ? 'maxPrice=' + maxPrice + '&' : '' %>sort=low-to-high">
                                             Price: Low to High
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="<%= sort === 'high-to-low' ? 'active' : '' %>" 
-                                           href="?<%= search ? 'search=' + encodeURIComponent(search) + '&' : '' %><%= category ? 'category=' + category + '&' : '' %><%= minPrice ? 'minPrice=' + minPrice + '&' : '' %><%= maxPrice ? 'maxPrice=' + maxPrice + '&' : '' %>sort=high-to-low">
+                                        <a class="<%= sort === 'high-to-low' ? 'active' : '' %>"
+                                            href="?<%= search ? 'search=' + encodeURIComponent(search) + '&' : '' %><%= category ? 'category=' + category + '&' : '' %><%= minPrice ? 'minPrice=' + minPrice + '&' : '' %><%= maxPrice ? 'maxPrice=' + maxPrice + '&' : '' %>sort=high-to-low">
                                             Price: High to Low
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="<%= sort === 'a-to-z' ? 'active' : '' %>" 
-                                           href="?<%= search ? 'search=' + encodeURIComponent(search) + '&' : '' %><%= category ? 'category=' + category + '&' : '' %><%= minPrice ? 'minPrice=' + minPrice + '&' : '' %><%= maxPrice ? 'maxPrice=' + maxPrice + '&' : '' %>sort=a-to-z">
+                                        <a class="<%= sort === 'a-to-z' ? 'active' : '' %>"
+                                            href="?<%= search ? 'search=' + encodeURIComponent(search) + '&' : '' %><%= category ? 'category=' + category + '&' : '' %><%= minPrice ? 'minPrice=' + minPrice + '&' : '' %><%= maxPrice ? 'maxPrice=' + maxPrice + '&' : '' %>sort=a-to-z">
                                             Name: A to Z
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="<%= sort === 'z-to-a' ? 'active' : '' %>" 
-                                           href="?<%= search ? 'search=' + encodeURIComponent(search) + '&' : '' %><%= category ? 'category=' + category + '&' : '' %><%= minPrice ? 'minPrice=' + minPrice + '&' : '' %><%= maxPrice ? 'maxPrice=' + maxPrice + '&' : '' %>sort=z-to-a">
+                                        <a class="<%= sort === 'z-to-a' ? 'active' : '' %>"
+                                            href="?<%= search ? 'search=' + encodeURIComponent(search) + '&' : '' %><%= category ? 'category=' + category + '&' : '' %><%= minPrice ? 'minPrice=' + minPrice + '&' : '' %><%= maxPrice ? 'maxPrice=' + maxPrice + '&' : '' %>sort=z-to-a">
                                             Name: Z to A
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="<%= sort === 'featured' ? 'active' : '' %>" 
-                                           href="?<%= search ? 'search=' + encodeURIComponent(search) + '&' : '' %><%= category ? 'category=' + category + '&' : '' %><%= minPrice ? 'minPrice=' + minPrice + '&' : '' %><%= maxPrice ? 'maxPrice=' + maxPrice + '&' : '' %>sort=featured">
+                                        <a class="<%= sort === 'featured' || !sort ? 'active' : '' %>"
+                                            href="?<%= search ? 'search=' + encodeURIComponent(search) + '&' : '' %><%= category ? 'category=' + category + '&' : '' %><%= minPrice ? 'minPrice=' + minPrice + '&' : '' %><%= maxPrice ? 'maxPrice=' + maxPrice + '&' : '' %>sort=featured">
                                             Featured
                                         </a>
                                     </li>
@@ -959,7 +965,9 @@
                 }
             });
         
-            $("#amount").val("₹" + minPrice + " - ₹" + maxPrice);
+            $("#amount").val("₹" + currentMin + " - ₹" + currentMax);
+            $("#min-price").val(currentMin);
+            $("#max-price").val(currentMax);
             
             const searchInput = document.getElementById('searchInput');
             const clearButton = document.getElementById('clear-search');
@@ -967,7 +975,7 @@
             function toggleClearButton() {
                 if (searchInput.value.trim()) {
                     clearButton.style.display = 'block';
-                } else {
+                } else if (clearButton) {
                     clearButton.style.display = 'none';
                 }
             }

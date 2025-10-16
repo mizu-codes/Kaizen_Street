@@ -58,7 +58,7 @@ const addCategory = async (req, res) => {
     }
 
     const exists = await Category.findOne({
-      categoryName: categoryName.trim(),
+      categoryName: { $regex: new RegExp(`^${categoryName.trim()}$`, 'i') }
     });
 
     if (exists) {
@@ -90,6 +90,15 @@ const editCategory = async (req, res) => {
   }
 
   try {
+    const exists = await Category.findOne({
+      _id: { $ne: id },
+      categoryName: { $regex: new RegExp(`^${categoryName.trim()}$`, 'i') }
+    });
+
+    if (exists) {
+      return res.redirect(`${redirectBase}&error=${encodeURIComponent(`Category "${categoryName.trim()}" already exists.`)}`);
+    }
+
     const updated = await Category.findByIdAndUpdate(
       id,
       {

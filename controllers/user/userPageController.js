@@ -137,21 +137,10 @@ const loadShoppingPage = async (req, res) => {
             ]
         };
 
-        if (search.length) { filter.productName = { $regex: search, $options: 'i' }; }
-        if (category) filter.category = category;
-
-        filter.discountPrice = { $gte: minPrice, $lte: maxPrice };
-
-        let sortCriteria = { createdAt: -1 };
-        if (sortOption === 'low-to-high') {
-            sortCriteria = { discountPrice: 1 };
-        } else if (sortOption === 'high-to-low') {
-            sortCriteria = { discountPrice: -1 };
-        } else if (sortOption === 'a-to-z') {
-            sortCriteria = { productName: 1 };
-        } else if (sortOption === 'z-to-a') {
-            sortCriteria = { productName: -1 };
+        if (search.length) {
+            filter.productName = { $regex: search, $options: 'i' };
         }
+        if (category) filter.category = category;
 
         const priceRange = await Product.aggregate([
             {
@@ -170,14 +159,14 @@ const loadShoppingPage = async (req, res) => {
             {
                 $group: {
                     _id: null,
-                    minPrice: { $min: "$discountPrice" },
-                    maxPrice: { $max: "$discountPrice" }
+                    minPrice: { $min: "$regularPrice" },
+                    maxPrice: { $max: "$regularPrice" }
                 }
             }
         ]);
 
-        const actualMinPrice = priceRange.length > 0 ? Math.floor(priceRange[0].minPrice) : 0;
-        const actualMaxPrice = priceRange.length > 0 ? Math.min(Math.ceil(priceRange[0].maxPrice), 5000) : 5000;
+        const actualMinPrice = 0;
+        const actualMaxPrice = priceRange.length > 0 ? Math.ceil(priceRange[0].maxPrice) : 5000;
 
         const categories = await Category.find({ status: 'active' }).lean();
 
@@ -187,37 +176,68 @@ const loadShoppingPage = async (req, res) => {
                 select: 'categoryName status categoryOffer',
                 match: { status: 'active' }
             })
-            .sort(sortCriteria)
-            .skip(perPage * (page - 1))
-            .limit(perPage)
             .lean();
 
         products = products.filter(p => p.category);
 
-        const productsWithOffers = products.map(product => {
+        let productsWithOffers = products.map(product => {
             const offerInfo = getBestOfferForProduct(product);
             return {
                 ...product,
-                offer: offerInfo
+                offer: offerInfo,
+                finalPrice: offerInfo.hasOffer ? offerInfo.finalPrice : product.regularPrice
             };
         });
 
-        const count = await Product.countDocuments(filter);
+        productsWithOffers = productsWithOffers.filter(p =>
+            p.finalPrice >= minPrice && p.finalPrice <= maxPrice
+        );
+
+        switch (sortOption) {
+            case 'low-to-high':
+                productsWithOffers.sort((a, b) => a.finalPrice - b.finalPrice);
+                break;
+            case 'high-to-low':
+                productsWithOffers.sort((a, b) => b.finalPrice - a.finalPrice);
+                break;
+            case 'a-to-z':
+                productsWithOffers.sort((a, b) =>
+                    a.productName.toLowerCase().localeCompare(b.productName.toLowerCase())
+                );
+                break;
+            case 'z-to-a':
+                productsWithOffers.sort((a, b) =>
+                    b.productName.toLowerCase().localeCompare(a.productName.toLowerCase())
+                );
+                break;
+            case 'featured':
+            default:
+                productsWithOffers.sort((a, b) =>
+                    new Date(b.createdAt) - new Date(a.createdAt)
+                );
+                break;
+        }
+
+        const count = productsWithOffers.length;
         const pages = Math.ceil(count / perPage);
+        const paginatedProducts = productsWithOffers.slice(
+            perPage * (page - 1),
+            perPage * page
+        );
 
         res.render('shop', {
             categories,
-            products: productsWithOffers,
+            products: paginatedProducts,
             search,
             category,
             sort: sortOption,
             page,
             pages,
             count,
-            minPrice: req.query.minPrice || 0,
-            maxPrice: req.query.maxPrice || 5000,
-            actualMinPrice: 0,
-            actualMaxPrice: 5000,
+            minPrice: req.query.minPrice || actualMinPrice,
+            maxPrice: req.query.maxPrice || actualMaxPrice,
+            actualMinPrice,
+            actualMaxPrice,
             currentFilters: {
                 search: search,
                 category: category,

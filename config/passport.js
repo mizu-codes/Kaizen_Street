@@ -12,32 +12,35 @@ passport.use(new GoogleStrategy({
         try {
             let user = await User.findOne({ googleId: profile.id });
 
-            if (!user) {
-                const email = profile.emails[0].value;
-                user = await User.findOne({ email, isAdmin: false });
-
-                if (user) {
-                    user.googleId = profile.id;
-                    await user.save();
+            if (user) {
+                if (user.isBlocked) {
+                    return done(null, false, { message: 'Your account has been blocked by admin.' });
                 }
+                return done(null, user);
             }
 
-            if (!user) {
-                user = new User({
-                    name: profile.displayName,
-                    email: profile.emails[0].value,
-                    googleId: profile.id,
-                    isBlocked: false,
-                    isAdmin: false
-                });
+            const email = profile.emails[0].value;
+            user = await User.findOne({ email, isAdmin: false });
 
+            if (user) {
+                if (user.isBlocked) {
+                    return done(null, false, { message: 'Your account has been blocked by admin.' });
+                }
+
+                user.googleId = profile.id;
                 await user.save();
+                return done(null, user);
             }
 
-            if (user.isBlocked) {
-                return done(null, false, { message: 'Your account has been blocked.' });
-            }
+            user = new User({
+                name: profile.displayName,
+                email: profile.emails[0].value,
+                googleId: profile.id,
+                isBlocked: false,
+                isAdmin: false
+            });
 
+            await user.save();
             return done(null, user);
 
         } catch (err) {
