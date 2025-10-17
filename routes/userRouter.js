@@ -3,7 +3,6 @@ const router = express.Router();
 const upload = require('../middlewares/multer');
 const cartController = require('../controllers/user/cartController');
 const wishlistController = require('../controllers/user/wishlistController');
-const checkoutController = require('../controllers/user/checkoutController');
 const orderController = require('../controllers/user/orderController');
 const couponController = require('../controllers/user/profile/couponController');
 const redirectIfLoggedIn = require('../middlewares/redirectIfLoggedIn');
@@ -13,6 +12,10 @@ const profileController = require('../controllers/user/profile/profileController
 const addressController = require('../controllers/user/profile/addressController');
 const securityController = require('../controllers/user/profile/securityController');
 const walletController = require('../controllers/user/profile/walletController');
+
+const checkoutController = require('../controllers/user/checkout/checkoutController');
+const addressCheckoutController = require('../controllers/user/checkout/addressController');
+const retryPaymentController = require('../controllers/user/checkout/retryPaymentController');
 
 const errorController = require('../controllers/user/errorController');
 const authController = require('../controllers/user/authController');
@@ -25,6 +28,8 @@ router.get('/', userPageController.loadHomepage);
 router.get('/shop', userPageController.loadShoppingPage);
 router.get('/products/:productId', userPageController.loadProductDetails);
 router.get('/shop/product/:productId', userPageController.loadProductDetails);
+router.get('/checkout/order-success/:orderId', userAuth, userPageController.orderSuccessPage);
+router.get('/checkout/order-failed', userAuth, userPageController.orderFailedPage);
 
 router.get('/signup', redirectIfLoggedIn, authController.loadSignup);
 router.post('/signup', authController.signup);
@@ -74,35 +79,33 @@ router.get('/api/product/:productId/stock', userAuth, wishlistController.getProd
 
 router.get('/checkout/place-order', userAuth, checkoutController.loadCheckoutPage);
 router.post('/checkout/place-order', userAuth, checkoutController.placeOrder);
-router.get('/checkout/order-success/:orderId', userAuth, checkoutController.orderSuccessPage);
-router.get('/checkout/order-failed', userAuth, checkoutController.orderFailedPage);
-router.post('/checkout/retry-payment', userAuth, checkoutController.retryPayment);
-
-router.patch('/checkout/set-default/:id', userAuth, checkoutController.setDefaultAddress);
-router.delete('/checkout/address/:id', userAuth, checkoutController.deleteAddress);
-router.get('/checkout/add-address', userAuth, addressController.addAddress);
-router.post('/checkout/add-address', userAuth, addressController.createAddress);
-router.get('/checkout/edit-address/:id', userAuth, checkoutController.editAddressPage);
-router.patch('/checkout/edit-address/:id', userAuth, checkoutController.updateAddress);
 router.post("/checkout/create-razorpay-order", userAuth, checkoutController.createRazorpayOrder);
 router.post("/checkout/verify-payment", userAuth, checkoutController.verifyRazorpayPayment);
-router.post('/checkout/apply-coupon', userAuth, checkoutController.applyCoupon);
-router.delete('/checkout/remove-coupon', userAuth, checkoutController.removeCoupon);
-router.get('/checkout/validate-coupon', userAuth, checkoutController.validateCoupon);
-router.post('/orders/retry-payment/:orderId', userAuth, checkoutController.retryPaymentOrders);
-router.post('/orders/verify-retry-payment', userAuth, checkoutController.verifyRetryPayment);
+router.get('/checkout/add-address', userAuth, addressController.addAddress);
+router.post('/checkout/add-address', userAuth, addressController.createAddress);
+router.patch('/checkout/set-default/:id', userAuth, addressCheckoutController.setDefaultAddress);
+router.delete('/checkout/address/:id', userAuth, addressCheckoutController.deleteAddress);
+router.get('/checkout/edit-address/:id', userAuth, addressCheckoutController.editAddressPage);
+router.patch('/checkout/edit-address/:id', userAuth, addressCheckoutController.updateAddress);
+router.post('/checkout/retry-payment', userAuth, retryPaymentController.retryPayment);
 
 router.get('/orders', userAuth, orderController.loadOrderPage);
 router.get('/orders/:orderId', userAuth, orderController.loadOrderDetailsPage);
 router.patch('/orders/cancel-item/:itemId', userAuth, orderController.cancelOrderItem);
 router.get('/orders/:orderId/invoice', userAuth, orderController.downloadInvoicePDF);
 router.post('/orders/return-item', userAuth, orderController.returnOrderItem);
+router.post('/orders/retry-payment/:orderId', userAuth, retryPaymentController.retryPaymentOrders);
+router.post('/orders/verify-retry-payment', userAuth, retryPaymentController.verifyRetryPayment);
 
 router.get('/wallet', userAuth, walletController.loadWalletPage);
 router.post("/wallet/create-razorpay-order", userAuth, walletController.createWalletRazorpayOrder);
 router.post("/wallet/verify-payment", userAuth, walletController.verifyWalletRazorpayPayment);
 
 router.get('/profile/coupons', userAuth, couponController.loadCouponPage);
+router.post('/checkout/apply-coupon', userAuth, couponController.applyCoupon);
+router.delete('/checkout/remove-coupon', userAuth, couponController.removeCoupon);
+router.get('/checkout/validate-coupon', userAuth, couponController.validateCoupon);
+
 
 module.exports = router;
 

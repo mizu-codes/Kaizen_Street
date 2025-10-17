@@ -426,6 +426,26 @@
             font-weight: 700;
             color: #1a1a1a;
         }
+
+        .continue-shopping-btn{
+             width: 100%;
+            padding: 7px 14px;
+            background: linear-gradient(135deg, #ff1744 0%, #f50057 50%, #c51162 100%);
+            color: white;
+            border: none;
+            border-radius: 22px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 2rem;
+            transition: all 0.3s ease;
+        }
+
+         .continue-shopping-btn:hover {
+            transform: translateY(-1px);
+            color: white;
+            box-shadow: 0 8px 20px rgba(255, 23, 68, 0.3);
+        }
     
         .continue-btn {
             width: 100%;
@@ -698,7 +718,7 @@
                         <div class="empty-cart-icon">🛒</div>
                         <h3>Your cart is empty</h3>
                         <p>Add some awesome items to get started!</p><br>
-                        <a href="/shop" class="continue-btn" style="margin-top:20px;">
+                        <a href="/shop" class="continue-shopping-btn" style="margin-top:20px;">
                             Continue Shopping
                         </a>
                     </div>

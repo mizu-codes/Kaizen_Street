@@ -90,7 +90,7 @@ const createAddress = async (req, res) => {
     if (req.xhr || req.headers.accept.includes('json')) {
       return res.json({ success: true });
     } else {
-       if (from === 'checkout') {
+      if (from === 'checkout') {
         return res.redirect('/checkout/place-order');
       }
       return res.redirect('/profile/addresses');
@@ -139,26 +139,26 @@ const deleteAddress = async (req, res) => {
 }
 
 const editAddressPage = async (req, res) => {
-    try {
+  try {
 
-        const userId = req.session.userId;
-        const addr = await Address.findOne({ _id: req.params.id, userId });
-        if (!addr) return res.redirect('/profile/addresses');
+    const userId = req.session.userId;
+    const addr = await Address.findOne({ _id: req.params.id, userId });
+    if (!addr) return res.redirect('/profile/addresses');
 
-        const from = req.query.from || 'profile';
+    const from = req.query.from || 'profile';
 
-        res.render('edit-address', {
-            address: addr,
-            errors: {},
-            old: addr.toObject(),
-            from
-        });
+    res.render('edit-address', {
+      address: addr,
+      errors: {},
+      old: addr.toObject(),
+      from
+    });
 
-    } catch (error) {
-        console.error('Edit page error', err);
-        res.redirect('/pageNotFound');
-    }
-} 
+  } catch (error) {
+    console.error('Edit page error', err);
+    res.redirect('/pageNotFound');
+  }
+}
 
 const updateAddress = async (req, res) => {
   try {
@@ -205,12 +205,12 @@ const updateAddress = async (req, res) => {
 
 
 
-module.exports={
-     addressPage,
-      addAddress,
-      createAddress,
-      setDefaultAddress,
-      deleteAddress,
-      editAddressPage,
-      updateAddress
+module.exports = {
+  addressPage,
+  addAddress,
+  createAddress,
+  setDefaultAddress,
+  deleteAddress,
+  editAddressPage,
+  updateAddress
 }

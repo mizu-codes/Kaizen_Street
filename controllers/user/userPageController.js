@@ -1,8 +1,12 @@
+const mongoose = require('mongoose');
 const User = require('../../models/userSchema');
 const Product = require('../../models/productSchema');
 const Category = require('../../models/categorySchema');
 const Cart = require('../../models/cartSchema');
 const Wishlist = require('../../models/wishlistSchema');
+const Address = require('../../models/addressSchema');
+const Coupon = require('../../models/couponSchema');
+const Order = require('../../models/orderSchema');
 
 
 function getBestOfferForProduct(product) {
@@ -355,8 +359,144 @@ const loadProductDetails = async (req, res) => {
     }
 };
 
+const orderSuccessPage = async (req, res) => {
+    try {
+        const orderId = req.params.orderId;
+        const userId = req.session.userId;
+
+        const order = await Order.findOne({ _id: orderId, user: userId });
+
+        if (!order) {
+            return res.status(404).render('page-404', { message: 'Order not found' });
+        }
+
+        res.render('order-success', { order });
+    } catch (error) {
+        console.error('Error loading order success page:', error);
+        res.status(500).render('user/500', { message: 'Something went wrong' });
+    }
+};
+
+const orderFailedPage = async (req, res) => {
+    try {
+        const userId = req.session.userId;
+        const { reason, orderId, code, couponCode } = req.query;
+
+        let failedOrder = null;
+
+        if (orderId && mongoose.Types.ObjectId.isValid(orderId)) {
+            failedOrder = await Order.findById(orderId).populate('address').lean();
+        }
+
+        if (!failedOrder) {
+            const cart = await Cart.findOne({ userId }).populate({
+                path: 'items.productId',
+                populate: {
+                    path: 'category',
+                    model: 'Category',
+                    select: 'categoryName categoryOffer status',
+                    match: { status: 'active' }
+                }
+            });
+
+            const addresses = await Address.find({ userId });
+            const selectedAddress = addresses.find(addr => addr.isDefault) || addresses[0];
+
+            if (cart && cart.items.length > 0) {
+                const validItems = cart.items.filter(item =>
+                    item.productId && !item.productId.isBlocked &&
+                    item.productId.status === 'active'
+                );
+
+                if (validItems.length > 0) {
+                    const itemsWithOffers = validItems.map(item => {
+                        const product = item.productId;
+                        const offerInfo = getBestOfferForProduct(product);
+                        const currentBestPrice = offerInfo.hasOffer ? offerInfo.finalPrice : product.regularPrice;
+                        const finalPrice = Math.min(item.price, currentBestPrice);
+
+                        return {
+                            product: product._id,
+                            name: product.productName,
+                            image: product.productImage?.[0] || '',
+                            price: finalPrice,
+                            quantity: item.quantity,
+                            subtotal: finalPrice * item.quantity,
+                            size: item.size,
+                            status: 'Payment Failed'
+                        };
+                    });
+
+                    const cartTotal = itemsWithOffers.reduce((sum, item) => sum + item.subtotal, 0);
+
+                    let discount = 0;
+                    let appliedCoupon = null;
+
+                    if (couponCode) {
+                        const coupon = await Coupon.findOne({
+                            couponCode: couponCode,
+                            status: 'active'
+                        });
+
+                        if (coupon) {
+                            const now = new Date();
+                            const isValid = now >= new Date(coupon.activeDate) &&
+                                now <= new Date(coupon.expireDate) &&
+                                cartTotal >= coupon.minimumPrice;
+
+                            if (isValid) {
+                                discount = Math.min(coupon.discountPrice, cartTotal);
+                                appliedCoupon = coupon.couponCode;
+                            }
+                        }
+                    } else {
+                        discount = cart.discount || 0;
+                    }
+
+                    const newOrder = new Order({
+                        user: userId,
+                        items: itemsWithOffers,
+                        address: selectedAddress ? selectedAddress._id : null,
+                        totalAmount: cartTotal,
+                        discount: discount,
+                        couponApplied: appliedCoupon,
+                        paymentMethod: 'razorpay',
+                        paymentStatus: 'unpaid',
+                        status: 'Payment Failed',
+                    });
+
+                    failedOrder = await newOrder.save();
+                }
+            }
+        }
+
+        const failureReasons = {
+            'cancelled': 'Payment was cancelled',
+            'verification_failed': 'Payment verification failed',
+            'payment_failed': 'Payment could not be processed',
+        };
+
+        const errorMessage = failureReasons[reason] || 'Payment failed';
+        const hasItems = failedOrder && failedOrder.items && failedOrder.items.length > 0;
+
+        return res.render('order-failed', {
+            errorMessage,
+            orderId: failedOrder ? failedOrder._id : null,
+            order: failedOrder,
+            errorCode: code || null,
+            hasItems
+        });
+
+    } catch (error) {
+        console.error('Load payment failed page error:', error);
+        return res.status(500).send('Internal server error');
+    }
+};
+
 module.exports = {
     loadHomepage,
     loadShoppingPage,
     loadProductDetails,
+    orderSuccessPage,
+    orderFailedPage
 };

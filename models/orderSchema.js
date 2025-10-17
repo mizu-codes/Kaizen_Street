@@ -85,8 +85,7 @@ const orderSchema = new Schema(
       required: true,
     },
     address: {
-      type: Schema.Types.ObjectId,
-      ref: "Address",
+      type: Schema.Types.Mixed,
       required: true,
     },
     items: {

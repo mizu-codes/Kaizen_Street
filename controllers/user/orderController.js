@@ -252,14 +252,13 @@ const downloadInvoicePDF = async (req, res) => {
 
         doc.pipe(res);
 
-
         doc.fontSize(20).text('Kaizen Street Online Shopping - Invoice', { align: 'center' });
         doc.moveDown();
 
         doc.fontSize(12).text(`Order ID: #${order._id.toString().slice(-8).toUpperCase()}`);
         doc.text(`Date: ${new Date(order.createdAt).toLocaleString()}`);
         doc.text(`Payment Method: ${order.paymentMethod}`);
-        doc.text(`Order Status: ${order.status}`);
+        doc.text(`Payment Status: ${order.paymentStatus}`);
         doc.moveDown();
 
         const a = order.address;
@@ -270,14 +269,105 @@ const downloadInvoicePDF = async (req, res) => {
         doc.moveDown();
 
         doc.fontSize(14).text('Items', { underline: true });
+        doc.moveDown(0.5);
+
+        const originalTotal = order.items.reduce((sum, item) =>
+            sum + (item.subtotal || (item.price * item.quantity)), 0
+        );
+        const orderDiscount = order.discount || 0;
+
         order.items.forEach((item, i) => {
-            doc.fontSize(12).text(`${i + 1}. ${item.name} (${item.size}) - Rs. ${item.price} x ${item.quantity} = Rs. ${item.subtotal}`);
+            const itemStatus = item.status || order.status || 'Placed';
+            const isCancelled = itemStatus.toLowerCase() === 'cancelled';
+
+            doc.fontSize(12).text(`${i + 1}. ${item.name}`, { continued: false });
+
+            const itemDetails = `   Size: ${item.size} | Qty: ${item.quantity} | Price: Rs ${item.price}`;
+            doc.fontSize(10).text(itemDetails);
+
+            const itemSubtotal = item.subtotal || (item.price * item.quantity);
+            doc.text(`   Subtotal: Rs ${itemSubtotal}`);
+
+            if (isCancelled) {
+                doc.fillColor('red')
+                    .text(`   Status: ${itemStatus.toUpperCase()} `, { continued: false });
+                doc.fillColor('black');
+
+                if (item.cancellationReason) {
+                    doc.fontSize(9)
+                        .fillColor('gray')
+                        .text(`   Reason: ${item.cancellationReason}`)
+                        .fillColor('black');
+                }
+            } else if (itemStatus.toLowerCase() === 'delivered') {
+                doc.fillColor('green')
+                    .text(`   Status: ${itemStatus.toUpperCase()} ✓`, { continued: false })
+                    .fillColor('black');
+            } else {
+                doc.fillColor('blue')
+                    .text(`   Status: ${itemStatus.toUpperCase()}`, { continued: false })
+                    .fillColor('black');
+            }
+
+            doc.moveDown(0.8);
         });
 
+        const activeItems = order.items.filter(item =>
+            (item.status || order.status).toLowerCase() !== 'cancelled'
+        );
+
+        const activeSubtotal = activeItems.reduce((sum, item) =>
+            sum + (item.subtotal || (item.price * item.quantity)), 0
+        );
+
+        let activeDiscount = 0;
+        if (orderDiscount > 0 && originalTotal > 0) {
+            activeDiscount = (activeSubtotal / originalTotal) * orderDiscount;
+            activeDiscount = Math.round(activeDiscount * 100) / 100;
+        }
+
+        const finalAmount = activeSubtotal - activeDiscount;
+
         doc.moveDown();
-        doc.text(`Subtotal: Rs. ${order.items.reduce((sum, i) => sum + i.subtotal, 0)}`);
-        doc.text(`Discount: Rs. ${order.discount}`);
-        doc.text(`Total Amount: Rs. ${order.totalAmount}`, { bold: true });
+        doc.fontSize(12);
+
+        const cancelledItems = order.items.filter(item =>
+            (item.status || order.status).toLowerCase() === 'cancelled'
+        );
+
+        if (cancelledItems.length > 0) {
+            const cancelledSubtotal = cancelledItems.reduce((sum, item) =>
+                sum + (item.subtotal || (item.price * item.quantity)), 0
+            );
+
+            doc.fontSize(11).fillColor('gray');
+            doc.text('Summary (Including Cancelled Items):', { underline: true });
+            doc.text(`Original Subtotal: Rs ${originalTotal}`);
+            doc.text(`Cancelled Items Value: -Rs ${cancelledSubtotal}`, { strike: true });
+            doc.fillColor('black');
+            doc.moveDown(0.5);
+        }
+
+        doc.fontSize(12).text('Final Invoice Summary:', { underline: true });
+        doc.text(`Active Items Subtotal: Rs ${activeSubtotal}`);
+
+        if (activeDiscount > 0) {
+            doc.text(`Discount Applied: -Rs ${activeDiscount}`);
+        }
+
+        doc.fontSize(14).fillColor('green');
+        doc.text(`Total Amount: Rs ${finalAmount}`, { bold: true });
+        doc.fillColor('black');
+
+        if (cancelledItems.length > 0) {
+            doc.moveDown();
+            doc.fontSize(9).fillColor('gray');
+            doc.text('Note: Cancelled items are excluded from the final amount. Refunds have been processed to your wallet.', {
+                align: 'center',
+                width: 500
+            });
+            doc.fillColor('black');
+        }
 
         doc.end();
     } catch (err) {
