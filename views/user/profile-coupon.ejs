@@ -460,10 +460,6 @@
                   <a href="#" class="sign-in-link">
                     <%= user.name %>
                   </a>
-                  <div class="dropdown-content">
-                    <a href="/userProfile">Profile</a>
-                    <a href="/logout">Logout</a>
-                  </div>
                 </div>
                 <% } else { %>
                   <ul>
@@ -488,18 +484,17 @@
             <div class="search-style-2"></div>
             <div class="header-action-right">
               <div class="header-action-2">
-                <div class="header-action-icon-2">
+               <div class="header-action-icon-2">
                   <a href="/wishlist">
-                    <img class="svgInject" alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
+                    <img class="svgInject" alt="Evara" src="/imgs/theme/icons/icon-heart.svg" />
                     <span id="wishlistItemCount" class="pro-count blue">
                       <%= typeof locals.wishlistItemCount !=='undefined' ? locals.wishlistItemCount : 0 %>
                     </span>
-
                   </a>
                 </div>
                 <div class="header-action-icon-2">
                   <a class="mini-cart-icon" href="/cart">
-                    <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
+                    <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg" />
                     <span id="cartItemCount" class="pro-count blue">
                       <%= typeof locals.cartItemCount !=='undefined' ? locals.cartItemCount : 0 %>
                     </span>
@@ -718,104 +713,129 @@
 
   <footer class="main">
     <section class="newsletter p-30 text-white wow fadeIn animated">
-      <div class="floating-elements">
-        <div class="floating-element">桜</div>
-        <div class="floating-element">桜</div>
-        <div class="floating-element">⚡</div>
-        <div class="floating-element">🌸</div>
-      </div>
+        <div class="floating-elements">
+            <div class="floating-element">桜</div>
+            <div class="floating-element">桜</div>
+            <div class="floating-element">⚡</div>
+            <div class="floating-element">🌸</div>
+        </div>
     </section>
+
     <section class="section-padding footer-mid">
-      <div class="container pt-15 pb-20">
-        <div class="row">
-          <div class="col-lg-4 col-md-6">
-            <div class="widget-about font-md mb-md-5 mb-lg-0">
-              <div class="logo logo-width-1 wow fadeIn animated">
-                <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
-              </div>
-              <h5 class="mt-20 mb-10 fw-600 text-grey-4 wow fadeIn animated">Contact</h5>
-              <p class="wow fadeIn animated">
-                <strong>Address: </strong>562 Wellington Road, Street 32, San Francisco
-              </p>
-              <p class="wow fadeIn animated">
-                <strong>Phone: </strong>+01 2222 365 /(+91) 01 2345 6789
-              </p>
-              <p class="wow fadeIn animated">
-                <strong>Hours: </strong>10:00 - 18:00, Mon - Sat
-              </p>
-              <h5 class="mb-10 mt-30 fw-600 text-grey-4 wow fadeIn animated">Follow Us</h5>
-              <div class="mobile-social-icon wow fadeIn animated mb-sm-5 mb-md-0">
-                <a href="#"><img src="/imgs/theme/icons/icon-facebook.svg" alt=""></a>
-                <a href="#"><img src="/imgs/theme/icons/icon-twitter.svg" alt=""></a>
-                <a href="#"><img src="/imgs/theme/icons/icon-instagram.svg" alt=""></a>
-                <a href="#"><img src="/imgs/theme/icons/icon-pinterest.svg" alt=""></a>
-                <a href="#"><img src="/imgs/theme/icons/icon-youtube.svg" alt=""></a>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-2 col-md-3">
-            <h5 class="widget-title wow fadeIn animated">About</h5>
-            <ul class="footer-list wow fadeIn animated mb-sm-5 mb-md-0">
-              <li><a href="#">About Us</a></li>
-              <li><a href="#">Delivery Information</a></li>
-              <li><a href="#">Privacy Policy</a></li>
-              <li><a href="#">Terms &amp; Conditions</a></li>
-              <li><a href="#">Contact Us</a></li>
-              <li><a href="#">Support Center</a></li>
-            </ul>
-          </div>
-          <div class="col-lg-2  col-md-3">
-            <h5 class="widget-title wow fadeIn animated">My Account</h5>
-            <ul class="footer-list wow fadeIn animated">
-              <li><a href="#">Sign In</a></li>
-              <li><a href="#">View Cart</a></li>
-              <li><a href="#">My Wishlist</a></li>
-              <li><a href="#">Track My Order</a></li>
-              <li><a href="#">Help</a></li>
-              <li><a href="#">Order</a></li>
-            </ul>
-          </div>
-          <div class="col-lg-4">
-            <h5 class="widget-title wow fadeIn animated">Install App</h5>
+        <div class="container pt-15 pb-20">
             <div class="row">
-              <div class="col-md-8 col-lg-12">
-                <p class="wow fadeIn animated">From App Store or Google Play</p>
-                <div class="download-app wow fadeIn animated">
-                  <a href="#" class="hover-up mb-sm-4 mb-lg-0"><img class="active" src="/imgs/theme/app-store.jpg"
-                      alt=""></a>
-                  <a href="#" class="hover-up"><img src="/imgs/theme/google-play.jpg" alt=""></a>
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-logo mb-20">
+                        <a><img src="/imgs/theme/kaizenlogoo.svg" alt="Kaizen Logo"></a>
+                    </div>
+                    <div class="widget-about font-md mb-md-5 mb-lg-0">
+                        <div class="brand-story wow fadeIn animated">
+                            <p class="text-grey-4 mb-15">
+                                <strong>Kaizen</strong> (改善) — Japanese philosophy of continuous improvement and
+                                evolution. We embody this principle in every stitch, every design, and every collection.
+                            </p>
+                            <p class="text-grey-4 mb-20">
+                                From streetwear roots to evolving aesthetics, Kaizen represents the relentless pursuit
+                                of perfection. We don't just create clothing; we evolve culture, one piece at a time.
+                            </p>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <div class="col-md-4 col-lg-12 mt-md-3 mt-lg-0">
-                <p class="mb-20 wow fadeIn animated">Secured Payment Gateways</p>
-                <img class="wow fadeIn animated" src="/imgs/theme/payment-method.png" alt="">
-              </div>
+
+                <div class="col-lg-2 col-md-3">
+                    <h5 class="widget-title wow fadeIn animated">Quick Links</h5>
+                    <ul class="footer-list wow fadeIn animated mb-sm-5 mb-md-0">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/shop">Shop</a></li>
+                        <li><a href="/cart">Cart</a></li>
+                        <li><a href="/wishlist">Wishlist</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-3">
+                    <h5 class="widget-title wow fadeIn animated">My Account</h5>
+                    <ul class="footer-list wow fadeIn animated">
+                        <li><a href="/userProfile">My Profile</a></li>
+                        <li><a href="/profile/coupons">View Coupons</a></li>
+                        <li><a href="/wallet">Open Wallet</a></li>
+                        <li><a href="/orders">Track My Order</a></li>
+                        <li><a href="/profile/addresses">View Address</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="widget-title wow fadeIn animated">Contact</h5>
+                    <div class="widget-about font-md mb-md-5 mb-lg-0 wow fadeIn animated">
+                        <p class="wow fadeIn animated">
+                            <strong>Address:</strong> Kannur, Kerala
+                        </p>
+                        <p class="wow fadeIn animated">
+                            <strong>Phone:</strong> +91 9000 123 456 / +91 484 555 0123
+                        </p>
+                        <p class="wow fadeIn animated">
+                            <strong>Hours:</strong> 10:00 - 21:00, Mon - Sun
+                        </p>
+                    </div>
+
+                    <div class="payment-section mt-30">
+                        <p class="mb-15 fw-600 text-grey-4 wow fadeIn animated">Secured Payment Methods</p>
+                        <div class="payment-methods wow fadeIn animated d-flex align-items-center gap-3">
+                            <div class="payment-method-item">
+                                <img src="/imgs/theme/COD-icon.png" alt="COD" style="height: 55px;">
+                            </div>
+                            <div class="payment-method-item">
+                                <img src="/imgs/theme/wallet-icon.png" alt="Wallet" style="height: 60px;">
+                            </div>
+                            <div class="payment-method-item">
+                                <img src="/imgs/theme/razorpay-icon.png" alt="Razorpay" style="height: 55px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
     </section>
+
     <div class="container pb-20 wow fadeIn animated">
-      <div class="row">
-        <div class="col-12 mb-20">
-          <div class="footer-bottom"></div>
+        <div class="row">
+            <div class="col-12">
+                <hr class="footer-divider mb-3">
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <p class="text-md-start text-center font-sm text-muted mb-0">
+                    &copy; <span id="year"></span> <strong class="text-brand">Kaizen Street</strong>. All rights
+                    reserved.
+                </p>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <p class="text-md-end text-center font-sm text-muted mb-0">
+                    Designed with <span class="text-brand">❤</span>
+                </p>
+            </div>
         </div>
-        <div class="col-lg-6">
-          <p class="float-md-left font-sm text-muted mb-0">&copy; 2025, <strong class="text-brand">Kaizen
-              Street</strong>
-        </div>
-        <div class="col-lg-6">
-          <p class="text-lg-end text-start font-sm text-muted mb-0">All rights reserved</p>
-        </div>
-      </div>
     </div>
-  </footer>
+</footer>
 
   <script src="/js/jquery.min.js"></script>
   <script src="/js/bootstrap.bundle.min.js"></script>
   <script src="/js/wishlist-count-updater.js"></script>
   <script src="/js/cart-count-updater.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+<script>
+    const section = document.querySelector('.newsletter');
+    window.addEventListener('scroll', () => {
+        const rect = section.getBoundingClientRect();
+        const topOfPage = window.pageYOffset;
+        const topOfSec = rect.top + topOfPage;
+        const scrolled = topOfPage - topOfSec;
+        const distance = Math.max(scrolled, 0);
+        const yPos = distance * -0.5;
+    });
+</script>
 
   <script>
     function toggleSidebar() {

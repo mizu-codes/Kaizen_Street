@@ -94,8 +94,6 @@ const loadCouponPage = async (req, res) => {
             user: user,
             userId: userId,
             usedCouponsCount: usedCouponsCount,
-            wishlistItemCount: req.session?.wishlistItemCount || 0,
-            cartItemCount: req.session?.cartItemCount || 0
         });
     } catch (err) {
         console.error('Error loading user coupons:', err);
