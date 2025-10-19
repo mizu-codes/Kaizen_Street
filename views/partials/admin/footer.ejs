@@ -32,7 +32,37 @@
 <script src="/assets2/js/vendors/bootstrap.bundle.min.js"></script>
 <script src="/assets/js/main.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js" integrity="sha512-..." crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js" integrity="sha512-..."
+    crossorigin="anonymous"></script>
+
+<script>
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const sidebar = document.getElementById('offcanvas_aside');
+    const overlay = document.getElementById('screenOverlay');
+
+    if (mobileMenuBtn) {
+        mobileMenuBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            sidebar.classList.toggle('show');
+            overlay.classList.toggle('show');
+        });
+    }
+
+    if (overlay) {
+        overlay.addEventListener('click', function () {
+            sidebar.classList.remove('show');
+            overlay.classList.remove('show');
+        });
+    }
+
+    document.querySelectorAll('.menu-link').forEach(link => {
+        link.addEventListener('click', function () {
+            sidebar.classList.remove('show');
+            overlay.classList.remove('show');
+        });
+    });
+
+</script>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {

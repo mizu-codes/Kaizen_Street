@@ -1,0 +1,120 @@
+      .logout-fixed {
+          position: fixed;
+          top: 15px;
+          right: 20px;
+          z-index: 1031;
+      }
+
+      .logout-fixed .nav {
+          display: flex;
+          margin: 0;
+      }
+
+      .logout-fixed .nav-item {
+          list-style: none;
+      }
+
+      .main-header {
+          display: flex !important;
+          align-items: center !important;
+          flex-wrap: nowrap !important;
+          position: relative;
+      }
+
+      .main-header .col-search {
+          display: none !important;
+          flex-grow: 0 !important;
+          width: 0 !important;
+          margin: 0 !important;
+          padding: 0 !important;
+      }
+
+      .mobile-menu-btn {
+          display: none;
+          background: none;
+          border: none;
+          font-size: 24px;
+          cursor: pointer;
+          padding: 5px 10px;
+          flex-shrink: 0;
+      }
+
+      @media (max-width: 991px) {
+          .navbar-aside {
+              position: fixed !important;
+              left: 0;
+              top: 0;
+              width: 260px;
+              height: 100vh;
+              z-index: 1045;
+              transform: translateX(-100%);
+              transition: transform 0.3s ease;
+              background: white;
+              box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+          }
+
+          .navbar-aside.show {
+              transform: translateX(0);
+          }
+
+          .screen-overlay {
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background: rgba(0, 0, 0, 0.5);
+              z-index: 1040;
+              display: none !important;
+          }
+
+          .screen-overlay.show {
+              display: block !important;
+          }
+
+          .main-wrap {
+              margin-left: 0 !important;
+          }
+
+          .main-header {
+              position: sticky;
+              top: 0;
+              z-index: 1030;
+          }
+
+          .mobile-menu-btn {
+              display: block !important;
+          }
+      }
+
+      @media (max-width: 767px) {
+
+          .col-lg-3,
+          .col-md-6 {
+              flex: 0 0 100% !important;
+              max-width: 100% !important;
+          }
+
+          .col-xl-8 {
+              flex: 0 0 100% !important;
+              max-width: 100% !important;
+          }
+
+          .col-xl-4 {
+              flex: 0 0 100% !important;
+              max-width: 100% !important;
+          }
+
+          .col-xl-6 {
+              flex: 0 0 100% !important;
+              max-width: 100% !important;
+          }
+
+          .card {
+              margin-bottom: 15px;
+          }
+
+          .table-responsive {
+              font-size: 12px;
+          }
+      }

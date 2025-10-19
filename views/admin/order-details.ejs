@@ -8,38 +8,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="shortcut icon" type="image/x-icon" href="/assets2/imgs/theme/kaizenicon.svg">
   <link href="/assets2/css/main.css" rel="stylesheet" type="text/css" />
+   <link href="/css/responsiveAdmin.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
-
     .item-action-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
-}
-
-.item-action-buttons .btn {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.12rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+  
+    .item-action-buttons .btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.12rem;
       text-decoration: none;
       white-space: nowrap;
       width: fit-content;
-    font-size: 11px;
-    padding: 5px 10px;
-}
-
-.return-actions {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.return-actions .btn {
-    flex: 1;
-}
-
+      font-size: 11px;
+      padding: 5px 10px;
+    }
+  
+    .return-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+  
+    .return-actions .btn {
+      flex: 1;
+    }
+  
     .item-pricing-info {
       margin-top: 0.5rem;
       padding: 0.5rem;
@@ -47,34 +48,34 @@
       border-radius: 4px;
       font-size: 0.9em;
     }
-
+  
     .original-item-price {
       color: #999;
       text-decoration: line-through;
     }
-
+  
     .paid-item-price {
       color: #28a745;
       font-weight: 600;
     }
-
+  
     .item-price .price-breakdown .original-price {
       text-decoration: line-through;
       color: #999;
       font-size: 0.9em;
     }
-
+  
     .item-price .price-breakdown .customer-paid {
       color: #28a745;
       font-weight: 600;
       font-size: 1.1em;
     }
-
+  
     .discount-applied {
       color: #28a745;
       font-weight: 500;
     }
-
+  
     .savings-highlight {
       text-align: center;
       color: #28a745;
@@ -85,26 +86,26 @@
       border-radius: 4px;
       border-left: 3px solid #6c63ff;
     }
-
+  
     @media (max-width: 768px) {
       .item-pricing-info {
         font-size: 0.8em;
         padding: 0.4rem;
       }
-
+  
       .return-actions {
         flex-direction: column;
         gap: 0.3rem;
       }
     }
-
+  
     .item-status-info {
       margin-top: 8px;
       display: flex;
       flex-direction: column;
       gap: 4px;
     }
-
+  
     .item-status-badge {
       font-size: 12px;
       padding: 4px 8px;
@@ -113,13 +114,13 @@
       display: inline-block;
       width: fit-content;
     }
-
+  
     .content-header-right {
       margin-top: 1.5rem;
       display: flex;
       justify-content: center;
     }
-
+  
     .btn-update {
       background: linear-gradient(135deg, #6c63ff 0%, #8f94fb 100%);
       color: white;
@@ -136,14 +137,14 @@
       white-space: nowrap;
       width: fit-content;
     }
-
+  
     .btn-update:hover {
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(108, 99, 255, 0.3);
       color: white;
       text-decoration: none;
     }
-
+  
     .btn-back {
       background: #007bff;
       color: white;
@@ -159,28 +160,28 @@
       margin: auto;
       margin-top: 3rem;
     }
-
+  
     .btn-back:hover {
       background: #0056b3;
       border-color: #0056b3;
       color: white;
       text-decoration: none;
     }
-
+  
     .order-details-grid {
       display: grid;
       grid-template-columns: 2fr 1fr;
       gap: 2rem;
       margin-bottom: 2rem;
     }
-
+  
     .order-summary-card {
       background: white;
       border-radius: 12px;
       box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
       overflow: hidden;
     }
-
+  
     .card-header {
       background: linear-gradient(90deg, #6c63ff, #8f94fb);
       color: white;
@@ -188,38 +189,38 @@
       font-weight: 600;
       font-size: 1.1rem;
     }
-
+  
     .card-body {
       padding: 1rem;
     }
-
+  
     .info-row {
       display: flex;
       justify-content: space-between;
       padding: 0.55rem 0;
       border-bottom: 1px solid #f0f0f0;
     }
-
+  
     .info-row:last-child {
       border-bottom: none;
     }
-
+  
     .info-label {
       font-weight: 600;
       color: #6c7293;
     }
-
+  
     .info-value {
       color: #253D4E;
       font-weight: 500;
     }
-
+  
     .items-section {
       display: flex;
       flex-direction: column;
       gap: 1rem;
     }
-
+  
     .item-card {
       background: white;
       border: 1px solid #f0f0f0;
@@ -230,12 +231,12 @@
       gap: 1rem;
       transition: all 0.3s ease;
     }
-
+  
     .item-card:hover {
       box-shadow: 0 4px 12px rgba(108, 99, 255, 0.15);
       border-color: #6c63ff;
     }
-
+  
     .item-image {
       width: 70px;
       height: 70px;
@@ -243,36 +244,36 @@
       border-radius: 8px;
       border: 2px solid #f0f0f0;
     }
-
+  
     .item-details {
       flex: 1;
     }
-
+  
     .item-name {
       font-weight: 600;
       color: #253D4E;
       margin-bottom: 0.25rem;
       font-size: 1rem;
     }
-
+  
     .item-specs {
       color: #7e7e7e;
       font-size: 0.875rem;
     }
-
+  
     .item-actions {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 0.5rem;
     }
-
+  
     .item-price {
       font-weight: 700;
       color: black;
       font-size: 1.1rem;
     }
-
+  
     .return-badge,
     .return-requested,
     .return-accepted,
@@ -286,27 +287,27 @@
       display: inline-block;
       margin-left: 1rem;
     }
-
+  
     .return-requested {
       background-color: #fff3cd;
       color: #856404;
     }
-
+  
     .return-accepted {
       background-color: #d4edda;
       color: #155724;
     }
-
+  
     .return-rejected {
       background-color: #f8d7da;
       color: #721c24;
     }
-
+  
     .return-badge {
       background-color: #e9ecef;
       color: #495057;
     }
-
+  
     .status-badge {
       padding: 0.4rem 0.8rem;
       border-radius: 20px;
@@ -315,50 +316,50 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
-
+  
     .status-placed {
       background: #ffc107;
       color: #856404;
     }
-
+  
     .status-processing {
       background: #17a2b8;
       color: white;
     }
-
+  
     .status-shipped {
       background: #6f42c1;
       color: white;
     }
-
+  
     .status-out-for-delivery {
       background: #fd7e14;
       color: white;
     }
-
+  
     .status-delivered {
       background: #28a745;
       color: white;
     }
-
+  
     .status-cancelled {
       background: #dc3545;
       color: white;
     }
-
+  
     .price-breakdown {
       background: #f8f9ff;
       border-radius: 8px;
       padding: 0.9rem;
     }
-
+  
     .price-row {
       display: flex;
       justify-content: space-between;
       padding: 0.1rem;
       color: #6c7293;
     }
-
+  
     .total-row {
       border-top: 2px solid #6c63ff;
       padding-top: 1rem;
@@ -367,7 +368,7 @@
       font-weight: 700;
       color: #253D4E;
     }
-
+  
     .address-card {
       background: white;
       border-radius: 12px;
@@ -375,42 +376,42 @@
       overflow: hidden;
       height: fit-content;
     }
-
+  
     .address-content {
       padding: 1.5rem;
     }
-
+  
     .address-content p {
       margin: 0.5rem 0;
       color: #6c7293;
       line-height: 1.6;
     }
-
+  
     .customer-info {
       background: white;
       border-radius: 8px;
       padding: 1rem;
     }
-
+  
     .customer-name {
       font-size: 1rem;
       font-weight: 600;
       color: #253D4E;
       margin-bottom: 0.5rem;
     }
-
+  
     .customer-email {
       color: #6c7293;
       font-size: 0.9rem;
     }
-
+  
     .action-buttons {
       display: flex;
       gap: 1rem;
       margin-top: 2rem;
       flex-wrap: wrap;
     }
-
+  
     .btn-secondary {
       background: #6c7293;
       color: white;
@@ -421,48 +422,48 @@
       font-weight: 500;
       transition: all 0.3s ease;
     }
-
+  
     .btn-secondary:hover {
       background: #5a5f7d;
     }
-
+  
     @media (max-width: 768px) {
       .order-details-grid {
         grid-template-columns: 1fr;
         gap: 1rem;
       }
-
+  
       .item-card {
         flex-direction: column;
         text-align: center;
         gap: 1rem;
       }
-
+  
       .item-actions {
         flex-direction: row;
         justify-content: center;
         width: 100%;
       }
-
+  
       .info-row {
         flex-direction: column;
         gap: 0.25rem;
         text-align: center;
       }
-
+  
       .action-buttons {
         flex-direction: column;
       }
-
+  
       .card-body {
         padding: 1rem;
       }
     }
-
+  
     .table-wrap {
       overflow-x: auto;
     }
-
+  
     .pagination .page-link {
       color: #6c63ff;
       border-radius: 8px;
@@ -470,12 +471,12 @@
       margin: 0 4px;
       transition: 0.3s ease;
     }
-
+  
     .pagination .page-link:hover {
       background-color: #6c63ff;
       color: white;
     }
-
+  
     .pagination .page-item.active .page-link {
       background-color: #6c63ff;
       border-color: #6c63ff;
@@ -486,7 +487,7 @@
 </head>
 
 <body>
-
+   <div class="screen-overlay" id="screenOverlay"></div>
   <aside class="navbar-aside" id="offcanvas_aside">
     <div class="aside-top">
       <a href="/admin" class="brand-wrap">
@@ -554,26 +555,29 @@
 
   <main class="main-wrap">
     <% const _msg=typeof message !=='undefined' ? message : '' ; %>
-
+  
       <header class="main-header navbar">
-        <div class="col-search">
-        </div>
-        <div class="col-nav">
-          <ul class="nav">
-            <li class="dropdown nav-item">
-              <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount">
-                <img class="img-xs rounded-circle" src="/assets2/imgs/people/avatar2.jpg" alt="Admin">
-              </a>
-              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                <a class="dropdown-item text-danger" href="/admin/logout">
-                  <i class="material-icons md-exit_to_app"></i>Logout
-                </a>
-              </div>
-            </li>
-          </ul>
-        </div>
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="col-search"></div>
       </header>
-
+     
+      <div class="logout-fixed">
+        <ul class="nav">
+          <li class="dropdown nav-item">
+            <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount">
+              <img class="img-xs rounded-circle" src="/assets2/imgs/theme/adminAvatar.svg" alt="Admin">
+            </a>
+            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+              <a class="dropdown-item text-danger" href="/admin/logout">
+                <i class="material-icons md-exit_to_app"></i>Logout
+              </a>
+            </div>
+          </li>
+        </ul>
+      </div>
+  
       <section class="content-main">
         <div class="content-header d-flex justify-content-between align-items-center mb-4">
           <div>
@@ -870,28 +874,60 @@
       </footer>
   </main>
 
-  <script src="/assets2/js/vendors/jquery-3.6.0.min.js"></script>
-  <script src="/assets2/js/main.js"></script>
+    <script src="/assets2/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/assets2/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/assets2/js/vendors/select2.min.js"></script>
+    <script src="/assets2/js/vendors/perfect-scrollbar.js"></script>
+    <script src="/assets2/js/vendors/jquery.fullscreen.min.js"></script>
+    <script src="/assets2/js/main.js" type="text/javascript"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <script>
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const sidebar = document.getElementById('offcanvas_aside');
+    const overlay = document.getElementById('screenOverlay');
+
+    if (mobileMenuBtn) {
+      mobileMenuBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        sidebar.classList.toggle('show');
+        overlay.classList.toggle('show');
+      });
+    }
+    
+    if (overlay) {
+      overlay.addEventListener('click', function () {
+        sidebar.classList.remove('show');
+        overlay.classList.remove('show');
+      });
+    }
+   
+    document.querySelectorAll('.menu-link').forEach(link => {
+      link.addEventListener('click', function () {
+        sidebar.classList.remove('show');
+        overlay.classList.remove('show');
+      });
+    });
+  </script>
+  
+  <script>
 
     async function updateItemStatus(orderId, itemId, currentStatus) {
-    if (!orderId || !itemId) {
+      if (!orderId || !itemId) {
         return Swal.fire('Error', 'Missing order or item information', 'error');
-    }
+      }
 
-    const statusOptions = {
+      const statusOptions = {
         'Placed': 'Order Placed',
         'Processing': 'Processing',
         'Shipped': 'Shipped',
         'Out for Delivery': 'Out for Delivery',
         'Delivered': 'Delivered'
-    };
+      };
 
-    delete statusOptions['Cancelled'];
+      delete statusOptions['Cancelled'];
 
-    const { value: selected } = await Swal.fire({
+      const { value: selected } = await Swal.fire({
         title: 'Update Item Status',
         input: 'select',
         inputOptions: statusOptions,
@@ -900,56 +936,56 @@
         confirmButtonText: 'Update Status',
         confirmButtonColor: '#6c63ff',
         inputValidator: (value) => !value && 'You need to select a status!'
-    });
+      });
 
-    if (!selected) return;
+      if (!selected) return;
 
-    Swal.fire({
+      Swal.fire({
         title: 'Updating...',
         text: 'Please wait...',
         allowOutsideClick: false,
         showConfirmButton: false,
         didOpen: () => Swal.showLoading()
-    });
+      });
 
-    try {
+      try {
         const resp = await fetch(`/admin/orders/${orderId}/items/${itemId}/status`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ status: selected })
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ status: selected })
         });
 
         let body;
         try {
-            body = await resp.json();
+          body = await resp.json();
         } catch (e) {
-            throw new Error('Invalid server response');
+          throw new Error('Invalid server response');
         }
 
         if (!resp.ok) {
-            throw new Error(body?.message || `HTTP ${resp.status}`);
+          throw new Error(body?.message || `HTTP ${resp.status}`);
         }
 
         await Swal.fire({
-            title: 'Success!',
-            text: body.message || 'Item status updated successfully',
-            icon: 'success',
-            confirmButtonColor: '#6c63ff'
+          title: 'Success!',
+          text: body.message || 'Item status updated successfully',
+          icon: 'success',
+          confirmButtonColor: '#6c63ff'
         });
 
         location.reload();
 
-    } catch (err) {
+      } catch (err) {
         console.error('Item status update error:', err);
         Swal.fire({
-            title: 'Error',
-            text: err.message || 'Failed to update item status',
-            icon: 'error'
+          title: 'Error',
+          text: err.message || 'Failed to update item status',
+          icon: 'error'
         });
+      }
     }
-}
 
     async function handleReturnRequest(orderId, itemId, action) {
       console.log('handleReturnRequest called with:', { orderId, itemId, action });
@@ -1057,23 +1093,23 @@
       badge.textContent = newStatus;
     }
 
- async function updateOrderStatus() {
-    const currentStatus = '<%= order ? order.status : "Placed" %>';
-    const orderId = '<%= order ? order._id : "" %>';
+    async function updateOrderStatus() {
+      const currentStatus = '<%= order ? order.status : "Placed" %>';
+      const orderId = '<%= order ? order._id : "" %>';
 
-    if (!orderId) {
+      if (!orderId) {
         return Swal.fire('Error', 'Order ID not found', 'error');
-    }
+      }
 
-    const statusOptions = {
+      const statusOptions = {
         'Placed': 'Order Placed',
         'Processing': 'Processing',
         'Shipped': 'Shipped',
         'Out for Delivery': 'Out for Delivery',
         'Delivered': 'Delivered'
-    };
+      };
 
-    const { value: selected } = await Swal.fire({
+      const { value: selected } = await Swal.fire({
         title: 'Update Order Status',
         input: 'select',
         inputOptions: statusOptions,
@@ -1082,73 +1118,73 @@
         confirmButtonText: 'Update Status',
         confirmButtonColor: '#6c63ff',
         inputValidator: (value) => !value && 'You need to select a status!'
-    });
+      });
 
-    if (!selected) return;
+      if (!selected) return;
 
-    Swal.fire({
+      Swal.fire({
         title: 'Updating...',
         allowOutsideClick: false,
         didOpen: () => Swal.showLoading()
-    });
+      });
 
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-    try {
+      try {
         const resp = await fetch(`/admin/orders/${orderId}/status`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ status: selected }),
-            signal: controller.signal
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ status: selected }),
+          signal: controller.signal
         });
 
         clearTimeout(timeoutId);
 
         let body = null;
         try {
-            body = await resp.json();
+          body = await resp.json();
         } catch (e) {
-            body = null;
+          body = null;
         }
 
         if (!resp.ok) {
-            const msg = body?.message || body?.error || `HTTP ${resp.status}`;
-            throw new Error(msg);
+          const msg = body?.message || body?.error || `HTTP ${resp.status}`;
+          throw new Error(msg);
         }
 
         updateStatusUI(selected);
 
         await Swal.fire({
-            title: 'Success',
-            text: body.message || 'Order status updated successfully',
-            icon: 'success',
-            confirmButtonColor: '#6c63ff'
+          title: 'Success',
+          text: body.message || 'Order status updated successfully',
+          icon: 'success',
+          confirmButtonColor: '#6c63ff'
         });
 
         location.reload();
 
-    } catch (err) {
-        const message = err.name === 'AbortError' 
-            ? 'Request timed out' 
-            : (err.message || 'Something went wrong');
-        
+      } catch (err) {
+        const message = err.name === 'AbortError'
+          ? 'Request timed out'
+          : (err.message || 'Something went wrong');
+
         console.error('Status update error:', err);
-        
+
         await Swal.fire({
-            title: 'Error',
-            text: message,
-            icon: 'error',
-            confirmButtonColor: '#dc3545'
+          title: 'Error',
+          text: message,
+          icon: 'error',
+          confirmButtonColor: '#dc3545'
         });
-    } finally {
+      } finally {
         try {
-            Swal.close();
+          Swal.close();
         } catch (e) { }
+      }
     }
-}
 
     (function setupPolling() {
       if (!('<%= order ? order._id : "" %>')) return;
@@ -1195,10 +1231,10 @@
           const result = await Swal.fire({
             title: 'Return Request',
             html: `
-        <p><strong>Product:</strong> ${productName}</p>
-        <p><strong>Reason:</strong> ${reason}</p>
-        <p style="color: #666; font-size: 0.9em;">Order ID: ${orderId}</p>
-        <p style="color: #666; font-size: 0.9em;">Item ID: ${itemId}</p>`,
+          <p><strong>Product:</strong> ${productName}</p>
+          <p><strong>Reason:</strong> ${reason}</p>
+          <p style="color: #666; font-size: 0.9em;">Order ID: ${orderId}</p>
+          <p style="color: #666; font-size: 0.9em;">Item ID: ${itemId}</p>`,
             icon: 'info',
             showCancelButton: true,
             confirmButtonText: 'Approve',

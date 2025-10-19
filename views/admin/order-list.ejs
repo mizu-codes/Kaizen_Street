@@ -8,224 +8,380 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="shortcut icon" type="image/x-icon" href="/assets2/imgs/theme/kaizenicon.svg">
   <link href="/assets2/css/main.css" rel="stylesheet" type="text/css" />
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+      .logout-fixed {
+        position: fixed;
+        top: 15px;
+        right: 20px;
+        z-index: 1031;
+      }
+    
+      .logout-fixed .nav {
+        display: flex;
+        margin: 0;
+      }
+    
+      .logout-fixed .nav-item {
+        list-style: none;
+      }
+    
+      .main-header {
+        display: flex !important;
+        align-items: center !important;
+        flex-wrap: wrap !important;
+        position: relative;
+        gap: 10px;
+      }
+    
+      .main-header .col-search {
+        flex: 1 1 100%;
+        min-width: 200px;
+        margin: 0 !important;
+        padding: 0 !important;
+        order: 3;
+      }
+    
+      .searchform {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: nowrap;
+      }
+    
+      .searchform .form-control {
+        flex: 1;
+        min-width: 150px;
+      }
+    
+      .mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 5px 10px;
+        flex-shrink: 0;
+        order: 1;
+      }
+    
+      @media (max-width: 991px) {
+        .navbar-aside {
+          position: fixed !important;
+          left: 0;
+          top: 0;
+          width: 260px;
+          height: 100vh;
+          z-index: 1045;
+          transform: translateX(-100%);
+          transition: transform 0.3s ease;
+          background: white;
+          box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+    
+        .navbar-aside.show {
+          transform: translateX(0);
+        }
+    
+        .screen-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.5);
+          z-index: 1040;
+          display: none !important;
+        }
+    
+        .screen-overlay.show {
+          display: block !important;
+        }
+    
+        .main-wrap {
+          margin-left: 0 !important;
+        }
+    
+        .main-header {
+          position: sticky;
+          top: 0;
+          z-index: 1030;
+          flex-wrap: wrap;
+        }
+    
+        .main-header .col-search {
+          flex: 1 1 100%;
+          order: 3;
+          margin-top: 10px !important;
+        }
+    
+        .mobile-menu-btn {
+          display: block !important;
+          order: 1;
+        }
+      }
+    
+      @media (max-width: 767px) {
+    
+        .col-lg-3,
+        .col-md-6 {
+          flex: 0 0 100% !important;
+          max-width: 100% !important;
+        }
+    
+        .col-xl-8 {
+          flex: 0 0 100% !important;
+          max-width: 100% !important;
+        }
+    
+        .col-xl-4 {
+          flex: 0 0 100% !important;
+          max-width: 100% !important;
+        }
+    
+        .col-xl-6 {
+          flex: 0 0 100% !important;
+          max-width: 100% !important;
+        }
+    
+        .card {
+          margin-bottom: 15px;
+        }
+    
+        .table-responsive {
+          font-size: 12px;
+        }
+    
+        .searchform {
+          flex-wrap: wrap;
+        }
+    
+        .searchform .form-control {
+          min-width: 100%;
+        }
+    
+        .main-header .col-search {
+          flex: 1 1 100%;
+          margin-top: 10px !important;
+        }
+      }
+    
+      .amount-with-discount {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 2px;
+      }
+    
+      .original-amount {
+        text-decoration: line-through;
+        color: #999;
+        font-size: 0.85em;
+      }
+    
+      .paid-amount {
+        color: #28a745;
+        font-weight: 600;
+        font-size: 0.95em;
+      }
+    
+      .discount-info {
+        color: #28a745;
+        font-weight: 500;
+        font-size: 0.75em;
+      }
+    
+      @media (max-width: 768px) {
+        .amount-with-discount {
+          align-items: flex-start;
+        }
+    
+        .original-amount,
+        .paid-amount {
+          font-size: 0.8em;
+        }
+      }
+    
+      .mixed-status-info {
+        text-align: center;
+        display: block;
+      }
+    
+      .mixed-status-info small {
+        display: inline-block;
+        font-size: 11px;
+        padding: 2px 6px;
+        border-radius: 3px;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        margin: 2px;
+      }
+    
+      .content-header .btn-add {
+        background-color: #6c63ff;
+        color: #fff;
+      }
+    
+      .content-header .btn-add:hover {
+        background-color: #5a52d4;
+      }
+    
+      .table-wrap {
+        overflow-x: auto;
+      }
+    
+      .table-custom th {
+        background: linear-gradient(90deg, #6c63ff, #8f94fb);
+        color: #fff;
+        border: none;
+      }
+    
+      .table-custom tbody tr:hover {
+        background-color: #f1f1f1;
+      }
+    
+      .pagination .page-link {
+        color: #6c63ff;
+        border-radius: 8px;
+        border: 1px solid #6c63ff;
+        margin: 0 4px;
+        transition: 0.3s ease;
+      }
+    
+      .pagination .page-link:hover {
+        background-color: #6c63ff;
+        color: white;
+      }
+    
+      .pagination .page-item.active .page-link {
+        background-color: #6c63ff;
+        border-color: #6c63ff;
+        color: white;
+      }
+    
+      .pagination .page-item.disabled .page-link {
+        color: #aaa;
+        border-color: #ddd;
+        background-color: #f9f9f9;
+      }
+    
+      .status-cancelled {
+        background: #dc3545;
+        color: white;
+        padding: 2px 12px;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+    
+      .status-placed {
+        background: #ffc107;
+        color: white;
+        padding: 2px 12px;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+    
+      .status-processing {
+        background: #17a2b8;
+        color: white;
+        padding: 2px 12px;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+    
+      .status-shipped {
+        background: #6f42c1;
+        color: white;
+        padding: 2px 12px;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+    
+      .status-out-for-delivery {
+        background: #fd7e14;
+        color: white;
+        padding: 2px 12px;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+    
+      .status-delivered {
+        background: #28a745;
+        color: white;
+        padding: 2px 12px;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+    
+      td {
+        text-align: center;
+        vertical-align: top;
+        padding: 12px 8px;
+      }
+    
+      .status-container {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        align-items: center;
+        min-width: 100px;
+      }
+    
+      .return-badge,
+      .return-requested,
+      .return-accepted,
+      .return-rejected {
+        padding: 3px 6px;
+        border-radius: 4px;
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: inline-block;
+        margin-top: 0.6rem;
+        margin-left: 0.2rem;
+        white-space: nowrap;
+    
+      }
+    
+      .return-requested {
+        background-color: #fff3cd;
+        color: #856404;
+      }
+    
+      .return-accepted {
+        background-color: #d4edda;
+        color: #155724;
+      }
+    
+      .return-rejected {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+    
+      .return-badge {
+        background-color: #e9ecef;
+        color: #495057;
+      }
+    
+      .filter-dropdown {
+        min-width: 150px;
+      }
+    </style>
 </head>
 
 <body>
-
-  <style>
-    .amount-with-discount {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 2px;
-    }
-  
-    .original-amount {
-      text-decoration: line-through;
-      color: #999;
-      font-size: 0.85em;
-    }
-  
-    .paid-amount {
-      color: #28a745;
-      font-weight: 600;
-      font-size: 0.95em;
-    }
-  
-    .discount-info {
-      color: #28a745;
-      font-weight: 500;
-      font-size: 0.75em;
-    }
-  
-    @media (max-width: 768px) {
-      .amount-with-discount {
-        align-items: flex-start;
-      }
-  
-      .original-amount,
-      .paid-amount {
-        font-size: 0.8em;
-      }
-    }
-  
-    .mixed-status-info {
-      text-align: center;
-      display: block;
-    }
-  
-    .mixed-status-info small {
-      display: inline-block;
-      font-size: 11px;
-      padding: 2px 6px;
-      border-radius: 3px;
-      background-color: #f8f9fa;
-      border: 1px solid #dee2e6;
-      margin: 2px;
-    }
-  
-    .content-header .btn-add {
-      background-color: #6c63ff;
-      color: #fff;
-    }
-  
-    .content-header .btn-add:hover {
-      background-color: #5a52d4;
-    }
-  
-    .table-wrap {
-      overflow-x: auto;
-    }
-  
-    .table-custom th {
-      background: linear-gradient(90deg, #6c63ff, #8f94fb);
-      color: #fff;
-      border: none;
-    }
-  
-    .table-custom tbody tr:hover {
-      background-color: #f1f1f1;
-    }
-  
-    .pagination .page-link {
-      color: #6c63ff;
-      border-radius: 8px;
-      border: 1px solid #6c63ff;
-      margin: 0 4px;
-      transition: 0.3s ease;
-    }
-  
-    .pagination .page-link:hover {
-      background-color: #6c63ff;
-      color: white;
-    }
-  
-    .pagination .page-item.active .page-link {
-      background-color: #6c63ff;
-      border-color: #6c63ff;
-      color: white;
-    }
-  
-    .pagination .page-item.disabled .page-link {
-      color: #aaa;
-      border-color: #ddd;
-      background-color: #f9f9f9;
-    }
-  
-    .status-cancelled {
-      background: #dc3545;
-      color: white;
-      padding: 2px 12px;
-      border-radius: 20px;
-      font-size: 0.875rem;
-      font-weight: 500;
-    }
-  
-    .status-placed {
-      background: #ffc107;
-      color: white;
-      padding: 2px 12px;
-      border-radius: 20px;
-      font-size: 0.875rem;
-      font-weight: 500;
-    }
-  
-    .status-processing {
-      background: #17a2b8;
-      color: white;
-      padding: 2px 12px;
-      border-radius: 20px;
-      font-size: 0.875rem;
-      font-weight: 500;
-    }
-  
-    .status-shipped {
-      background: #6f42c1;
-      color: white;
-      padding: 2px 12px;
-      border-radius: 20px;
-      font-size: 0.875rem;
-      font-weight: 500;
-    }
-  
-    .status-out-for-delivery {
-      background: #fd7e14;
-      color: white;
-      padding: 2px 12px;
-      border-radius: 20px;
-      font-size: 0.875rem;
-      font-weight: 500;
-      white-space: nowrap;
-    }
-  
-    .status-delivered {
-      background: #28a745;
-      color: white;
-      padding: 2px 12px;
-      border-radius: 20px;
-      font-size: 0.875rem;
-      font-weight: 500;
-    }
-  
-    td {
-      text-align: center;
-      vertical-align: top;
-      padding: 12px 8px;
-    }
-  
-    .status-container {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      align-items: center;
-      min-width: 100px;
-    }
-  
-    .return-badge,
-    .return-requested,
-    .return-accepted,
-    .return-rejected {
-      padding: 3px 6px;
-      border-radius: 4px;
-      font-size: 10px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      display: inline-block;
-      margin-top: 0.6rem;
-      margin-left: 0.2rem;
-      white-space: nowrap;
-  
-    }
-  
-    .return-requested {
-      background-color: #fff3cd;
-      color: #856404;
-    }
-  
-    .return-accepted {
-      background-color: #d4edda;
-      color: #155724;
-    }
-  
-    .return-rejected {
-      background-color: #f8d7da;
-      color: #721c24;
-    }
-  
-    .return-badge {
-      background-color: #e9ecef;
-      color: #495057;
-    }
-  
-    .filter-dropdown {
-      min-width: 150px;
-    }
-  </style>
-
+   <div class="screen-overlay" id="screenOverlay"></div>
   <aside class="navbar-aside" id="offcanvas_aside">
     <div class="aside-top">
-      <a href="/admin" class="brand-wrap">
+      <a href="#" class="brand-wrap">
         <img src="/assets2/imgs/theme/kaizenlogoo.svg" class="logo" alt="Kaizen Dashboard">
       </a>
       <div>
@@ -287,18 +443,21 @@
       </ul>
     </nav>
   </aside>
-
-  <main class="main-wrap">
-    <% const _page=typeof page !=='undefined' ? page : 1; const _limit=typeof limit !=='undefined' ? limit :
-      orders.length || 1; const _q=typeof q !=='undefined' ? q : '' ; const _status=typeof status !=='undefined' ?
-      status : '' ; const _msg=typeof message !=='undefined' ? message : '' ; %>
+<main class="main-wrap">
+  <% const _page=typeof page !=='undefined' ? page : 1; const _limit=typeof limit !=='undefined' ? limit : orders.length
+    || 1; const _q=typeof q !=='undefined' ? q : '' ; const _status=typeof status !=='undefined' ? status : '' ; const
+    _msg=typeof message !=='undefined' ? message : '' ; %>
     <header class="main-header navbar">
+      <button class="mobile-menu-btn" id="mobileMenuBtn">
+        <i class="fas fa-bars"></i>
+      </button>
       <div class="col-search">
         <form id="orderFilterForm" class="searchform d-flex" action="/admin/orders" method="GET">
           <input type="hidden" name="page" id="pageInput" value="1">
 
           <div class="dropdown me-2">
-            <select name="status" class="form-select filter-dropdown" onchange="document.getElementById('orderFilterForm').submit()">
+            <select name="status" class="form-select filter-dropdown"
+              onchange="document.getElementById('orderFilterForm').submit()">
               <option value="all" <%=(!_status || _status==='all' ) ? 'selected' : '' %>>All Status</option>
               <option value="Placed" <%=_status==='Placed' ? 'selected' : '' %>>Placed</option>
               <option value="Processing" <%=_status==='Processing' ? 'selected' : '' %>>Processing</option>
@@ -317,34 +476,33 @@
           </button>
 
           <% if ((_q && _q.trim()) || (_status && _status !=='all' )) { %>
-          <a href="/admin/orders" class="btn btn-outline-secondary ms-2" style="font-size:1rem;">Clear</a>
-          <% } %>
+            <a href="/admin/orders" class="btn btn-outline-secondary ms-2" style="font-size:1rem;">Clear</a>
+            <% } %>
         </form>
-
-
-      </div>
-      <div class="col-nav">
-        <ul class="nav">
-          <li class="dropdown nav-item">
-            <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount">
-              <img class="img-xs rounded-circle" src="/assets2/imgs/people/avatar2.jpg" alt="Admin">
-            </a>
-            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-              <a class="dropdown-item text-danger" href="/admin/logout">
-                <i class="material-icons md-exit_to_app"></i>Logout
-              </a>
-            </div>
-          </li>
-        </ul>
       </div>
     </header>
 
-   <section class="content-main">
-  <div class="content-header d-flex justify-content-between align-items-center mb-4">
-    <div>
-      <h2 class="content-title card-title">Order Management</h2>
+    <div class="logout-fixed">
+      <ul class="nav">
+        <li class="dropdown nav-item">
+          <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount">
+            <img class="img-xs rounded-circle" src="/assets2/imgs/theme/adminAvatar.svg" alt="Admin">
+          </a>
+          <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+            <a class="dropdown-item text-danger" href="/admin/logout">
+              <i class="material-icons md-exit_to_app"></i>Logout
+            </a>
+          </div>
+        </li>
+      </ul>
     </div>
-  </div>
+
+    <section class="content-main">
+      <div class="content-header d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h2 class="content-title card-title">Order Management</h2>
+        </div>
+      </div>
 
   <div class="card mb-4">
     <div class="card-body">
@@ -525,9 +683,39 @@
   </main>
 
   <script src="/assets2/js/vendors/jquery-3.6.0.min.js"></script>
+  <script src="/assets2/js/vendors/bootstrap.bundle.min.js"></script>
   <script src="/assets2/js/main.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  
+  
+  <script>
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const sidebar = document.getElementById('offcanvas_aside');
+    const overlay = document.getElementById('screenOverlay');
+
+    if (mobileMenuBtn) {
+      mobileMenuBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        sidebar.classList.toggle('show');
+        overlay.classList.toggle('show');
+      });
+    }
+
+    if (overlay) {
+      overlay.addEventListener('click', function () {
+        sidebar.classList.remove('show');
+        overlay.classList.remove('show');
+      });
+    }
+
+    document.querySelectorAll('.menu-link').forEach(link => {
+      link.addEventListener('click', function () {
+        sidebar.classList.remove('show');
+        overlay.classList.remove('show');
+      });
+    });
+
+  </script>
 
 </body>
-
 </html>

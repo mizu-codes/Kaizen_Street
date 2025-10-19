@@ -5,12 +5,163 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kaizen Product Add</title>
+    <title>Product Add</title>
     <link rel="shortcut icon" type="image/x-icon" href="/assets2/imgs/theme/kaizenicon.svg">
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
     <link href="/assets2/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="/css/responsiveAdmin.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"
         integrity="sha512-..." crossorigin="anonymous" />
+    <style>
+        .spinner-border-sm {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .spinner-border {
+            display: inline-block;
+            width: 2rem;
+            height: 2rem;
+            vertical-align: -0.125em;
+            border: 0.25em solid currentColor;
+            border-right-color: transparent;
+            border-radius: 50%;
+            animation: spinner-border 0.75s linear infinite;
+        }
+
+        @keyframes spinner-border {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .swal-responsive {
+            width: 90% !important;
+            max-width: 320px !important;
+            padding: 1.2rem !important;
+            border-radius: 10px;
+            font-size: 0.95rem;
+        }
+
+        .form-control,
+        .form-select {
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #6c63ff;
+            box-shadow: 0 0 0 0.1rem rgba(108, 99, 255, 0.25);
+        }
+
+        .btn-primary {
+            background-color: #6c63ff;
+            border-color: #6c63ff;
+            transition: 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #584fd0;
+            border-color: #584fd0;
+        }
+
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e1e1e1;
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+        }
+
+        .image-slot {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            width: 100%;
+            max-width: 200px;
+            height: 150px;
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            margin: 0.5rem 0;
+            overflow: hidden;
+        }
+
+        .image-slot img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            opacity: 0.6;
+            transition: object-fit 0.3s ease, opacity 0.3s ease;
+        }
+
+        .image-slot.has-image img {
+            object-fit: cover;
+            opacity: 1;
+        }
+
+        .image-slot .btn {
+            margin-top: 0.5rem;
+            padding: 4px 8px;
+            font-size: 0.85rem;
+            background-color: #6c63ff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+        }
+
+        #img-error {
+            font-size: 0.9rem;
+        }
+
+        .crop-container {
+            background: #fff;
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-dialog.modal-xl {
+            max-width: 90%;
+        }
+
+        .modal-content {
+            height: 85vh;
+            display: flex;
+            flex-direction: column;
+            border-radius: 12px;
+        }
+
+        .modal-body {
+            flex: 1;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        #cropImage {
+            max-width: 90vw;
+            max-height: 60vh;
+            border-radius: 8px;
+        }
+    </style>
 </head>
-
-

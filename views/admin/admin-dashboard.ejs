@@ -1,25 +1,27 @@
 <!DOCTYPE HTML>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <title>Kaizen Dashboard</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" type="image/x-icon" href="assets2/imgs/theme/kaizenicon.svg">
-    <link href="assets2/css/main.css" rel="stylesheet" type="text/css" />
+    <link rel="shortcut icon" type="image/x-icon" href="/assets2/imgs/theme/kaizenicon.svg">
+    <link href="/assets2/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="/css/responsiveAdmin.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body>
-    <div class="screen-overlay"></div>
+    <div class="screen-overlay" id="screenOverlay"></div>
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
-            <a href="/admin" class="brand-wrap">
-                <img src="assets2/imgs/theme/kaizenlogoo.svg" class="logo" alt="Evara Dashboard">
+            <a href="#" class="brand-wrap">
+                <img src="/assets2/imgs/theme/kaizenlogoo.svg" class="logo" alt="Kaizen Dashboard">
             </a>
             <div>
-                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i> </button>
+                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i>
+                </button>
             </div>
         </div>
         <nav>
@@ -29,12 +31,12 @@
                         <span class="text">Dashboard</span>
                     </a>
                 </li>
-                  <li class="menu-item ">
+                <li class="menu-item">
                     <a class="menu-link" href="/admin/user"> <i class="icon material-icons md-person"></i>
                         <span class="text">Customers</span>
                     </a>
                 </li>
-                 <li class="menu-item">
+                <li class="menu-item">
                     <a class="menu-link" href="/admin/category"> <i class="icon material-icons md-store"></i>
                         <span class="text">Category</span>
                     </a>
@@ -48,71 +50,419 @@
                         <a href="/admin/products">Product List</a>
                     </div>
                 </li>
-                 <li class="menu-item">
+                <li class="menu-item">
                     <a class="menu-link" href="/admin/orders">
                         <i class="icon material-icons md-shopping_cart"></i>
                         <span class="text">Orders</span>
                     </a>
                 </li>
-                 <li class="menu-item">
-          <a class="menu-link" href="/admin/transactions">
-            <i class="icon material-icons md-account_balance_wallet"></i>
-            <span class="text">Transactions</span>
-          </a>
-        </li>
-        <li class="menu-item ">
-          <a class="menu-link" href="/admin/coupons">
-            <i class="icon material-icons md-local_offer"></i>
-            <span class="text">Coupons</span>
-          </a>
-        </li>
-         <li class="menu-item">
-          <a class="menu-link" href="/admin/sales-report">
-            <i class="icon material-icons md-assessment"></i>
-            <span class="text">Sales Report</span>
-          </a>
-          </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/transactions">
+                        <i class="icon material-icons md-account_balance_wallet"></i>
+                        <span class="text">Transactions</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/coupons">
+                        <i class="icon material-icons md-local_offer"></i>
+                        <span class="text">Coupons</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/sales-report">
+                        <i class="icon material-icons md-assessment"></i>
+                        <span class="text">Sales Report</span>
+                    </a>
+                </li>
             </ul>
         </nav>
     </aside>
+
     <main class="main-wrap">
         <header class="main-header navbar">
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
             <div class="col-search"></div>
-             <div class="col-nav">
-                <ul class="nav">
-                    <li class="dropdown nav-item">
-                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount">
-                            <img class="img-xs rounded-circle" src="/assets2/imgs/people/avatar2.jpg" alt="Admin">
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                            <a class="dropdown-item text-danger" href="/admin/logout">
-                                <i class="material-icons md-exit_to_app"></i>Logout
-                            </a>
-                        </div>
-                    </li>
-                </ul>
-            </div>
         </header>
+
+        <div class="logout-fixed">
+            <ul class="nav">
+                <li class="dropdown nav-item">
+                    <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount">
+                        <img class="img-xs rounded-circle" src="/assets2/imgs/theme/adminAvatar.svg" alt="Admin">
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                        <a class="dropdown-item text-danger" href="/admin/logout">
+                            <i class="material-icons md-exit_to_app"></i>Logout
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
         <section class="content-main">
             <div class="content-header">
                 <div>
-                    <h2 class="content-title card-title">Dashboard </h2>
+                    <h2 class="content-title card-title">Dashboard</h2>
+                </div>
+                <div>
+                    <select class="form-select" id="filterSelect" style="width: auto;">
+                        <option value="daily" <% if(filter==='daily' ) { %>selected<% } %>>Daily</option>
+                        <option value="weekly" <% if(filter==='weekly' ) { %>selected<% } %>>Weekly</option>
+                        <option value="monthly" <% if(filter==='monthly' ) { %>selected<% } %>>Monthly</option>
+                        <option value="yearly" <% if(filter==='yearly' ) { %>selected<% } %>>Yearly</option>
+                    </select>
                 </div>
             </div>
-        </section> 
-       <footer class="main-footer font-xs text-center py-3">
-    <div>&copy;
-        <script>document.write(new Date().getFullYear())</script> Kaizen Street. All rights reserved.
-    </div>
-</footer>
+
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="card card-body mb-4"
+                        style="background: linear-gradient(135deg, #ffb3d9 0%, #ffe0ed 100%); border: none;">
+                        <article class="icontext">
+                            <span class="icon icon-sm rounded-circle"
+                                style="background: #ff4d94; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-chart-line text-white" style="font-size: 20px;"></i>
+                            </span>
+                            <div class="text ms-3">
+                                <h3 class="mb-1 fw-bold" style="color: #1a1a1a;">₹<%= (todaySales/1000).toFixed(0) %>k
+                                </h3>
+                                <h6 class="mb-1" style="color: #1a1a1a;">Total Sales</h6>
+                                <small style="color: #666;">
+                                    <% if(salesChange>= 0) { %>+<% } %>
+                                            <%= salesChange %>% <%= comparisonText %>
+                                </small>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card card-body mb-4"
+                        style="background: linear-gradient(135deg, #ffd966 0%, #fff0b3 100%); border: none;">
+                        <article class="icontext">
+                            <span class="icon icon-sm rounded-circle"
+                                style="background: #e4d20a; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-clipboard-list text-white" style="font-size: 20px;"></i>
+                            </span>
+                            <div class="text ms-3">
+                                <h3 class="mb-1 fw-bold" style="color: #1a1a1a;">
+                                    <%= totalOrders %>
+                                </h3>
+                                <h6 class="mb-1" style="color: #1a1a1a;">Total Orders</h6>
+                                <small style="color: #666;">
+                                    <% if(ordersChange>= 0) { %>+<% } %>
+                                            <%= ordersChange %>% <%= comparisonText %>
+                                </small>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card card-body mb-4"
+                        style="background: linear-gradient(135deg, #5dd890 0%, #b0edc9 100%); border: none;">
+                        <article class="icontext">
+                            <span class="icon icon-sm rounded-circle"
+                                style="background: #18c859; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-shopping-bag text-white" style="font-size: 20px;"></i>
+                            </span>
+                            <div class="text ms-3">
+                                <h3 class="mb-1 fw-bold" style="color: #1a1a1a;">
+                                    <%= productsSold %>
+                                </h3>
+                                <h6 class="mb-1" style="color: #1a1a1a;">Products Sold</h6>
+                                <small style="color: #666;">
+                                    <% if(productsChange>= 0) { %>+<% } %>
+                                            <%= productsChange %>% <%= comparisonText %>
+                                </small>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card card-body mb-4"
+                        style="background: linear-gradient(135deg, #d4bfff 0%, #ede5ff 100%); border: none;">
+                        <article class="icontext">
+                            <span class="icon icon-sm rounded-circle"
+                                style="background: #a855f7; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-user-plus text-white" style="font-size: 18px;"></i>
+                            </span>
+                            <div class="text ms-3">
+                                <h3 class="mb-1 fw-bold" style="color: #1a1a1a;">
+                                    <%= newCustomers %>
+                                </h3>
+                                <h6 class="mb-1" style="color: #1a1a1a;">New Customer</h6>
+                                <small style="color: #666;">
+                                    <% if(customersChange>= 0) { %>+<% } %>
+                                            <%= customersChange %>% <%= comparisonText %>
+                                </small>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xl-8 col-lg-12">
+                    <div class="card mb-4">
+                        <article class="card-body">
+                            <h5 class="card-title">Revenue Overview</h5>
+                            <div style="position: relative; height: 300px;">
+                                <canvas id="revenueChart"></canvas>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-lg-12">
+                    <div class="card mb-4">
+                        <article class="card-body">
+                            <h5 class="card-title">Top Selling Categories</h5>
+                            <div style="position: relative; height: 300px;">
+                                <canvas id="topBrandsChart"></canvas>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xl-6">
+                    <div class="card mb-4">
+                        <header class="card-header">
+                            <h4 class="card-title">Top 10 Selling Products</h4>
+                        </header>
+                        <div class="card-body">
+                            <% if (topProducts && topProducts.length> 0) { %>
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Product Name</th>
+                                                <th>Quantity Sold</th>
+                                                <th>Revenue</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% topProducts.forEach((product, index)=> { %>
+                                                <tr>
+                                                    <td><b>
+                                                            <%= index + 1 %>.
+                                                        </b>
+                                                        <%= product.productName %>
+                                                    </td>
+                                                    <td><span class="badge rounded-pill bg-primary">
+                                                            <%= product.totalQuantity %>
+                                                        </span></td>
+                                                    <td>₹<%= Math.round(product.totalRevenue).toLocaleString() %>
+                                                    </td>
+                                                </tr>
+                                                <% }); %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <% } else { %>
+                                    <p class="text-muted text-center py-3">No products sold yet</p>
+                                    <% } %>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-6">
+                    <div class="card mb-4">
+                        <header class="card-header">
+                            <h4 class="card-title">Top 10 Selling Categories</h4>
+                        </header>
+                        <div class="card-body">
+                            <% if (topCategories && topCategories.length> 0) { %>
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Category Name</th>
+                                                <th>Items Sold</th>
+                                                <th>Revenue</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% topCategories.forEach((category, index)=> { %>
+                                                <tr>
+                                                    <td><b>
+                                                            <%= index + 1 %>.
+                                                        </b>
+                                                        <%= category.categoryName %>
+                                                    </td>
+                                                    <td><span class="badge rounded-pill bg-success">
+                                                            <%= category.totalQuantity %>
+                                                        </span></td>
+                                                    <td>₹<%= Math.round(category.totalRevenue).toLocaleString() %>
+                                                    </td>
+                                                </tr>
+                                                <% }); %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <% } else { %>
+                                    <p class="text-muted text-center py-3">No categories sold yet</p>
+                                    <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <footer class="main-footer font-xs text-center py-3">
+            <div>&copy;
+                <script>document.write(new Date().getFullYear())</script> Kaizen Street. All rights reserved.
+            </div>
+        </footer>
     </main>
-    <script src="assets2/js/vendors/jquery-3.6.0.min.js"></script>
-    <script src="assets2/js/vendors/bootstrap.bundle.min.js"></script>
-    <script src="assets2/js/vendors/select2.min.js"></script>
-    <script src="assets2/js/vendors/perfect-scrollbar.js"></script>
-    <script src="assets2/js/vendors/jquery.fullscreen.min.js"></script>
-    <script src="assets2/js/main.js" type="text/javascript"></script>
-    <script src="assets2/js/custom-chart.js" type="text/javascript"></script>
+
+    <div id="chartData" style="display: none;" data-revenue-labels='<%- revenueLabels %>'
+        data-revenue-values='<%- revenueValues %>' data-top-categories='<%- topCategoriesChart %>'>
+    </div>
+
+    <script src="/assets2/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/assets2/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/assets2/js/vendors/select2.min.js"></script>
+    <script src="/assets2/js/vendors/perfect-scrollbar.js"></script>
+    <script src="/assets2/js/vendors/jquery.fullscreen.min.js"></script>
+    <script src="/assets2/js/main.js" type="text/javascript"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+
+    <script>
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.getElementById('offcanvas_aside');
+        const overlay = document.getElementById('screenOverlay');
+
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                sidebar.classList.toggle('show');
+                overlay.classList.toggle('show');
+            });
+        }
+
+        if (overlay) {
+            overlay.addEventListener('click', function () {
+                sidebar.classList.remove('show');
+                overlay.classList.remove('show');
+            });
+        }
+
+        document.querySelectorAll('.menu-link').forEach(link => {
+            link.addEventListener('click', function () {
+                sidebar.classList.remove('show');
+                overlay.classList.remove('show');
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            try {
+                const chartDataEl = document.getElementById('chartData');
+                if (!chartDataEl) {
+                    console.error('Chart data element not found');
+                    return;
+                }
+
+                const revenueLabels = JSON.parse(chartDataEl.getAttribute('data-revenue-labels') || '[]');
+                const revenueValues = JSON.parse(chartDataEl.getAttribute('data-revenue-values') || '[]');
+                const topCategoriesData = JSON.parse(chartDataEl.getAttribute('data-top-categories') || '[]');
+
+                const filterSelect = document.getElementById('filterSelect');
+                if (filterSelect) {
+                    filterSelect.addEventListener('change', function () {
+                        window.location.href = '/admin?filter=' + this.value;
+                    });
+                }
+
+                const revenueCtx = document.getElementById('revenueChart');
+                if (revenueCtx && revenueLabels && revenueValues) {
+                    new Chart(revenueCtx, {
+                        type: 'line',
+                        data: {
+                            labels: revenueLabels,
+                            datasets: [{
+                                label: 'Revenue (₹)',
+                                data: revenueValues,
+                                borderColor: 'rgb(75, 192, 192)',
+                                backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                                tension: 0.4,
+                                fill: true
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    display: true,
+                                    position: 'top'
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        callback: function (value) {
+                                            return '₹' + value.toLocaleString();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+
+                const topBrandsCtx = document.getElementById('topBrandsChart');
+                if (topBrandsCtx && topCategoriesData && topCategoriesData.length > 0) {
+                    new Chart(topBrandsCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: topCategoriesData.map(c => c.categoryName),
+                            datasets: [{
+                                label: 'Items Sold',
+                                data: topCategoriesData.map(c => c.totalQuantity),
+                                backgroundColor: [
+                                    'rgba(54, 162, 235, 0.8)',
+                                    'rgba(255, 99, 132, 0.8)',
+                                    'rgba(255, 206, 86, 0.8)',
+                                    'rgba(75, 192, 192, 0.8)',
+                                    'rgba(153, 102, 255, 0.8)'
+                                ],
+                                borderColor: [
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(255, 99, 132, 1)',
+                                    'rgba(255, 206, 86, 1)',
+                                    'rgba(75, 192, 192, 1)',
+                                    'rgba(153, 102, 255, 1)'
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            indexAxis: 'y',
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    display: false
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error initializing charts:', error);
+            }
+        });
+    </script>
 </body>
 
 </html>

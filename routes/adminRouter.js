@@ -11,12 +11,13 @@ const orderController = require('../controllers/admin/orderController');
 const transactionController = require('../controllers/admin/transactionController');
 const couponController = require('../controllers/admin/couponController');
 const salesController = require('../controllers/admin/salesController');
+const dashboardController = require('../controllers/admin/dashboardController');
 const { adminAuth } = require('../middlewares/auth');
 
 router.get('/page-error', adminController.pageError)
 router.get('/login', adminController.loadLogin);
 router.post('/login', adminController.login);
-router.get('/', adminAuth, adminController.loadDashboard);
+router.get('/', adminAuth, dashboardController.loadDashboard);
 router.get('/logout', adminController.logout);
 
 router.get('/user', adminAuth, customerController.customerInfo);

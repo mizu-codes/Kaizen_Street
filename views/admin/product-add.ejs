@@ -1,161 +1,10 @@
 <%- include('../../views/partials/admin/header') %>
 
   <body>
-    <style>
-      .spinner-border-sm {
-        width: 1rem;
-        height: 1rem;
-      }
-    
-      .spinner-border {
-        display: inline-block;
-        width: 2rem;
-        height: 2rem;
-        vertical-align: -0.125em;
-        border: 0.25em solid currentColor;
-        border-right-color: transparent;
-        border-radius: 50%;
-        animation: spinner-border 0.75s linear infinite;
-      }
-    
-      @keyframes spinner-border {
-        to {
-          transform: rotate(360deg);
-        }
-      }
-    
-      .swal-responsive {
-        width: 90% !important;
-        max-width: 320px !important;
-        padding: 1.2rem !important;
-        border-radius: 10px;
-        font-size: 0.95rem;
-      }
-    
-      .form-control,
-      .form-select {
-        border-radius: 8px;
-        border: 1px solid #ccc;
-        transition: border-color 0.3s ease;
-      }
-    
-      .form-control:focus,
-      .form-select:focus {
-        border-color: #6c63ff;
-        box-shadow: 0 0 0 0.1rem rgba(108, 99, 255, 0.25);
-      }
-    
-      .btn-primary {
-        background-color: #6c63ff;
-        border-color: #6c63ff;
-        transition: 0.3s;
-      }
-    
-      .btn-primary:hover {
-        background-color: #584fd0;
-        border-color: #584fd0;
-      }
-    
-      .btn-secondary {
-        background-color: #f0f0f0;
-        color: #333;
-        border: 1px solid #ccc;
-      }
-    
-      .btn-secondary:hover {
-        background-color: #e1e1e1;
-      }
-    
-      .card {
-        border: none;
-        box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
-        border-radius: 12px;
-      }
-    
-      .image-slot {
-        border: 2px dashed #ccc;
-        border-radius: 8px;
-        background-color: #f9f9f9;
-        width: 100%;
-        max-width: 200px;
-        height: 150px;
-        position: relative;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        margin: 0.5rem 0;
-        overflow: hidden;
-      }
-    
-      .image-slot img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        opacity: 0.6;
-        transition: object-fit 0.3s ease, opacity 0.3s ease;
-      }
-    
-      .image-slot.has-image img {
-        object-fit: cover;
-        opacity: 1;
-      }
-    
-      .image-slot .btn {
-        margin-top: 0.5rem;
-        padding: 4px 8px;
-        font-size: 0.85rem;
-        background-color: #6c63ff;
-        color: #fff;
-        border: none;
-        border-radius: 4px;
-      }
-    
-      #img-error {
-        font-size: 0.9rem;
-      }
-    
-      .crop-container {
-        background: #fff;
-        border-radius: 8px;
-        padding: 16px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      }
-    
-      .modal-dialog.modal-xl {
-        max-width: 90%;
-      }
-    
-      .modal-content {
-        height: 85vh;
-        display: flex;
-        flex-direction: column;
-        border-radius: 12px;
-      }
-    
-      .modal-body {
-        flex: 1;
-        min-height: 70vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 24px;
-      }
-    
-      #cropImage {
-        max-width: 90vw;
-        max-height: 60vh;
-        border-radius: 8px;
-      }
-    </style>
-
+    <div class="screen-overlay" id="screenOverlay"></div>
     <aside class="navbar-aside" id="offcanvas_aside">
       <div class="aside-top">
-        <a href="/admin" class="brand-wrap">
+        <a href="#" class="brand-wrap">
           <img src="/assets2/imgs/theme/kaizenlogoo.svg" class="logo" alt="Kaizen Dashboard">
         </a>
         <div>
@@ -197,23 +46,23 @@
               <span class="text">Orders</span>
             </a>
           </li>
-           <li class="menu-item">
-          <a class="menu-link" href="/admin/transactions">
-            <i class="icon material-icons md-account_balance_wallet"></i>
-            <span class="text">Transactions</span>
-          </a>
-        </li>
-         <li class="menu-item ">
-          <a class="menu-link" href="/admin/coupons">
-            <i class="icon material-icons md-local_offer"></i>
-            <span class="text">Coupons</span>
-          </a>
-        </li>
-         <li class="menu-item">
-          <a class="menu-link" href="/admin/sales-report">
-            <i class="icon material-icons md-assessment"></i>
-            <span class="text">Sales Report</span>
-          </a>
+          <li class="menu-item">
+            <a class="menu-link" href="/admin/transactions">
+              <i class="icon material-icons md-account_balance_wallet"></i>
+              <span class="text">Transactions</span>
+            </a>
+          </li>
+          <li class="menu-item ">
+            <a class="menu-link" href="/admin/coupons">
+              <i class="icon material-icons md-local_offer"></i>
+              <span class="text">Coupons</span>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a class="menu-link" href="/admin/sales-report">
+              <i class="icon material-icons md-assessment"></i>
+              <span class="text">Sales Report</span>
+            </a>
           </li>
         </ul>
       </nav>
@@ -221,54 +70,58 @@
 
     <main class="main-wrap">
       <header class="main-header navbar">
-        <div class="col-search mb-3"></div>
-        <div class="col-nav">
-          <ul class="nav">
-            <li class="dropdown nav-item">
-              <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount">
-                <img class="img-xs rounded-circle" src="/assets2/imgs/people/avatar2.jpg" alt="Admin">
-              </a>
-              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                <a class="dropdown-item text-danger" href="/admin/logout">
-                  <i class="material-icons md-exit_to_app"></i>Logout
-                </a>
-              </div>
-            </li>
-          </ul>
-        </div>
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="col-search"></div>
       </header>
+
+      <div class="logout-fixed">
+        <ul class="nav">
+          <li class="dropdown nav-item">
+            <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount">
+              <img class="img-xs rounded-circle" src="/assets2/imgs/theme/adminAvatar.svg" alt="Admin">
+            </a>
+            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+              <a class="dropdown-item text-danger" href="/admin/logout">
+                <i class="material-icons md-exit_to_app"></i>Logout
+              </a>
+            </div>
+          </li>
+        </ul>
+      </div>
 
       <section class="content-main">
         <div class="col-search mb-3">
           <h2 class="content-title card-title">Add New Product</h2>
         </div>
-      
+
         <form action="/admin/addProducts" method="POST">
           <div class="row">
-      
+
             <div class="col-md-8">
               <div class="card p-4 mb-4">
-      
-      
+
+
                 <div class="mb-3">
                   <label for="productName" class="form-label">Product Name</label>
                   <input type="text" class="form-control" id="productName" name="productName" required>
                 </div>
-      
-      
+
+
                 <div class="mb-3">
                   <label for="description" class="form-label">Description</label>
                   <textarea class="form-control" id="description" name="description" rows="4"
                     placeholder="Write your description here..."></textarea>
                 </div>
-      
-      
+
+
                 <div class="mb-3">
                   <label for="specifications" class="form-label">Specifications</label>
                   <textarea class="form-control" id="specifications" name="specifications" rows="6"
                     placeholder="Enter one spec per line…" required></textarea>
                 </div>
-      
+
                 <div class="mb-3">
                   <label for="category" class="form-label">Category</label>
                   <select class="form-select" id="category" name="category" required>
@@ -280,7 +133,7 @@
                       <% }) %>
                   </select>
                 </div>
-      
+
                 <div class="row">
                   <div class="col-md-6 mb-3">
                     <label for="regularPrice" class="form-label">Base Price (₹)</label>
@@ -293,10 +146,10 @@
                       placeholder="0" value="0">
                   </div>
                 </div>
-      
-      
+
+
                 <input type="hidden" name="discountPrice" id="discountPrice">
-      
+
                 <div class="mb-3">
                   <label class="form-label">Stock by Size</label>
                   <div class="row">
@@ -305,13 +158,13 @@
                         <label>
                           <%= size %>
                         </label>
-                        <input type="number" name="stock_<%= size %>" id="stock_<%= size %>" class="form-control" min="0"
-                          value="0">
+                        <input type="number" name="stock_<%= size %>" id="stock_<%= size %>" class="form-control"
+                          min="0" value="0">
                       </div>
                       <% }) %>
                   </div>
                 </div>
-      
+
                 <div class="mb-3">
                   <label for="status" class="form-label">Status</label>
                   <select class="form-select" id="status" name="status" required>
@@ -319,8 +172,8 @@
                     <option value="inactive">Inactive</option>
                   </select>
                 </div>
-      
-      
+
+
                 <div class="d-flex justify-content-center mt-4">
                   <button type="submit" class="btn btn-primary px-4" id="submitBtn" disabled>
                     Add Product
@@ -329,7 +182,7 @@
                 </div>
               </div>
             </div>
-      
+
             <div class="col-md-4">
               <div class="card p-4">
                 <label class="form-label mb-3">Edit Photos</label>

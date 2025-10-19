@@ -90,23 +90,6 @@ const login = async (req, res) => {
     }
 };
 
-const loadDashboard = async (req, res) => {
-    try {
-        if (!req.session || !req.session.admin) {
-            return res.redirect('/admin/login');
-        }
-
-        const admin = await User.findById(req.session.admin);
-
-        res.render('admin-dashboard', {
-            adminName: admin ? admin.name : 'Admin'
-        });
-    } catch (error) {
-        console.error('Dashboard load error:', error);
-        res.redirect('/admin/login');
-    }
-};
-
 const logout = async (req, res) => {
     try {
         const userId = req.session.userId;
@@ -141,7 +124,6 @@ const logout = async (req, res) => {
 module.exports = {
     loadLogin,
     login,
-    loadDashboard,
     pageError,
     logout
 };
