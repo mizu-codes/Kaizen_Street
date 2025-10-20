@@ -9,6 +9,8 @@
     <link rel="shortcut icon" type="image/x-icon" href="/assets2/imgs/theme/kaizenicon.svg">
     <link href="/assets2/css/main.css" rel="stylesheet" type="text/css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/daterangepicker/3.1.0/daterangepicker.css" rel="stylesheet">
+    <link href="/css/responsiveAdmin.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .stats-grid {
             display: grid;
@@ -299,6 +301,7 @@
 </head>
 
 <body>
+    <div class="screen-overlay" id="screenOverlay"></div>
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
             <a href="/admin" class="brand-wrap">
@@ -365,24 +368,27 @@
     </aside>
 
     <main class="main-wrap">
-        <header class="main-header navbar">
-            <div class="col-search">
-            </div>
-            <div class="col-nav">
-                <ul class="nav">
-                    <li class="dropdown nav-item">
-                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount">
-                            <img class="img-xs rounded-circle" src="/assets2/imgs/people/avatar2.jpg" alt="Admin">
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                            <a class="dropdown-item text-danger" href="/admin/logout">
-                                <i class="material-icons md-exit_to_app"></i>Logout
-                            </a>
-                        </div>
-                    </li>
-                </ul>
-            </div>
+       <header class="main-header navbar">
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="col-search"></div>
         </header>
+
+        <div class="logout-fixed">
+            <ul class="nav">
+                <li class="dropdown nav-item">
+                    <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount">
+                        <img class="img-xs rounded-circle" src="/assets2/imgs/theme/adminAvatar.svg" alt="Admin">
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                        <a class="dropdown-item text-danger" href="/admin/logout">
+                            <i class="material-icons md-exit_to_app"></i>Logout
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
 
        <section class="content-main">
     <div class="content-header d-flex justify-content-between align-items-center mb-4">
@@ -532,8 +538,8 @@
                                     </td>
                                     <td title="<%= order.products.join(', ') %>">
                                         <% const shortNames=order.products.slice(0, 2).join(', '); 
-                    const remaining = order.products.length - 2; %>
-                <%= shortNames %><%= remaining > 0 ? ' +' + remaining + ' more' : '' %>
+                                        const remaining = order.products.length - 2; %>
+                                        <%= shortNames %><%= remaining > 0 ? ' +' + remaining + ' more' : '' %>
                                     </td>
                                     <td>
                                         <%= moment(order.date).format('DD/MM/YYYY') %>
@@ -634,7 +640,7 @@
                         </div>
                         <% } %>
 
-</section>
+                    </section>
 
         <footer class="main-footer font-xs text-center py-3">
             <div>&copy;
@@ -645,12 +651,42 @@
         </footer>
     </main>
 
-    <script src="/assets2/js/vendors/jquery-3.6.0.min.js"></script>
+     <script src="/assets2/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/assets2/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/assets2/js/vendors/select2.min.js"></script>
     <script src="/assets2/js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/daterangepicker/3.1.0/daterangepicker.min.js"></script>
 
+    <script>
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.getElementById('offcanvas_aside');
+        const overlay = document.getElementById('screenOverlay');
+
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                sidebar.classList.toggle('show');
+                overlay.classList.toggle('show');
+            });
+        }
+
+        if (overlay) {
+            overlay.addEventListener('click', function () {
+                sidebar.classList.remove('show');
+                overlay.classList.remove('show');
+            });
+        }
+
+        document.querySelectorAll('.menu-link').forEach(link => {
+            link.addEventListener('click', function () {
+                sidebar.classList.remove('show');
+                overlay.classList.remove('show');
+            });
+        });
+    </script>
+    
     <script>
         document.getElementById('reportType').addEventListener('change', function () {
             const dateRangeContainer = document.getElementById('dateRangeContainer');

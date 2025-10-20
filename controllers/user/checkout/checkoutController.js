@@ -457,6 +457,14 @@ const placeOrder = async (req, res) => {
         }
 
         if (paymentMethod === 'cod') {
+
+            if (finalAmount > 1000) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Cash on Delivery is not available for orders above ₹1000. Please choose Razorpay or Wallet payment.'
+                });
+            }
+
             const session = await mongoose.startSession();
             session.startTransaction();
 
