@@ -3,6 +3,34 @@ const PDFDocument = require('pdfkit');
 const ExcelJS = require('exceljs');
 const moment = require('moment');
 
+
+function isFutureDateError(startDate, endDate) {
+    const now = moment().endOf('day');
+
+    if (moment(startDate).isAfter(now)) {
+        return {
+            error: true,
+            message: 'Start date cannot be in the future'
+        };
+    }
+
+    if (moment(endDate).isAfter(now)) {
+        return {
+            error: true,
+            message: 'End date cannot be in the future'
+        };
+    }
+
+    if (moment(startDate).isAfter(moment(endDate))) {
+        return {
+            error: true,
+            message: 'Start date cannot be after end date'
+        };
+    }
+
+    return { error: false };
+}
+
 function formatPaymentMethod(method) {
     const paymentMethods = {
         'cod': 'COD',
@@ -206,6 +234,13 @@ const salesController = {
                     start = new Date(startDate);
                     end = new Date(endDate);
                     end.setHours(23, 59, 59, 999);
+                    const dateError = isFutureDateError(start, end);
+                    if (dateError.error) {
+                        return res.json({
+                            success: false,
+                            message: dateError.message
+                        });
+                    }
                     break;
                 default:
                     start = moment().startOf('month').toDate();
@@ -268,6 +303,13 @@ const salesController = {
                     start = new Date(startDate);
                     end = new Date(endDate);
                     end.setHours(23, 59, 59, 999);
+
+                    const dateError = isFutureDateError(start, end);
+                    if (dateError.error) {
+                        return res.status(400).json({
+                            message: dateError.message
+                        });
+                    }
                     break;
                 default:
                     start = moment().startOf('month').toDate();

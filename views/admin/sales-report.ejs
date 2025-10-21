@@ -651,14 +651,14 @@
         </footer>
     </main>
 
-     <script src="/assets2/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/assets2/js/vendors/jquery-3.6.0.min.js"></script>
     <script src="/assets2/js/vendors/bootstrap.bundle.min.js"></script>
     <script src="/assets2/js/vendors/select2.min.js"></script>
     <script src="/assets2/js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/daterangepicker/3.1.0/daterangepicker.min.js"></script>
-
+    
     <script>
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const sidebar = document.getElementById('offcanvas_aside');
@@ -685,40 +685,47 @@
                 overlay.classList.remove('show');
             });
         });
-    </script>
-    
-    <script>
+
         document.getElementById('reportType').addEventListener('change', function () {
             const dateRangeContainer = document.getElementById('dateRangeContainer');
-            if (this.value === 'custom') {
-                dateRangeContainer.style.display = 'block';
-            } else {
-                dateRangeContainer.style.display = 'none';
-            }
+            dateRangeContainer.style.display = this.value === 'custom' ? 'block' : 'none';
         });
+
+        function isDateInFuture(dateString) {
+            const selectedDate = new Date(dateString);
+            selectedDate.setHours(23, 59, 59, 999);
+            const today = new Date();
+            today.setHours(23, 59, 59, 999);
+            return selectedDate > today;
+        }
 
         function downloadReport(format) {
             const reportType = document.getElementById('reportType').value;
             const startDate = document.getElementById('startDate').value;
             const endDate = document.getElementById('endDate').value;
 
+            if (reportType === 'custom') {
+                if (!startDate || !endDate) {
+                    Swal.fire('Missing Dates', 'Select both dates', 'warning');
+                    return;
+                }
+                if (isDateInFuture(startDate) || isDateInFuture(endDate)) {
+                    Swal.fire('Invalid Date', 'Dates cannot be in the future', 'error');
+                    return;
+                }
+                if (new Date(startDate) > new Date(endDate)) {
+                    Swal.fire('Invalid Range', 'Start date cannot be after end date', 'error');
+                    return;
+                }
+            }
+
             let params = new URLSearchParams();
             params.append('reportType', reportType);
             params.append('format', format);
-
             if (reportType === 'custom') {
-                if (!startDate || !endDate) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Missing Dates',
-                        text: 'Please select both start date and end date for custom reports.'
-                    });
-                    return;
-                }
                 params.append('startDate', startDate);
                 params.append('endDate', endDate);
             }
-
             window.location.href = `/admin/sales-report/download?${params.toString()}`;
         }
 
@@ -731,11 +738,17 @@
 
                 if (!startDate || !endDate) {
                     e.preventDefault();
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Missing Dates',
-                        text: 'Please select both start date and end date for custom reports.'
-                    });
+                    Swal.fire('Missing Dates', 'Select both dates', 'warning');
+                    return false;
+                }
+                if (isDateInFuture(startDate) || isDateInFuture(endDate)) {
+                    e.preventDefault();
+                    Swal.fire('Invalid Date', 'Dates cannot be in the future', 'error');
+                    return false;
+                }
+                if (new Date(startDate) > new Date(endDate)) {
+                    e.preventDefault();
+                    Swal.fire('Invalid Range', 'Start date cannot be after end date', 'error');
                     return false;
                 }
             }

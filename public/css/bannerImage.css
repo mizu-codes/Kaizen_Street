@@ -1,0 +1,466 @@
+     /* BANNER STYLES */
+        .banner-img {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            height: 400px;
+            margin: 50px auto;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .anime-bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://i.pinimg.com/736x/c0/2d/46/c02d46dda745e0fc91c7bea6db4355b2.jpg');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            filter: brightness(0.7) saturate(1.3);
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(0px);
+            z-index: 2;
+        }
+
+        .aesthetic-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: float-particles 8s infinite linear;
+        }
+
+        .particle:nth-child(1) {
+            left: 10%;
+            animation-delay: 0s;
+            animation-duration: 8s;
+        }
+
+        .particle:nth-child(2) {
+            left: 20%;
+            animation-delay: 2s;
+            animation-duration: 10s;
+        }
+
+        .particle:nth-child(3) {
+            left: 30%;
+            animation-delay: 4s;
+            animation-duration: 12s;
+        }
+
+        .particle:nth-child(4) {
+            left: 40%;
+            animation-delay: 1s;
+            animation-duration: 9s;
+        }
+
+        .particle:nth-child(5) {
+            left: 50%;
+            animation-delay: 3s;
+            animation-duration: 11s;
+        }
+
+        .particle:nth-child(6) {
+            left: 60%;
+            animation-delay: 5s;
+            animation-duration: 7s;
+        }
+
+        .particle:nth-child(7) {
+            left: 70%;
+            animation-delay: 2.5s;
+            animation-duration: 8.5s;
+        }
+
+        .particle:nth-child(8) {
+            left: 80%;
+            animation-delay: 4.5s;
+            animation-duration: 10.5s;
+        }
+
+        .particle:nth-child(9) {
+            left: 90%;
+            animation-delay: 1.5s;
+            animation-duration: 9.5s;
+        }
+
+        @keyframes float-particles {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .banner-text {
+            position: relative;
+            z-index: 10;
+            padding: 40px 50px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: white;
+            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+        }
+
+        .banner-text h4 {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.95;
+            color: #ffeaa7;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .banner-text h2 {
+            font-size: 42px;
+            line-height: 1.2;
+        }
+
+        .fw-600.mb-20 {
+            color: #000000;
+        }
+
+        .anime-stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 4;
+        }
+
+        .star {
+            position: absolute;
+            color: white;
+            font-size: 16px;
+            opacity: 0.8;
+            animation: twinkle 3s infinite;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .star:nth-child(1) {
+            top: 15%;
+            left: 20%;
+            animation-delay: 0s;
+        }
+
+        .star:nth-child(2) {
+            top: 25%;
+            left: 80%;
+            animation-delay: 1s;
+        }
+
+        .star:nth-child(3) {
+            top: 70%;
+            left: 15%;
+            animation-delay: 2s;
+        }
+
+        .star:nth-child(4) {
+            top: 60%;
+            left: 85%;
+            animation-delay: 1.5s;
+        }
+
+        .star:nth-child(5) {
+            top: 40%;
+            left: 90%;
+            animation-delay: 0.5s;
+        }
+
+        @keyframes twinkle {
+
+            0%,
+            100% {
+                opacity: 0.4;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.3);
+            }
+        }
+   
+   /* ============================================
+   RESPONSIVE MEDIA QUERIES - FIXED
+   ============================================ */
+
+        /* Large Desktop (1024px and above) */
+        @media (min-width: 1024px) {
+            .anime-bg-image {
+                background-repeat: no-repeat;
+                background-position: center center;
+            }
+        }
+
+        /* Tablet and below (992px) - CRITICAL FIX */
+        @media (max-width: 992px) {
+            .banner-img {
+                height: 260px;
+                /* Compact for tablets */
+                margin: 25px 15px;
+            }
+
+            .banner-text {
+                padding: 20px 22px;
+                padding-bottom: 28px;
+                justify-content: flex-end;
+                /* Text at bottom */
+            }
+
+            .banner-text h4 {
+                font-size: 13px;
+                margin-bottom: 8px;
+                letter-spacing: 1px;
+            }
+
+            .banner-text h1 {
+                font-size: 22px;
+                line-height: 1.3;
+            }
+
+            .anime-bg-image {
+                background-position: center center;
+                background-size: cover;
+                background-attachment: scroll;
+            }
+        }
+
+        /* Tablet (768px and below) - MOBILE FIX */
+        @media (max-width: 768px) {
+            .newsletter {
+                margin: auto;
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-attachment: scroll;
+            }
+
+            .banner-img {
+                height: 200px;
+                /* Shorter for mobile */
+                margin: 18px 10px;
+                border-radius: 8px;
+            }
+
+            .banner-text {
+                padding: 15px 18px;
+                padding-bottom: 20px;
+                justify-content: flex-end;
+                /* Text at bottom */
+            }
+
+            .banner-text h4 {
+                font-size: 11px;
+                letter-spacing: 0.8px;
+                margin-bottom: 6px;
+            }
+
+            .banner-text h1 {
+                font-size: 18px;
+                line-height: 1.3;
+            }
+
+            /* Show full image properly on mobile */
+            .anime-bg-image {
+                background-attachment: scroll;
+                background-size: cover;
+                background-position: center center;
+            }
+
+            /* Smaller decorative elements */
+            .particle {
+                width: 1.5px;
+                height: 1.5px;
+            }
+
+            .star {
+                font-size: 10px;
+                opacity: 0.5;
+            }
+
+            .brand-logo {
+                width: 140px;
+                height: 80px;
+            }
+
+            .brand-logo img {
+                height: 60px;
+                max-width: 130px;
+            }
+        }
+
+        /* Small Mobile (576px and below) */
+        @media (max-width: 576px) {
+            .banner-img {
+                height: 190px;
+                /* Compact for small phones */
+                margin: 15px 8px;
+            }
+
+            .banner-text {
+                padding: 12px 15px;
+                padding-bottom: 18px;
+                justify-content: flex-end;
+                /* Text at bottom */
+            }
+
+            .banner-text h4 {
+                font-size: 10px;
+                margin-bottom: 5px;
+                letter-spacing: 0.6px;
+            }
+
+            .banner-text h1 {
+                font-size: 16px;
+                line-height: 1.3;
+            }
+
+            /* Show full image nicely */
+            .anime-bg-image {
+                background-size: cover;
+                background-position: center center;
+            }
+
+            /* Minimal decorative elements */
+            .particle {
+                width: 1.5px;
+                height: 1.5px;
+            }
+
+            .star {
+                font-size: 9px;
+                opacity: 0.4;
+            }
+        }
+
+        /* Medium Mobile (482px and below) - NEW BREAKPOINT */
+        @media (max-width: 482px) {
+            .banner-img {
+                height: 220px;
+                /* Increased for full image view */
+                margin: 14px 7px;
+                width: calc(100% - 14px);
+                /* Full width minus margins */
+            }
+
+            .banner-text {
+                padding: 13px 15px;
+                padding-bottom: 22px;
+                justify-content: flex-end;
+                display: flex !important;
+                flex-direction: column;
+            }
+
+            .banner-text h4 {
+                font-size: 9.5px;
+                margin-bottom: 5px;
+                letter-spacing: 0.5px;
+                display: block !important;
+            }
+
+            .banner-text h1 {
+                font-size: 15px;
+                line-height: 1.3;
+                display: block !important;
+            }
+
+            .anime-bg-image {
+                background-size: cover;
+                /* Full cover */
+                background-position: center center;
+                /* Centered properly */
+            }
+        }
+
+        /* Extra Small Mobile (412px - Galaxy A51) - FINAL FIX */
+        @media (max-width: 412px) {
+            .banner-img {
+                height: 210px;
+                /* Taller for full image + text */
+                margin: 12px 6px;
+                width: calc(100% - 12px);
+                /* Full width */
+            }
+
+            .banner-text {
+                padding: 12px 14px;
+                padding-bottom: 20px;
+                justify-content: flex-end;
+                /* Keep text visible at bottom */
+                display: flex !important;
+                /* Force display */
+                flex-direction: column;
+            }
+
+            .banner-text h4 {
+                font-size: 9px;
+                letter-spacing: 0.5px;
+                margin-bottom: 4px;
+                display: block !important;
+            }
+
+            .banner-text h1 {
+                font-size: 14px;
+                line-height: 1.3;
+                display: block !important;
+            }
+
+            /* Show full character properly */
+            .anime-bg-image {
+                background-size: cover;
+                background-position: center center;
+                /* Full centered view */
+            }
+
+            /* Tiny decorative elements */
+            .particle {
+                width: 1px;
+                height: 1px;
+            }
+
+            .star {
+                font-size: 8px;
+                opacity: 0.4;
+            }
+        }
