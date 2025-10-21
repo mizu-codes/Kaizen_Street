@@ -17,7 +17,8 @@ const loadDashboard = async (req, res) => {
 
         switch (filter) {
             case 'daily':
-                currentPeriodStart = new Date(now.setHours(0, 0, 0, 0));
+                currentPeriodStart = new Date(now);
+                currentPeriodStart.setHours(0, 0, 0, 0);
                 previousPeriodEnd = new Date(currentPeriodStart);
                 previousPeriodStart = new Date(previousPeriodEnd);
                 previousPeriodStart.setDate(previousPeriodStart.getDate() - 1);
@@ -49,6 +50,7 @@ const loadDashboard = async (req, res) => {
                 previousPeriodEnd = new Date(currentPeriodStart);
                 previousPeriodStart = new Date(previousPeriodEnd);
                 previousPeriodStart.setDate(previousPeriodStart.getDate() - 7);
+
         }
 
         const currentOrders = await Order.aggregate([
