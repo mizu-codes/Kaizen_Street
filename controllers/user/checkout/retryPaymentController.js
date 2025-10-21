@@ -269,6 +269,34 @@ const retryPaymentOrders = async (req, res) => {
             });
         }
 
+        let addressData = order.address;
+        if (typeof addressData === 'string' || (addressData && addressData._id)) {
+            const addressId = typeof addressData === 'string' ? addressData : addressData._id;
+            const addressDoc = await Address.findOne({ _id: addressId, userId });
+
+            if (!addressDoc) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Address not found. Please add a new address.'
+                });
+            }
+
+            addressData = {
+                userName: addressDoc.userName,
+                phoneNumber: addressDoc.phoneNumber,
+                altPhoneNumber: addressDoc.altPhoneNumber || null,
+                houseNo: addressDoc.houseNo,
+                locality: addressDoc.locality,
+                landmark: addressDoc.landmark || null,
+                city: addressDoc.city,
+                state: addressDoc.state,
+                pincode: addressDoc.pincode,
+                addressType: addressDoc.addressType || 'home'
+            };
+
+            await Order.findByIdAndUpdate(orderId, { address: addressData });
+        }
+
         const totalAmount = Number(order.totalAmount) || 0;
         const discount = Number(order.discount) || 0;
         const finalAmount = Math.max(0, totalAmount - discount);
@@ -433,6 +461,40 @@ const verifyRetryPayment = async (req, res) => {
             });
         }
 
+        const hasCompleteAddress = order.address &&
+            order.address.userName &&
+            order.address.phoneNumber &&
+            order.address.city &&
+            order.address.pincode;
+
+        if (!hasCompleteAddress) {
+
+            const Address = require('../../../models/addressSchema');
+            const addressDoc = await Address.findOne({ userId: userId, isDefault: true }) ||
+                await Address.findOne({ userId: userId }).sort({ createdAt: -1 });
+
+            if (!addressDoc) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'No delivery address found. Please add an address first.'
+                });
+            }
+
+            order.address = {
+                userName: addressDoc.userName,
+                phoneNumber: addressDoc.phoneNumber,
+                altPhoneNumber: addressDoc.altPhoneNumber || null,
+                houseNo: addressDoc.houseNo,
+                locality: addressDoc.locality,
+                landmark: addressDoc.landmark || null,
+                city: addressDoc.city,
+                state: addressDoc.state,
+                pincode: addressDoc.pincode,
+                addressType: addressDoc.addressType || 'home'
+            };
+        }
+
+
         const session = await mongoose.startSession();
         session.startTransaction();
 
@@ -521,9 +583,138 @@ const verifyRetryPayment = async (req, res) => {
     }
 };
 
+const createFailedPaymentOrder = async (req, res) => {
+    try {
+        const userId = req.session.userId;
+        const { addressId, couponData } = req.body;
+
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: 'Not authenticated'
+            });
+        }
+
+        const address = await Address.findOne({ _id: addressId, userId });
+
+        if (!address) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid address'
+            });
+        }
+
+        const addressSnapshot = {
+            userName: address.userName || '',
+            phoneNumber: address.phoneNumber || '',
+            altPhoneNumber: address.altPhoneNumber || null,
+            houseNo: address.houseNo || '',
+            locality: address.locality || '',
+            landmark: address.landmark || null,
+            city: address.city || '',
+            state: address.state || '',
+            pincode: address.pincode || '',
+            addressType: address.addressType || 'home'
+        };
+
+        const cart = await Cart.findOne({ userId }).populate({
+            path: "items.productId",
+            populate: {
+                path: 'category',
+                model: 'Category',
+                select: 'categoryName categoryOffer status',
+                match: { status: 'active' }
+            }
+        });
+
+        if (!cart || cart.items.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Cart is empty'
+            });
+        }
+
+        const validItems = cart.items.filter(item => {
+            const product = item.productId;
+            return product && !product.isBlocked && product.status === 'active' && product.category;
+        });
+
+        const orderItems = validItems.map((item) => {
+            const product = item.productId;
+            const offerInfo = getBestOfferForProduct(product);
+            const currentBestPrice = offerInfo.hasOffer ? offerInfo.finalPrice : product.regularPrice;
+            const finalPrice = Math.min(item.price, currentBestPrice);
+
+            return {
+                product: product._id,
+                name: product.productName,
+                price: finalPrice,
+                quantity: item.quantity,
+                size: item.size,
+                image: product.productImage?.[0] || "",
+                subtotal: finalPrice * item.quantity,
+                status: 'Payment Failed'
+            };
+        });
+
+        const totalAmount = orderItems.reduce((sum, i) => sum + i.subtotal, 0);
+
+        let discount = 0;
+        let couponId = null;
+
+        if (couponData && couponData.couponCode) {
+            const coupon = await Coupon.findOne({
+                couponCode: couponData.couponCode,
+                status: 'active'
+            });
+
+            if (coupon) {
+                discount = Math.min(coupon.discountPrice, totalAmount);
+                couponId = coupon._id;
+            }
+        }
+
+        const order = new Order({
+            user: userId,
+            address: addressSnapshot,
+            items: orderItems,
+            totalAmount: totalAmount,
+            discount: discount,
+            paymentMethod: "razorpay",
+            paymentStatus: "unpaid",
+            status: "Payment Failed",
+            coupon: couponId ? {
+                couponId: couponId,
+                couponCode: couponData.couponCode,
+                discountAmount: discount
+            } : null,
+            paymentDetails: {
+                payment_failed_at: new Date(),
+                error_reason: 'User cancelled payment or payment declined'
+            }
+        });
+
+        await order.save();
+
+        return res.json({
+            success: true,
+            orderId: order._id,
+            message: 'Failed order saved. You can retry from your orders page.'
+        });
+
+    } catch (error) {
+        console.error('Create failed order error:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Error saving failed order',
+            error: error.message
+        });
+    }
+};
 
 module.exports = {
     retryPayment,
     retryPaymentOrders,
     verifyRetryPayment,
+    createFailedPaymentOrder
 };

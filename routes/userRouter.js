@@ -88,6 +88,7 @@ router.delete('/checkout/address/:id', userAuth, addressCheckoutController.delet
 router.get('/checkout/edit-address/:id', userAuth, addressCheckoutController.editAddressPage);
 router.patch('/checkout/edit-address/:id', userAuth, addressCheckoutController.updateAddress);
 router.post('/checkout/retry-payment', userAuth, retryPaymentController.retryPayment);
+router.post('/checkout/create-failed-payment-order', userAuth, retryPaymentController.createFailedPaymentOrder);
 
 router.get('/orders', userAuth, orderController.loadOrderPage);
 router.get('/orders/:orderId', userAuth, orderController.loadOrderDetailsPage);

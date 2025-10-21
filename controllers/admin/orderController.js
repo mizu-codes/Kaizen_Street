@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Order = require('../../models/orderSchema');
+const Address = require('../../models/addressSchema');
 const Product = require('../../models/productSchema');
 const returnAndRefund = require('../../models/returnAndRefundSchema');
 const Wallet = require('../../models/walletSchema');
@@ -206,16 +207,34 @@ const loadOrderDetailsPage = async (req, res) => {
     const order = isObjectId
       ? await Order.findById(param)
         .populate('user', 'name email phone')
-        .populate('address')
         .populate('items.product')
         .lean({ virtuals: true })
       : await Order.findOne({ orderId: param })
         .populate('user', 'name email phone')
-        .populate('address')
         .populate('items.product')
         .lean({ virtuals: true });
 
     if (!order) return res.status(404).render('page-404');
+
+    if (order.address && (typeof order.address === 'string' || order.address._id)) {
+      const addressId = typeof order.address === 'string' ? order.address : order.address._id;
+      const addressDoc = await Address.findById(addressId);
+
+      if (addressDoc) {
+        order.address = {
+          userName: addressDoc.userName || '',
+          phoneNumber: addressDoc.phoneNumber || '',
+          altPhoneNumber: addressDoc.altPhoneNumber || null,
+          houseNo: addressDoc.houseNo || '',
+          locality: addressDoc.locality || '',
+          landmark: addressDoc.landmark || null,
+          city: addressDoc.city || '',
+          state: addressDoc.state || '',
+          pincode: addressDoc.pincode || '',
+          addressType: addressDoc.addressType || 'home'
+        };
+      }
+    }
 
     const originalTotal = order.items.reduce((sum, item) => sum + (item.subtotal || (item.price * item.quantity)), 0);
     const orderDiscount = order.discount || 0;

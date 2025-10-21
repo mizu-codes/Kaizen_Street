@@ -5,7 +5,8 @@ const WalletTransaction = require('../../models/walletTransactionSchema');
 const Transaction = require('../../models/transactionSchema');
 const Product = require('../../models/productSchema');
 const Order = require('../../models/orderSchema');
-const returnAndRefund = require('../../models/returnAndRefundSchema')
+const Address = require('../../models/addressSchema');
+const returnAndRefund = require('../../models/returnAndRefundSchema');
 const PDFDocument = require('pdfkit');
 
 const loadOrderPage = async (req, res) => {
@@ -68,12 +69,30 @@ const loadOrderDetailsPage = async (req, res) => {
         const userId = req.session.userId;
         const orderId = req.params.orderId;
 
-        const order = await Order.findOne({ _id: orderId, user: userId })
-            .populate('address')
-            .lean({ virtuals: true });
+        let order = await Order.findOne({ _id: orderId, user: userId }).lean({ virtuals: true });
 
         if (!order) {
             return res.status(404).render('page-404');
+        }
+
+        if (order.address && typeof order.address === 'string' || (order.address && order.address._id)) {
+            const addressId = typeof order.address === 'string' ? order.address : order.address._id;
+            const addressDoc = await Address.findOne({ _id: addressId, userId });
+
+            if (addressDoc) {
+                order.address = {
+                    userName: addressDoc.userName || '',
+                    phoneNumber: addressDoc.phoneNumber || '',
+                    altPhoneNumber: addressDoc.altPhoneNumber || null,
+                    houseNo: addressDoc.houseNo || '',
+                    locality: addressDoc.locality || '',
+                    landmark: addressDoc.landmark || null,
+                    city: addressDoc.city || '',
+                    state: addressDoc.state || '',
+                    pincode: addressDoc.pincode || '',
+                    addressType: addressDoc.addressType || 'home'
+                };
+            }
         }
 
         order.items = order.items.map(item => {
@@ -230,7 +249,7 @@ const downloadInvoicePDF = async (req, res) => {
         const userId = req.session.userId;
         const orderId = req.params.orderId;
 
-        const order = await Order.findOne({ _id: orderId, user: userId }).populate('address');
+        const order = await Order.findOne({ _id: orderId, user: userId })
         if (!order) return res.status(404).send('Order not found');
 
         const validStatuses = ['placed', 'processing', 'shipped', 'out for delivery', 'delivered'];
