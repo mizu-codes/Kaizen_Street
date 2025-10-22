@@ -10334,7 +10334,7 @@ span.fi-rs-apps {
 
 button.submit, button[type='submit'] {
   margin-top: 10px;
-  font-size: 15px;
+  font-size: 0.7rem;
   font-weight: 700;
   padding: 8px 16px;
   color: #ffffff;
@@ -10397,60 +10397,6 @@ button.submit:hover, button[type='submit']:hover {
   color: white;
 }
 
-/* 7) “Login with Google” */
-
-/* --------------------------------------------
-   1) Style the button itself (btn-google)
-   -------------------------------------------- */
-.btn-google {
-  background-color: #fff;
-  color: #444;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  padding: 0.5rem 1rem;
-  font-size: 0.95rem;
-  font-weight: 500;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-  transition: background-color 0.3s ease, box-shadow 0.3s ease,
-              transform 0.1s ease;
-}
-
-/* Hover: lift effect */
-.btn-google:hover {
-  background-color: #f7f7f7;
-  border-color: #ccc;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
-  transform: translateY(-1px);
-}
-
-/* Active (pressed) state */
-.btn-google:active {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-  transform: translateY(0);
-}
-
-/* --------------------------------------------
-   2) Style the icon inside the button
-   -------------------------------------------- */
-.google-icon {
-  width: 24px;
-  height: 24px;
-  margin-left: 3.5rem; /* space between icon and text */
-}
-
-/* --------------------------------------------
-   3) Style the text, if you have any
-   -------------------------------------------- */
-.google-text {
-  display: inline-block;
-  vertical-align: center;
-  margin-left: 0.5rem;
-  color: #444;
-  font-family: Verdana, Geneva, Tahoma, sans-serif
-}
-
-
-
 /* 8) Divider styling */
 hr {
   border: none;
@@ -10476,36 +10422,6 @@ hr {
 }
 .divider-or::after {
   margin-left: 0.75rem;
-}
-
-/* 9) “Already have an account?” and “Don’t have an account?” link styling */
-.link-register,
-.link-login {
-  color: #007B5E;                      /* teal link color */
-  text-decoration: none;
-}
-.link-register:hover,
-.link-login:hover {
-  text-decoration: underline;
-}
-
-/* 10) Responsive: stack columns on smaller screens */
-@media (max-width: 991.98px) {
-  .signup-card {
-    flex-direction: column;            /* stack the two col-6’s */
-    border-radius: 16px;               /* optional: slightly smaller radius on mobile */
-  }
-  .signup-card .row {
-    flex-direction: column;
-  }
-  .signup-form-col {
-    width: 100%;
-  }
-  /* Allow the social buttons to become full-width on mobile */
-  .btn-google,
-  .btn-facebook {
-    max-width: none;
-  }
 }
 
 /* Header signup DropDown */

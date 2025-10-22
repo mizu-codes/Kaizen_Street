@@ -3,29 +3,16 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Kaizen Street</title>
+    <title>Login</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/kaizenicon.svg">
     <link rel="stylesheet" href="/css/main.css?v=3.4">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.4.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .password-toggle {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #888;
-            z-index: 10;
-        }
-
-        .password-toggle:hover {
-            color: #333333;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/loginUserResponsive.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -34,13 +21,12 @@
             <div class="container">
                 <div class="signup-card mx-auto">
                     <div class="row g-0">
-                     
                         <div class="col-lg-6 signup-form-col">
                             <div class="p-4 p-lg-5">
                                 <div class="logo-signup-img">
                                     <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
                                 </div>
-                                <h3 class="signup-headline mb-4">Login</h3>
+                                <h3 class="signup-headline mb-4">Login</h3><br>
 
                                 <form id="loginForm" method="POST" action="/login" novalidate>
                                     <div class="mb-3">
@@ -50,73 +36,64 @@
                                             Please enter a valid email address.
                                         </div>
                                     </div>
+
                                     <div class="mb-3 position-relative">
                                         <input type="password" id="password" name="password" placeholder="Password"
                                             required class="form-control signup-input" />
-                                            <span class="password-toggle" onclick="togglePassword('password')">
-                                                <i class="fas fa-eye" id="password-eye"></i>
-                                            </span>
+                                        <button type="button" class="password-toggle"
+                                            onclick="togglePassword('password')">
+                                            <i class="fas fa-eye" id="password-eye"></i>
+                                        </button>
                                         <div class="invalid-feedback">
                                             Please enter your password.
                                         </div>
                                     </div>
+
                                     <div class="text-end mb-1">
                                         <a href="/forgot-password" class="link-forgot">Forgot your password?</a>
                                     </div>
+
                                     <div class="d-grid mb-4">
                                         <button type="submit" class="btn btn-signup">
                                             Log In
                                         </button>
                                     </div>
+
                                     <div class="divider-or text-center mb-3">
                                         <span>or</span>
                                     </div>
-                                    <div class="d-grid gap-2 mt-4">
-                                        <a href="/auth/google" class="btn btn-google d-flex align-items-center"
-                                            onclick="location.href='/auth/google'">
+
+                                    <div class="d-grid mt-4">
+                                        <a href="/auth/google" class="btn btn-google">
                                             <img src="/imgs/theme/icons8-google.svg" alt="Google" class="google-icon" />
                                             <span class="google-text">Log in with Google</span>
                                         </a>
                                     </div>
+
                                     <p class="text-center mt-4 text-muted">
-                                        Don’t have an account?
+                                        Don't have an account?
                                         <a href="/signup" class="link-login">Sign up now</a>
                                     </p>
                                 </form>
-                                <div id="loginData" 
-     data-message="<%= locals.message || '' %>" 
-     data-show-error="<%= locals.showLoginError || false %>" 
-     style="display: none;">
-</div>
-                            </div>
-                        </div>
-                    
-                        <div class="col-lg-6 signup-form-col">
-                            <div class="p-4 p-lg-5 text-center">
-                                <img src="imgs/anime/login.png" alt="Login Banner" class="img-fluid rounded"
-                                    style="max-width: 80%; height: auto; margin-top: 80px;" />
+
+                                <div id="loginData" data-message="<%= locals.message || '' %>"
+                                    data-show-error="<%= locals.showLoginError || false %>" style="display: none;">
+                                </div>
                             </div>
                         </div>
 
+                        <div class="col-lg-6 signup-form-col">
+                            <div class="p-4 p-lg-5 text-center">
+                                <img src="imgs/anime/login.png" alt="Login Banner" class="img-fluid rounded"
+                                    style="max-width: 70%; height: auto; margin-top: 80px;" />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer class="main">
-        <div class="container pb-20 wow fadeIn animated">
-            <div class="row">
-                <div class="col-12 mb-20"></div>
-                <div class="col-lg-6">
-                    <p class="float-md-left font-sm text-muted mb-0">&copy; 2025, <strong class="text-brand">Kaizen Street</strong></p>
-                </div>
-
-            </div>
-        </div>
-    </footer>
-
-   
     <script src="/js/vendor/modernizr-3.6.0.min.js"></script>
     <script src="/js/vendor/jquery-3.6.0.min.js"></script>
     <script src="/js/vendor/jquery-migrate-3.3.0.min.js"></script>
@@ -138,73 +115,71 @@
     <script src="/js/plugins/jquery.theia.sticky.js"></script>
     <script src="/js/main.js?v=3.4"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function togglePassword(inputId) {
+            const passwordInput = document.getElementById(inputId);
+            const eyeIcon = document.getElementById(inputId + '-eye');
 
-   <script>
-    function togglePassword(inputId) {
-        const passwordInput = document.getElementById(inputId);
-        const eyeIcon = document.getElementById(inputId + '-eye');
-
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            eyeIcon.className = 'fas fa-eye-slash';
-        } else {
-            passwordInput.type = 'password';
-            eyeIcon.className = 'fas fa-eye';
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.className = 'fas fa-eye-slash';
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.className = 'fas fa-eye';
+            }
         }
-    }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const loginData = document.getElementById('loginData');
-        const serverMessage = loginData ? loginData.dataset.message : '';
-        const showLoginError = loginData ? loginData.dataset.showError === 'true' : false;
+        document.addEventListener('DOMContentLoaded', function () {
+            const loginData = document.getElementById('loginData');
+            const serverMessage = loginData ? loginData.dataset.message : '';
+            const showLoginError = loginData ? loginData.dataset.showError === 'true' : false;
 
-        if (serverMessage && showLoginError) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Login Failed',
-                text: serverMessage,
-                confirmButtonColor: '#e74c3c',
-                width: '350px',
-                background: '#fff',
-                color: '#333',
-                iconColor: '#e74c3c',
-                customClass: {
-                    popup: 'rounded-4 shadow',
-                    title: 'fw-semibold fs-5',
-                    confirmButton: 'btn btn-danger px-4 py-2'
+            if (serverMessage && showLoginError) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Login Failed',
+                    text: serverMessage,
+                    confirmButtonColor: '#e74c3c',
+                    width: '350px',
+                    background: '#fff',
+                    color: '#333',
+                    iconColor: '#e74c3c',
+                    customClass: {
+                        popup: 'rounded-4 shadow',
+                        title: 'fw-semibold fs-5',
+                        confirmButton: 'btn btn-danger px-4 py-2'
+                    }
+                });
+            }
+
+            const form = document.getElementById('loginForm');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+
+            form.addEventListener('submit', function (e) {
+                let valid = true;
+                [emailInput, passwordInput].forEach(i => i.classList.remove('is-invalid'));
+
+                if (!emailInput.checkValidity()) {
+                    emailInput.classList.add('is-invalid');
+                    valid = false;
+                }
+                if (!passwordInput.value) {
+                    passwordInput.classList.add('is-invalid');
+                    valid = false;
+                }
+
+                if (!valid) {
+                    e.preventDefault();
+                    e.stopPropagation();
                 }
             });
-        }
 
-        const form = document.getElementById('loginForm');
-        const emailInput = document.getElementById('email');
-        const passwordInput = document.getElementById('password');
-
-        form.addEventListener('submit', function (e) {
-            let valid = true;
-            [emailInput, passwordInput].forEach(i => i.classList.remove('is-invalid'));
-
-            if (!emailInput.checkValidity()) {
-                emailInput.classList.add('is-invalid');
-                valid = false;
-            }
-            if (!passwordInput.value) {
-                passwordInput.classList.add('is-invalid');
-                valid = false;
-            }
-
-            if (!valid) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
+            [emailInput, passwordInput].forEach(input => {
+                input.addEventListener('input', () => input.classList.remove('is-invalid'));
+            });
         });
-
-        [emailInput, passwordInput].forEach(input => {
-            input.addEventListener('input', () => input.classList.remove('is-invalid'));
-        });
-    });
-</script>
+    </script>
 </body>
 
 </html>
