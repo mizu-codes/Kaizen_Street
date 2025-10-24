@@ -65,11 +65,6 @@ const updateProduct = async (req, res) => {
       console.warn('Error parsing image data:', error);
     }
 
-    console.log('Has new images:', hasNewImages);
-    console.log('Files received:', req.files?.length || 0);
-    console.log('Image indexes:', parsedImageIndexes);
-    console.log('Existing images:', Object.keys(parsedExistingImages));
-
     if (hasNewImages === 'true' && req.files && req.files.length > 0) {
       const uploadedImages = [];
 
@@ -77,7 +72,6 @@ const updateProduct = async (req, res) => {
         try {
           const uploadResult = await uploadToCloudinary(file.buffer);
           uploadedImages.push(uploadResult.secure_url);
-          console.log('Uploaded image:', uploadResult.secure_url);
         } catch (uploadErr) {
           console.error('Error uploading image:', uploadErr);
           throw new Error(`Failed to upload image: ${uploadErr.message}`);
@@ -112,8 +106,6 @@ const updateProduct = async (req, res) => {
       throw new Error('At least one image is required');
     }
 
-    console.log('Final images:', finalImages);
-
     const updateData = {
       productName: productName.trim(),
       description: description.trim(),
@@ -135,8 +127,6 @@ const updateProduct = async (req, res) => {
     if (!updatedProduct) {
       throw new Error('Failed to update product');
     }
-
-    console.log('Product updated successfully');
 
     const page = req.query.page || req.body.page || 1;
     const limit = req.query.limit || req.body.limit || 10;

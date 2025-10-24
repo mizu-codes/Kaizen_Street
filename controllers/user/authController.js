@@ -7,7 +7,6 @@ const { securePassword } = require('../../utils/passwordUtils');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 
-
 const loadSignup = async (req, res) => {
     try {
         return res.render('signup')
@@ -419,8 +418,6 @@ const resendOtp = async (req, res) => {
         const otp = generateOtp();
         req.session.userOtp = otp
 
-        console.log('Sending email to:', email);
-
         const emailSent = await sendVerificationEmail(email, otp);
 
         if (emailSent) {
@@ -432,7 +429,6 @@ const resendOtp = async (req, res) => {
                         message: 'Session error occurred'
                     });
                 }
-                console.log('Resend OTP:', otp);
                 res.status(200).json({ success: true, message: 'OTP Resend Successfully' });
             });
         } else {

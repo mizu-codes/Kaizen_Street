@@ -43,11 +43,6 @@ const uploadToCloudinary = (buffer) => {
 
 
 const addNewProduct = async (req, res) => {
-  console.log('=== REQUEST RECEIVED ===');
-  console.log('Body:', req.body);
-  console.log('Files:', req.files);
-  console.log('Files length:', req.files ? req.files.length : 0);
-
   try {
     const {
       productName,
@@ -85,17 +80,14 @@ const addNewProduct = async (req, res) => {
         message: 'At least one image is required.'
       });
     }
-
-    console.log('Processing images:', req.files.length);
-
+    
     let imageUrls = [];
 
     try {
       const uploadPromises = req.files.map(file => uploadToCloudinary(file.buffer));
       const uploadResults = await Promise.all(uploadPromises);
       imageUrls = uploadResults.map(r => r.secure_url);
-
-      console.log('Images uploaded successfully:', imageUrls.length);
+ 
     } catch (uploadError) {
       console.error('Image upload error:', uploadError);
       return res.status(500).json({
@@ -118,9 +110,7 @@ const addNewProduct = async (req, res) => {
       productImage: imageUrls
     });
 
-    console.log('Creating product with images:', imageUrls);
     await newProduct.save();
-    console.log('Product saved successfully with images:', newProduct.productImage);
 
     return res.status(200).json({
       success: true,

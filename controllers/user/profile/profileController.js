@@ -52,7 +52,6 @@ const updateProfile = async (req, res) => {
 
 const saveProfile = async (req, res) => {
   try {
-    console.log('Incoming email:', req.body.email);
     const userId = req.session.userId;
     const { name, email, phone } = req.body;
 
@@ -106,10 +105,9 @@ const saveProfile = async (req, res) => {
 
     if (email !== user.email) {
       const otp = otpGenerator();
-      console.log('Generated OTP for profile update:', otp);
 
       const emailSent = await sendVerificationEmail(email, otp);
-      console.log('Email sent status:', emailSent);
+      
       if (!emailSent) {
         return res.status(500).json({ success: false, message: 'Failed to send verification email' });
       }

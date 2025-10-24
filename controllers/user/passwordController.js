@@ -25,8 +25,6 @@ const sendPasswordOtp = async (req, res) => {
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
         req.session.passwordReset = { email, otp };
 
-        console.log(`OTP for ${email}: ${otp}`);
-
         const emailSent = await sendVerificationEmail(email, otp);
         if (!emailSent) {
             return res.render('forgot-password', {
@@ -103,8 +101,6 @@ const resendForgotPasswordOtp = async (req, res) => {
 
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
         req.session.passwordReset = { email, otp };
-
-        console.log(`Resent OTP for ${email}: ${otp}`);
 
         const emailSent = await sendVerificationEmail(email, otp);
         if (!emailSent) {
