@@ -2,16 +2,15 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Wishlist</title>
-    <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/kaizenicon.svg">
+    <link rel="icon" type="image/svg+xml" href="/imgs/theme/kaizenicon.svg">
     <link rel="stylesheet" href="/css/main.css?v=3.4">
+    <link href="/css/responsiveUser.css" rel="stylesheet" type="text/css">
     <style>
-
-         .add-to-cart-btn {
-         flex: 1;
+        .add-to-cart-btn {
+            flex: 1;
             padding: 6px 12px;
             background: linear-gradient(135deg, #ff1744 0%, #f50057 50%, #c51162 100%);
             color: white;
@@ -27,84 +26,83 @@
             gap: 4px;
             white-space: nowrap;
             min-height: 32px;
-    }
+        }
 
-    .add-to-cart-btn:hover {
-        transform: translateY(-1px);
+        .add-to-cart-btn:hover {
+            transform: translateY(-1px);
             color: white;
             box-shadow: 0 6px 15px rgba(255, 23, 68, 0.3);
-    }
+        }
 
-    .add-to-cart-btn:disabled {
-        background: #ccc;
-        cursor: not-allowed;
-        transform: none;
-    }
+        .add-to-cart-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+      
+        .size-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
 
-    /* Size selector in SweetAlert */
-    .size-selector {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        margin: 20px 0;
-        flex-wrap: wrap;
-    }
+        .size-option {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background: white;
+        }
 
-    .size-option {
-        width: 50px;
-        height: 50px;
-        border: 2px solid #ddd;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        background: white;
-    }
+        .size-option:hover {
+            border-color: #3ed092;
+            transform: scale(1.05);
+        }
 
-    .size-option:hover {
-        border-color: #3ed092;
-        transform: scale(1.05);
-    }
+        .size-option.selected {
+            border-color: #3ed092;
+            background: #3ed092;
+            color: white;
+        }
 
-    .size-option.selected {
-        border-color: #3ed092;
-        background:#3ed092;
-        color: white;
-    }
+        .size-option.out-of-stock {
+            opacity: 0.3;
+            cursor: not-allowed;
+            position: relative;
+        }
 
-    .size-option.out-of-stock {
-        opacity: 0.3;
-        cursor: not-allowed;
-        position: relative;
-    }
+        .size-option.out-of-stock::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: red;
+            transform: rotate(-45deg);
+        }
 
-    .size-option.out-of-stock::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: red;
-        transform: rotate(-45deg);
-    }
+        .stock-info {
+            margin-top: 15px;
+            padding: 10px;
+            background: #f0f9ff;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #0369a1;
+        }
 
-    .stock-info {
-        margin-top: 15px;
-        padding: 10px;
-        background: #f0f9ff;
-        border-radius: 8px;
-        font-size: 14px;
-        color: #0369a1;
-    }
-
-    .stock-info.out-of-stock {
-        background: #fef2f2;
-        color: #991b1b;
-    }
+        .stock-info.out-of-stock {
+            background: #fef2f2;
+            color: #991b1b;
+        }
 
         .swal2-popup.swal-responsive {
             color: #333 !important;
@@ -602,7 +600,7 @@
             <div class="container">
                 <div class="header-wrap">
                     <div class="logo logo-width-1">
-                        <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+                        <a href="#"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
                     </div>
                     <div class="header-right">
                         <div class="search-style-2"></div>
@@ -612,8 +610,7 @@
                                     <a href="/wishlist">
                                         <img class="svgInject" alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
                                         <span id="wishlistItemCount" class="pro-count blue">
-                                            <%= typeof locals.wishlistItemCount !=='undefined' ?
-                                                locals.wishlistItemCount : 0 %>
+                                            <%= wishlistItemCount %>
                                         </span>
                                     </a>
                                 </div>
@@ -621,7 +618,7 @@
                                     <a class="mini-cart-icon" href="/cart">
                                         <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
                                         <span id="cartItemCount" class="pro-count blue">
-                                            <%= typeof locals.cartItemCount !=='undefined' ? locals.cartItemCount : 0 %>
+                                            <%= cartItemCount %>
                                         </span>
                                     </a>
                                 </div>
@@ -635,14 +632,15 @@
             <div class="container">
                 <div class="header-wrap header-space-between position-relative">
                     <div class="logo logo-width-1 d-block d-lg-none">
-                        <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+                        <a href="#"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
                     </div>
                     <div class="header-nav d-none d-lg-flex">
+
                         <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
                             <nav>
                                 <ul>
                                     <li><a href="/">Home</a></li>
-                                    <li><a href="/shop">Shop</a></li>
+                                    <li><a class='active' href="/shop">Shop</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -653,8 +651,7 @@
                                 <a href="/wishlist">
                                     <img alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
                                     <span id="wishlistItemCount" class="pro-count blue">
-                                        <%= typeof locals.wishlistItemCount !=='undefined' ? locals.wishlistItemCount :
-                                            0 %>
+                                        <%= wishlistItemCount %>
                                     </span>
                                 </a>
                             </div>
@@ -662,7 +659,7 @@
                                 <a class="mini-cart-icon" href="/cart">
                                     <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
                                     <span id="cartItemCount" class="pro-count blue">
-                                        <%= typeof locals.cartItemCount !=='undefined' ? locals.cartItemCount : 0 %>
+                                        <%= cartItemCount %>
                                     </span>
                                 </a>
                             </div>
@@ -679,208 +676,301 @@
             </div>
         </div>
     </header>
+    <div class="mobile-header-active mobile-header-wrapper-style">
+        <div class="mobile-header-wrapper-inner">
+            <div class="mobile-header-top">
+                <div class="mobile-header-logo">
+                    <a href="#"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+                </div>
+                <div class="mobile-menu-close close-style-wrap close-style-position-inherit">
+                    <button class="close-style search-close">
+                        <i class="icon-top"></i>
+                        <i class="icon-bottom"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="mobile-header-content-area">
+                <div class="mobile-menu-wrap mobile-header-border">
+                    <nav>
+                        <ul class="mobile-menu">
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/shop">Shop</a></li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <div class="mobile-header-info-wrap mobile-header-border">
+                    <% if (user) { %>
+                        <div class="single-mobile-header-info mt-10 mb-10">
+                            <i class="fi-rs-user"></i>
+                            <strong>
+                                <%= user.name %>
+                            </strong>
+                        </div>
+
+                        <div class="single-mobile-header-info mobile-profile-dropdown">
+                            <div class="mobile-profile-toggle" onclick="toggleMobileProfileDropdown()">
+                                <i class="fi-rs-settings-sliders"></i> My Profile
+                                <i class="fi-rs-angle-small-down dropdown-arrow"></i>
+                            </div>
+                            <ul class="mobile-profile-submenu">
+                                <li><a href="/userProfile"><i class="fi-rs-user"></i> My Profile</a></li>
+                                <li><a href="/orders"><i class="fi-rs-shopping-bag"></i> My Orders</a></li>
+                                <li><a href="/wallet"><i class="fi-rs-credit-card"></i> My Wallet</a></li>
+                                <li><a href="/profile/coupons"><i class="fi-rs-ticket"></i> My Coupons</a></li>
+                                <li><a href="/profile/addresses"><i class="fi-rs-marker"></i> My Address</a></li>
+                                <li><a href="/profile/security"><i class="fi-rs-lock"></i> Privacy Settings</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="single-mobile-header-info">
+                            <a href="/logout"><i class="fi-rs-sign-out"></i> Logout</a>
+                        </div>
+                        <% } else { %>
+                            <div class="single-mobile-header-info">
+                                <a href="/login"><i class="fi-rs-user"></i> Log In</a>
+                            </div>
+                            <div class="single-mobile-header-info">
+                                <a href="/signup"><i class="fi-rs-user-add"></i> Sign Up</a>
+                            </div>
+                            <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="anime-elements">
+        <div class="sakura">🌸</div>
+        <div class="sakura">🌸</div>
+        <div class="sakura">🌸</div>
+        <div class="sakura">🌸</div>
+        <div class="sakura">🌸</div>
+        <div class="sakura">🌸</div>
+        <div class="sakura">🌸</div>
+        <div class="sakura">🌸</div>
+        <div class="kanji-float">化</div>
+        <div class="kanji-float">革</div>
+    </div>
 
     <div class="page-header breadcrumb-wrap">
         <div class="container">
             <div class="breadcrumb">
-                <a href="/" rel="nofollow">Home</a>
+                <a href="#" rel="nofollow">Home</a>
                 <span></span> Shop
                 <span></span> Wishlist
             </div>
         </div>
     </div>
 
-<div class="wishlist-container">
-    <div class="wishlist-content">
-        <div class="wishlist-header">
-            <h1 class="wishlist-title">Discover Items In Your Wishlist</h1>
-            <p class="wishlist-subtitle">Save your favorite items and move them to cart when you're ready to
-                purchase</p>
-        </div>
+    <div class="wishlist-container">
+        <div class="wishlist-content">
+            <div class="wishlist-header">
+                <h1 class="wishlist-title">Discover Items In Your Wishlist</h1>
+                <p class="wishlist-subtitle">Save your favorite items and move them to cart when you're ready to
+                    purchase</p>
+            </div>
 
-        <% if (items && items.length> 0) { %>
+            <% if (items && items.length> 0) { %>
 
-            <div class="wishlist-grid">
-                <% items.forEach(item=> { %>
-                    <div class="wishlist-item" data-product-id="<%= item._id %>">
-                        <div class="item-image-container">
-                            <a href="/products/<%= item._id %>">
-                                <img src="<%= item.productImage %>" alt="<%= item.productName %>" class="item-image"
-                                    onerror="this.src='/imgs/theme/placeholder.jpg'">
-                            </a>
-                            <div class="heart-icon filled">❤️</div>
-                        </div>
-
-                        <div class="item-details">
-                            <div class="item-category">
-                                <%= item.categoryName %>
+                <div class="wishlist-grid">
+                    <% items.forEach(item=> { %>
+                        <div class="wishlist-item" data-product-id="<%= item._id %>">
+                            <div class="item-image-container">
+                                <a href="/products/<%= item._id %>">
+                                    <img src="<%= item.productImage %>" alt="<%= item.productName %>" class="item-image"
+                                        onerror="this.src='/imgs/theme/placeholder.jpg'">
+                                </a>
+                                <div class="heart-icon filled">❤️</div>
                             </div>
-                            <h3 class="item-name">
-                                <%= item.productName %>
-                            </h3>
 
-                            <div class="item-price-section d-flex align-items-center gap-2 mt-2">
-                                <% if (item.originalPrice && item.originalPrice> item.discountPrice) { %>
-                                    <span class="text-muted" style="text-decoration: line-through; font-size: 0.9rem;">
-                                        ₹<%= item.originalPrice %>
-                                    </span>
-                                    <% } %>
-                                        <span class="fw-bold text-dark" style="font-size: 1.1rem;">
-                                            ₹<%= item.discountPrice %>
+                            <div class="item-details">
+                                <div class="item-category">
+                                    <%= item.categoryName %>
+                                </div>
+                                <h3 class="item-name">
+                                    <%= item.productName %>
+                                </h3>
+
+                                <div class="item-price-section d-flex align-items-center gap-2 mt-2">
+                                    <% if (item.originalPrice && item.originalPrice> item.discountPrice) { %>
+                                        <span class="text-muted"
+                                            style="text-decoration: line-through; font-size: 0.9rem;">
+                                            ₹<%= item.originalPrice %>
                                         </span>
+                                        <% } %>
+                                            <span class="fw-bold text-dark" style="font-size: 1.1rem;">
+                                                ₹<%= item.discountPrice %>
+                                            </span>
+                                </div>
+
+                                <div class="item-actions">
+                                    <button class="add-to-cart-btn"
+                                        onclick="addToCartFromWishlist('<%= item._id %>', '<%= item.productName %>')">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                            <path
+                                                d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z" />
+                                        </svg>
+                                        Add to Cart
+                                    </button>
+
+                                    <button class="remove-from-wishlist-btn"
+                                        onclick="removeFromWishlist('<%= item._id %>')">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                            <path
+                                                d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
+                        </div>
+                        <% }) %>
+                </div>
+                <% } else { %>
+                    <div class="empty-wishlist">
+                        <div class="empty-wishlist-icon">💝</div>
+                        <h3>Your wishlist is empty</h3>
+                        <p>Add items you love to your wishlist and shop them later!</p>
+                        <a href="/shop" class="continue-shopping-btn">
+                            Start Shopping
+                        </a>
+                    </div>
+                    <% } %>
+        </div>
+    </div>
 
-                            <div class="item-actions">
-                                <button class="add-to-cart-btn"
-                                    onclick="addToCartFromWishlist('<%= item._id %>', '<%= item.productName %>')">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                                        <path
-                                            d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z" />
-                                    </svg>
-                                    Add to Cart
-                                </button>
 
-                                <button class="remove-from-wishlist-btn"
-                                    onclick="removeFromWishlist('<%= item._id %>')">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                                        <path
-                                            d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
-                                    </svg>
-                                </button>
+    <footer class="main">
+        <section class="newsletter p-30 text-white wow fadeIn animated">
+            <div class="floating-elements">
+                <div class="floating-element">桜</div>
+                <div class="floating-element">桜</div>
+                <div class="floating-element">⚡</div>
+                <div class="floating-element">🌸</div>
+            </div>
+        </section>
+
+        <section class="section-padding footer-mid">
+            <div class="container pt-15 pb-20">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="footer-logo mb-20">
+                            <a><img src="/imgs/theme/kaizenlogoo.svg" alt="Kaizen Logo"></a>
+                        </div>
+                        <div class="widget-about font-md mb-md-5 mb-lg-0">
+                            <div class="brand-story wow fadeIn animated">
+                                <p class="text-grey-4 mb-15">
+                                    <strong>Kaizen</strong> (改善) — Japanese philosophy of continuous improvement and
+                                    evolution. We embody this principle in every stitch, every design, and every
+                                    collection.
+                                </p>
+                                <p class="text-grey-4 mb-20">
+                                    From streetwear roots to evolving aesthetics, Kaizen represents the relentless
+                                    pursuit
+                                    of perfection. We don't just create clothing; we evolve culture, one piece at a
+                                    time.
+                                </p>
                             </div>
                         </div>
                     </div>
-                    <% }) %>
-            </div>
-            <% } else { %>
-                <div class="empty-wishlist">
-                    <div class="empty-wishlist-icon">💝</div>
-                    <h3>Your wishlist is empty</h3>
-                    <p>Add items you love to your wishlist and shop them later!</p>
-                    <a href="/shop" class="continue-shopping-btn">
-                        Start Shopping
-                    </a>
+
+                    <div class="col-lg-2 col-md-3">
+                        <h5 class="widget-title wow fadeIn animated">Quick Links</h5>
+                        <ul class="footer-list wow fadeIn animated mb-sm-5 mb-md-0">
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/shop">Shop</a></li>
+                            <li><a href="/cart">Cart</a></li>
+                            <li><a href="/wishlist">Wishlist</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="col-lg-2 col-md-3">
+                        <h5 class="widget-title wow fadeIn animated">My Account</h5>
+                        <ul class="footer-list wow fadeIn animated">
+                            <li><a href="/userProfile">My Profile</a></li>
+                            <li><a href="/profile/coupons">View Coupons</a></li>
+                            <li><a href="/wallet">Open Wallet</a></li>
+                            <li><a href="/orders">Track My Order</a></li>
+                            <li><a href="/profile/addresses">View Address</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <h5 class="widget-title wow fadeIn animated">Contact</h5>
+                        <div class="widget-about font-md mb-md-5 mb-lg-0 wow fadeIn animated">
+                            <p class="wow fadeIn animated">
+                                <strong>Address:</strong> Kannur, Kerala
+                            </p>
+                            <p class="wow fadeIn animated">
+                                <strong>Phone:</strong> +91 9000 123 456 / +91 484 555 0123
+                            </p>
+                            <p class="wow fadeIn animated">
+                                <strong>Hours:</strong> 10:00 - 21:00, Mon - Sun
+                            </p>
+                        </div>
+
+                        <div class="payment-section mt-30">
+                            <p class="mb-15 fw-600 text-grey-4 wow fadeIn animated">Secured Payment Methods</p>
+                            <div class="payment-methods wow fadeIn animated d-flex align-items-center gap-3">
+                                <div class="payment-method-item">
+                                    <img src="/imgs/theme/COD-icon.png" alt="COD" style="height: 55px;">
+                                </div>
+                                <div class="payment-method-item">
+                                    <img src="/imgs/theme/wallet-icon.png" alt="Wallet" style="height: 60px;">
+                                </div>
+                                <div class="payment-method-item">
+                                    <img src="/imgs/theme/razorpay-icon.png" alt="Razorpay" style="height: 55px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <% } %>
-    </div>
-</div>
+            </div>
+        </section>
 
-
-<footer class="main">
-    <section class="newsletter p-30 text-white wow fadeIn animated">
-        <div class="floating-elements">
-            <div class="floating-element">桜</div>
-            <div class="floating-element">桜</div>
-            <div class="floating-element">⚡</div>
-            <div class="floating-element">🌸</div>
-        </div>
-    </section>
-
-    <section class="section-padding footer-mid">
-        <div class="container pt-15 pb-20">
+        <div class="container pb-20 wow fadeIn animated">
             <div class="row">
-                <div class="col-lg-4 col-md-6">
-                    <div class="footer-logo mb-20">
-                        <a><img src="/imgs/theme/kaizenlogoo.svg" alt="Kaizen Logo"></a>
-                    </div>
-                    <div class="widget-about font-md mb-md-5 mb-lg-0">
-                        <div class="brand-story wow fadeIn animated">
-                            <p class="text-grey-4 mb-15">
-                                <strong>Kaizen</strong> (改善) — Japanese philosophy of continuous improvement and
-                                evolution. We embody this principle in every stitch, every design, and every collection.
-                            </p>
-                            <p class="text-grey-4 mb-20">
-                                From streetwear roots to evolving aesthetics, Kaizen represents the relentless pursuit
-                                of perfection. We don't just create clothing; we evolve culture, one piece at a time.
-                            </p>
-                        </div>
-                    </div>
+                <div class="col-12">
+                    <hr class="footer-divider mb-3">
                 </div>
-
-                <div class="col-lg-2 col-md-3">
-                    <h5 class="widget-title wow fadeIn animated">Quick Links</h5>
-                    <ul class="footer-list wow fadeIn animated mb-sm-5 mb-md-0">
-                        <li><a href="/">Home</a></li>
-                        <li><a href="/shop">Shop</a></li>
-                        <li><a href="/cart">Cart</a></li>
-                        <li><a href="/wishlist">Wishlist</a></li>
-                    </ul>
+                <div class="col-lg-6 col-md-6">
+                    <p class="text-md-start text-center font-sm text-muted mb-0">
+                        &copy; <span id="year"></span> <strong class="text-brand">Kaizen Street</strong>. All rights
+                        reserved.
+                    </p>
                 </div>
-
-                <div class="col-lg-2 col-md-3">
-                    <h5 class="widget-title wow fadeIn animated">My Account</h5>
-                    <ul class="footer-list wow fadeIn animated">
-                        <li><a href="/userProfile">My Profile</a></li>
-                        <li><a href="/profile/coupons">View Coupons</a></li>
-                        <li><a href="/wallet">Open Wallet</a></li>
-                        <li><a href="/orders">Track My Order</a></li>
-                        <li><a href="/profile/addresses">View Address</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <h5 class="widget-title wow fadeIn animated">Contact</h5>
-                    <div class="widget-about font-md mb-md-5 mb-lg-0 wow fadeIn animated">
-                        <p class="wow fadeIn animated">
-                            <strong>Address:</strong> Kannur, Kerala
-                        </p>
-                        <p class="wow fadeIn animated">
-                            <strong>Phone:</strong> +91 9000 123 456 / +91 484 555 0123
-                        </p>
-                        <p class="wow fadeIn animated">
-                            <strong>Hours:</strong> 10:00 - 21:00, Mon - Sun
-                        </p>
-                    </div>
-
-                    <div class="payment-section mt-30">
-                        <p class="mb-15 fw-600 text-grey-4 wow fadeIn animated">Secured Payment Methods</p>
-                        <div class="payment-methods wow fadeIn animated d-flex align-items-center gap-3">
-                            <div class="payment-method-item">
-                                <img src="/imgs/theme/COD-icon.png" alt="COD" style="height: 55px;">
-                            </div>
-                            <div class="payment-method-item">
-                                <img src="/imgs/theme/wallet-icon.png" alt="Wallet" style="height: 60px;">
-                            </div>
-                            <div class="payment-method-item">
-                                <img src="/imgs/theme/razorpay-icon.png" alt="Razorpay" style="height: 55px;">
-                            </div>
-                        </div>
-                    </div>
+                <div class="col-lg-6 col-md-6">
+                    <p class="text-md-end text-center font-sm text-muted mb-0">
+                        Designed with <span class="text-brand">❤</span>
+                    </p>
                 </div>
             </div>
         </div>
-    </section>
+    </footer>
 
-    <div class="container pb-20 wow fadeIn animated">
-        <div class="row">
-            <div class="col-12">
-                <hr class="footer-divider mb-3">
-            </div>
-            <div class="col-lg-6 col-md-6">
-                <p class="text-md-start text-center font-sm text-muted mb-0">
-                    &copy; <span id="year"></span> <strong class="text-brand">Kaizen Street</strong>. All rights
-                    reserved.
-                </p>
-            </div>
-            <div class="col-lg-6 col-md-6">
-                <p class="text-md-end text-center font-sm text-muted mb-0">
-                    Designed with <span class="text-brand">❤</span>
-                </p>
-            </div>
-        </div>
-    </div>
-</footer>
 
-     
     <script src="/js/vendor/jquery-3.6.0.min.js"></script>
     <script src="/js/main.js?v=3.4"></script>
     <script src="/js/shop.js?v=3.4"></script>
     <script src="/js/wishlist-count-updater.js"></script>
     <script src="/js/cart-count-updater.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/responsiveUser.js"></script>
+
     <script>
         document.getElementById('year').textContent = new Date().getFullYear();
+
+        function toggleMobileProfileDropdown() {
+            const dropdown = document.querySelector('.mobile-profile-dropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        document.addEventListener('click', function (event) {
+            const dropdown = document.querySelector('.mobile-profile-dropdown');
+            if (dropdown && !dropdown.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
     </script>
-    
+
     <script>
         const section = document.querySelector('.newsletter');
 
@@ -1097,5 +1187,4 @@
     </script>
 
 </body>
-
 </html>

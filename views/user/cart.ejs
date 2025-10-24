@@ -1,40 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Cart</title>
-    <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/kaizenicon.svg">
+    <link rel="icon" type="image/svg+xml" href="/imgs/theme/kaizenicon.svg">
     <link rel="stylesheet" href="/css/main.css?v=3.4">
+    <link href="/css/responsiveUser.css" rel="stylesheet" type="text/css">
     <style>
-
-         .footer-logo {
+        .footer-logo {
             width: 180px;
             min-width: 120px;
         }
+
         .swal-rounded {
             border-radius: 15px !important;
         }
-    
+
         .swal2-popup.swal-responsive {
             color: #333 !important;
             border: 2px solid rgba(0, 0, 0, 0.1) !important;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
             backdrop-filter: blur(10px) !important;
         }
-    
+
         .swal2-title {
             color: #e74c3c !important;
             font-weight: 600 !important;
             text-shadow: none !important;
         }
-    
+
         .swal2-content {
             color: #666 !important;
         }
-    
+
         .swal2-confirm {
             background: #3BB77E !important;
             border: none !important;
@@ -45,22 +44,22 @@
             box-shadow: 0 4px 15px rgba(59, 183, 126, 0.3) !important;
             transition: all 0.3s ease !important;
         }
-    
+
         .swal2-confirm:hover {
             background: #2a9d5f !important;
             transform: translateY(-1px) !important;
             box-shadow: 0 6px 20px rgba(59, 183, 126, 0.4) !important;
         }
-    
+
         .swal2-icon.swal2-error {
             border-color: #e74c3c !important;
             color: #e74c3c !important;
         }
-    
+
         .swal2-icon.swal2-error .swal2-x-mark {
             color: #e74c3c !important;
         }
-    
+
         .swal-responsive {
             width: 90% !important;
             max-width: 320px !important;
@@ -68,32 +67,32 @@
             border-radius: 10px;
             font-size: 0.95rem;
         }
-    
+
         .cart-container {
             background: white;
             min-height: 100vh;
             padding: 40px 0;
         }
-    
+
         .cart-header {
             text-align: left;
             margin-bottom: 30px;
             border-bottom: 2px solid #f1f3f4;
             padding-bottom: 20px;
         }
-    
+
         .cart-title {
             font-size: 1.6rem;
             font-weight: 600;
             color: #1a1a1a;
             margin-bottom: 8px;
         }
-    
+
         .cart-subtitle {
             color: #666;
             font-size: 0.95rem;
         }
-    
+
         .progress-steps {
             display: flex;
             justify-content: center;
@@ -104,7 +103,7 @@
             background: #f8f9fa;
             border-radius: 15px;
         }
-    
+
         .step {
             display: flex;
             align-items: center;
@@ -115,7 +114,7 @@
             transition: all 0.3s ease;
             font-size: 0.75rem;
         }
-    
+
         .step-icon {
             width: 18px;
             height: 18px;
@@ -126,33 +125,33 @@
             margin-right: 6px;
             font-size: 0.65rem;
         }
-    
+
         .step.active {
             background: linear-gradient(135deg, #ff1744 0%, #f50057 50%, #c51162 100%);
             color: white;
         }
-    
+
         .step.active .step-icon {
             background: rgba(255, 255, 255, 0.2);
             color: white;
         }
-    
+
         .step.inactive {
             background: #e9ecef;
             color: #666;
         }
-    
+
         .step.inactive .step-icon {
             background: #dee2e6;
             color: #6c757d;
         }
-    
+
         .step-arrow {
             color: #ccc;
             margin: 0 4px;
             font-size: 0.8rem;
         }
-    
+
         .cart-content {
             display: grid;
             grid-template-columns: 1fr 380px;
@@ -161,7 +160,7 @@
             margin: 0 auto;
             padding: 0 20px;
         }
-    
+
         .cart-items-section {
             background: white;
             border-radius: 20px;
@@ -169,19 +168,19 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             border: 1px solid #e9ecef;
         }
-    
+
         .empty-cart {
             text-align: center;
             padding: 60px 20px;
             color: #666;
         }
-    
+
         .empty-cart-icon {
             font-size: 4rem;
             margin-bottom: 20px;
             opacity: 0.5;
         }
-    
+
         .cart-item {
             display: grid;
             grid-template-columns: 100px 1fr auto;
@@ -193,36 +192,36 @@
             border: 1px solid #e9ecef;
             transition: all 0.3s ease;
         }
-    
+
         .cart-item:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
-    
+
         .item-image {
             position: relative;
             overflow: hidden;
             border-radius: 12px;
             aspect-ratio: 1;
         }
-    
+
         .item-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform 0.3s ease;
         }
-    
+
         .item-image:hover img {
             transform: scale(1.05);
         }
-    
+
         .item-details {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
-    
+
         .item-name {
             font-size: 1.1rem;
             font-weight: 600;
@@ -230,7 +229,7 @@
             margin-bottom: 6px;
             line-height: 1.3;
         }
-    
+
         .item-category {
             color: #088178;
             font-size: 0.85rem;
@@ -239,31 +238,31 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-    
+
         .item-size {
             color: #666;
             font-size: 0.85rem;
             margin-bottom: 8px;
         }
-    
+
         .item-price-section {
             display: flex;
             align-items: center;
             gap: 10px;
         }
-    
+
         .item-original-price {
             color: #999;
             text-decoration: line-through;
             font-size: 0.9rem;
         }
-    
+
         .item-price {
             color: #1a1a1a;
             font-size: 1rem;
             font-weight: 600;
         }
-    
+
         .discount-badge {
             background: #088178;
             color: white;
@@ -272,14 +271,14 @@
             font-size: 0.75rem;
             font-weight: 500;
         }
-    
+
         .item-actions {
             display: flex;
             flex-direction: column;
             align-items: flex-end;
             justify-content: space-between;
         }
-    
+
         .quantity-controls {
             display: flex;
             align-items: center;
@@ -290,7 +289,7 @@
             border: 1px solid #e9ecef;
             width: fit-content;
         }
-    
+
         .qty-btn {
             width: 26px;
             height: 26px;
@@ -307,18 +306,18 @@
             transition: all 0.3s ease;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
-    
+
         .qty-btn:hover:not(:disabled) {
             background: linear-gradient(135deg, #ff1744 0%, #f50057 50%, #c51162 100%);
             color: white;
             transform: scale(1.05);
         }
-    
+
         .qty-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
-    
+
         .qty-input {
             background: transparent;
             border: none;
@@ -334,8 +333,8 @@
             outline: none;
             box-sizing: border-box;
         }
-    
-    
+
+
         .remove-btn {
             background: none;
             border: none;
@@ -348,25 +347,25 @@
             align-items: center;
             justify-content: center;
         }
-    
+
         .remove-btn:hover {
             background: rgba(255, 71, 87, 0.1);
             transform: scale(1.1);
         }
-    
+
         .delete-icon {
             width: 16px;
             height: 16px;
             fill: currentColor;
         }
-    
+
         .subtotal {
             color: #1a1a1a;
             font-size: 1.1rem;
             font-weight: 700;
             margin-top: 8px;
         }
-    
+
         .order-summary {
             background: white;
             border-radius: 15px;
@@ -377,7 +376,7 @@
             position: sticky;
             top: 20px;
         }
-    
+
         .summary-title {
             font-size: 1.6rem;
             font-weight: 600;
@@ -385,7 +384,7 @@
             margin-bottom: 20px;
             text-align: center;
         }
-    
+
         .summary-item {
             display: flex;
             justify-content: space-between;
@@ -393,19 +392,19 @@
             border-bottom: 1px solid #f1f3f4;
             color: #666;
         }
-    
+
         .summary-item:last-of-type {
             border-bottom: none;
         }
-    
+
         .summary-value {
             font-weight: 600;
         }
-    
+
         .summary-value.free {
             color: #28a745;
         }
-    
+
         .total-section {
             background: #f8f9fa;
             border-radius: 12px;
@@ -413,27 +412,27 @@
             margin: 20px 0;
             border: 2px solid #e9ecef;
         }
-    
+
         .total-label {
             font-size: 1rem;
             color: #666;
             margin-bottom: 8px;
         }
-    
+
         .total-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-    
+
         .total-amount {
             font-size: 1.8rem;
             font-weight: 700;
             color: #1a1a1a;
         }
 
-        .continue-shopping-btn{
-             width: 100%;
+        .continue-shopping-btn {
+            width: 100%;
             padding: 7px 14px;
             background: linear-gradient(135deg, #ff1744 0%, #f50057 50%, #c51162 100%);
             color: white;
@@ -446,12 +445,12 @@
             transition: all 0.3s ease;
         }
 
-         .continue-shopping-btn:hover {
+        .continue-shopping-btn:hover {
             transform: translateY(-1px);
             color: white;
             box-shadow: 0 8px 20px rgba(255, 23, 68, 0.3);
         }
-    
+
         .continue-btn {
             width: 100%;
             padding: 10px;
@@ -465,40 +464,40 @@
             margin-top: 2rem;
             transition: all 0.3s ease;
         }
-    
+
         .continue-btn:hover {
             transform: translateY(-1px);
             color: white;
             box-shadow: 0 8px 20px rgba(255, 23, 68, 0.3);
         }
-    
+
         .stock-warning {
             color: #ffa500;
             font-size: 0.8rem;
             margin-top: 5px;
         }
-    
+
         @media (max-width: 1024px) {
             .cart-content {
                 grid-template-columns: 1fr 340px;
             }
         }
-    
+
         @media (max-width: 768px) {
             .cart-content {
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
-    
+
             .cart-container {
                 padding: 20px 0;
             }
-    
+
             .cart-item {
                 grid-template-columns: 80px 1fr;
                 gap: 12px;
             }
-    
+
             .item-actions {
                 grid-column: 1 / -1;
                 flex-direction: row;
@@ -506,75 +505,74 @@
                 align-items: center;
                 margin-top: 15px;
             }
-    
+
             .cart-title {
                 font-size: 1.4rem;
             }
-    
+
             .cart-subtitle {
                 font-size: 0.9rem;
             }
-    
+
             .progress-steps {
                 gap: 4px;
                 padding: 8px;
             }
-    
+
             .step {
                 font-size: 0.7rem;
                 padding: 4px 8px;
             }
-    
+
             .step-icon {
                 width: 16px;
                 height: 16px;
                 font-size: 0.6rem;
                 margin-right: 4px;
             }
-    
+
             .order-summary {
                 position: relative;
                 top: auto;
             }
-    
+
             .total-section {
                 padding: 15px;
             }
-    
+
             .total-amount {
                 font-size: 1.5rem;
             }
-    
+
             .summary-title {
                 font-size: 1.4rem;
             }
         }
-    
+
         @media (max-width: 480px) {
             .cart-content {
                 padding: 0 15px;
             }
-    
+
             .cart-items-section,
             .order-summary {
                 padding: 20px;
             }
-    
+
             .cart-item {
                 grid-template-columns: 70px 1fr;
                 padding: 15px;
             }
-    
+
             .item-name {
                 font-size: 1rem;
             }
-    
+
             .quantity-controls {
                 transform: scale(0.9);
             }
         }
     </style>
-
 </head>
 
 <body>
@@ -620,7 +618,7 @@
             <div class="container">
                 <div class="header-wrap">
                     <div class="logo logo-width-1">
-                        <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+                        <a href="#"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
                     </div>
                     <div class="header-right">
                         <div class="search-style-2"></div>
@@ -630,8 +628,7 @@
                                     <a href="/wishlist">
                                         <img class="svgInject" alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
                                         <span id="wishlistItemCount" class="pro-count blue">
-                                            <%= typeof locals.wishlistItemCount !=='undefined' ?
-                                                locals.wishlistItemCount : 0 %>
+                                            <%= wishlistItemCount %>
                                         </span>
                                     </a>
                                 </div>
@@ -639,7 +636,7 @@
                                     <a class="mini-cart-icon" href="/cart">
                                         <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
                                         <span id="cartItemCount" class="pro-count blue">
-                                            <%= typeof locals.cartItemCount !=='undefined' ? locals.cartItemCount : 0 %>
+                                            <%= cartItemCount %>
                                         </span>
                                     </a>
                                 </div>
@@ -653,14 +650,15 @@
             <div class="container">
                 <div class="header-wrap header-space-between position-relative">
                     <div class="logo logo-width-1 d-block d-lg-none">
-                        <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+                        <a href="#"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
                     </div>
                     <div class="header-nav d-none d-lg-flex">
+
                         <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
                             <nav>
                                 <ul>
                                     <li><a href="/">Home</a></li>
-                                    <li><a href="/shop">Shop</a></li>
+                                    <li><a class='active' href="/shop">Shop</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -671,8 +669,7 @@
                                 <a href="/wishlist">
                                     <img alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
                                     <span id="wishlistItemCount" class="pro-count blue">
-                                        <%= typeof locals.wishlistItemCount !=='undefined' ? locals.wishlistItemCount :
-                                            0 %>
+                                        <%= wishlistItemCount %>
                                     </span>
                                 </a>
                             </div>
@@ -680,7 +677,7 @@
                                 <a class="mini-cart-icon" href="/cart">
                                     <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
                                     <span id="cartItemCount" class="pro-count blue">
-                                        <%= typeof locals.cartItemCount !=='undefined' ? locals.cartItemCount : 0 %>
+                                        <%= cartItemCount %>
                                     </span>
                                 </a>
                             </div>
@@ -697,11 +694,86 @@
             </div>
         </div>
     </header>
+    <div class="mobile-header-active mobile-header-wrapper-style">
+        <div class="mobile-header-wrapper-inner">
+            <div class="mobile-header-top">
+                <div class="mobile-header-logo">
+                    <a href="#"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+                </div>
+                <div class="mobile-menu-close close-style-wrap close-style-position-inherit">
+                    <button class="close-style search-close">
+                        <i class="icon-top"></i>
+                        <i class="icon-bottom"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="mobile-header-content-area">
+                <div class="mobile-menu-wrap mobile-header-border">
+                    <nav>
+                        <ul class="mobile-menu">
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/shop">Shop</a></li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <div class="mobile-header-info-wrap mobile-header-border">
+                    <% if (user) { %>
+                        <div class="single-mobile-header-info mt-10 mb-10">
+                            <i class="fi-rs-user"></i>
+                            <strong>
+                                <%= user.name %>
+                            </strong>
+                        </div>
+
+                        <div class="single-mobile-header-info mobile-profile-dropdown">
+                            <div class="mobile-profile-toggle" onclick="toggleMobileProfileDropdown()">
+                                <i class="fi-rs-settings-sliders"></i> My Profile
+                                <i class="fi-rs-angle-small-down dropdown-arrow"></i>
+                            </div>
+                            <ul class="mobile-profile-submenu">
+                                <li><a href="/userProfile"><i class="fi-rs-user"></i> My Profile</a></li>
+                                <li><a href="/orders"><i class="fi-rs-shopping-bag"></i> My Orders</a></li>
+                                <li><a href="/wallet"><i class="fi-rs-credit-card"></i> My Wallet</a></li>
+                                <li><a href="/profile/coupons"><i class="fi-rs-ticket"></i> My Coupons</a></li>
+                                <li><a href="/profile/addresses"><i class="fi-rs-marker"></i> My Address</a></li>
+                                <li><a href="/profile/security"><i class="fi-rs-lock"></i> Privacy Settings</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="single-mobile-header-info">
+                            <a href="/logout"><i class="fi-rs-sign-out"></i> Logout</a>
+                        </div>
+                        <% } else { %>
+                            <div class="single-mobile-header-info">
+                                <a href="/login"><i class="fi-rs-user"></i> Log In</a>
+                            </div>
+                            <div class="single-mobile-header-info">
+                                <a href="/signup"><i class="fi-rs-user-add"></i> Sign Up</a>
+                            </div>
+                            <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="anime-elements">
+        <div class="sakura">🌸</div>
+        <div class="sakura">🌸</div>
+        <div class="sakura">🌸</div>
+        <div class="sakura">🌸</div>
+        <div class="sakura">🌸</div>
+        <div class="sakura">🌸</div>
+        <div class="sakura">🌸</div>
+        <div class="sakura">🌸</div>
+        <div class="kanji-float">化</div>
+        <div class="kanji-float">革</div>
+    </div>
 
     <div class="page-header breadcrumb-wrap">
         <div class="container">
             <div class="breadcrumb">
-                <a href="/" rel="nofollow">Home</a>
+                <a href="#" rel="nofollow">Home</a>
                 <span></span> Shop
                 <span></span> Product
                 <span></span> Cart
@@ -864,109 +936,112 @@
     </div>
 
 
-   <footer class="main">
-    <section class="newsletter p-30 text-white wow fadeIn animated">
-        <div class="floating-elements">
-            <div class="floating-element">桜</div>
-            <div class="floating-element">桜</div>
-            <div class="floating-element">⚡</div>
-            <div class="floating-element">🌸</div>
-        </div>
-    </section>
+    <footer class="main">
+        <section class="newsletter p-30 text-white wow fadeIn animated">
+            <div class="floating-elements">
+                <div class="floating-element">桜</div>
+                <div class="floating-element">桜</div>
+                <div class="floating-element">⚡</div>
+                <div class="floating-element">🌸</div>
+            </div>
+        </section>
 
-    <section class="section-padding footer-mid">
-        <div class="container pt-15 pb-20">
+        <section class="section-padding footer-mid">
+            <div class="container pt-15 pb-20">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="footer-logo mb-20">
+                            <a><img src="/imgs/theme/kaizenlogoo.svg" alt="Kaizen Logo"></a>
+                        </div>
+                        <div class="widget-about font-md mb-md-5 mb-lg-0">
+                            <div class="brand-story wow fadeIn animated">
+                                <p class="text-grey-4 mb-15">
+                                    <strong>Kaizen</strong> (改善) — Japanese philosophy of continuous improvement and
+                                    evolution. We embody this principle in every stitch, every design, and every
+                                    collection.
+                                </p>
+                                <p class="text-grey-4 mb-20">
+                                    From streetwear roots to evolving aesthetics, Kaizen represents the relentless
+                                    pursuit
+                                    of perfection. We don't just create clothing; we evolve culture, one piece at a
+                                    time.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-2 col-md-3">
+                        <h5 class="widget-title wow fadeIn animated">Quick Links</h5>
+                        <ul class="footer-list wow fadeIn animated mb-sm-5 mb-md-0">
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/shop">Shop</a></li>
+                            <li><a href="/cart">Cart</a></li>
+                            <li><a href="/wishlist">Wishlist</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="col-lg-2 col-md-3">
+                        <h5 class="widget-title wow fadeIn animated">My Account</h5>
+                        <ul class="footer-list wow fadeIn animated">
+                            <li><a href="/userProfile">My Profile</a></li>
+                            <li><a href="/profile/coupons">View Coupons</a></li>
+                            <li><a href="/wallet">Open Wallet</a></li>
+                            <li><a href="/orders">Track My Order</a></li>
+                            <li><a href="/profile/addresses">View Address</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <h5 class="widget-title wow fadeIn animated">Contact</h5>
+                        <div class="widget-about font-md mb-md-5 mb-lg-0 wow fadeIn animated">
+                            <p class="wow fadeIn animated">
+                                <strong>Address:</strong> Kannur, Kerala
+                            </p>
+                            <p class="wow fadeIn animated">
+                                <strong>Phone:</strong> +91 9000 123 456 / +91 484 555 0123
+                            </p>
+                            <p class="wow fadeIn animated">
+                                <strong>Hours:</strong> 10:00 - 21:00, Mon - Sun
+                            </p>
+                        </div>
+
+                        <div class="payment-section mt-30">
+                            <p class="mb-15 fw-600 text-grey-4 wow fadeIn animated">Secured Payment Methods</p>
+                            <div class="payment-methods wow fadeIn animated d-flex align-items-center gap-3">
+                                <div class="payment-method-item">
+                                    <img src="/imgs/theme/COD-icon.png" alt="COD" style="height: 55px;">
+                                </div>
+                                <div class="payment-method-item">
+                                    <img src="/imgs/theme/wallet-icon.png" alt="Wallet" style="height: 60px;">
+                                </div>
+                                <div class="payment-method-item">
+                                    <img src="/imgs/theme/razorpay-icon.png" alt="Razorpay" style="height: 55px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="container pb-20 wow fadeIn animated">
             <div class="row">
-                <div class="col-lg-4 col-md-6">
-                    <div class="footer-logo mb-20">
-                        <a><img src="/imgs/theme/kaizenlogoo.svg" alt="Kaizen Logo"></a>
-                    </div>
-                    <div class="widget-about font-md mb-md-5 mb-lg-0">
-                        <div class="brand-story wow fadeIn animated">
-                            <p class="text-grey-4 mb-15">
-                                <strong>Kaizen</strong> (改善) — Japanese philosophy of continuous improvement and
-                                evolution. We embody this principle in every stitch, every design, and every collection.
-                            </p>
-                            <p class="text-grey-4 mb-20">
-                                From streetwear roots to evolving aesthetics, Kaizen represents the relentless pursuit
-                                of perfection. We don't just create clothing; we evolve culture, one piece at a time.
-                            </p>
-                        </div>
-                    </div>
+                <div class="col-12">
+                    <hr class="footer-divider mb-3">
                 </div>
-
-                <div class="col-lg-2 col-md-3">
-                    <h5 class="widget-title wow fadeIn animated">Quick Links</h5>
-                    <ul class="footer-list wow fadeIn animated mb-sm-5 mb-md-0">
-                        <li><a href="/">Home</a></li>
-                        <li><a href="/shop">Shop</a></li>
-                        <li><a href="/cart">Cart</a></li>
-                        <li><a href="/wishlist">Wishlist</a></li>
-                    </ul>
+                <div class="col-lg-6 col-md-6">
+                    <p class="text-md-start text-center font-sm text-muted mb-0">
+                        &copy; <span id="year"></span> <strong class="text-brand">Kaizen Street</strong>. All rights
+                        reserved.
+                    </p>
                 </div>
-
-                <div class="col-lg-2 col-md-3">
-                    <h5 class="widget-title wow fadeIn animated">My Account</h5>
-                    <ul class="footer-list wow fadeIn animated">
-                        <li><a href="/userProfile">My Profile</a></li>
-                        <li><a href="/profile/coupons">View Coupons</a></li>
-                        <li><a href="/wallet">Open Wallet</a></li>
-                        <li><a href="/orders">Track My Order</a></li>
-                        <li><a href="/profile/addresses">View Address</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <h5 class="widget-title wow fadeIn animated">Contact</h5>
-                    <div class="widget-about font-md mb-md-5 mb-lg-0 wow fadeIn animated">
-                        <p class="wow fadeIn animated">
-                            <strong>Address:</strong> Kannur, Kerala
-                        </p>
-                        <p class="wow fadeIn animated">
-                            <strong>Phone:</strong> +91 9000 123 456 / +91 484 555 0123
-                        </p>
-                        <p class="wow fadeIn animated">
-                            <strong>Hours:</strong> 10:00 - 21:00, Mon - Sun
-                        </p>
-                    </div>
-
-                    <div class="payment-section mt-30">
-                        <p class="mb-15 fw-600 text-grey-4 wow fadeIn animated">Secured Payment Methods</p>
-                        <div class="payment-methods wow fadeIn animated d-flex align-items-center gap-3">
-                            <div class="payment-method-item">
-                                <img src="/imgs/theme/COD-icon.png" alt="COD" style="height: 55px;">
-                            </div>
-                            <div class="payment-method-item">
-                                <img src="/imgs/theme/wallet-icon.png" alt="Wallet" style="height: 60px;">
-                            </div>
-                            <div class="payment-method-item">
-                                <img src="/imgs/theme/razorpay-icon.png" alt="Razorpay" style="height: 55px;">
-                            </div>
-                        </div>
-                    </div>
+                <div class="col-lg-6 col-md-6">
+                    <p class="text-md-end text-center font-sm text-muted mb-0">
+                        Designed with <span class="text-brand">❤</span>
+                    </p>
                 </div>
             </div>
         </div>
-    </section>
-
-    <div class="container pb-20 wow fadeIn animated">
-        <div class="row">
-            <div class="col-12">
-                <hr class="footer-divider mb-3">
-            </div>
-            <div class="col-lg-6 col-md-6">
-                <p class="text-md-start text-center font-sm text-muted mb-0">
-                    &copy; <span id="year"></span> <strong class="text-brand">Kaizen Street</strong>. All rights
-                    reserved.
-                </p>
-            </div>
-            <div class="col-lg-6 col-md-6">
-                <p class="text-md-end text-center font-sm text-muted mb-0">
-                    Designed with <span class="text-brand">❤</span>
-                </p>
-            </div>
-        </div>
-    </div>
-</footer>
+    </footer>
 
     <div id="preloader-active">
         <div class="preloader d-flex align-items-center justify-content-center">
@@ -986,13 +1061,25 @@
 
     <script src="/js/vendor/jquery-3.6.0.min.js"></script>
     <script src="/js/main.js?v=3.4"></script>
-    <script src="/js/shop.js?v=3.4"></script>
     <script src="/js/wishlist-count-updater.js"></script>
     <script src="/js/cart-count-updater.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+    <script src="/js/responsiveUser.js"></script>
+
     <script>
         document.getElementById('year').textContent = new Date().getFullYear();
+
+        function toggleMobileProfileDropdown() {
+            const dropdown = document.querySelector('.mobile-profile-dropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        document.addEventListener('click', function (event) {
+            const dropdown = document.querySelector('.mobile-profile-dropdown');
+            if (dropdown && !dropdown.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
     </script>
 
     <script>
@@ -1234,17 +1321,17 @@
     </script>
 
     <script>
-    const section = document.querySelector('.newsletter');
+        const section = document.querySelector('.newsletter');
 
-    window.addEventListener('scroll', () => {
-        const rect = section.getBoundingClientRect();
-        const topOfPage = window.pageYOffset;
-        const topOfSec = rect.top + topOfPage;
-        const scrolled = topOfPage - topOfSec;
-        const distance = Math.max(scrolled, 0);
-        const yPos = distance * -0.5;
-    });
-</script>
+        window.addEventListener('scroll', () => {
+            const rect = section.getBoundingClientRect();
+            const topOfPage = window.pageYOffset;
+            const topOfSec = rect.top + topOfPage;
+            const scrolled = topOfPage - topOfSec;
+            const distance = Math.max(scrolled, 0);
+            const yPos = distance * -0.5;
+        });
+    </script>
 
 
 </body>

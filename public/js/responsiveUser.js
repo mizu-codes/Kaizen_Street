@@ -1,14 +1,11 @@
 
     // Mobile Menu Functionality
 document.addEventListener('DOMContentLoaded', function() {
-    
-    // Get elements
     const burgerIcon = document.querySelector('.burger-icon');
     const mobileMenu = document.querySelector('.mobile-header-active');
     const closeButton = document.querySelector('.mobile-menu-close .close-style');
     const body = document.body;
     
-    // Create overlay if it doesn't exist
     let overlay = document.querySelector('.body-overlay');
     if (!overlay) {
         overlay = document.createElement('div');
@@ -92,7 +89,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const mobileSearchForm = document.querySelector('.mobile-search form');
     
     if (mobileSearchInput && mobileSearchForm) {
-        // Add clear button if needed
         const clearBtn = document.createElement('button');
         clearBtn.type = 'button';
         clearBtn.className = 'mobile-search-clear';
@@ -153,7 +149,6 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Mobile menu functionality initialized');
 });
 
-// Export functions if needed
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         openMobileMenu: function() {

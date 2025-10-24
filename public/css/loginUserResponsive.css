@@ -222,7 +222,7 @@
   text-transform: uppercase;
   font-size: 0.65rem;
   color: #777;
-  margin: 0.4rem 0 0.4rem 0;
+  margin: 1.5rem 0 0.4rem 0;
   gap: 0.5rem;
   max-width: 50%;
   margin-left: auto;
@@ -245,11 +245,12 @@
 }
 
 .text-center.mt-4 {
-  margin-top: 0.4rem !important;
+  margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
 }
 
 .text-center.mb-3 {
-  margin-bottom: 0.3rem !important;
+  margin-bottom: 1rem !important;
 }
 
 .link-login {
@@ -312,7 +313,7 @@
 /* Feedback text - smaller and fixed height */
 .invalid-feedback {
   font-size: 0.65rem;
-  line-height: 1;
+  line-height: 2;
   margin-top: 0.15rem;
   min-height: 0;
   position: absolute;
@@ -323,7 +324,7 @@
 }
 
 .mb-3.position-relative .invalid-feedback{
-  bottom: -1.2rem;
+  bottom: -1.0rem;
 }
 
 /* Add bottom margin to inputs to accommodate error messages */
@@ -394,5 +395,5 @@ body {
 .d-grid.mt-4 {
   display: flex !important;
   justify-content: center;
-  margin-top: 0.3rem !important;
+  margin-top: 0.8rem !important;
 }

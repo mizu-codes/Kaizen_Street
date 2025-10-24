@@ -1,879 +1,878 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>User Profile</title>
-  <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/kaizenicon.svg">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Order Details</title>
+  <link rel="icon" type="image/svg+xml" href="/imgs/theme/kaizenicon.svg">
   <link rel="stylesheet" href="/css/main.css?v=3.4">
-</head>
-<style>
-  .compact-alert {
-    width: 90% !important;
-    max-width: 320px !important;
-    padding: 1.5rem !important;
-    border-radius: 10px !important;
-  }
-
-  .compact-alert .swal2-icon {
-    width: 60px !important;
-    height: 60px !important;
-    margin: 1rem auto !important;
-  }
-
-  .compact-alert .swal2-title {
-    font-size: 20px !important;
-    padding: 0.5rem 0 !important;
-  }
-
-  .compact-alert .swal2-html-container {
-    font-size: 14px !important;
-    margin: 0.5rem 0 1rem 0 !important;
-  }
-
-  .bottom-actions {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    margin-top: 2rem;
-    width: 100%;
-  }
-
-  .btn-back-to-orders {
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-    color: white;
-    text-decoration: none;
-    border: none;
-    padding: 12px 32px;
-    border-radius: 50px;
-    font-size: 16px;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-  }
-
-  .btn-back-to-orders:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
-  }
-
-  .btn-retry-payment {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: white;
-    border: none;
-    padding: 8px 18px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-    width: auto;
-    margin-top: 12px;
-  }
-
-  .btn-retry-payment:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
-  }
-
-  .btn-retry-payment:active,
-  .btn-back-to-orders:active {
-    transform: translateY(0);
-  }
-
-  .btn-retry-payment i,
-  .btn-back-to-orders i {
-    font-size: 18px;
-  }
-
-
-  .btn-retry-payment::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.5s;
-  }
-
-  .btn-retry-payment:hover::before {
-    left: 100%;
-  }
-
-  .btn-retry-payment:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-  }
-
-  .btn-retry-payment:active {
-    transform: translateY(0);
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-  }
-
-  .swal2-popup.swal-responsive {
-    color: #333 !important;
-    border: 2px solid rgba(0, 0, 0, 0.1) !important;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
-    backdrop-filter: blur(10px) !important;
-  }
-
-  .swal2-title {
-    color: #e74c3c !important;
-    font-weight: 600 !important;
-    text-shadow: none !important;
-  }
-
-  .swal2-content {
-    color: #666 !important;
-  }
-
-  .swal2-confirm {
-    background: #3BB77E !important;
-    border: none !important;
-    border-radius: 8px !important;
-    padding: 12px 30px !important;
-    font-weight: 600 !important;
-    color: white !important;
-    box-shadow: 0 4px 15px rgba(59, 183, 126, 0.3) !important;
-    transition: all 0.3s ease !important;
-  }
-
-  .swal2-confirm:hover {
-    background: #2a9d5f !important;
-    transform: translateY(-1px) !important;
-    box-shadow: 0 6px 20px rgba(59, 183, 126, 0.4) !important;
-  }
-
-  .swal2-icon.swal2-error {
-    border-color: #e74c3c !important;
-    color: #e74c3c !important;
-  }
-
-  .swal2-icon.swal2-error .swal2-x-mark {
-    color: #e74c3c !important;
-  }
-
-  .swal-responsive {
-    width: 90% !important;
-    max-width: 320px !important;
-    padding: 1.2rem !important;
-    border-radius: 10px;
-    font-size: 0.95rem;
-  }
-
-  .payment-failed-section {
-    margin-top: 20px;
-    animation: slideInUp 0.5s ease-out;
-  }
-
-  @keyframes slideInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
+  <link href="/css/responsiveUser.css" rel="stylesheet" type="text/css">
+  <style>
+    .compact-alert {
+      width: 90% !important;
+      max-width: 320px !important;
+      padding: 1.5rem !important;
+      border-radius: 10px !important;
     }
 
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .payment-failed-section>div {
-    background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
-    border: 2px solid #dc3545;
-    border-radius: 12px;
-    padding: 24px;
-    text-align: center;
-    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.1);
-  }
-
-  .payment-failed-section h4 {
-    color: #dc3545;
-    margin-bottom: 12px;
-    font-size: 20px;
-    font-weight: 600;
-  }
-
-  .payment-failed-section p {
-    color: #666;
-    margin-bottom: 20px;
-    font-size: 14px;
-    line-height: 1.6;
-    max-width: 400px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  /* Status badge for Payment Failed */
-  .status-badge.status-payment-failed {
-    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-    color: white;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    display: inline-block;
-    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
-  }
-
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .btn-retry-payment {
-      width: 100%;
-      justify-content: center;
-      padding: 12px 24px;
-      font-size: 15px;
-    }
-  }
-
-  /* Loading animation for retry button */
-  .btn-retry-payment.loading {
-    pointer-events: none;
-    opacity: 0.7;
-  }
-
-  .btn-retry-payment.loading::after {
-    content: '';
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    top: 50%;
-    left: 50%;
-    margin-left: -8px;
-    margin-top: -8px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    border-top-color: white;
-    animation: spin 0.6s linear infinite;
-  }
-
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
-  .pricing-info {
-    font-size: 0.85em;
-    margin-top: 5px;
-  }
-
-  .original-price {
-    text-decoration: line-through;
-    color: #999;
-    margin-right: 10px;
-  }
-
-  .actual-paid {
-    color: #28a745;
-    font-weight: 600;
-  }
-
-  .item-total .original-amount {
-    text-decoration: line-through;
-    color: #999;
-    font-size: 0.9em;
-  }
-
-  .item-total .paid-amount {
-    color: #28a745;
-    font-weight: 600;
-  }
-
-  .discount-row {
-    color: #28a745;
-    font-weight: 500;
-  }
-
-  .savings-info {
-    text-align: center;
-    color: #28a745;
-    font-weight: 500;
-    margin-top: 10px;
-    padding: 8px;
-    background-color: #f8f9fa;
-    border-radius: 4px;
-  }
-
-  .btn-return {
-    background: rgb(8, 129, 120);
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-
-  .btn-return:hover {
-    background: rgb(6, 103, 96);
-    box-shadow: 0 0 25px rgba(8, 129, 120, 1);
-  }
-
-  .return-status {
-    margin-top: 5px;
-  }
-
-  .return-badge {
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 500;
-  }
-
-  .return-requested {
-    background-color: #fff3cd;
-    color: #856404;
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .return-accepted {
-    background-color: #d4edda;
-    color: #155724;
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .return-rejected {
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .swal-responsive {
-    width: 90% !important;
-    max-width: 500px !important;
-  }
-
-  .main-content {
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-    overflow: hidden;
-  }
-
-  .profile-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 30px;
-    border-bottom: 1px solid #f0f0f0;
-    background: linear-gradient(135deg, #e8f4f2 0%, #ddf0e8 100%);
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-
-  .profile-header h3 {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #253D4E;
-    margin: 0;
-  }
-
-  .profile-header h3 i {
-    color: #3BB77E;
-    font-size: 1.75rem;
-  }
-
-  .header-left {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-  }
-
-  .btn-back {
-    background: white;
-    border: 1px solid #e0e4e8;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    color: #253D4E;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-weight: 500;
-    transition: all 0.3s ease;
-  }
-
-  .btn-back:hover {
-    background: #3BB77E;
-    color: white;
-    border-color: #3BB77E;
-    text-decoration: none;
-  }
-
-  .btn-download-invoice {
-    background: #088178;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-weight: 500;
-    transition: all 0.3s ease;
-  }
-
-  .btn-download-invoice:hover {
-    background: #066b62;
-    color: white;
-  }
-
-  .order-details-grid {
-    display: grid;
-    grid-template-columns: 1fr 300px;
-    gap: 2rem;
-    margin-bottom: 2rem;
-  }
-
-  .left-column {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  .summary-section {
-    background: white;
-    padding: 0.5rem;
-    border-radius: 8px;
-  }
-
-  .summary-section h4 {
-    color: #088178;
-    margin: 0 0 1rem 0;
-    font-size: 1.2rem;
-    font-weight: 600;
-  }
-
-  .summary-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid #f0f0f0;
-    color: #4a5568;
-  }
-
-  .summary-item:last-child {
-    border-bottom: none;
-  }
-
-  .status-badge {
-    padding: 0.4rem 0.8rem;
-    border-radius: 20px;
-    font-weight: 600;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  /* Items Section */
-  .items-section {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .item-row {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem;
-    background: white;
-    border-radius: 8px;
-    border: 1px solid #f0f0f0;
-  }
-
-  .item-image {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 6px;
-  }
-
-  .item-details {
-    flex: 1;
-  }
-
-  .item-details h6 {
-    margin: 0 0 0.25rem 0;
-    font-size: 1rem;
-    font-weight: 600;
-    color: #253D4E;
-  }
-
-  .item-specs {
-    color: #7e7e7e;
-    font-size: 0.85rem;
-  }
-
-  .item-actions {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .status-placed {
-    background: #ffc107;
-    color: #856404;
-  }
-
-  .status-processing {
-    background: #17a2b8;
-    color: white;
-  }
-
-  .status-shipped {
-    background: #6f42c1;
-    color: white;
-  }
-
-  .status-out-for-delivery {
-    background: #fd7e14;
-    color: white;
-  }
-
-  .status-delivered {
-    background: #28a745;
-    color: white;
-  }
-
-  .status-cancelled {
-    background: #dc3545;
-    color: white;
-  }
-
-  .item-total {
-    font-weight: 600;
-    color: #253D4E;
-    font-size: 1.1rem;
-  }
-
-  .price-breakdown {
-    background: white;
-    padding: 0.2rem;
-    border-radius: 8px;
-  }
-
-  .price-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.5rem 0;
-    color: #4a5568;
-  }
-
-  .total-row {
-    border-top: 1px solid #e0e0e0;
-    padding-top: 1rem;
-    margin-top: 1rem;
-    font-size: 1.1rem;
-  }
-
-  .right-column {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .address-section {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-  }
-
-  .address-section h4 {
-    color: #088178;
-    margin: 0 0 1rem 0;
-    font-size: 1.2rem;
-    font-weight: 600;
-  }
-
-  .address-content p {
-    margin: 0.25rem 0;
-    color: #4a5568;
-    line-height: 1.5;
-  }
-
-  .bottom-actions {
-    display: flex;
-    justify-content: center;
-    padding-top: 1rem;
-  }
-
-  .btn-back-to-orders {
-    background: #007bff;
-    color: white;
-    text-decoration: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 25px;
-    font-weight: 500;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: all 0.3s ease;
-    border: 2px solid #007bff;
-  }
-
-  .btn-back-to-orders:hover {
-    background: #0056b3;
-    border-color: #0056b3;
-    color: white;
-    text-decoration: none;
-  }
-
-  .no-order-found {
-    text-align: center;
-    padding: 4rem 2rem;
-    background: linear-gradient(135deg, #f8fffe 0%, #f0f9f6 100%);
-    border: 2px solid #e8f5e8;
-    border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(59, 183, 126, 0.1);
-  }
-
-  .no-order-found .icon-container {
-    display: inline-block;
-    margin-bottom: 1.5rem;
-  }
-
-  .no-order-found i {
-    font-size: 4rem;
-    color: #dc3545;
-  }
-
-  .no-order-found h3 {
-    color: #253D4E;
-    margin-bottom: 1rem;
-    font-size: 1.5rem;
-    font-weight: 600;
-  }
-
-  .no-order-found p {
-    color: #7e8a98;
-    margin-bottom: 2rem;
-    font-size: 1.1rem;
-  }
-
-  .no-order-found {
-    text-align: center;
-    padding: 4rem 2rem;
-    background: linear-gradient(135deg, #f8fffe 0%, #f0f9f6 100%);
-    border: 2px solid #e8f5e8;
-    border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(59, 183, 126, 0.1);
-  }
-
-  .no-order-found .icon-container {
-    display: inline-block;
-    margin-bottom: 1.5rem;
-  }
-
-  .no-order-found i {
-    font-size: 4rem;
-    color: #dc3545;
-  }
-
-  .no-order-found h3 {
-    color: #253D4E;
-    margin-bottom: 1rem;
-    font-size: 1.5rem;
-    font-weight: 600;
-  }
-
-  .no-order-found p {
-    color: #7e8a98;
-    margin-bottom: 2rem;
-    font-size: 1.1rem;
-  }
-
-  .btn-cancel {
-    background: #e53935;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-
-  .btn-cancel:hover {
-    background: #c62828;
-    transform: translateY(-1px);
-  }
-
-  .btn-cancel.faded {
-    opacity: 0.5;
-    filter: grayscale(100%);
-    cursor: not-allowed;
-  }
-
-  .btn-cancel.faded::after {
-    position: absolute;
-    top: 50%;
-    left: 10%;
-    right: 10%;
-    height: 1px;
-    background: #fff;
-    transform: translateY(-50%);
-  }
-
-  @media (max-width: 768px) {
-    .profile-header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 1rem;
+    .compact-alert .swal2-icon {
+      width: 60px !important;
+      height: 60px !important;
+      margin: 1rem auto !important;
     }
 
-    .header-left {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 1rem;
-      width: 100%;
+    .compact-alert .swal2-title {
+      font-size: 20px !important;
+      padding: 0.5rem 0 !important;
     }
 
-    .header-actions {
-      width: 100%;
-    }
-
-    .btn-download-invoice {
-      width: 100%;
-      justify-content: center;
-    }
-
-    .order-details-grid {
-      grid-template-columns: 1fr;
-      gap: 1rem;
-    }
-
-    .item-row {
-      flex-direction: column;
-      text-align: center;
-      gap: 0.75rem;
-    }
-
-    .item-actions {
-      flex-direction: row;
-      justify-content: center;
-      width: 100%;
-    }
-
-    .summary-item,
-    .price-row {
-      flex-direction: column;
-      gap: 0.25rem;
-      text-align: center;
+    .compact-alert .swal2-html-container {
+      font-size: 14px !important;
+      margin: 0.5rem 0 1rem 0 !important;
     }
 
     .bottom-actions {
-      justify-content: center;
-    }
-  }
-
-  @media (max-width: 480px) {
-
-    .profile-header,
-    .profile-body {
-      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 2rem;
+      width: 100%;
     }
 
-    .summary-section,
-    .address-section,
-    .price-breakdown {
-      padding: 1rem;
+    .btn-back-to-orders {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      color: white;
+      text-decoration: none;
+      border: none;
+      padding: 12px 32px;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-back-to-orders:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+    }
+
+    .btn-retry-payment {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      width: auto;
+      margin-top: 12px;
+    }
+
+    .btn-retry-payment:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-retry-payment:active,
+    .btn-back-to-orders:active {
+      transform: translateY(0);
+    }
+
+    .btn-retry-payment i,
+    .btn-back-to-orders i {
+      font-size: 18px;
+    }
+
+
+    .btn-retry-payment::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn-retry-payment:hover::before {
+      left: 100%;
+    }
+
+    .btn-retry-payment:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-retry-payment:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .swal2-popup.swal-responsive {
+      color: #333 !important;
+      border: 2px solid rgba(0, 0, 0, 0.1) !important;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+      backdrop-filter: blur(10px) !important;
+    }
+
+    .swal2-title {
+      color: #e74c3c !important;
+      font-weight: 600 !important;
+      text-shadow: none !important;
+    }
+
+    .swal2-content {
+      color: #666 !important;
+    }
+
+    .swal2-confirm {
+      background: #3BB77E !important;
+      border: none !important;
+      border-radius: 8px !important;
+      padding: 12px 30px !important;
+      font-weight: 600 !important;
+      color: white !important;
+      box-shadow: 0 4px 15px rgba(59, 183, 126, 0.3) !important;
+      transition: all 0.3s ease !important;
+    }
+
+    .swal2-confirm:hover {
+      background: #2a9d5f !important;
+      transform: translateY(-1px) !important;
+      box-shadow: 0 6px 20px rgba(59, 183, 126, 0.4) !important;
+    }
+
+    .swal2-icon.swal2-error {
+      border-color: #e74c3c !important;
+      color: #e74c3c !important;
+    }
+
+    .swal2-icon.swal2-error .swal2-x-mark {
+      color: #e74c3c !important;
+    }
+
+    .swal-responsive {
+      width: 90% !important;
+      max-width: 320px !important;
+      padding: 1.2rem !important;
+      border-radius: 10px;
+      font-size: 0.95rem;
+    }
+
+    .payment-failed-section {
+      margin-top: 20px;
+      animation: slideInUp 0.5s ease-out;
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .payment-failed-section>div {
+      background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
+      border: 2px solid #dc3545;
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(220, 53, 69, 0.1);
+    }
+
+    .payment-failed-section h4 {
+      color: #dc3545;
+      margin-bottom: 12px;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .payment-failed-section p {
+      color: #666;
+      margin-bottom: 20px;
+      font-size: 14px;
+      line-height: 1.6;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Status badge for Payment Failed */
+    .status-badge.status-payment-failed {
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+      color: white;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      display: inline-block;
+      box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .btn-retry-payment {
+        width: 100%;
+        justify-content: center;
+        padding: 12px 24px;
+        font-size: 15px;
+      }
+    }
+
+    /* Loading animation for retry button */
+    .btn-retry-payment.loading {
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .btn-retry-payment.loading::after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      top: 50%;
+      left: 50%;
+      margin-left: -8px;
+      margin-top: -8px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .pricing-info {
+      font-size: 0.85em;
+      margin-top: 5px;
+    }
+
+    .original-price {
+      text-decoration: line-through;
+      color: #999;
+      margin-right: 10px;
+    }
+
+    .actual-paid {
+      color: #28a745;
+      font-weight: 600;
+    }
+
+    .item-total .original-amount {
+      text-decoration: line-through;
+      color: #999;
+      font-size: 0.9em;
+    }
+
+    .item-total .paid-amount {
+      color: #28a745;
+      font-weight: 600;
+    }
+
+    .discount-row {
+      color: #28a745;
+      font-weight: 500;
+    }
+
+    .savings-info {
+      text-align: center;
+      color: #28a745;
+      font-weight: 500;
+      margin-top: 10px;
+      padding: 8px;
+      background-color: #f8f9fa;
+      border-radius: 4px;
+    }
+
+    .btn-return {
+      background: rgb(8, 129, 120);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-return:hover {
+      background: rgb(6, 103, 96);
+      box-shadow: 0 0 25px rgba(8, 129, 120, 1);
+    }
+
+    .return-status {
+      margin-top: 5px;
+    }
+
+    .return-badge {
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .return-requested {
+      background-color: #fff3cd;
+      color: #856404;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .return-accepted {
+      background-color: #d4edda;
+      color: #155724;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .return-rejected {
+      background-color: #f8d7da;
+      color: #721c24;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .swal-responsive {
+      width: 90% !important;
+      max-width: 500px !important;
+    }
+
+    .main-content {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+    }
+
+    .profile-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 30px;
+      border-bottom: 1px solid #f0f0f0;
+      background: linear-gradient(135deg, #e8f4f2 0%, #ddf0e8 100%);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .profile-header h3 {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #253D4E;
+      margin: 0;
+    }
+
+    .profile-header h3 i {
+      color: #3BB77E;
+      font-size: 1.75rem;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .btn-back {
+      background: white;
+      border: 1px solid #e0e4e8;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      color: #253D4E;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .btn-back:hover {
+      background: #3BB77E;
+      color: white;
+      border-color: #3BB77E;
+      text-decoration: none;
+    }
+
+    .btn-download-invoice {
+      background: #088178;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .btn-download-invoice:hover {
+      background: #066b62;
+      color: white;
+    }
+
+    .order-details-grid {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .left-column {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .summary-section {
+      background: white;
+      padding: 0.5rem;
+      border-radius: 8px;
+    }
+
+    .summary-section h4 {
+      color: #088178;
+      margin: 0 0 1rem 0;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #f0f0f0;
+      color: #4a5568;
+    }
+
+    .summary-item:last-child {
+      border-bottom: none;
+    }
+
+    .status-badge {
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Items Section */
+    .items-section {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
     }
 
     .item-row {
-      padding: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: white;
+      border-radius: 8px;
+      border: 1px solid #f0f0f0;
     }
 
     .item-image {
-      width: 50px;
-      height: 50px;
-    }
-  }
-
-
-  .btn-cancel-order {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .order-item-detail {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .item-attributes {
-    justify-content: center;
-  }
-
-  .item-pricing {
-    text-align: center;
-  }
-
-  .price-row,
-  .payment-method,
-  .payment-status {
-    flex-direction: column;
-    text-align: center;
-  }
-
-
-  @media (max-width: 480px) {
-
-    .profile-header,
-    .profile-body {
-      padding: 1rem;
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 6px;
     }
 
-    .items-list,
-    .address-card,
-    .price-breakdown,
-    .payment-card {
-      padding: 1rem;
+    .item-details {
+      flex: 1;
     }
 
-    .order-header-details {
-      padding: 1rem;
+    .item-details h6 {
+      margin: 0 0 0.25rem 0;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #253D4E;
+    }
+
+    .item-specs {
+      color: #7e7e7e;
+      font-size: 0.85rem;
+    }
+
+    .item-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .status-placed {
+      background: #ffc107;
+      color: #856404;
+    }
+
+    .status-processing {
+      background: #17a2b8;
+      color: white;
+    }
+
+    .status-shipped {
+      background: #6f42c1;
+      color: white;
+    }
+
+    .status-out-for-delivery {
+      background: #fd7e14;
+      color: white;
+    }
+
+    .status-delivered {
+      background: #28a745;
+      color: white;
+    }
+
+    .status-cancelled {
+      background: #dc3545;
+      color: white;
+    }
+
+    .item-total {
+      font-weight: 600;
+      color: #253D4E;
+      font-size: 1.1rem;
+    }
+
+    .price-breakdown {
+      background: white;
+      padding: 0.2rem;
+      border-radius: 8px;
+    }
+
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      color: #4a5568;
+    }
+
+    .total-row {
+      border-top: 1px solid #e0e0e0;
+      padding-top: 1rem;
+      margin-top: 1rem;
+      font-size: 1.1rem;
+    }
+
+    .right-column {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .address-section {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+    }
+
+    .address-section h4 {
+      color: #088178;
+      margin: 0 0 1rem 0;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .address-content p {
+      margin: 0.25rem 0;
+      color: #4a5568;
+      line-height: 1.5;
+    }
+
+    .bottom-actions {
+      display: flex;
+      justify-content: center;
+      padding-top: 1rem;
+    }
+
+    .btn-back-to-orders {
+      background: #007bff;
+      color: white;
+      text-decoration: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 25px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+      border: 2px solid #007bff;
+    }
+
+    .btn-back-to-orders:hover {
+      background: #0056b3;
+      border-color: #0056b3;
+      color: white;
+      text-decoration: none;
+    }
+
+    .no-order-found {
+      text-align: center;
+      padding: 4rem 2rem;
+      background: linear-gradient(135deg, #f8fffe 0%, #f0f9f6 100%);
+      border: 2px solid #e8f5e8;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(59, 183, 126, 0.1);
+    }
+
+    .no-order-found .icon-container {
+      display: inline-block;
+      margin-bottom: 1.5rem;
+    }
+
+    .no-order-found i {
+      font-size: 4rem;
+      color: #dc3545;
+    }
+
+    .no-order-found h3 {
+      color: #253D4E;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .no-order-found p {
+      color: #7e8a98;
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+    }
+
+    .no-order-found {
+      text-align: center;
+      padding: 4rem 2rem;
+      background: linear-gradient(135deg, #f8fffe 0%, #f0f9f6 100%);
+      border: 2px solid #e8f5e8;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(59, 183, 126, 0.1);
+    }
+
+    .no-order-found .icon-container {
+      display: inline-block;
+      margin-bottom: 1.5rem;
+    }
+
+    .no-order-found i {
+      font-size: 4rem;
+      color: #dc3545;
+    }
+
+    .no-order-found h3 {
+      color: #253D4E;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .no-order-found p {
+      color: #7e8a98;
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+    }
+
+    .btn-cancel {
+      background: #e53935;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-cancel:hover {
+      background: #c62828;
+      transform: translateY(-1px);
+    }
+
+    .btn-cancel.faded {
+      opacity: 0.5;
+      filter: grayscale(100%);
+      cursor: not-allowed;
+    }
+
+    .btn-cancel.faded::after {
+      position: absolute;
+      top: 50%;
+      left: 10%;
+      right: 10%;
+      height: 1px;
+      background: #fff;
+      transform: translateY(-50%);
+    }
+
+    @media (max-width: 768px) {
+      .profile-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .header-left {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        width: 100%;
+      }
+
+      .header-actions {
+        width: 100%;
+      }
+
+      .btn-download-invoice {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .order-details-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .item-row {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.75rem;
+      }
+
+      .item-actions {
+        flex-direction: row;
+        justify-content: center;
+        width: 100%;
+      }
+
+      .summary-item,
+      .price-row {
+        flex-direction: column;
+        gap: 0.25rem;
+        text-align: center;
+      }
+
+      .bottom-actions {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+
+      .profile-header,
+      .profile-body {
+        padding: 1rem;
+      }
+
+      .summary-section,
+      .address-section,
+      .price-breakdown {
+        padding: 1rem;
+      }
+
+      .item-row {
+        padding: 0.75rem;
+      }
+
+      .item-image {
+        width: 50px;
+        height: 50px;
+      }
+    }
+
+
+    .btn-cancel-order {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .order-item-detail {
+      flex-direction: column;
+      text-align: center;
     }
 
     .item-attributes {
-      flex-direction: column;
-      gap: 0.25rem;
+      justify-content: center;
     }
-  }
-</style>
+
+    .item-pricing {
+      text-align: center;
+    }
+
+    .price-row,
+    .payment-method,
+    .payment-status {
+      flex-direction: column;
+      text-align: center;
+    }
+
+
+    @media (max-width: 480px) {
+
+      .profile-header,
+      .profile-body {
+        padding: 1rem;
+      }
+
+      .items-list,
+      .address-card,
+      .price-breakdown,
+      .payment-card {
+        padding: 1rem;
+      }
+
+      .order-header-details {
+        padding: 1rem;
+      }
+
+      .item-attributes {
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+    }
+  </style>
+</head>
 
 <body>
 
@@ -910,124 +909,145 @@
         </div>
       </div>
     </div>
-    <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
-      <div class="container">
-        <div class="header-wrap">
-          <div class="logo logo-width-1">
-            <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
-          </div>
-          <div class="header-right">
-            <div class="search-style-2"></div>
-            <div class="header-action-right">
-              <div class="header-action-2">
-                <div class="header-action-icon-2">
-                  <a href="/wishlist">
-                    <img class="svgInject" alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
-                    <span id="wishlistItemCount" class="pro-count blue">
-                      <%= typeof locals.wishlistItemCount !=='undefined' ? locals.wishlistItemCount : 0 %>
-                    </span>
+     <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
+            <div class="container">
+                <div class="header-wrap">
+                    <div class="logo logo-width-1">
+                        <a href="#"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+                    </div>
+                    <div class="header-right">
+                        <div class="search-style-2"></div>
+                        <div class="header-action-right">
+                            <div class="header-action-2">
+                                <div class="header-action-icon-2">
+                                    <a href="/wishlist">
+                                        <img class="svgInject" alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
+                                        <span id="wishlistItemCount" class="pro-count blue">
+                                            <%= wishlistItemCount %>
+                                        </span>
+                                    </a>
+                                </div>
+                                <div class="header-action-icon-2">
+                                    <a class="mini-cart-icon" href="/cart">
+                                        <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
+                                        <span id="cartItemCount" class="pro-count blue">
+                                            <%= cartItemCount %>
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-bottom header-bottom-bg-color sticky-bar">
+            <div class="container">
+                <div class="header-wrap header-space-between position-relative">
+                    <div class="logo logo-width-1 d-block d-lg-none">
+                        <a href="#"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+                    </div>
+                    <div class="header-nav d-none d-lg-flex">
+    
+                        <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
+                            <nav>
+                                <ul>
+                                    <li><a href="/">Home</a></li>
+                                    <li><a class='active' href="/shop">Shop</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="header-action-right d-block d-lg-none">
+                        <div class="header-action-2">
+                            <div class="header-action-icon-2">
+                                <a href="/wishlist">
+                                    <img alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
+                                    <span id="wishlistItemCount" class="pro-count blue">
+                                        <%= wishlistItemCount %>
+                                    </span>
+                                </a>
+                            </div>
+                            <div class="header-action-icon-2">
+                                <a class="mini-cart-icon" href="/cart">
+                                    <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
+                                    <span id="cartItemCount" class="pro-count blue">
+                                        <%= cartItemCount %>
+                                    </span>
+                                </a>
+                            </div>
+                            <div class="header-action-icon-2 d-block d-lg-none">
+                                <div class="burger-icon burger-icon-white">
+                                    <span class="burger-icon-top"></span>
+                                    <span class="burger-icon-mid"></span>
+                                    <span class="burger-icon-bottom"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+  <div class="mobile-header-active mobile-header-wrapper-style">
+    <div class="mobile-header-wrapper-inner">
+        <div class="mobile-header-top">
+            <div class="mobile-header-logo">
+                <a href="#"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+            </div>
+            <div class="mobile-menu-close close-style-wrap close-style-position-inherit">
+                <button class="close-style search-close">
+                    <i class="icon-top"></i>
+                    <i class="icon-bottom"></i>
+                </button>
+            </div>
+        </div>
+        <div class="mobile-header-content-area">
+            <div class="mobile-menu-wrap mobile-header-border">
+                <nav>
+                    <ul class="mobile-menu">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/shop">Shop</a></li>
+                    </ul>
+                </nav>
+            </div>
+           
+            <div class="mobile-header-info-wrap mobile-header-border">
+                <% if (user) { %>
+                    <div class="single-mobile-header-info mt-10 mb-10">
+                        <i class="fi-rs-user"></i>
+                        <strong><%= user.name %></strong>
+                    </div>
+                <% } else { %>
+                    <div class="single-mobile-header-info">
+                        <a href="/login"><i class="fi-rs-user"></i> Log In</a>
+                    </div>
+                    <div class="single-mobile-header-info">
+                        <a href="/signup"><i class="fi-rs-user-add"></i> Sign Up</a>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
 
-                  </a>
-                </div>
-                <div class="header-action-icon-2">
-                  <a class="mini-cart-icon" href="/cart">
-                    <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
-                    <span id="cartItemCount" class="pro-count blue">
-                      <%= typeof locals.cartItemCount !=='undefined' ? locals.cartItemCount : 0 %>
-                    </span>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
+<div class="anime-elements">
+            <div class="sakura">🌸</div>
+            <div class="sakura">🌸</div>
+            <div class="sakura">🌸</div>
+            <div class="sakura">🌸</div>
+            <div class="sakura">🌸</div>
+            <div class="sakura">🌸</div>
+            <div class="sakura">🌸</div>
+            <div class="sakura">🌸</div>
+            <div class="kanji-float">化</div>
+            <div class="kanji-float">革</div>
         </div>
-      </div>
-    </div>
-    <div class="header-bottom header-bottom-bg-color sticky-bar">
-      <div class="container">
-        <div class="header-wrap header-space-between position-relative">
-          <div class="logo logo-width-1 d-block d-lg-none">
-            <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
-          </div>
-          <div class="header-nav d-none d-lg-flex">
-            <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
-              <nav>
-                <ul>
-                  <li><a href="/">Home</a></li>
-                  <li><a href="/shop">Shop</a></li>
-                </ul>
-              </nav>
-            </div>
-          </div>
-          <div class="header-action-right d-block d-lg-none">
-            <div class="header-action-2">
-              <div class="header-action-icon-2">
-                <a href="shop-wishlist.html">
-                  <img alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
-                  <span class="pro-count white">4</span>
-                </a>
-              </div>
-              <div class="header-action-icon-2">
-                <a class="mini-cart-icon" href="shop-cart.html">
-                  <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
-                  <span class="pro-count white">2</span>
-                </a>
-                <div class="cart-dropdown-wrap cart-dropdown-hm2">
-                  <ul>
-                    <li>
-                      <div class="shopping-cart-img">
-                        <a href="shop-product-right.html"><img alt="Evara" src="/imgs/shop/thumbnail-3.jpg"></a>
-                      </div>
-                      <div class="shopping-cart-title">
-                        <h4><a href="shop-product-right.html">Plain Striola Shirts</a></h4>
-                        <h3><span>1 × </span>$800.00</h3>
-                      </div>
-                      <div class="shopping-cart-delete">
-                        <a href="#"><i class="fi-rs-cross-small"></i></a>
-                      </div>
-                    </li>
-                    <li>
-                      <div class="shopping-cart-img">
-                        <a href="shop-product-right.html"><img alt="Evara" src="/imgs/shop/thumbnail-4.jpg"></a>
-                      </div>
-                      <div class="shopping-cart-title">
-                        <h4><a href="shop-product-right.html">Macbook Pro 2022</a></h4>
-                        <h3><span>1 × </span>$3500.00</h3>
-                      </div>
-                      <div class="shopping-cart-delete">
-                        <a href="#"><i class="fi-rs-cross-small"></i></a>
-                      </div>
-                    </li>
-                  </ul>
-                  <div class="shopping-cart-footer">
-                    <div class="shopping-cart-total">
-                      <h4>Total <span>$383.00</span></h4>
-                    </div>
-                    <div class="shopping-cart-button">
-                      <a href="shop-cart.html">View cart</a>
-                      <a href="shop-checkout.html">Checkout</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="header-action-icon-2 d-block d-lg-none">
-                <div class="burger-icon burger-icon-white">
-                  <span class="burger-icon-top"></span>
-                  <span class="burger-icon-mid"></span>
-                  <span class="burger-icon-bottom"></span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </header>
 
   <div class="page-header breadcrumb-wrap">
     <div class="container">
       <div class="breadcrumb" aria-label="Breadcrumb navigation">
-        <a href="/" rel="nofollow">Home</a>
+        <a href="#" rel="nofollow">Home</a>
         <span></span> User Profile
         <span></span> My Orders
         <span></span> Order Details
@@ -1431,16 +1451,30 @@
     </div>
 </footer>
 
-  <script src="/js/jquery.min.js"></script>
+ 
   <script src="/js/wishlist-count-updater.js"></script>=
   <script src="/js/cart-count-updater.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
+  <script src="/js/responsiveUser.js"></script>
+  
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
-</script>
+
+    function toggleMobileProfileDropdown() {
+      const dropdown = document.querySelector('.mobile-profile-dropdown');
+      dropdown.classList.toggle('active');
+    }
+
+    document.addEventListener('click', function (event) {
+      const dropdown = document.querySelector('.mobile-profile-dropdown');
+      if (dropdown && !dropdown.contains(event.target)) {
+        dropdown.classList.remove('active');
+      }
+    });
+  </script>
 
 <script>
     const section = document.querySelector('.newsletter');

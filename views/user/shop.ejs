@@ -1,18 +1,14 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en">
-
+<html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Kaizen Street Shop</title>
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Shop</title>
+    <meta name="description" content="Browse our complete collection of anime clothing, hoodies, t-shirts and accessories. Naruto, One Piece, Demon Slayer merch. COD available. Free shipping">
+    <link rel="icon" type="image/svg+xml" href="/imgs/theme/kaizenicon.svg">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css">
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/kaizenicon.svg">
     <link rel="stylesheet" href="/css/main.css?v=3.4">
     <link href="/css/responsiveUser.css" rel="stylesheet" type="text/css">
-
     <style>
         .footer-logo {
             width: 180px;
@@ -148,7 +144,6 @@
             margin: 40px 0;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
             min-height: 300px;
-            /* Fixed height to maintain size */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -316,7 +311,7 @@
             <div class="container">
                 <div class="header-wrap">
                     <div class="logo logo-width-1">
-                        <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+                        <a href="#"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
                     </div>
                     <div class="header-right">
                         <div class="search-style-2">
@@ -334,7 +329,6 @@
                                         name="search" id="searchInput" autocomplete="off"
                                         value="<%= typeof search !== 'undefined' ? search : '' %>">
 
-                                    <!-- Hidden inputs to preserve other filters -->
                                     <% if (category) { %>
                                         <input type="hidden" name="category" value="<%= category %>">
                                         <% } %>
@@ -351,8 +345,7 @@
                                                                 <input type="hidden" name="maxPrice"
                                                                     value="<%= maxPrice %>">
                                                                 <% } %>
-
-                                                                    <!-- Search button -->
+                                                                  
                                                                     <button type="9" class="search-button"
                                                                         aria-label="Search">
                                                                         <svg width="22" height="22" viewBox="0 0 24 24"
@@ -362,8 +355,7 @@
                                                                             <path d="m9 18 6-6-6-6" />
                                                                         </svg>
                                                                     </button>
-
-                                                                    <!-- Clear button -->
+                                       
                                                                     <button type="button" id="clear-search"
                                                                         class="search-clear" aria-label="Clear search"
                                                                         onclick="clearSearch()"
@@ -401,7 +393,7 @@
             <div class="container">
                 <div class="header-wrap header-space-between position-relative">
                     <div class="logo logo-width-1 d-block d-lg-none">
-                        <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+                        <a href="#"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
                     </div>
                     <div class="header-nav d-none d-lg-flex">
                         <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
@@ -448,7 +440,7 @@
     <div class="mobile-header-wrapper-inner">
         <div class="mobile-header-top">
             <div class="mobile-header-logo">
-                <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+                <a href="#"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
             </div>
             <div class="mobile-menu-close close-style-wrap close-style-position-inherit">
                 <button class="close-style search-close">

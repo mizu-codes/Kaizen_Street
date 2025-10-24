@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Checkout</title>
-    <link rel="shortcut icon" type="image/x-icon" href="/imgs/theme/kaizenicon.svg">
+    <link rel="icon" type="image/svg+xml" href="/imgs/theme/kaizenicon.svg">
     <link rel="stylesheet" href="/css/main.css?v=3.4">
     <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+    <link href="/css/responsiveUser.css" rel="stylesheet" type="text/css">
     <style>
         .coupon-section-summary {
             border-top: 1px solid #f0f0f0;
@@ -19,7 +18,7 @@
             padding: 5px;
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
         }
-    
+
         .coupon-section-summary .coupon-title {
             display: flex;
             align-items: center;
@@ -29,14 +28,14 @@
             font-size: 16px;
             font-weight: 700;
         }
-    
+
         .coupon-section-summary .coupon-title i {
             color: #3BB77E;
             font-size: 22px;
             padding: 8px;
             border-radius: 10px;
         }
-    
+
         .coupon-count-badge {
             background: linear-gradient(135deg, #3BB77E 0%, #2ea368 100%);
             color: white;
@@ -47,19 +46,19 @@
             letter-spacing: 0.5px;
             margin-left: auto;
         }
-    
+
         .coupon-form {
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
-    
+
         .coupon-input-container {
             display: flex;
             gap: 10px;
             align-items: stretch;
         }
-    
+
         .coupon-input {
             flex: 1;
             padding: 12px 16px;
@@ -71,14 +70,14 @@
             font-weight: 600;
             letter-spacing: 0.5px;
         }
-    
+
         .coupon-input:focus {
             outline: none;
             border-color: #3BB77E;
             box-shadow: 0 0 0 4px rgba(59, 183, 126, 0.1);
             transform: translateY(-1px);
         }
-    
+
         .apply-coupon-btn {
             padding: 12px 24px;
             background: linear-gradient(135deg, #3BB77E 0%, #2ea368 100%);
@@ -92,20 +91,20 @@
             white-space: nowrap;
             box-shadow: 0 4px 15px rgba(59, 183, 126, 0.3);
         }
-    
+
         .apply-coupon-btn:hover {
             background: linear-gradient(135deg, #2ea368 0%, #259a5a 100%);
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(59, 183, 126, 0.4);
         }
-    
+
         .apply-coupon-btn:disabled {
             background: #6c757d;
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
         }
-    
+
         .coupon-help {
             display: flex;
             align-items: center;
@@ -115,7 +114,7 @@
             padding: 8px 12px;
             border-radius: 8px;
         }
-    
+
         .applied-coupon {
             display: flex;
             justify-content: space-between;
@@ -129,19 +128,19 @@
             box-shadow: 0 8px 25px rgba(59, 183, 126, 0.3);
             animation: slideIn 0.4s ease-out;
         }
-    
+
         @keyframes slideIn {
             from {
                 opacity: 0;
                 transform: translateY(-10px);
             }
-    
+
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-    
+
         .applied-coupon::before {
             content: '';
             position: absolute;
@@ -156,7 +155,7 @@
                     rgba(255, 255, 255, 0.08) 20px);
             pointer-events: none;
         }
-    
+
         .applied-coupon-info {
             display: flex;
             align-items: center;
@@ -164,7 +163,7 @@
             z-index: 1;
             position: relative;
         }
-    
+
         .coupon-icon.success {
             font-size: 18px;
             display: flex;
@@ -173,7 +172,7 @@
             padding: 8px;
             border-radius: 50%;
         }
-    
+
         .coupon-code {
             padding: 0px 0px;
             border-radius: 6px;
@@ -182,13 +181,13 @@
             font-weight: 600;
             letter-spacing: 0.5px;
         }
-    
+
         .discount-amount {
             font-weight: 700;
             font-size: 14px !important;
             margin-top: 6px !important;
         }
-    
+
         .remove-coupon-btn {
             background: rgba(255, 255, 255, 0.2);
             border: 2px solid rgba(255, 255, 255, 0.3);
@@ -206,13 +205,13 @@
             align-items: center;
             justify-content: center;
         }
-    
+
         .remove-coupon-btn:hover {
             background: rgba(255, 255, 255, 0.3);
             border-color: rgba(255, 255, 255, 0.5);
             transform: rotate(90deg) scale(1.1);
         }
-    
+
         .summary-item.coupon-discount {
             color: #3BB77E;
             background: rgba(59, 183, 126, 0.1);
@@ -221,22 +220,22 @@
             margin: 8px 0;
             border: 1px solid rgba(59, 183, 126, 0.2);
         }
-    
+
         .summary-item.coupon-discount .summary-value.discount {
             color: #3BB77E;
             font-weight: 700;
             font-size: 16px;
         }
-    
+
         .swal-rounded {
             border-radius: 15px !important;
         }
-    
+
         .coupon-help-text {
             font-size: 13px;
             color: #6c757d;
         }
-    
+
         .coupon-link {
             color: #007bff;
             text-decoration: none;
@@ -244,12 +243,12 @@
             font-size: 13px;
             transition: color 0.3s ease;
         }
-    
+
         .coupon-link:hover {
             color: #0056b3;
             text-decoration: underline;
         }
-    
+
         .payment-option {
             position: relative;
             display: flex;
@@ -262,37 +261,37 @@
             transition: all 0.3s ease;
             background: #ffffff;
         }
-    
+
         .payment-option:hover {
             border-color: #3399cc;
             background-color: #f8f9fa;
         }
-    
+
         .payment-option input[type="radio"]:checked+.payment-option-icon+.payment-option-content {
             color: #3399cc;
         }
-    
+
         .payment-option input[type="radio"]:checked~* {
             border-color: #3399cc;
         }
-    
+
         .payment-option.insufficient-balance {
             opacity: 0.6;
             cursor: not-allowed;
             background-color: #f8f9fa;
             border-color: #dc3545;
         }
-    
+
         .payment-option.insufficient-balance input[type="radio"] {
             cursor: not-allowed;
         }
-    
+
         .payment-option input[type="radio"] {
             margin-right: 15px;
             transform: scale(1.2);
             accent-color: #3399cc;
         }
-    
+
         .payment-option-icon {
             margin-right: 15px;
             display: flex;
@@ -304,11 +303,11 @@
             border-radius: 8px;
             padding: 8px;
         }
-    
+
         .payment-option input[type="radio"]:checked+.payment-option-icon {
             background-color: #e3f2fd;
         }
-    
+
         .payment-icon {
             width: 100%;
             height: 100%;
@@ -316,39 +315,39 @@
             max-width: 100px;
             max-height: 150px;
         }
-    
+
         .payment-option-content {
             flex: 1;
         }
-    
+
         .payment-option-title {
             font-size: 16px;
             font-weight: 600;
             color: #333;
             margin-bottom: 4px;
         }
-    
+
         .payment-option-desc {
             font-size: 14px;
             color: #666;
             line-height: 1.4;
         }
-    
+
         .wallet-info {
             padding: 5px 0;
         }
-    
+
         .wallet-balance-label {
             font-size: 13px;
             color: #666;
         }
-    
+
         .wallet-balance {
             font-weight: 600;
             color: #28a745;
             font-size: 14px;
         }
-    
+
         .insufficient-balance-msg {
             margin-top: 4px;
             padding: 4px 8px;
@@ -358,7 +357,7 @@
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
-    
+
         .payment-title {
             font-size: 18px;
             font-weight: 600;
@@ -368,41 +367,41 @@
             align-items: center;
             gap: 10px;
         }
-    
+
         .payment-title i {
             color: #3399cc;
             font-size: 20px;
         }
-    
+
         @media (max-width: 768px) {
             .payment-option {
                 padding: 12px;
             }
-    
+
             .payment-option-icon {
                 width: 45px;
                 height: 45px;
                 margin-right: 12px;
             }
-    
+
             .payment-icon {
                 max-width: 35px;
                 max-height: 35px;
             }
-    
+
             .payment-option input[type="radio"] {
                 margin-right: 12px;
             }
-    
+
             .payment-option-title {
                 font-size: 15px;
             }
-    
+
             .payment-option-desc {
                 font-size: 13px;
             }
         }
-    
+
         .payment-option {
             position: relative;
             display: flex;
@@ -415,70 +414,70 @@
             transition: all 0.3s ease;
             background: #ffffff;
         }
-    
+
         .payment-option:hover {
             border-color: #3399cc;
             background-color: #f8f9fa;
         }
-    
+
         .payment-option input[type="radio"]:checked+.payment-option-icon+.payment-option-content {
             color: #3399cc;
         }
-    
+
         .payment-option input[type="radio"]:checked~* {
             border-color: #3399cc;
         }
-    
+
         .payment-option.insufficient-balance {
             opacity: 0.6;
             cursor: not-allowed;
             background-color: #f8f9fa;
             border-color: #dc3545;
         }
-    
+
         .payment-option.insufficient-balance input[type="radio"] {
             cursor: not-allowed;
         }
-    
+
         .payment-option input[type="radio"] {
             margin-right: 15px;
             transform: scale(1.2);
             accent-color: #3399cc;
         }
-    
+
         .payment-option input[type="radio"]:checked+.payment-option-icon {
             background-color: #e3f2fd;
             color: #3399cc;
         }
-    
+
         .payment-option-content {
             flex: 1;
         }
-    
+
         .payment-option-title {
             font-size: 16px;
             font-weight: 600;
             color: #333;
             margin-bottom: 4px;
         }
-    
+
         .payment-option-desc {
             font-size: 14px;
             color: #666;
             line-height: 1.4;
         }
-    
+
         .wallet-balance-label {
             font-size: 13px;
             color: #666;
         }
-    
+
         .wallet-balance {
             font-weight: 600;
             color: #28a745;
             font-size: 14px;
         }
-    
+
         .insufficient-balance-msg {
             margin-top: 4px;
             padding: 4px 8px;
@@ -488,7 +487,7 @@
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
-    
+
         .payment-title {
             font-size: 18px;
             font-weight: 600;
@@ -498,54 +497,54 @@
             align-items: center;
             gap: 10px;
         }
-    
+
         .payment-title i {
             color: #3399cc;
             font-size: 20px;
         }
-    
+
         @media (max-width: 768px) {
             .payment-option {
                 padding: 12px;
             }
-    
+
             .payment-option-icon {
                 width: 35px;
                 height: 35px;
                 font-size: 20px;
                 margin-right: 12px;
             }
-    
+
             .payment-option input[type="radio"] {
                 margin-right: 12px;
             }
-    
+
             .payment-option-title {
                 font-size: 15px;
             }
-    
+
             .payment-option-desc {
                 font-size: 13px;
             }
         }
-    
+
         .swal2-popup.swal-responsive {
             color: #333 !important;
             border: 2px solid rgba(0, 0, 0, 0.1) !important;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
             backdrop-filter: blur(10px) !important;
         }
-    
+
         .swal2-title {
             color: #e74c3c !important;
             font-weight: 600 !important;
             text-shadow: none !important;
         }
-    
+
         .swal2-content {
             color: #666 !important;
         }
-    
+
         .swal2-confirm {
             background: #3BB77E !important;
             border: none !important;
@@ -556,22 +555,22 @@
             box-shadow: 0 4px 15px rgba(59, 183, 126, 0.3) !important;
             transition: all 0.3s ease !important;
         }
-    
+
         .swal2-confirm:hover {
             background: #2a9d5f !important;
             transform: translateY(-1px) !important;
             box-shadow: 0 6px 20px rgba(59, 183, 126, 0.4) !important;
         }
-    
+
         .swal2-icon.swal2-error {
             border-color: #e74c3c !important;
             color: #e74c3c !important;
         }
-    
+
         .swal2-icon.swal2-error .swal2-x-mark {
             color: #e74c3c !important;
         }
-    
+
         .swal-responsive {
             width: 90% !important;
             max-width: 320px !important;
@@ -579,13 +578,13 @@
             border-radius: 10px;
             font-size: 0.95rem;
         }
-    
+
         .checkout-container {
             background: white;
             min-height: 100vh;
             padding: 40px 0;
         }
-    
+
         .checkout-header {
             text-align: left;
             margin-bottom: 30px;
@@ -597,19 +596,19 @@
             padding-left: 20px;
             padding-right: 20px;
         }
-    
+
         .checkout-title {
             font-size: 1.4rem;
             font-weight: 600;
             color: #1a1a1a;
             margin-bottom: 8px;
         }
-    
+
         .checkout-subtitle {
             color: #666;
             font-size: 0.85rem;
         }
-    
+
         .checkout-content {
             display: grid;
             grid-template-columns: 1fr 380px;
@@ -618,13 +617,13 @@
             margin: 0 auto;
             padding: 0 20px;
         }
-    
+
         .main-content {
             display: flex;
             flex-direction: column;
             gap: 25px;
         }
-    
+
         .section {
             background: white;
             border-radius: 20px;
@@ -632,7 +631,7 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             border: 1px solid #e9ecef;
         }
-    
+
         .section-title {
             font-size: 1.4rem;
             font-weight: 600;
@@ -642,14 +641,14 @@
             align-items: center;
             gap: 10px;
         }
-    
+
         .main-content {
             background: white;
             border-radius: 16px;
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
             overflow: hidden;
         }
-    
+
         .profile-header {
             display: flex;
             justify-content: space-between;
@@ -659,7 +658,7 @@
             gap: 1rem;
             margin-bottom: 1rem;
         }
-    
+
         .profile-header h3 {
             display: flex;
             align-items: center;
@@ -669,11 +668,11 @@
             color: #253D4E;
             margin: 0;
         }
-    
+
         .profile-header h3 i {
             font-size: 1.75rem;
         }
-    
+
         .btn-add-address {
             display: flex;
             align-items: center;
@@ -688,34 +687,34 @@
             cursor: pointer;
             font-size: 13px;
         }
-    
+
         .btn-add-address:hover {
             background: #059669;
             color: white;
             transform: translateY(-1px);
             box-shadow: 0 6px 20px rgba(59, 183, 126, 0.4);
         }
-    
+
         .btn-add-address i {
             margin-right: 6px;
             color: white;
             font-size: 1.3rem;
         }
-    
+
         .btn-add-address:active {
             transform: translateY(0);
         }
-    
+
         .profile-body {
             padding: 2rem;
         }
-    
+
         .addresses-grid {
             display: flex;
             flex-direction: column;
             gap: 1rem;
         }
-    
+
         .address-card {
             background: white;
             border: 2px solid #f0f0f0;
@@ -729,7 +728,7 @@
             justify-content: space-between;
             min-height: 80px;
         }
-    
+
         .address-card::before {
             content: '';
             position: absolute;
@@ -741,31 +740,31 @@
             transform: scaleY(0);
             transition: transform 0.3s ease;
         }
-    
+
         .address-card:hover::before {
             transform: scaleY(1);
         }
-    
+
         .address-card:hover {
             border-color: #3BB77E;
             box-shadow: 0 4px 15px rgba(59, 183, 126, 0.15);
             transform: translateX(4px);
         }
-    
+
         .address-main-content {
             display: flex;
             align-items: center;
             gap: 1.5rem;
             flex: 1;
         }
-    
+
         .address-type {
             display: flex;
             align-items: center;
             gap: 0.75rem;
             min-width: 120px;
         }
-    
+
         .address-type i {
             color: #3BB77E;
             font-size: 1.4rem;
@@ -773,14 +772,14 @@
             padding: 0.5rem;
             border-radius: 10px;
         }
-    
+
         .address-type-text {
             font-weight: 600;
             color: #253D4E;
             text-transform: capitalize;
             font-size: 0.9rem;
         }
-    
+
         .default-badge {
             background: linear-gradient(135deg, #3BB77E 0%, #2ea368 100%);
             color: white;
@@ -792,19 +791,19 @@
             letter-spacing: 0.5px;
             margin-left: 0.5rem;
         }
-    
+
         .address-details {
             flex: 1;
             min-width: 0;
         }
-    
+
         .address-details h4 {
             color: #253D4E;
             margin-bottom: 0.25rem;
             font-size: 0.9rem;
             font-weight: 600;
         }
-    
+
         .address-text {
             color: #666;
             font-size: 0.8rem;
@@ -813,7 +812,7 @@
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
-    
+
         .address-phone {
             color: #666;
             display: flex;
@@ -822,18 +821,18 @@
             font-size: 0.8rem;
             margin-top: 0.25rem;
         }
-    
+
         .address-phone i {
             color: #3BB77E;
             font-size: 1rem;
         }
-    
+
         .address-actions {
             display: flex;
             align-items: center;
             gap: 0.75rem;
         }
-    
+
         .btn-set-default {
             background: transparent;
             border: 2px solid #3BB77E;
@@ -846,24 +845,24 @@
             transition: all 0.3s ease;
             white-space: nowrap;
         }
-    
+
         .btn-set-default:hover {
             background: #3BB77E;
             color: white;
             transform: translateY(-1px);
         }
-    
+
         .btn-set-default:disabled {
             opacity: 0.5;
             cursor: not-allowed;
             transform: none;
         }
-    
+
         .address-action-buttons {
             display: flex;
             gap: 0.5rem;
         }
-    
+
         .btn-action {
             background: white;
             border: 2px solid #f0f0f0;
@@ -877,29 +876,29 @@
             transition: all 0.3s ease;
             font-size: 1rem;
         }
-    
+
         .btn-action.edit {
             color: #3BB77E;
         }
-    
+
         .btn-action.edit:hover {
             background: #3BB77E;
             color: white;
             border-color: #3BB77E;
             transform: scale(1.05);
         }
-    
+
         .btn-action.delete {
             color: #ff4757;
         }
-    
+
         .btn-action.delete:hover {
             background: #ff4757;
             color: white;
             border-color: #ff4757;
             transform: scale(1.05);
         }
-    
+
         /* No addresses state */
         .no-addresses {
             text-align: center;
@@ -908,20 +907,20 @@
             border-radius: 20px;
             border: 2px dashed #e0e0e0;
         }
-    
+
         .no-addresses-icon {
             font-size: 5rem;
             color: #d0d0d0;
             margin-bottom: 1.5rem;
         }
-    
+
         .no-addresses h4 {
             color: #253D4E;
             margin-bottom: 0.75rem;
             font-size: 1.5rem;
             font-weight: 600;
         }
-    
+
         .no-addresses p {
             color: #666;
             margin-bottom: 2rem;
@@ -930,7 +929,7 @@
             margin-left: auto;
             margin-right: auto;
         }
-    
+
         .btn-add-first-address {
             background: linear-gradient(135deg, #3BB77E 0%, #2ea368 100%);
             color: white;
@@ -946,12 +945,12 @@
             gap: 0.75rem;
             box-shadow: 0 4px 15px rgba(59, 183, 126, 0.3);
         }
-    
+
         .btn-add-first-address:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(59, 183, 126, 0.4);
         }
-    
+
         /* Order Items Section */
         .order-item {
             display: grid;
@@ -964,62 +963,62 @@
             border: 1px solid #e9ecef;
             transition: all 0.3s ease;
         }
-    
+
         .order-item:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
         }
-    
+
         .order-item-image {
             position: relative;
             overflow: hidden;
             border-radius: 10px;
             aspect-ratio: 1;
         }
-    
+
         .order-item-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-    
+
         .order-item-details {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
-    
+
         .order-item-name {
             font-size: 1.1rem;
             font-weight: 600;
             color: #1a1a1a;
             margin-bottom: 5px;
         }
-    
+
         .order-item-quantity {
             color: #666;
             font-size: 0.9rem;
             margin-bottom: 10px;
         }
-    
+
         .order-item-price {
             display: flex;
             align-items: center;
             gap: 10px;
         }
-    
+
         .original-price {
             color: #999;
             text-decoration: line-through;
             font-size: 0.9rem;
         }
-    
+
         .current-price {
             color: #1a1a1a;
             font-size: 1.1rem;
             font-weight: 600;
         }
-    
+
         .discount-badge {
             background: #088178;
             color: white;
@@ -1028,25 +1027,25 @@
             font-size: 0.75rem;
             font-weight: 500;
         }
-    
+
         .order-item-total {
             display: flex;
             flex-direction: column;
             align-items: flex-end;
             justify-content: center;
         }
-    
+
         .item-subtotal {
             font-size: 1.2rem;
             font-weight: 700;
             color: #1a1a1a;
         }
-    
+
         .payment-title i {
             color: #ff1744;
             font-size: 1.5rem;
         }
-    
+
         .payment-option {
             background: white;
             border: 2px solid #f0f0f0;
@@ -1059,23 +1058,23 @@
             align-items: center;
             gap: 15px;
         }
-    
+
         .payment-option:hover {
             border-color: #ff1744;
             box-shadow: 0 4px 15px rgba(255, 23, 68, 0.1);
         }
-    
+
         .payment-option input[type="radio"] {
             width: 20px;
             height: 20px;
             margin: 0;
             accent-color: #ff1744;
         }
-    
+
         .payment-option-content {
             flex: 1;
         }
-    
+
         .order-summary {
             background: white;
             border-radius: 15px;
@@ -1086,7 +1085,7 @@
             position: sticky;
             top: 20px;
         }
-    
+
         .progress-steps {
             display: flex;
             justify-content: center;
@@ -1097,7 +1096,7 @@
             background: #f8f9fa;
             border-radius: 15px;
         }
-    
+
         .step {
             display: flex;
             align-items: center;
@@ -1108,7 +1107,7 @@
             transition: all 0.3s ease;
             font-size: 0.75rem;
         }
-    
+
         .step-icon {
             width: 18px;
             height: 18px;
@@ -1119,43 +1118,43 @@
             margin-right: 6px;
             font-size: 0.65rem;
         }
-    
+
         .step.active {
             background: linear-gradient(135deg, #ff1744 0%, #f50057 50%, #c51162 100%);
             color: white;
         }
-    
+
         .step.active .step-icon {
             background: rgba(255, 255, 255, 0.2);
             color: white;
         }
-    
+
         .step.completed {
             background: #28a745;
             color: white;
         }
-    
+
         .step.completed .step-icon {
             background: rgba(255, 255, 255, 0.2);
             color: white;
         }
-    
+
         .step.inactive {
             background: #e9ecef;
             color: #666;
         }
-    
+
         .step.inactive .step-icon {
             background: #dee2e6;
             color: #6c757d;
         }
-    
+
         .step-arrow {
             color: #ccc;
             margin: 0 4px;
             font-size: 0.8rem;
         }
-    
+
         .summary-title {
             font-size: 1.6rem;
             font-weight: 600;
@@ -1163,7 +1162,7 @@
             margin-bottom: 20px;
             text-align: center;
         }
-    
+
         .summary-item {
             display: flex;
             justify-content: space-between;
@@ -1171,23 +1170,23 @@
             border-bottom: 1px solid #f1f3f4;
             color: #666;
         }
-    
+
         .summary-item:last-of-type {
             border-bottom: none;
         }
-    
+
         .summary-value {
             font-weight: 600;
         }
-    
+
         .summary-value.free {
             color: #28a745;
         }
-    
+
         .summary-value.discount {
             color: #088178;
         }
-    
+
         .total-section {
             background: #f8f9fa;
             border-radius: 12px;
@@ -1195,24 +1194,24 @@
             margin: 20px 0;
             border: 2px solid #e9ecef;
         }
-    
+
         .total-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-    
+
         .total-label {
             font-size: 1rem;
             color: #666;
         }
-    
+
         .total-amount {
             font-size: 1.8rem;
             font-weight: 700;
             color: #1a1a1a;
         }
-    
+
         .place-order-btn {
             width: 100%;
             padding: 10px;
@@ -1226,24 +1225,24 @@
             transition: all 0.3s ease;
             margin-top: 2rem;
         }
-    
+
         .place-order-btn:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 10px 30px rgba(255, 23, 68, 0.3);
         }
-    
+
         .place-order-btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
             transform: none;
         }
-    
+
         @media (max-width: 1024px) {
             .checkout-content {
                 grid-template-columns: 1fr 340px;
             }
         }
-    
+
         @media (max-width: 768px) {
             .address-card {
                 flex-direction: column;
@@ -1251,44 +1250,44 @@
                 gap: 1rem;
                 padding: 1.25rem;
             }
-    
+
             .address-main-content {
                 flex-direction: column;
                 gap: 1rem;
             }
-    
+
             .address-type {
                 min-width: auto;
             }
-    
+
             .address-actions {
                 flex-direction: row;
                 justify-content: space-between;
                 align-items: center;
             }
-    
+
             .btn-add-address {
                 justify-content: center;
             }
-    
+
             .checkout-content {
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
-    
+
             .checkout-container {
                 padding: 20px 0;
             }
-    
+
             .checkout-title {
                 font-size: 1.3rem;
             }
-    
+
             .order-item {
                 grid-template-columns: 70px 1fr;
                 gap: 12px;
             }
-    
+
             .order-item-total {
                 grid-column: 1 / -1;
                 flex-direction: row;
@@ -1296,43 +1295,43 @@
                 align-items: center;
                 margin-top: 10px;
             }
-    
+
             .order-summary {
                 position: relative;
                 top: auto;
             }
-    
+
             .payment-options {
                 gap: 12px;
             }
-    
+
             .payment-option {
                 padding: 15px;
             }
         }
-    
+
         @media (max-width: 480px) {
             .checkout-content {
                 padding: 0 15px;
             }
-    
+
             .section {
                 padding: 20px;
             }
-    
+
             .order-item {
                 padding: 15px;
             }
-    
+
             .order-summary {
                 padding: 20px;
             }
-    
+
             .payment-methods {
                 padding: 20px;
             }
         }
-    
+
         .coupon-section-summary .coupon-title {
             display: flex;
             align-items: center;
@@ -1342,24 +1341,24 @@
             font-size: 14px;
             font-weight: 600;
         }
-    
+
         .coupon-section-summary .coupon-title i {
             color: #28a745;
             font-size: 16px;
         }
-    
+
         .coupon-form {
             display: flex;
             flex-direction: column;
             gap: 8px;
         }
-    
+
         .coupon-input-container {
             display: flex;
             gap: 8px;
             align-items: stretch;
         }
-    
+
         .coupon-input {
             flex: 1;
             padding: 8px 12px;
@@ -1369,13 +1368,13 @@
             text-transform: uppercase;
             transition: all 0.3s ease;
         }
-    
+
         .coupon-input:focus {
             outline: none;
             border-color: #007bff;
             box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
         }
-    
+
         .apply-coupon-btn {
             padding: 8px 16px;
             background: #007bff;
@@ -1388,16 +1387,16 @@
             font-size: 12px;
             white-space: nowrap;
         }
-    
+
         .apply-coupon-btn:hover {
             background: #0056b3;
         }
-    
+
         .apply-coupon-btn:disabled {
             background: #6c757d;
             cursor: not-allowed;
         }
-    
+
         .applied-coupon {
             display: flex;
             justify-content: space-between;
@@ -1408,9 +1407,9 @@
             color: white;
             position: relative;
             overflow: hidden;
-    
+
         }
-    
+
         .applied-coupon::before {
             content: '';
             position: absolute;
@@ -1425,7 +1424,7 @@
                     rgba(255, 255, 255, 0.1) 16px);
             pointer-events: none;
         }
-    
+
         .applied-coupon-info {
             display: flex;
             align-items: center;
@@ -1433,31 +1432,31 @@
             z-index: 1;
             position: relative;
         }
-    
+
         .coupon-icon {
             font-size: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-    
+
         .coupon-details h4 {
             margin: 8px 0 4px -20px;
             font-size: 12px;
             font-weight: 600;
         }
-    
+
         .coupon-details p {
             margin: -3px;
             font-size: 10px;
             opacity: 0.9;
         }
-    
+
         .discount-amount {
             font-weight: 600;
             font-size: 11px !important;
         }
-    
+
         .remove-coupon-btn {
             background: rgba(255, 255, 255, 0.2);
             border: none;
@@ -1475,46 +1474,46 @@
             align-items: center;
             justify-content: center;
         }
-    
+
         .remove-coupon-btn:hover {
             background: rgba(255, 255, 255, 0.3);
             transform: scale(1.1);
         }
-    
+
         .summary-item.coupon-discount {
             color: #28a745;
         }
-    
+
         .summary-item.coupon-discount .summary-value.discount {
             color: #28a745;
             font-weight: 600;
         }
-    
+
         .coupon-loading {
             opacity: 0.6;
             pointer-events: none;
         }
-    
+
         .coupon-loading .apply-coupon-btn {
             background: #6c757d;
         }
-    
+
         @media (max-width: 768px) {
             .coupon-input-container {
                 flex-direction: column;
                 gap: 6px;
             }
-    
+
             .apply-coupon-btn {
                 width: 100%;
             }
-    
+
             .applied-coupon {
                 flex-direction: column;
                 gap: 8px;
                 text-align: center;
             }
-    
+
             .applied-coupon-info {
                 flex-direction: column;
                 text-align: center;
@@ -1522,7 +1521,6 @@
             }
         }
     </style>
-
 </head>
 
 <body>
@@ -1568,7 +1566,7 @@
             <div class="container">
                 <div class="header-wrap">
                     <div class="logo logo-width-1">
-                        <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+                        <a href="#"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
                     </div>
                     <div class="header-right">
                         <div class="search-style-2"></div>
@@ -1578,8 +1576,7 @@
                                     <a href="/wishlist">
                                         <img class="svgInject" alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
                                         <span id="wishlistItemCount" class="pro-count blue">
-                                            <%= typeof locals.wishlistItemCount !=='undefined' ?
-                                                locals.wishlistItemCount : 0 %>
+                                            <%= wishlistItemCount %>
                                         </span>
                                     </a>
                                 </div>
@@ -1587,7 +1584,7 @@
                                     <a class="mini-cart-icon" href="/cart">
                                         <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
                                         <span id="cartItemCount" class="pro-count blue">
-                                            <%= typeof locals.cartItemCount !=='undefined' ? locals.cartItemCount : 0 %>
+                                            <%= cartItemCount %>
                                         </span>
                                     </a>
                                 </div>
@@ -1601,14 +1598,15 @@
             <div class="container">
                 <div class="header-wrap header-space-between position-relative">
                     <div class="logo logo-width-1 d-block d-lg-none">
-                        <a href="/"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+                        <a href="#"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
                     </div>
                     <div class="header-nav d-none d-lg-flex">
+
                         <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
                             <nav>
                                 <ul>
                                     <li><a href="/">Home</a></li>
-                                    <li><a href="/shop">Shop</a></li>
+                                    <li><a class='active' href="/shop">Shop</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -1619,8 +1617,7 @@
                                 <a href="/wishlist">
                                     <img alt="Evara" src="/imgs/theme/icons/icon-heart.svg">
                                     <span id="wishlistItemCount" class="pro-count blue">
-                                        <%= typeof locals.wishlistItemCount !=='undefined' ? locals.wishlistItemCount :
-                                            0 %>
+                                        <%= wishlistItemCount %>
                                     </span>
                                 </a>
                             </div>
@@ -1628,7 +1625,7 @@
                                 <a class="mini-cart-icon" href="/cart">
                                     <img alt="Evara" src="/imgs/theme/icons/icon-cart.svg">
                                     <span id="cartItemCount" class="pro-count blue">
-                                        <%= typeof locals.cartItemCount !=='undefined' ? locals.cartItemCount : 0 %>
+                                        <%= cartItemCount %>
                                     </span>
                                 </a>
                             </div>
@@ -1646,10 +1643,86 @@
         </div>
     </header>
 
+    <div class="mobile-header-active mobile-header-wrapper-style">
+        <div class="mobile-header-wrapper-inner">
+            <div class="mobile-header-top">
+                <div class="mobile-header-logo">
+                    <a href="#"><img src="/imgs/theme/kaizenlogoo.svg" alt="logo"></a>
+                </div>
+                <div class="mobile-menu-close close-style-wrap close-style-position-inherit">
+                    <button class="close-style search-close">
+                        <i class="icon-top"></i>
+                        <i class="icon-bottom"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="mobile-header-content-area">
+                <div class="mobile-menu-wrap mobile-header-border">
+                    <nav>
+                        <ul class="mobile-menu">
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/shop">Shop</a></li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <div class="mobile-header-info-wrap mobile-header-border">
+                    <% if (user) { %>
+                        <div class="single-mobile-header-info mt-10 mb-10">
+                            <i class="fi-rs-user"></i>
+                            <strong>
+                                <%= user.name %>
+                            </strong>
+                        </div>
+
+                        <div class="single-mobile-header-info mobile-profile-dropdown">
+                            <div class="mobile-profile-toggle" onclick="toggleMobileProfileDropdown()">
+                                <i class="fi-rs-settings-sliders"></i> My Profile
+                                <i class="fi-rs-angle-small-down dropdown-arrow"></i>
+                            </div>
+                            <ul class="mobile-profile-submenu">
+                                <li><a href="/userProfile"><i class="fi-rs-user"></i> My Profile</a></li>
+                                <li><a href="/orders"><i class="fi-rs-shopping-bag"></i> My Orders</a></li>
+                                <li><a href="/wallet"><i class="fi-rs-credit-card"></i> My Wallet</a></li>
+                                <li><a href="/profile/coupons"><i class="fi-rs-ticket"></i> My Coupons</a></li>
+                                <li><a href="/profile/addresses"><i class="fi-rs-marker"></i> My Address</a></li>
+                                <li><a href="/profile/security"><i class="fi-rs-lock"></i> Privacy Settings</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="single-mobile-header-info">
+                            <a href="/logout"><i class="fi-rs-sign-out"></i> Logout</a>
+                        </div>
+                        <% } else { %>
+                            <div class="single-mobile-header-info">
+                                <a href="/login"><i class="fi-rs-user"></i> Log In</a>
+                            </div>
+                            <div class="single-mobile-header-info">
+                                <a href="/signup"><i class="fi-rs-user-add"></i> Sign Up</a>
+                            </div>
+                            <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="anime-elements">
+        <div class="sakura">🌸</div>
+        <div class="sakura">🌸</div>
+        <div class="sakura">🌸</div>
+        <div class="sakura">🌸</div>
+        <div class="sakura">🌸</div>
+        <div class="sakura">🌸</div>
+        <div class="sakura">🌸</div>
+        <div class="sakura">🌸</div>
+        <div class="kanji-float">化</div>
+        <div class="kanji-float">革</div>
+    </div>
+
     <div class="page-header breadcrumb-wrap">
         <div class="container">
             <div class="breadcrumb">
-                <a href="/" rel="nofollow">Home</a>
+                <a href="#" rel="nofollow">Home</a>
                 <span></span> Shop
                 <span></span> Product
                 <span></span> Cart
@@ -1659,429 +1732,492 @@
     </div>
 
     <div class="checkout-container">
-    <div class="checkout-content">
-        <div class="main-content">
-            <div class="section">
-                <div class="checkout-header">
-                    <h1 class="checkout-title">Complete Your Order</h1>
-                    <p class="checkout-subtitle">Review your delivery details and finalize your purchase</p>
-                </div>
+        <div class="checkout-content">
+            <div class="main-content">
+                <div class="section">
+                    <div class="checkout-header">
+                        <h1 class="checkout-title">Complete Your Order</h1>
+                        <p class="checkout-subtitle">Review your delivery details and finalize your purchase</p>
+                    </div>
 
-                <div class="profile-header">
-                    <h3><i class="ri-map-pin-fill"></i> Delivery Address</h3>
-                    <a href="/profile/add-address?from=checkout" class="btn-add-address">
-                        <i class="ri-add-line"></i> Add New Address
-                    </a>
-                </div>
+                    <div class="profile-header">
+                        <h3><i class="ri-map-pin-fill"></i> Delivery Address</h3>
+                        <a href="/profile/add-address?from=checkout" class="btn-add-address">
+                            <i class="ri-add-line"></i> Add New Address
+                        </a>
+                    </div>
 
-                <div class="addresses-section">
-                    <% if (addresses.length===0) { %>
-                        <div class="no-addresses">
-                            <div class="no-addresses-icon">
-                                <i class="ri-map-pin-line"></i>
+                    <div class="addresses-section">
+                        <% if (addresses.length===0) { %>
+                            <div class="no-addresses">
+                                <div class="no-addresses-icon">
+                                    <i class="ri-map-pin-line"></i>
+                                </div>
+                                <h4>No addresses added yet</h4>
+                                <p>Add your first address to make checkout faster and easier.</p>
                             </div>
-                            <h4>No addresses added yet</h4>
-                            <p>Add your first address to make checkout faster and easier.</p>
-                        </div>
-                    <% } else { %>
-                        <div class="addresses-grid">
-                            <% addresses.forEach(address=> { %>
-                                <div class="address-card" data-address-id="<%= address._id %>"
-                                    data-default="<%= address.isDefault %>">
+                            <% } else { %>
+                                <div class="addresses-grid">
+                                    <% addresses.forEach(address=> { %>
+                                        <div class="address-card" data-address-id="<%= address._id %>"
+                                            data-default="<%= address.isDefault %>">
 
-                                    <div class="address-main-content">
-                                        <div class="address-type">
-                                            <i class="ri-<%= address.addressType === 'home' ? 'home-fill' : address.addressType === 'work' ? 'building-fill' : 'map-pin-fill' %>"></i>
-                                            <div>
-                                                <span class="address-type-text">
-                                                    <%= address.addressType.charAt(0).toUpperCase() + address.addressType.slice(1) %>
+                                            <div class="address-main-content">
+                                                <div class="address-type">
+                                                    <i
+                                                        class="ri-<%= address.addressType === 'home' ? 'home-fill' : address.addressType === 'work' ? 'building-fill' : 'map-pin-fill' %>"></i>
+                                                    <div>
+                                                        <span class="address-type-text">
+                                                            <%= address.addressType.charAt(0).toUpperCase() +
+                                                                address.addressType.slice(1) %>
+                                                        </span>
+                                                        <% if (address.isDefault) { %>
+                                                            <span class="default-badge">Default</span>
+                                                            <% } %>
+                                                    </div>
+                                                </div>
+
+                                                <div class="address-details">
+                                                    <h4>
+                                                        <%= address.userName %>
+                                                    </h4>
+                                                    <p class="address-text">
+                                                        <%= address.houseNo %>, <%= address.locality %>,
+                                                                <% if (address.landmark) { %>
+                                                                    <%= address.landmark %>,
+                                                                        <% } %>
+                                                                            <%= address.city %>, <%= address.state %> -
+                                                                                    <%= address.pincode %>
+                                                    </p>
+                                                    <p class="address-phone">
+                                                        <i class="ri-phone-line"></i> +91 <%= address.phoneNumber %>
+                                                    </p>
+                                                    <% if (address.altPhoneNumber) { %>
+                                                        <p class="address-phone">
+                                                            <i class="ri-phone-line"></i> Alt: +91 <%=
+                                                                address.altPhoneNumber %>
+                                                        </p>
+                                                        <% } %>
+                                                </div>
+                                            </div>
+
+                                            <div class="address-actions">
+                                                <% if (!address.isDefault) { %>
+                                                    <button class="btn-set-default"
+                                                        onclick="setDefaultAddress('<%= address._id %>')">
+                                                        Set as Default
+                                                    </button>
+                                                    <% } %>
+                                                        <div class="address-action-buttons">
+                                                            <button class="btn-action edit"
+                                                                onclick="editAddress('<%= address._id %>')"
+                                                                title="Edit">
+                                                                <i class="ri-edit-line"></i>
+                                                            </button>
+                                                            <button class="btn-action delete"
+                                                                onclick="deleteAddress('<%= address._id %>')"
+                                                                title="Delete">
+                                                                <i class="ri-delete-bin-line"></i>
+                                                            </button>
+                                                        </div>
+                                            </div>
+                                        </div>
+                                        <% }) %>
+                                </div>
+                                <% } %>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Order Items (<%= cart.items.length %> items)</h2>
+                    <% if (!cart.items || cart.items.length===0) { %>
+                        <div class="empty-cart">
+                            <div class="empty-cart-icon">🛒</div>
+                            <h3>No items to checkout</h3>
+                            <p>Your cart is empty. Add some items to continue.</p>
+                        </div>
+                        <% } else { %>
+                            <% cart.items.forEach(item=> { %>
+                                <div class="order-item">
+                                    <div class="order-item-image">
+                                        <img src="<%= item.image %>" alt="<%= item.name %>"
+                                            onerror="this.src='/imgs/theme/placeholder.jpg'">
+                                    </div>
+                                    <div class="order-item-details">
+                                        <div class="order-item-name">
+                                            <%= item.name %>
+                                        </div>
+                                        <div class="order-item-quantity">
+                                            Quantity: <%= item.quantity %>
+                                                <% if (item.size) { %>
+                                                    | Size: <%= item.size %>
+                                                        <% } %>
+                                        </div>
+
+                                        <div class="order-item-price">
+                                            <% if (item.hasOffer) { %>
+                                                <span class="original-price">₹<%= item.originalPrice %></span>
+                                                <span class="discount-badge">
+                                                    <%= item.discountPercentage %>% OFF
                                                 </span>
-                                                <% if (address.isDefault) { %>
-                                                    <span class="default-badge">Default</span>
+                                                <span class="current-price">₹<%= item.price %></span>
+                                                <% } else { %>
+                                                    <% if (item.originalPrice && item.originalPrice> item.price) { %>
+                                                        <span class="original-price">₹<%= item.originalPrice %></span>
+                                                        <span class="discount-badge">
+                                                            <%= Math.round(((item.originalPrice -
+                                                                item.price)/item.originalPrice)*100) %>% OFF
+                                                        </span>
+                                                        <% } %>
+                                                            <span class="current-price">₹<%= item.price %></span>
+                                                            <% } %>
+                                        </div>
+                                    </div>
+                                    <div class="order-item-total">
+                                        <div class="item-subtotal">₹<%= item.subtotal %>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% }) %>
+                                    <% } %>
+                </div>
+
+                <div class="section payment-methods">
+                    <h2 class="payment-title">
+                        <i class="ri-secure-payment-line"></i>
+                        Choose Payment Method
+                    </h2>
+
+                    <div class="payment-options">
+                        <% ['razorpay','wallet','cod'].forEach(method=> { %>
+                            <label class="payment-option">
+                                <input type="radio" name="payment" value="<%= method %>" <%=method==='cod' ? 'checked'
+                                    : '' %>>
+                                <div class="payment-option-icon">
+                                    <% if (method==='razorpay' ) { %>
+                                        <img src="/assets2/imgs/theme/razorpay-icon.webp" alt="Razorpay"
+                                            class="payment-icon">
+                                        <% } %>
+                                            <% if (method==='wallet' ) { %>
+                                                <img src="/assets2/imgs/theme/wallet-icon.png" alt="Wallet"
+                                                    class="payment-icon">
                                                 <% } %>
+                                                    <% if (method==='cod' ) { %>
+                                                        <img src="/assets2/imgs/theme/money-notes-receiving-dollar-color-icon.png"
+                                                            alt="Cash on Delivery" class="payment-icon">
+                                                        <% } %>
+                                </div>
+                                <div class="payment-option-content">
+                                    <div class="payment-option-title">
+                                        <%= method==='razorpay' ? 'Razorpay' : method==='wallet' ? 'Wallet'
+                                            : 'Cash on Delivery' %>
+                                    </div>
+                                    <div class="payment-option-desc">
+                                        <% if (method==='razorpay' ) { %>
+                                            Pay securely with netbanking
+                                            <% } else if (method==='wallet' ) { %>
+                                                Use your digital wallet balance
+                                                <div class="wallet-info">
+                                                    <span class="wallet-balance-label">Available Balance: </span>
+                                                    <span class="wallet-balance">₹<%= (walletBalance || 0).toFixed(2) %>
+                                                    </span>
+                                                </div>
+                                                <% } else { %>
+                                                    Pay when your order arrives
+                                                    <% } %>
+                                    </div>
+                                </div>
+                            </label>
+                            <% }) %>
+                    </div>
+
+                    <div style="display: none;">
+                        <span class="order-total">₹<%= (typeof appliedCoupon !=='undefined' && appliedCoupon) ?
+                                appliedCoupon.finalTotal.toFixed(2) : cart.total.toFixed(2) %></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="order-summary">
+                <div class="progress-steps">
+                    <div class="step completed">
+                        <div class="step-icon">✓</div>
+                        Cart
+                    </div>
+                    <div class="step-arrow">›</div>
+                    <div class="step active">
+                        <div class="step-icon">2</div>
+                        Payment
+                    </div>
+                </div>
+                <h2 class="summary-title">Order Summary</h2>
+                <% if (cart.items && cart.items.length> 0) { %>
+                    <% cart.items.forEach(item=> { %>
+                        <div class="summary-item">
+                            <span>
+                                <%= item.quantity %>× <%= item.name.length> 20 ? item.name.substring(0,20)+'...' :
+                                        item.name %>
+                                        <% if (item.hasOffer) { %>
+                                            <small class="offer-indicator">(<%= item.discountPercentage %>% off)</small>
+                                            <% } %>
+                            </span>
+                            <span class="summary-value">₹<%= item.subtotal %></span>
+                        </div>
+                        <% }) %>
+
+                            <div class="summary-item">
+                                <span>Subtotal</span>
+                                <span class="summary-value" id="summarySubtotal">₹<%= cart.rawTotal || cart.total %>
+                                </span>
+                            </div>
+
+                            <% if (typeof appliedCoupon !=='undefined' && appliedCoupon) { %>
+                                <div class="summary-item coupon-discount" id="couponDiscountRow">
+                                    <span>Coupon Discount (<%= appliedCoupon.couponCode %>)</span>
+                                    <span class="summary-value discount" id="couponDiscountAmount">-₹<%=
+                                            appliedCoupon.discount %></span>
+                                </div>
+                                <% } else { %>
+                                    <div class="summary-item coupon-discount" id="couponDiscountRow"
+                                        style="display: none;">
+                                        <span>Coupon Discount (<span id="appliedCouponCode"></span>)</span>
+                                        <span class="summary-value discount" id="couponDiscountAmount">-₹0</span>
+                                    </div>
+                                    <% } %>
+
+                                        <div class="summary-item">
+                                            <span>Delivery Charges</span>
+                                            <span class="summary-value free">Free</span>
+                                        </div>
+                                        <div class="summary-item">
+                                            <span>Platform Fee</span>
+                                            <span class="summary-value">₹0</span>
+                                        </div>
+
+                                        <div class="coupon-section-summary">
+                                            <h3 class="coupon-title">
+                                                <i class="ri-coupon-3-line"></i>
+                                                Apply Coupon
+                                                <% if (availableCouponsCount> 0) { %>
+                                                    <span class="coupon-count-badge">
+                                                        <%= availableCouponsCount %> available
+                                                    </span>
+                                                    <% } %>
+                                            </h3>
+
+                                            <div class="coupon-container" id="couponContainer">
+                                                <% if (typeof appliedCoupon !=='undefined' && appliedCoupon) { %>
+                                                    <div class="applied-coupon" id="appliedCouponDisplay">
+                                                        <div class="applied-coupon-info">
+                                                            <div class="coupon-icon success">
+                                                                <i class="ri-checkbox-circle-fill"></i>
+                                                            </div>
+                                                            <div class="coupon-details">
+                                                                <h4>
+                                                                    <%= appliedCoupon.couponName %>
+                                                                </h4>
+                                                                <p class="coupon-code">Code: <%=
+                                                                        appliedCoupon.couponCode %>
+                                                                </p>
+                                                                <p class="discount-amount">You saved ₹<%=
+                                                                        appliedCoupon.discount %>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                        <button class="remove-coupon-btn" onclick="removeCoupon()">
+                                                            <i class="ri-close-line"></i>
+                                                        </button>
+                                                    </div>
+                                                    <% } else { %>
+                                                        <div class="coupon-form" id="couponForm">
+                                                            <div class="coupon-input-container">
+                                                                <input type="text" id="couponCodeInput"
+                                                                    placeholder="Enter coupon code" class="coupon-input"
+                                                                    maxlength="20">
+                                                                <button type="button" class="apply-coupon-btn"
+                                                                    id="applyCouponBtn"
+                                                                    onclick="applyCoupon()">Apply</button>
+                                                            </div>
+                                                            <div class="coupon-help">
+                                                                <span>Don't have a coupon? <a href="/profile/coupons"
+                                                                        class="coupon-link">View available
+                                                                        coupons</a></span>
+                                                            </div>
+                                                            <div class="coupon-message-text" id="couponMessage"
+                                                                style="display: none; color: #dc3545; font-size: 12px; margin-top: 6px;">
+                                                            </div>
+                                                        </div>
+                                                        <% } %>
                                             </div>
                                         </div>
 
-                                        <div class="address-details">
-                                            <h4><%= address.userName %></h4>
-                                            <p class="address-text">
-                                                <%= address.houseNo %>, <%= address.locality %>,
-                                                <% if (address.landmark) { %>
-                                                    <%= address.landmark %>,
-                                                <% } %>
-                                                <%= address.city %>, <%= address.state %> - <%= address.pincode %>
-                                            </p>
-                                            <p class="address-phone">
-                                                <i class="ri-phone-line"></i> +91 <%= address.phoneNumber %>
-                                            </p>
-                                            <% if (address.altPhoneNumber) { %>
-                                                <p class="address-phone">
-                                                    <i class="ri-phone-line"></i> Alt: +91 <%= address.altPhoneNumber %>
-                                                </p>
+                                        <div class="total-section">
+                                            <div class="total-row">
+                                                <div class="total-label">Total Amount</div>
+                                                <div class="total-amount" id="finalTotalAmount">
+                                                    ₹<%= (typeof appliedCoupon !=='undefined' && appliedCoupon) ?
+                                                        appliedCoupon.finalTotal : cart.total %>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <button type="button" class="place-order-btn" id="placeOrderBtn"
+                                            onclick="placeOrder()" <%=(!addresses || addresses.length===0) ? 'disabled'
+                                            : '' %>>
+                                            <%= (!addresses || addresses.length===0) ? 'Add Address to Continue'
+                                                : 'Place Order' %>
+                                        </button>
+                                        <% } else { %>
+                                            <div style="text-align:center;padding:40px 20px;color:#666;">
+                                                <div style="font-size:3rem;margin-bottom:15px;opacity:0.5;">📋</div>
+                                                <p>No items to checkout</p>
+                                            </div>
                                             <% } %>
-                                        </div>
-                                    </div>
-
-                                    <div class="address-actions">
-                                        <% if (!address.isDefault) { %>
-                                            <button class="btn-set-default" onclick="setDefaultAddress('<%= address._id %>')">
-                                                Set as Default
-                                            </button>
-                                        <% } %>
-                                        <div class="address-action-buttons">
-                                            <button class="btn-action edit" onclick="editAddress('<%= address._id %>')" title="Edit">
-                                                <i class="ri-edit-line"></i>
-                                            </button>
-                                            <button class="btn-action delete" onclick="deleteAddress('<%= address._id %>')" title="Delete">
-                                                <i class="ri-delete-bin-line"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            <% }) %>
-                        </div>
-                    <% } %>
-                </div>
             </div>
-
-            <div class="section">
-                <h2 class="section-title">Order Items (<%= cart.items.length %> items)</h2>
-                <% if (!cart.items || cart.items.length===0) { %>
-                    <div class="empty-cart">
-                        <div class="empty-cart-icon">🛒</div>
-                        <h3>No items to checkout</h3>
-                        <p>Your cart is empty. Add some items to continue.</p>
-                    </div>
-                <% } else { %>
-                    <% cart.items.forEach(item=> { %>
-                        <div class="order-item">
-                            <div class="order-item-image">
-                                <img src="<%= item.image %>" alt="<%= item.name %>"
-                                    onerror="this.src='/imgs/theme/placeholder.jpg'">
-                            </div>
-                            <div class="order-item-details">
-                                <div class="order-item-name"><%= item.name %></div>
-                                <div class="order-item-quantity">
-                                    Quantity: <%= item.quantity %>
-                                    <% if (item.size) { %>
-                                        | Size: <%= item.size %>
-                                    <% } %>
-                                </div>
-                               
-                                <div class="order-item-price">
-                                    <% if (item.hasOffer) { %>
-                                        <span class="original-price">₹<%= item.originalPrice %></span>
-                                        <span class="discount-badge">
-                                            <%= item.discountPercentage %>% OFF
-                                        </span>
-                                        <span class="current-price">₹<%= item.price %></span>
-                                    <% } else { %>
-                                        <% if (item.originalPrice && item.originalPrice > item.price) { %>
-                                            <span class="original-price">₹<%= item.originalPrice %></span>
-                                            <span class="discount-badge">
-                                                <%= Math.round(((item.originalPrice - item.price)/item.originalPrice)*100) %>% OFF
-                                            </span>
-                                        <% } %>
-                                        <span class="current-price">₹<%= item.price %></span>
-                                    <% } %>
-                                </div>
-                            </div>
-                            <div class="order-item-total">
-                                <div class="item-subtotal">₹<%= item.subtotal %></div>
-                            </div>
-                        </div>
-                    <% }) %>
-                <% } %>
-            </div>
-
-            <div class="section payment-methods">
-                <h2 class="payment-title">
-                    <i class="ri-secure-payment-line"></i>
-                    Choose Payment Method
-                </h2>
-
-                <div class="payment-options">
-                    <% ['razorpay','wallet','cod'].forEach(method=> { %>
-                        <label class="payment-option">
-                            <input type="radio" name="payment" value="<%= method %>" <%=method==='cod' ? 'checked' : '' %>>
-                            <div class="payment-option-icon">
-                                <% if (method==='razorpay' ) { %>
-                                    <img src="/assets2/imgs/theme/razorpay-icon.webp" alt="Razorpay" class="payment-icon">
-                                <% } %>
-                                <% if (method==='wallet' ) { %>
-                                    <img src="/assets2/imgs/theme/wallet-icon.png" alt="Wallet" class="payment-icon">
-                                <% } %>
-                                <% if (method==='cod' ) { %>
-                                    <img src="/assets2/imgs/theme/money-notes-receiving-dollar-color-icon.png" alt="Cash on Delivery" class="payment-icon">
-                                <% } %>
-                            </div>
-                            <div class="payment-option-content">
-                                <div class="payment-option-title">
-                                    <%= method==='razorpay' ? 'Razorpay' : method==='wallet' ? 'Wallet' : 'Cash on Delivery' %>
-                                </div>
-                                <div class="payment-option-desc">
-                                    <% if (method==='razorpay' ) { %>
-                                        Pay securely with netbanking
-                                    <% } else if (method==='wallet' ) { %>
-                                        Use your digital wallet balance
-                                        <div class="wallet-info">
-                                            <span class="wallet-balance-label">Available Balance: </span>
-                                            <span class="wallet-balance">₹<%= (walletBalance || 0).toFixed(2) %></span>
-                                        </div>
-                                    <% } else { %>
-                                        Pay when your order arrives
-                                    <% } %>
-                                </div>
-                            </div>
-                        </label>
-                    <% }) %>
-                </div>
-
-                <div style="display: none;">
-                    <span class="order-total">₹<%= (typeof appliedCoupon !=='undefined' && appliedCoupon) ? appliedCoupon.finalTotal.toFixed(2) : cart.total.toFixed(2) %></span>
-                </div>
-            </div>
-        </div>
-
-        <div class="order-summary">
-            <div class="progress-steps">
-                <div class="step completed">
-                    <div class="step-icon">✓</div>
-                    Cart
-                </div>
-                <div class="step-arrow">›</div>
-                <div class="step active">
-                    <div class="step-icon">2</div>
-                    Payment
-                </div>
-            </div>
-            <h2 class="summary-title">Order Summary</h2>
-            <% if (cart.items && cart.items.length> 0) { %>
-                <% cart.items.forEach(item=> { %>
-                    <div class="summary-item">
-                        <span>
-                            <%= item.quantity %>× <%= item.name.length> 20 ? item.name.substring(0,20)+'...' : item.name %>
-                            <% if (item.hasOffer) { %>
-                                <small class="offer-indicator">(<%= item.discountPercentage %>% off)</small>
-                            <% } %>
-                        </span>
-                        <span class="summary-value">₹<%= item.subtotal %></span>
-                    </div>
-                <% }) %>
-
-                <div class="summary-item">
-                    <span>Subtotal</span>
-                    <span class="summary-value" id="summarySubtotal">₹<%= cart.rawTotal || cart.total %></span>
-                </div>
-
-                <% if (typeof appliedCoupon !=='undefined' && appliedCoupon) { %>
-                    <div class="summary-item coupon-discount" id="couponDiscountRow">
-                        <span>Coupon Discount (<%= appliedCoupon.couponCode %>)</span>
-                        <span class="summary-value discount" id="couponDiscountAmount">-₹<%= appliedCoupon.discount %></span>
-                    </div>
-                <% } else { %>
-                    <div class="summary-item coupon-discount" id="couponDiscountRow" style="display: none;">
-                        <span>Coupon Discount (<span id="appliedCouponCode"></span>)</span>
-                        <span class="summary-value discount" id="couponDiscountAmount">-₹0</span>
-                    </div>
-                <% } %>
-
-                <div class="summary-item">
-                    <span>Delivery Charges</span>
-                    <span class="summary-value free">Free</span>
-                </div>
-                <div class="summary-item">
-                    <span>Platform Fee</span>
-                    <span class="summary-value">₹0</span>
-                </div>
-
-       <div class="coupon-section-summary">
-    <h3 class="coupon-title">
-        <i class="ri-coupon-3-line"></i>
-        Apply Coupon
-        <% if (availableCouponsCount > 0) { %>
-            <span class="coupon-count-badge"><%= availableCouponsCount %> available</span>
-        <% } %>
-    </h3>
-
-    <div class="coupon-container" id="couponContainer">
-        <% if (typeof appliedCoupon !== 'undefined' && appliedCoupon) { %>
-            <div class="applied-coupon" id="appliedCouponDisplay">
-                <div class="applied-coupon-info">
-                    <div class="coupon-icon success">
-                        <i class="ri-checkbox-circle-fill"></i>
-                    </div>
-                    <div class="coupon-details">
-                        <h4><%= appliedCoupon.couponName %></h4>
-                        <p class="coupon-code">Code: <%= appliedCoupon.couponCode %></p>
-                        <p class="discount-amount">You saved ₹<%= appliedCoupon.discount %></p>
-                    </div>
-                </div>
-                <button class="remove-coupon-btn" onclick="removeCoupon()">
-                    <i class="ri-close-line"></i>
-                </button>
-            </div>
-        <% } else { %>
-            <div class="coupon-form" id="couponForm">
-                <div class="coupon-input-container">
-                    <input type="text" id="couponCodeInput" placeholder="Enter coupon code" class="coupon-input" maxlength="20">
-                    <button type="button" class="apply-coupon-btn" id="applyCouponBtn" onclick="applyCoupon()">Apply</button>
-                </div>
-               <div class="coupon-help">
-    <span>Don't have a coupon? <a href="/profile/coupons" class="coupon-link">View available coupons</a></span>
-</div>
-                <div class="coupon-message-text" id="couponMessage" style="display: none; color: #dc3545; font-size: 12px; margin-top: 6px;"></div>
-            </div>
-        <% } %>
-    </div>
-</div>
-
-                <div class="total-section">
-                    <div class="total-row">
-                        <div class="total-label">Total Amount</div>
-                        <div class="total-amount" id="finalTotalAmount">
-                            ₹<%= (typeof appliedCoupon !=='undefined' && appliedCoupon) ? appliedCoupon.finalTotal : cart.total %>
-                        </div>
-                    </div>
-                </div>
-                
-                <button type="button" class="place-order-btn" id="placeOrderBtn" onclick="placeOrder()" <%=(!addresses || addresses.length===0) ? 'disabled' : '' %>>
-                    <%= (!addresses || addresses.length===0) ? 'Add Address to Continue' : 'Place Order' %>
-                </button>
-            <% } else { %>
-                <div style="text-align:center;padding:40px 20px;color:#666;">
-                    <div style="font-size:3rem;margin-bottom:15px;opacity:0.5;">📋</div>
-                    <p>No items to checkout</p>
-                </div>
-            <% } %>
         </div>
     </div>
-</div>
 
-  <footer class="main">
-    <section class="newsletter p-30 text-white wow fadeIn animated">
-        <div class="floating-elements">
-            <div class="floating-element">桜</div>
-            <div class="floating-element">桜</div>
-            <div class="floating-element">⚡</div>
-            <div class="floating-element">🌸</div>
-        </div>
-    </section>
+    <footer class="main">
+        <section class="newsletter p-30 text-white wow fadeIn animated">
+            <div class="floating-elements">
+                <div class="floating-element">桜</div>
+                <div class="floating-element">桜</div>
+                <div class="floating-element">⚡</div>
+                <div class="floating-element">🌸</div>
+            </div>
+        </section>
 
-    <section class="section-padding footer-mid">
-        <div class="container pt-15 pb-20">
+        <section class="section-padding footer-mid">
+            <div class="container pt-15 pb-20">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="footer-logo mb-20">
+                            <a><img src="/imgs/theme/kaizenlogoo.svg" alt="Kaizen Logo"></a>
+                        </div>
+                        <div class="widget-about font-md mb-md-5 mb-lg-0">
+                            <div class="brand-story wow fadeIn animated">
+                                <p class="text-grey-4 mb-15">
+                                    <strong>Kaizen</strong> (改善) — Japanese philosophy of continuous improvement and
+                                    evolution. We embody this principle in every stitch, every design, and every
+                                    collection.
+                                </p>
+                                <p class="text-grey-4 mb-20">
+                                    From streetwear roots to evolving aesthetics, Kaizen represents the relentless
+                                    pursuit
+                                    of perfection. We don't just create clothing; we evolve culture, one piece at a
+                                    time.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-2 col-md-3">
+                        <h5 class="widget-title wow fadeIn animated">Quick Links</h5>
+                        <ul class="footer-list wow fadeIn animated mb-sm-5 mb-md-0">
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/shop">Shop</a></li>
+                            <li><a href="/cart">Cart</a></li>
+                            <li><a href="/wishlist">Wishlist</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="col-lg-2 col-md-3">
+                        <h5 class="widget-title wow fadeIn animated">My Account</h5>
+                        <ul class="footer-list wow fadeIn animated">
+                            <li><a href="/userProfile">My Profile</a></li>
+                            <li><a href="/profile/coupons">View Coupons</a></li>
+                            <li><a href="/wallet">Open Wallet</a></li>
+                            <li><a href="/orders">Track My Order</a></li>
+                            <li><a href="/profile/addresses">View Address</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <h5 class="widget-title wow fadeIn animated">Contact</h5>
+                        <div class="widget-about font-md mb-md-5 mb-lg-0 wow fadeIn animated">
+                            <p class="wow fadeIn animated">
+                                <strong>Address:</strong> Kannur, Kerala
+                            </p>
+                            <p class="wow fadeIn animated">
+                                <strong>Phone:</strong> +91 9000 123 456 / +91 484 555 0123
+                            </p>
+                            <p class="wow fadeIn animated">
+                                <strong>Hours:</strong> 10:00 - 21:00, Mon - Sun
+                            </p>
+                        </div>
+
+                        <div class="payment-section mt-30">
+                            <p class="mb-15 fw-600 text-grey-4 wow fadeIn animated">Secured Payment Methods</p>
+                            <div class="payment-methods wow fadeIn animated d-flex align-items-center gap-3">
+                                <div class="payment-method-item">
+                                    <img src="/imgs/theme/COD-icon.png" alt="COD" style="height: 55px;">
+                                </div>
+                                <div class="payment-method-item">
+                                    <img src="/imgs/theme/wallet-icon.png" alt="Wallet" style="height: 60px;">
+                                </div>
+                                <div class="payment-method-item">
+                                    <img src="/imgs/theme/razorpay-icon.png" alt="Razorpay" style="height: 55px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="container pb-20 wow fadeIn animated">
             <div class="row">
-                <div class="col-lg-4 col-md-6">
-                    <div class="footer-logo mb-20">
-                        <a><img src="/imgs/theme/kaizenlogoo.svg" alt="Kaizen Logo"></a>
-                    </div>
-                    <div class="widget-about font-md mb-md-5 mb-lg-0">
-                        <div class="brand-story wow fadeIn animated">
-                            <p class="text-grey-4 mb-15">
-                                <strong>Kaizen</strong> (改善) — Japanese philosophy of continuous improvement and
-                                evolution. We embody this principle in every stitch, every design, and every collection.
-                            </p>
-                            <p class="text-grey-4 mb-20">
-                                From streetwear roots to evolving aesthetics, Kaizen represents the relentless pursuit
-                                of perfection. We don't just create clothing; we evolve culture, one piece at a time.
-                            </p>
-                        </div>
-                    </div>
+                <div class="col-12">
+                    <hr class="footer-divider mb-3">
                 </div>
-
-                <div class="col-lg-2 col-md-3">
-                    <h5 class="widget-title wow fadeIn animated">Quick Links</h5>
-                    <ul class="footer-list wow fadeIn animated mb-sm-5 mb-md-0">
-                        <li><a href="/">Home</a></li>
-                        <li><a href="/shop">Shop</a></li>
-                        <li><a href="/cart">Cart</a></li>
-                        <li><a href="/wishlist">Wishlist</a></li>
-                    </ul>
+                <div class="col-lg-6 col-md-6">
+                    <p class="text-md-start text-center font-sm text-muted mb-0">
+                        &copy; <span id="year"></span> <strong class="text-brand">Kaizen Street</strong>. All rights
+                        reserved.
+                    </p>
                 </div>
-
-                <div class="col-lg-2 col-md-3">
-                    <h5 class="widget-title wow fadeIn animated">My Account</h5>
-                    <ul class="footer-list wow fadeIn animated">
-                        <li><a href="/userProfile">My Profile</a></li>
-                        <li><a href="/profile/coupons">View Coupons</a></li>
-                        <li><a href="/wallet">Open Wallet</a></li>
-                        <li><a href="/orders">Track My Order</a></li>
-                        <li><a href="/profile/addresses">View Address</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <h5 class="widget-title wow fadeIn animated">Contact</h5>
-                    <div class="widget-about font-md mb-md-5 mb-lg-0 wow fadeIn animated">
-                        <p class="wow fadeIn animated">
-                            <strong>Address:</strong> Kannur, Kerala
-                        </p>
-                        <p class="wow fadeIn animated">
-                            <strong>Phone:</strong> +91 9000 123 456 / +91 484 555 0123
-                        </p>
-                        <p class="wow fadeIn animated">
-                            <strong>Hours:</strong> 10:00 - 21:00, Mon - Sun
-                        </p>
-                    </div>
-
-                    <div class="payment-section mt-30">
-                        <p class="mb-15 fw-600 text-grey-4 wow fadeIn animated">Secured Payment Methods</p>
-                        <div class="payment-methods wow fadeIn animated d-flex align-items-center gap-3">
-                            <div class="payment-method-item">
-                                <img src="/imgs/theme/COD-icon.png" alt="COD" style="height: 55px;">
-                            </div>
-                            <div class="payment-method-item">
-                                <img src="/imgs/theme/wallet-icon.png" alt="Wallet" style="height: 60px;">
-                            </div>
-                            <div class="payment-method-item">
-                                <img src="/imgs/theme/razorpay-icon.png" alt="Razorpay" style="height: 55px;">
-                            </div>
-                        </div>
-                    </div>
+                <div class="col-lg-6 col-md-6">
+                    <p class="text-md-end text-center font-sm text-muted mb-0">
+                        Designed with <span class="text-brand">❤</span>
+                    </p>
                 </div>
             </div>
         </div>
-    </section>
-
-    <div class="container pb-20 wow fadeIn animated">
-        <div class="row">
-            <div class="col-12">
-                <hr class="footer-divider mb-3">
-            </div>
-            <div class="col-lg-6 col-md-6">
-                <p class="text-md-start text-center font-sm text-muted mb-0">
-                    &copy; <span id="year"></span> <strong class="text-brand">Kaizen Street</strong>. All rights
-                    reserved.
-                </p>
-            </div>
-            <div class="col-lg-6 col-md-6">
-                <p class="text-md-end text-center font-sm text-muted mb-0">
-                    Designed with <span class="text-brand">❤</span>
-                </p>
-            </div>
-        </div>
-    </div>
-</footer>
+    </footer>
 
     <script src="/js/wishlist-count-updater.js"></script>
     <script src="/js/cart-count-updater.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-    <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-</script>
+    <script src="/js/responsiveUser.js"></script>
 
     <script>
-    const section = document.querySelector('.newsletter');
-    window.addEventListener('scroll', () => {
-        const rect = section.getBoundingClientRect();
-        const topOfPage = window.pageYOffset;
-        const topOfSec = rect.top + topOfPage;
-        const scrolled = topOfPage - topOfSec;
-        const distance = Math.max(scrolled, 0);
-        const yPos = distance * -0.5;
-    });
-</script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        function toggleMobileProfileDropdown() {
+            const dropdown = document.querySelector('.mobile-profile-dropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        document.addEventListener('click', function (event) {
+            const dropdown = document.querySelector('.mobile-profile-dropdown');
+            if (dropdown && !dropdown.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+    </script>
+
+    <script>
+        const section = document.querySelector('.newsletter');
+        window.addEventListener('scroll', () => {
+            const rect = section.getBoundingClientRect();
+            const topOfPage = window.pageYOffset;
+            const topOfSec = rect.top + topOfPage;
+            const scrolled = topOfPage - topOfSec;
+            const distance = Math.max(scrolled, 0);
+            const yPos = distance * -0.5;
+        });
+    </script>
 
 
     <script>
