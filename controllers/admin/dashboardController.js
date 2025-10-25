@@ -11,46 +11,59 @@ const loadDashboard = async (req, res) => {
         const admin = await User.findById(req.session.admin);
 
         const filter = req.query.filter || 'weekly';
+        const customStartDate = req.query.startDate;
+        const customEndDate = req.query.endDate;
 
         const now = new Date();
         let currentPeriodStart, previousPeriodStart, previousPeriodEnd;
 
-        switch (filter) {
-            case 'daily':
-                currentPeriodStart = new Date(now);
-                currentPeriodStart.setHours(0, 0, 0, 0);
-                previousPeriodEnd = new Date(currentPeriodStart);
-                previousPeriodStart = new Date(previousPeriodEnd);
-                previousPeriodStart.setDate(previousPeriodStart.getDate() - 1);
-                break;
-            case 'weekly':
-                currentPeriodStart = new Date(now);
-                currentPeriodStart.setDate(currentPeriodStart.getDate() - 7);
-                previousPeriodEnd = new Date(currentPeriodStart);
-                previousPeriodStart = new Date(previousPeriodEnd);
-                previousPeriodStart.setDate(previousPeriodStart.getDate() - 7);
-                break;
-            case 'monthly':
-                currentPeriodStart = new Date(now);
-                currentPeriodStart.setDate(currentPeriodStart.getDate() - 30);
-                previousPeriodEnd = new Date(currentPeriodStart);
-                previousPeriodStart = new Date(previousPeriodEnd);
-                previousPeriodStart.setDate(previousPeriodStart.getDate() - 30);
-                break;
-            case 'yearly':
-                currentPeriodStart = new Date(now);
-                currentPeriodStart.setFullYear(currentPeriodStart.getFullYear() - 1);
-                previousPeriodEnd = new Date(currentPeriodStart);
-                previousPeriodStart = new Date(previousPeriodEnd);
-                previousPeriodStart.setFullYear(previousPeriodStart.getFullYear() - 1);
-                break;
-            default:
-                currentPeriodStart = new Date(now);
-                currentPeriodStart.setDate(currentPeriodStart.getDate() - 7);
-                previousPeriodEnd = new Date(currentPeriodStart);
-                previousPeriodStart = new Date(previousPeriodEnd);
-                previousPeriodStart.setDate(previousPeriodStart.getDate() - 7);
+        if (filter === 'custom' && customStartDate && customEndDate) {
+            currentPeriodStart = new Date(customStartDate);
+            currentPeriodStart.setHours(0, 0, 0, 0);
 
+            const currentPeriodEnd = new Date(customEndDate);
+            currentPeriodEnd.setHours(23, 59, 59, 999);
+
+            const durationMs = currentPeriodEnd - currentPeriodStart;
+            previousPeriodEnd = new Date(currentPeriodStart);
+            previousPeriodStart = new Date(currentPeriodStart - durationMs);
+        } else {
+            switch (filter) {
+                case 'daily':
+                    currentPeriodStart = new Date(now);
+                    currentPeriodStart.setHours(0, 0, 0, 0);
+                    previousPeriodEnd = new Date(currentPeriodStart);
+                    previousPeriodStart = new Date(previousPeriodEnd);
+                    previousPeriodStart.setDate(previousPeriodStart.getDate() - 1);
+                    break;
+                case 'weekly':
+                    currentPeriodStart = new Date(now);
+                    currentPeriodStart.setDate(currentPeriodStart.getDate() - 7);
+                    previousPeriodEnd = new Date(currentPeriodStart);
+                    previousPeriodStart = new Date(previousPeriodEnd);
+                    previousPeriodStart.setDate(previousPeriodStart.getDate() - 7);
+                    break;
+                case 'monthly':
+                    currentPeriodStart = new Date(now);
+                    currentPeriodStart.setDate(currentPeriodStart.getDate() - 30);
+                    previousPeriodEnd = new Date(currentPeriodStart);
+                    previousPeriodStart = new Date(previousPeriodEnd);
+                    previousPeriodStart.setDate(previousPeriodStart.getDate() - 30);
+                    break;
+                case 'yearly':
+                    currentPeriodStart = new Date(now);
+                    currentPeriodStart.setFullYear(currentPeriodStart.getFullYear() - 1);
+                    previousPeriodEnd = new Date(currentPeriodStart);
+                    previousPeriodStart = new Date(previousPeriodEnd);
+                    previousPeriodStart.setFullYear(previousPeriodStart.getFullYear() - 1);
+                    break;
+                default:
+                    currentPeriodStart = new Date(now);
+                    currentPeriodStart.setDate(currentPeriodStart.getDate() - 7);
+                    previousPeriodEnd = new Date(currentPeriodStart);
+                    previousPeriodStart = new Date(previousPeriodEnd);
+                    previousPeriodStart.setDate(previousPeriodStart.getDate() - 7);
+            }
         }
 
         const currentOrders = await Order.aggregate([
@@ -151,7 +164,68 @@ const loadDashboard = async (req, res) => {
         let revenueLabels = [];
         let revenueValues = [];
 
-        if (filter === 'daily') {
+        if (filter === 'custom' && customStartDate && customEndDate) {
+            const start = new Date(customStartDate);
+            const end = new Date(customEndDate);
+            const daysDiff = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+
+            if (daysDiff <= 31) {
+                const dailyData = await Order.aggregate([
+                    {
+                        $match: {
+                            placedAt: { $gte: currentPeriodStart },
+                            status: { $nin: ['Cancelled', 'Payment Failed'] }
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: {
+                                year: { $year: '$placedAt' },
+                                month: { $month: '$placedAt' },
+                                day: { $dayOfMonth: '$placedAt' }
+                            },
+                            revenue: { $sum: '$totalAmount' }
+                        }
+                    },
+                    { $sort: { '_id.year': 1, '_id.month': 1, '_id.day': 1 } }
+                ]);
+
+                for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+                    revenueLabels.push(`${d.getDate()}/${d.getMonth() + 1}`);
+                    const found = dailyData.find(item =>
+                        item._id.year === d.getFullYear() &&
+                        item._id.month === d.getMonth() + 1 &&
+                        item._id.day === d.getDate()
+                    );
+                    revenueValues.push(found ? found.revenue : 0);
+                }
+            } else {
+                const monthlyData = await Order.aggregate([
+                    {
+                        $match: {
+                            placedAt: { $gte: currentPeriodStart },
+                            status: { $nin: ['Cancelled', 'Payment Failed'] }
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: {
+                                year: { $year: '$placedAt' },
+                                month: { $month: '$placedAt' }
+                            },
+                            revenue: { $sum: '$totalAmount' }
+                        }
+                    },
+                    { $sort: { '_id.year': 1, '_id.month': 1 } }
+                ]);
+
+                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                monthlyData.forEach(item => {
+                    revenueLabels.push(`${months[item._id.month - 1]} ${item._id.year}`);
+                    revenueValues.push(item.revenue);
+                });
+            }
+        } else if (filter === 'daily') {
             revenueLabels = Array.from({ length: 24 }, (_, i) => `${i}:00`);
             const hourlyData = await Order.aggregate([
                 {
@@ -293,6 +367,7 @@ const loadDashboard = async (req, res) => {
         if (filter === 'weekly') comparisonText = 'than last week';
         else if (filter === 'monthly') comparisonText = 'than last month';
         else if (filter === 'yearly') comparisonText = 'than last year';
+        else if (filter === 'custom') comparisonText = 'than previous period';
 
         res.render('admin-dashboard', {
             adminName: admin ? admin.name : 'Admin',
@@ -310,7 +385,9 @@ const loadDashboard = async (req, res) => {
             topProducts,
             topCategories,
             topCategoriesChart: JSON.stringify(topCategories.slice(0, 5)),
-            filter
+            filter,
+            startDate: customStartDate || '',
+            endDate: customEndDate || ''
         });
 
     } catch (error) {

@@ -27,13 +27,16 @@ const customerInfo = async (req, res) => {
       return res.redirect(`?q=${encodeURIComponent(q)}&page=${totalPages}`);
     }
 
+    const totalCustomers = await User.countDocuments({ isAdmin: false });
+
     res.render('customer-info', {
       customers,
       message: null,
       q,
       page: pageNum,
       limit: pageSize,
-      totalPages
+      totalPages,
+      totalCustomers: totalCustomers,
     });
   } catch (error) {
     console.error('Error loading customers:', error);

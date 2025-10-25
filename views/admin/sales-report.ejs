@@ -285,6 +285,15 @@
             background-color: #f9f9f9;
         }
 
+        .btn-search:hover {
+    background-color: #4F46E5 !important;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+.btn-search:active {
+    transform: translateY(0);
+}
+
         @media (max-width: 768px) {
             .stats-grid {
                 grid-template-columns: 1fr;
@@ -419,25 +428,40 @@
                     </div>
                 </div>
 
-                <div style="margin-top: auto;">
-                    <button type="submit" class="btn btn-sm btn-custom btn-primary-custom" style="height: 38px; padding: 0 20px;">
-                        <i class="material-icons md-search" style="font-size: 18px;"></i>
-                    </button>
-                </div>
+               <div style="margin-top: auto;">
+    <button type="submit" class="btn btn-sm btn-search" 
+            style="height: 38px; padding: 0 20px; background-color: #6366F1; color: white; border: none; border-radius: 6px; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s ease; min-width: 38px;">
+        <i class="material-icons md-search" style="font-size: 18px;"></i>
+    </button>
+</div>
+               <div style="margin-top: auto;">
+    <button type="button" class="btn btn-sm btn-pdf" 
+            onclick="downloadReport('pdf')" 
+            style="height: 38px; padding: 0 10px; background-color: #DC3545; color: white; border: none; border-radius: 6px; font-weight: 500; display: flex; align-items: center; gap: 8px; transition: all 0.3s ease;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M14 2V8H20" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10 13H14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10 17H14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        PDF
+    </button>
+</div>
 
-                <div style="margin-top: auto;">
-                    <button type="button" class="btn btn-sm btn-custom btn-success-custom" 
-                            onclick="downloadReport('pdf')" style="height: 38px; padding: 0 20px;">
-                        PDF
-                    </button>
-                </div>
-
-                <div style="margin-top: auto;">
-                    <button type="button" class="btn btn-sm btn-custom btn-info-custom" 
-                            onclick="downloadReport('excel')" style="height: 38px; padding: 0 20px;">
-                        Excel
-                    </button>
-                </div>
+<div style="margin-top: auto;">
+    <button type="button" class="btn btn-sm btn-excel" 
+            onclick="downloadReport('excel')" 
+            style="height: 38px; padding: 0 10px; background-color: #008000; color: white; border: none; border-radius: 6px; font-weight: 500; display: flex; align-items: center; gap: 8px; transition: all 0.3s ease;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M14 2V8H20" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M16 13H8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M16 17H8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10 9H8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Excel
+    </button>
+</div>
             </form>
         </div>
     </div>

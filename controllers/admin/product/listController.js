@@ -32,7 +32,8 @@ const listProducts = async (req, res) => {
       totalPages,
       limit,
       search,
-      categories
+      categories,
+      total
     });
   } catch (error) {
     console.error('Error listing products:', error);
@@ -44,7 +45,8 @@ const listProducts = async (req, res) => {
       limit: 10,
       search: '',
       categories: [],
-      errorMessage: 'Could not load products.'
+      errorMessage: 'Could not load products.',
+      total: 0
     });
   }
 };

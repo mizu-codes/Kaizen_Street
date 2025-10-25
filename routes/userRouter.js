@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const upload = require('../middlewares/multer');
 const cartController = require('../controllers/user/cartController');
 const wishlistController = require('../controllers/user/wishlistController');
 const orderController = require('../controllers/user/orderController');
 const couponController = require('../controllers/user/profile/couponController');
 const redirectIfLoggedIn = require('../middlewares/redirectIfLoggedIn');
 const { userAuth } = require('../middlewares/auth');
+const { upload, handleUploadError } = require('../middlewares/multer');
 
 const profileController = require('../controllers/user/profile/profileController');
 const addressController = require('../controllers/user/profile/addressController');
@@ -52,7 +52,7 @@ router.post('/reset-password', passwordController.resetPassword);
 
 router.get('/userProfile', userAuth, profileController.userProfile);
 router.get('/profile/edit', userAuth, profileController.updateProfile);
-router.post('/profile/update', userAuth, upload.single('avatar'), profileController.saveProfile);
+router.post('/profile/update', userAuth, upload.single('avatar'), handleUploadError, profileController.saveProfile);
 router.post('/profile/verify-otp', userAuth, securityController.verifyProfileOtp);
 
 router.get('/profile/security', userAuth, securityController.securityProfile);

@@ -183,6 +183,7 @@ const loadOrderPage = async (req, res) => {
 
     res.render('order-list', {
       orders: processedOrders,
+      totalCount,
       page: page,
       _page: page,
       _limit: limit,

@@ -1141,7 +1141,7 @@
             <div class="input-group">
               <input type="text" name="search" value="<%= search %>" class="form-control"
                 placeholder="Search products…" />
-              <button class="btn btn-light bg" type="submit"> <i class="material-icons md-search"></i></button>
+              <button class="btn btn-light bg" style="background-color: #088178; border-radius: 0.4rem;" type="submit"> <i class="material-icons md-search" style="color: white;"></i></button>
             </div>
           </div>
 
@@ -1159,6 +1159,7 @@
     <section class="content-main">
       <div class="content-header d-flex justify-content-between align-items-center mb-4">
         <h2 class="content-title card-title">Product Management</h2>
+         <p class="text-muted">Total: <%= total || 0 %> products</p>
       </div>
 
       <div class="container">

@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const upload = require('../middlewares/multer');
 const adminController = require('../controllers/admin/adminController');
 const customerController = require('../controllers/admin/customerController');
 const categoryController = require('../controllers/admin/categoryController');
@@ -13,6 +12,7 @@ const couponController = require('../controllers/admin/couponController');
 const salesController = require('../controllers/admin/salesController');
 const dashboardController = require('../controllers/admin/dashboardController');
 const { adminAuth } = require('../middlewares/auth');
+const { upload, handleUploadError } = require('../middlewares/multer');
 
 router.get('/page-error', adminController.pageError)
 router.get('/login', adminController.loadLogin);
@@ -32,10 +32,10 @@ router.post('/addCategoryOffer/:id', adminAuth, categoryController.addCategoryOf
 router.post('/removeCategoryOffer/:id', adminAuth, categoryController.removeCategoryOffer);
 
 router.get('/addProducts', adminAuth, addController.getProductAddPage);
-router.post('/addProducts', adminAuth, upload.array('images', 3), addController.addNewProduct);
+router.post('/addProducts', adminAuth, upload.array('images', 3), handleUploadError, addController.addNewProduct)
 router.get('/products', adminAuth, listController.listProducts);
 router.post('/products/block/:id', adminAuth, listController.toggleBlockProduct);
-router.post('/products/edit/:id', adminAuth, upload.array('productImages', 3), editController.updateProduct);
+router.post('/products/edit/:id', adminAuth, upload.array('productImages', 3), handleUploadError, editController.updateProduct);
 
 router.get('/orders', adminAuth, orderController.loadOrderPage);
 router.get('/orders/:orderId', adminAuth, orderController.loadOrderDetailsPage);
