@@ -985,7 +985,6 @@
     }
 
     async function handleReturnRequest(orderId, itemId, action) {
-      console.log('handleReturnRequest called with:', { orderId, itemId, action });
 
       if (!orderId || !itemId) {
         Swal.fire('Error', 'Missing order or item information', 'error');
@@ -1020,8 +1019,6 @@
       });
 
       try {
-        console.log('Making request to:', `/admin/returns/${orderId}/${itemId}`);
-        console.log('With action:', action);
 
         const resp = await fetch(`/admin/returns/${orderId}/${itemId}`, {
           method: 'PATCH',
@@ -1035,10 +1032,7 @@
           })
         });
 
-        console.log('Response status:', resp.status);
-
         const responseText = await resp.text();
-        console.log('Response text:', responseText);
 
         let data;
         try {
@@ -1263,8 +1257,6 @@
       });
 
       try {
-        console.log('Making request to:', `/admin/returns/${orderId}/${itemId}`);
-        console.log('With action:', action);
 
         const resp = await fetch(`/admin/returns/${orderId}/${itemId}`, {
           method: 'PATCH',
@@ -1278,10 +1270,7 @@
           })
         });
 
-        console.log('Response status:', resp.status);
-
         const responseText = await resp.text();
-        console.log('Response text:', responseText);
 
         let data;
         try {

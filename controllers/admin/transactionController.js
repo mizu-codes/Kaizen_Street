@@ -1,5 +1,4 @@
 const User = require('../../models/userSchema')
-const Wallet = require('../../models/walletSchema');
 const WalletTransaction = require('../../models/walletTransactionSchema');
 const Transaction = require('../../models/transactionSchema');
 

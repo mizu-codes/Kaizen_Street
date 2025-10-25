@@ -5,8 +5,6 @@ const Cart = require('../../../models/cartSchema');
 const Coupon = require('../../../models/couponSchema');
 const Address = require('../../../models/addressSchema');
 const Order = require('../../../models/orderSchema');
-const Wallet = require('../../../models/walletSchema');
-const WalletTransaction = require('../../../models/walletTransactionSchema');
 const Transaction = require('../../../models/transactionSchema');
 const crypto = require("crypto");
 require('dotenv').config();

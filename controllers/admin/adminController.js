@@ -1,5 +1,4 @@
 const User = require('../../models/userSchema');
-const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const pageError = async (req, res) => {

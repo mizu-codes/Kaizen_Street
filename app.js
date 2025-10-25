@@ -1,7 +1,10 @@
 const express = require('express');
 const app = express();
 const path = require('path');
+const MongoStore = require('connect-mongo');
 const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const loadUserData = require('./middlewares/userMiddleware');
 const userRouter = require('./routes/userRouter');
 const googleRouter = require('./routes/googleRouter');
@@ -15,9 +18,29 @@ const passport = require('./config/passport');
 const db = require('./config/db');
 db()
 
+app.use(helmet({
+  contentSecurityPolicy: false,
+}))
 
-app.use(express.json({ limit: '50mb' }))
-app.use(express.urlencoded({ extended: true, limit: '50mb' }))
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: 'Too many requests from this IP, please try again later.'
+});
+app.use('/api/', limiter);
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: 'Too many login attempts, please try again later.'
+});
+app.use('/login', authLimiter);
+app.use('/signup', authLimiter);
+
+
+app.use(express.json({ limit: '10mb' }))
+app.use(express.urlencoded({ extended: true, limit: '10mb' }))
 
 app.use(cookieParser(process.env.SESSION_SECRET));
 
@@ -26,19 +49,19 @@ app.use((req, res, next) => {
   next();
 })
 
-
 app.use(session({
   name: 'kaizen.sid',
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
   cookie: {
-    secure: false,
+    secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
-    maxAge: 72 * 60 * 60 * 1000
+    maxAge: 72 * 60 * 60 * 1000,
+    sameSite: 'strict'
   }
 }))
-
 
 app.use(flash());
 app.use(passport.initialize());
@@ -94,21 +117,47 @@ app.use('/', googleRouter);
 app.use('/', userRouter);
 app.use('/admin', adminRouter);
 
+app.use((req, res, next) => {
+  res.status(404).render('page-404', { message: 'Page not found' });
+});
 
 app.use((err, req, res, next) => {
   if (err.type === 'entity.too.large') {
     console.error('Request body too large:', err);
     return res.status(413).send('Payload too large. Try a smaller image.');
   }
-  console.error(err);
+  console.error('Error:', err);
+
   if (res.headersSent) return next(err);
-  res.status(err.status || 500).send(err.message || 'Internal Server Error');
+
+  if (process.env.NODE_ENV === 'production') {
+    res.status(err.status || 500).send('Something went wrong. Please try again later.');
+  } else {
+    res.status(err.status || 500).send(err.message || 'Internal Server Error');
+  }
 });
 
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`server running on ${PORT}`)
-})
+const server = app.listen(PORT, () => {
+  console.log(`server running on ${PORT}`);
+});
+
+
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received, closing server gracefully');
+  server.close(() => {
+    console.log('Server closed');
+    process.exit(0);
+  });
+});
+
+process.on('SIGINT', () => {
+  console.log('SIGINT received, closing server gracefully');
+  server.close(() => {
+    console.log('Server closed');
+    process.exit(0);
+  });
+});
 
 module.exports = app;

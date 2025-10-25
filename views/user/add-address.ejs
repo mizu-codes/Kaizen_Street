@@ -987,8 +987,8 @@
                     },
                     body: JSON.stringify(data)
                 });
+                
                 const json = await res.json();
-                console.log('SERVER SAYS:', json);
 
                 if (json.success) {
                     await Swal.fire({

@@ -1,5 +1,4 @@
 const User = require('../../models/userSchema');
-const Transaction = require('../../models/transactionSchema');
 const Order = require('../../models/orderSchema');
 
 const loadDashboard = async (req, res) => {

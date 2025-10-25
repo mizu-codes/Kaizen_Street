@@ -80,14 +80,14 @@ const addNewProduct = async (req, res) => {
         message: 'At least one image is required.'
       });
     }
-    
+
     let imageUrls = [];
 
     try {
       const uploadPromises = req.files.map(file => uploadToCloudinary(file.buffer));
       const uploadResults = await Promise.all(uploadPromises);
       imageUrls = uploadResults.map(r => r.secure_url);
- 
+
     } catch (uploadError) {
       console.error('Image upload error:', uploadError);
       return res.status(500).json({
