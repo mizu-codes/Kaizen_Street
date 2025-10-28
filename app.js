@@ -18,10 +18,9 @@ const passport = require('./config/passport');
 const db = require('./config/db');
 db()
 
-app.use(helmet({
-  contentSecurityPolicy: false,
-}))
-
+// app.use(helmet({
+//   contentSecurityPolicy: false,
+// }))
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,

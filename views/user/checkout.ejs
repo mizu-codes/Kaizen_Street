@@ -2187,9 +2187,9 @@
     <script src="/js/wishlist-count-updater.js"></script>
     <script src="/js/cart-count-updater.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
     <script src="/js/responsiveUser.js"></script>
+   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 
     <script>
         document.getElementById('year').textContent = new Date().getFullYear();
@@ -2941,39 +2941,51 @@
             }
         }
 
-        function checkWalletBalance() {
-            const walletRadio = document.querySelector('input[name="payment"][value="wallet"]');
-            const walletBalanceDisplay = document.querySelector('.wallet-balance');
-            const orderTotal = parseFloat(document.querySelector('.order-total')?.textContent?.replace('₹', '').replace(',', '') || 0);
+      function checkWalletBalance() {
+    const walletRadio = document.querySelector('input[name="payment"][value="wallet"]');
+    const walletBalanceDisplay = document.querySelector('.wallet-balance');
+    const orderTotalElement = document.querySelector('.order-total');
+    
+    // Exit early if required elements don't exist
+    if (!walletRadio || !walletBalanceDisplay || !orderTotalElement) {
+        return;
+    }
+    
+    const orderTotal = parseFloat(orderTotalElement.textContent.replace('₹', '').replace(',', '') || 0);
+    const walletBalance = parseFloat(walletBalanceDisplay.textContent.replace('₹', '').replace(',', ''));
 
-            if (walletRadio && walletBalanceDisplay) {
-                const walletBalance = parseFloat(walletBalanceDisplay.textContent.replace('₹', '').replace(',', ''));
-
-                if (walletBalance < orderTotal) {
-                    walletRadio.disabled = true;
-                    walletRadio.closest('.payment-option').classList.add('insufficient-balance');
-
-                    let insufficientMsg = walletRadio.closest('.payment-option').querySelector('.insufficient-balance-msg');
-                    if (!insufficientMsg) {
-                        insufficientMsg = document.createElement('div');
-                        insufficientMsg.className = 'insufficient-balance-msg';
-                        insufficientMsg.style.color = '#dc3545';
-                        insufficientMsg.style.fontSize = '12px';
-                        insufficientMsg.style.marginTop = '4px';
-                        insufficientMsg.textContent = `Insufficient balance. Need ₹${(orderTotal - walletBalance).toFixed(2)} more`;
-                        walletRadio.closest('.payment-option-content').appendChild(insufficientMsg);
-                    }
-                } else {
-                    walletRadio.disabled = false;
-
-
-                    const insufficientMsg = walletRadio.closest('.payment-option').querySelector('.insufficient-balance-msg');
-                    if (insufficientMsg) {
-                        insufficientMsg.remove();
-                    }
-                }
-            }
+    if (walletBalance < orderTotal) {
+        walletRadio.disabled = true;
+        const paymentOption = walletRadio.closest('.payment-option');
+        if (paymentOption) {
+            paymentOption.classList.add('insufficient-balance');
         }
+
+        const paymentOptionContent = walletRadio.closest('.payment-option-content');
+        let insufficientMsg = paymentOptionContent?.querySelector('.insufficient-balance-msg');
+        
+        if (paymentOptionContent && !insufficientMsg) {
+            insufficientMsg = document.createElement('div');
+            insufficientMsg.className = 'insufficient-balance-msg';
+            insufficientMsg.style.color = '#dc3545';
+            insufficientMsg.style.fontSize = '12px';
+            insufficientMsg.style.marginTop = '4px';
+            insufficientMsg.textContent = `Insufficient balance. Need ₹${(orderTotal - walletBalance).toFixed(2)} more`;
+            paymentOptionContent.appendChild(insufficientMsg);
+        }
+    } else {
+        walletRadio.disabled = false;
+        const paymentOption = walletRadio.closest('.payment-option');
+        if (paymentOption) {
+            paymentOption.classList.remove('insufficient-balance');
+        }
+
+        const insufficientMsg = walletRadio.closest('.payment-option')?.querySelector('.insufficient-balance-msg');
+        if (insufficientMsg) {
+            insufficientMsg.remove();
+        }
+    }
+}
 
         document.addEventListener('DOMContentLoaded', function () {
             checkWalletBalance();
