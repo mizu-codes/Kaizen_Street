@@ -2188,9 +2188,9 @@
     <script src="/js/cart-count-updater.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/js/responsiveUser.js"></script>
-   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
-
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    
+    
     <script>
         document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -2206,7 +2206,7 @@
             }
         });
     </script>
-
+    
     <script>
         const section = document.querySelector('.newsletter');
         window.addEventListener('scroll', () => {
@@ -2218,8 +2218,8 @@
             const yPos = distance * -0.5;
         });
     </script>
-
-
+    
+    
     <script>
 
         let originalTotal = 0;
@@ -2338,22 +2338,22 @@
             if (couponForm) couponForm.style.display = 'none';
 
             const appliedCouponHTML = `
-                        <div class="applied-coupon" id="appliedCouponDisplay">
-                            <div class="applied-coupon-info">
-                                <div class="coupon-icon success">
-                                    <i class="ri-checkbox-circle-fill"></i>
+                            <div class="applied-coupon" id="appliedCouponDisplay">
+                                <div class="applied-coupon-info">
+                                    <div class="coupon-icon success">
+                                        <i class="ri-checkbox-circle-fill"></i>
+                                    </div>
+                                    <div class="coupon-details">
+                                        <h4>${couponData.couponName}</h4>
+                                        <p class="coupon-code">Code: ${couponData.couponCode}</p>
+                                        <p class="discount-amount">You saved ₹${couponData.discount}</p>
+                                    </div>
                                 </div>
-                                <div class="coupon-details">
-                                    <h4>${couponData.couponName}</h4>
-                                    <p class="coupon-code">Code: ${couponData.couponCode}</p>
-                                    <p class="discount-amount">You saved ₹${couponData.discount}</p>
-                                </div>
+                                <button class="remove-coupon-btn" onclick="removeCoupon()">
+                                    <i class="ri-close-line"></i>
+                                </button>
                             </div>
-                            <button class="remove-coupon-btn" onclick="removeCoupon()">
-                                <i class="ri-close-line"></i>
-                            </button>
-                        </div>
-                    `;
+                        `;
 
             couponContainer.innerHTML = appliedCouponHTML;
         }
@@ -2362,26 +2362,26 @@
             const couponContainer = document.getElementById('couponContainer');
 
             const couponFormHTML = `
-                <div class="coupon-form" id="couponForm">
-                    <div class="coupon-input-container">
-                        <input type="text" 
-                               id="couponCodeInput" 
-                               placeholder="Enter coupon code" 
-                               class="coupon-input"
-                               maxlength="20">
-                        <button type="button" 
-                                class="apply-coupon-btn" 
-                                id="applyCouponBtn"
-                                onclick="applyCoupon()">
-                            Apply
-                        </button>
+                    <div class="coupon-form" id="couponForm">
+                        <div class="coupon-input-container">
+                            <input type="text" 
+                                   id="couponCodeInput" 
+                                   placeholder="Enter coupon code" 
+                                   class="coupon-input"
+                                   maxlength="20">
+                            <button type="button" 
+                                    class="apply-coupon-btn" 
+                                    id="applyCouponBtn"
+                                    onclick="applyCoupon()">
+                                Apply
+                            </button>
+                        </div>
+                        <div class="coupon-help">
+                            <span>Don't have a coupon? <a href="/profile/coupons" class="coupon-link">View available coupons</a></span>
+                        </div>
+                        <div class="coupon-message-text" id="couponMessage" style="display: none; color: #dc3545; font-size: 12px; margin-top: 6px;"></div>
                     </div>
-                    <div class="coupon-help">
-                        <span>Don't have a coupon? <a href="/profile/coupons" class="coupon-link">View available coupons</a></span>
-                    </div>
-                    <div class="coupon-message-text" id="couponMessage" style="display: none; color: #dc3545; font-size: 12px; margin-top: 6px;"></div>
-                </div>
-            `;
+                `;
 
             couponContainer.innerHTML = couponFormHTML;
 
@@ -2941,51 +2941,50 @@
             }
         }
 
-      function checkWalletBalance() {
-    const walletRadio = document.querySelector('input[name="payment"][value="wallet"]');
-    const walletBalanceDisplay = document.querySelector('.wallet-balance');
-    const orderTotalElement = document.querySelector('.order-total');
-    
-    // Exit early if required elements don't exist
-    if (!walletRadio || !walletBalanceDisplay || !orderTotalElement) {
-        return;
-    }
-    
-    const orderTotal = parseFloat(orderTotalElement.textContent.replace('₹', '').replace(',', '') || 0);
-    const walletBalance = parseFloat(walletBalanceDisplay.textContent.replace('₹', '').replace(',', ''));
+        function checkWalletBalance() {
+            const walletRadio = document.querySelector('input[name="payment"][value="wallet"]');
+            const walletBalanceDisplay = document.querySelector('.wallet-balance');
+            const orderTotalElement = document.querySelector('.order-total');
+           
+            if (!walletRadio || !walletBalanceDisplay || !orderTotalElement) {
+                return;
+            }
 
-    if (walletBalance < orderTotal) {
-        walletRadio.disabled = true;
-        const paymentOption = walletRadio.closest('.payment-option');
-        if (paymentOption) {
-            paymentOption.classList.add('insufficient-balance');
-        }
+            const orderTotal = parseFloat(orderTotalElement.textContent.replace('₹', '').replace(',', '') || 0);
+            const walletBalance = parseFloat(walletBalanceDisplay.textContent.replace('₹', '').replace(',', ''));
 
-        const paymentOptionContent = walletRadio.closest('.payment-option-content');
-        let insufficientMsg = paymentOptionContent?.querySelector('.insufficient-balance-msg');
-        
-        if (paymentOptionContent && !insufficientMsg) {
-            insufficientMsg = document.createElement('div');
-            insufficientMsg.className = 'insufficient-balance-msg';
-            insufficientMsg.style.color = '#dc3545';
-            insufficientMsg.style.fontSize = '12px';
-            insufficientMsg.style.marginTop = '4px';
-            insufficientMsg.textContent = `Insufficient balance. Need ₹${(orderTotal - walletBalance).toFixed(2)} more`;
-            paymentOptionContent.appendChild(insufficientMsg);
-        }
-    } else {
-        walletRadio.disabled = false;
-        const paymentOption = walletRadio.closest('.payment-option');
-        if (paymentOption) {
-            paymentOption.classList.remove('insufficient-balance');
-        }
+            if (walletBalance < orderTotal) {
+                walletRadio.disabled = true;
+                const paymentOption = walletRadio.closest('.payment-option');
+                if (paymentOption) {
+                    paymentOption.classList.add('insufficient-balance');
+                }
 
-        const insufficientMsg = walletRadio.closest('.payment-option')?.querySelector('.insufficient-balance-msg');
-        if (insufficientMsg) {
-            insufficientMsg.remove();
+                const paymentOptionContent = walletRadio.closest('.payment-option-content');
+                let insufficientMsg = paymentOptionContent?.querySelector('.insufficient-balance-msg');
+
+                if (paymentOptionContent && !insufficientMsg) {
+                    insufficientMsg = document.createElement('div');
+                    insufficientMsg.className = 'insufficient-balance-msg';
+                    insufficientMsg.style.color = '#dc3545';
+                    insufficientMsg.style.fontSize = '12px';
+                    insufficientMsg.style.marginTop = '4px';
+                    insufficientMsg.textContent = `Insufficient balance. Need ₹${(orderTotal - walletBalance).toFixed(2)} more`;
+                    paymentOptionContent.appendChild(insufficientMsg);
+                }
+            } else {
+                walletRadio.disabled = false;
+                const paymentOption = walletRadio.closest('.payment-option');
+                if (paymentOption) {
+                    paymentOption.classList.remove('insufficient-balance');
+                }
+
+                const insufficientMsg = walletRadio.closest('.payment-option')?.querySelector('.insufficient-balance-msg');
+                if (insufficientMsg) {
+                    insufficientMsg.remove();
+                }
+            }
         }
-    }
-}
 
         document.addEventListener('DOMContentLoaded', function () {
             checkWalletBalance();
