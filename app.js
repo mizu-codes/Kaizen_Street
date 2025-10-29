@@ -138,21 +138,4 @@ const server = app.listen(PORT, () => {
   console.log(`server running on ${PORT}`);
 });
 
-
-process.on('SIGTERM', () => {
-  console.log('SIGTERM received, closing server gracefully');
-  server.close(() => {
-    console.log('Server closed');
-    process.exit(0);
-  });
-});
-
-process.on('SIGINT', () => {
-  console.log('SIGINT received, closing server gracefully');
-  server.close(() => {
-    console.log('Server closed');
-    process.exit(0);
-  });
-});
-
 module.exports = app;
