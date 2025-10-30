@@ -5289,7 +5289,6 @@ h6.post-title {
   font-size: 14px;
   line-height: 10px;
   font-weight: 600;
-  margin-left: 150px;
 }
 
 .header-top-ptb-1 #news-flash li {
@@ -6751,7 +6750,7 @@ h6.post-title {
 }
 
 .header-style-1 .header-top-ptb-1 {
-  padding: 12px 0;
+  padding:2px 0;
   border-bottom: 3px solid black;
   background-color: white;
   background-image: none;

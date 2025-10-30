@@ -10,28 +10,70 @@
     <link rel="stylesheet" href="/css/main.css?v=3.4">
     <link href="/css/responsiveUser.css" rel="stylesheet" type="text/css">
     <style>
+        #news-flash {
+            height: 30px;
+            line-height: 30px;
+            overflow: hidden;
+            position: relative;
+        }
+    
+        #news-flash ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+    
+        #news-flash ul li {
+            height: 30px;
+            line-height: 30px;
+            padding: 0;
+            margin: 0;
+            white-space: nowrap;
+        }
+    
+        #news-flash ul li a {
+            margin-left: 10px;
+        }
+    
+        @media (min-width: 1200px) {
+            #news-flash {
+                margin: 0 auto;
+                text-align: center;
+            }
+    
+            #news-flash ul {
+                text-align: center;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+    
+            #news-flash ul li {
+                text-align: center;
+            }
+        }
+    
         .footer-logo {
             width: 180px;
             min-width: 120px;
         }
-
+    
         .swal2-popup.swal-responsive {
             color: #333 !important;
             border: 2px solid rgba(0, 0, 0, 0.1) !important;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
             backdrop-filter: blur(10px) !important;
         }
-
+    
         .swal2-title {
             color: #e74c3c !important;
             font-weight: 600 !important;
             text-shadow: none !important;
         }
-
+    
         .swal2-content {
             color: #666 !important;
         }
-
+    
         .swal2-confirm {
             background: #3BB77E !important;
             border: none !important;
@@ -42,22 +84,22 @@
             box-shadow: 0 4px 15px rgba(59, 183, 126, 0.3) !important;
             transition: all 0.3s ease !important;
         }
-
+    
         .swal2-confirm:hover {
             background: #2a9d5f !important;
             transform: translateY(-1px) !important;
             box-shadow: 0 6px 20px rgba(59, 183, 126, 0.4) !important;
         }
-
+    
         .swal2-icon.swal2-error {
             border-color: #e74c3c !important;
             color: #e74c3c !important;
         }
-
+    
         .swal2-icon.swal2-error .swal2-x-mark {
             color: #e74c3c !important;
         }
-
+    
         .swal-responsive {
             width: 90% !important;
             max-width: 320px !important;
@@ -65,13 +107,13 @@
             border-radius: 10px;
             font-size: 0.95rem;
         }
-       
+    
         .filter-buttons {
             display: flex;
             gap: 10px;
             margin-top: 15px;
         }
-
+    
         .filter-buttons .btn {
             border-radius: 5px;
             border: none;
@@ -79,58 +121,58 @@
             font-size: 11px;
             transition: all 0.3s;
         }
-
+    
         .btn-default {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
             background-color: #088178;
             color: white;
         }
-
+    
         .btn-default:hover {
             color: white;
         }
-
+    
         .btn-outline-danger {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
             background-color: transparent;
             color: #dc3545;
             border: 1px solid #dc3545;
         }
-
+    
         .btn-outline-danger:hover {
             background-color: #dc3545;
             color: white;
         }
-
+    
         .active-filters-section {
             animation: slideIn 0.3s ease-in-out;
         }
-
+    
         @keyframes slideIn {
             from {
                 opacity: 0;
                 transform: translateY(-10px);
             }
-
+    
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-
+    
         .remove-filter:hover {
             background-color: #c82333 !important;
             transform: scale(1.0);
         }
-       
+    
         @media (max-width: 768px) {
             .search-clear {
                 right: 50px !important;
                 font-size: 18px !important;
             }
         }
-
-
+    
+    
         section.newsletter {
             background: url('/imgs/theme/japan-pic.png');
             background-size: cover;
@@ -148,7 +190,7 @@
             align-items: center;
             justify-content: center;
         }
-
+    
         .newsletter::before {
             content: '';
             position: absolute;
@@ -164,27 +206,27 @@
             animation: float 20s ease-in-out infinite;
             pointer-events: none;
         }
-
+    
         @keyframes float {
-
+    
             0%,
             100% {
                 transform: translateY(0px) rotate(0deg);
             }
-
+    
             25% {
                 transform: translateY(-10px) rotate(1deg);
             }
-
+    
             50% {
                 transform: translateY(-5px) rotate(-1deg);
             }
-
+    
             75% {
                 transform: translateY(-15px) rotate(0.5deg);
             }
         }
-
+    
         .floating-elements {
             position: absolute;
             top: 0;
@@ -194,59 +236,59 @@
             pointer-events: none;
             overflow: hidden;
         }
-
+    
         .floating-element {
             position: absolute;
             font-size: 2rem;
             opacity: 0.3;
             animation: floatAround 15s linear infinite;
         }
-
+    
         .floating-element:nth-child(1) {
             top: 20%;
             left: 10%;
             animation-delay: 0s;
         }
-
+    
         .floating-element:nth-child(2) {
             top: 60%;
             right: 15%;
             animation-delay: 5s;
         }
-
+    
         .floating-element:nth-child(3) {
             bottom: 30%;
             left: 20%;
             animation-delay: 10s;
         }
-
+    
         @keyframes floatAround {
             0% {
                 transform: translateY(0px) rotate(0deg);
                 opacity: 0.3;
             }
-
+    
             25% {
                 transform: translateY(-20px) rotate(90deg);
                 opacity: 0.6;
             }
-
+    
             50% {
                 transform: translateY(-10px) rotate(180deg);
                 opacity: 0.4;
             }
-
+    
             75% {
                 transform: translateY(-30px) rotate(270deg);
                 opacity: 0.5;
             }
-
+    
             100% {
                 transform: translateY(0px) rotate(360deg);
                 opacity: 0.3;
             }
         }
-
+    
         @media (max-width: 768px) {
             .newsletter {
                 margin: auto;
@@ -256,7 +298,6 @@
                 background-attachment: fixed;
             }
         }
-    
     </style>
 
 </head>

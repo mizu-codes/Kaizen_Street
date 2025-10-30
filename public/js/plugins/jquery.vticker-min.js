@@ -13,12 +13,12 @@
         var defaults = {
             speed: 700,
             pause: 4000,
-            showItems: 3,
+            showItems: 1,
             animation: '',
             mousePause: true,
             isPaused: false,
             direction: 'up',
-            height: 0
+            height: 30
         };
 
         var options = $.extend(defaults, options);

@@ -14,8 +14,51 @@
     <link href="/css/responsiveUser.css" rel="stylesheet" type="text/css">
     <link href="/css/bannerImage.css" rel="stylesheet" type="text/css">
     <style>
-        /* Responsive fixes for anime slider */
+        #news-flash {
+            height: 30px;
+            line-height: 30px;
+            overflow: hidden;
+            position: relative;
+        }
+    
+        #news-flash ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+    
+        #news-flash ul li {
+            height: 30px;
+            line-height: 30px;
+            padding: 0;
+            margin: 0;
+            white-space: nowrap;
+        }
+    
+        #news-flash ul li a {
+            margin-left: 10px;
+        }
+    
+        @media (min-width: 1200px) {
+            #news-flash {
+                margin: 0 auto;
+                text-align: center;
+            }
+    
+            #news-flash ul {
+                text-align: center;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+    
+            #news-flash ul li {
+                text-align: center;
+            }
+        }
+    
+        /* Responsive for anime slider */
         @media only screen and (max-width: 767px) {
+    
             .hero-slider-1,
             .hero-slider-1 .single-slider-img-1 {
                 height: auto !important;
