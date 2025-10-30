@@ -67,6 +67,7 @@
         nextArrow: '<span class="slider-btn slider-next"><i class="fi-rs-angle-right"></i></span>',
         appendArrows: '.hero-slider-1-arrow',
         autoplay: true,
+        autoplaySpeed: 1000,
     });
 
     /*Carausel 6 columns*/

@@ -4,13 +4,225 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Home</title>
-    <meta name="description" content="Kaizen Street — Curated anime fashion for those who live and breathe the culture. Premium hoodies, tees & merch. Your story, your style. 🌸 COD Available | Free Shipping">    <meta name="keywords" content="anime clothing india, aesthetic anime merch, anime streetwear, naruto hoodie, one piece merchandise, demon slayer shirt, jujutsu kaisen merch, otaku fashion india, anime store online india">
+    <meta name="description"
+        content="Kaizen Street-anime fashion for those who live and breathe the culture. Premium hoodies, tees & merch. Your story, your style. 🌸 COD Available | Free Shipping">
+    <meta name="keywords"
+        content="anime clothing india, aesthetic anime merch, anime streetwear, naruto hoodie, one piece merchandise, demon slayer shirt, jujutsu kaisen merch, otaku fashion india, anime store online india">
     <link rel="icon" type="image/svg+xml" href="/imgs/theme/kaizenicon.svg">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css">
     <link rel="stylesheet" href="/css/main.css?v=3.4">
     <link href="/css/responsiveUser.css" rel="stylesheet" type="text/css">
     <link href="/css/bannerImage.css" rel="stylesheet" type="text/css">
     <style>
+        /* Responsive fixes for anime slider */
+        @media only screen and (max-width: 767px) {
+            .hero-slider-1,
+            .hero-slider-1 .single-slider-img-1 {
+                height: auto !important;
+            }
+
+            .hero-slider-1 img {
+                max-height: none !important;
+            }
+         
+            .home-slider .row {
+                flex-direction: column;
+                overflow: visible !important;
+            }
+         
+            .home-slider .col-lg-5,
+            .home-slider .col-md-6:first-child {
+                order: 1;
+                margin-bottom: 15px;
+                overflow: visible !important;
+            }
+           
+            .home-slider .col-lg-7,
+            .home-slider .col-md-6:last-child {
+                order: 2;
+                overflow: visible !important;
+            }
+
+            .hero-slider-1 .single-slider-img-1 .slider-1-1,
+            .hero-slider-1 .single-slider-img-1 .slider-1-2,
+            .hero-slider-1 .single-slider-img-1 .slider-1-3 {
+                position: relative !important;
+                bottom: auto !important;
+                right: auto !important;
+                width: 100%;
+                margin: 0 auto;
+                display: block;
+            }
+          
+            .hero-slider-content-2 h2 {
+                font-size: 32px !important;
+                line-height: 38px !important;
+            }
+
+            .hero-slider-content-2 h3 {
+                font-size: 26px !important;
+            }
+
+            .hero-slider-content-2 h4 {
+                font-size: 18px !important;
+                margin-bottom: 10px !important;
+            }
+
+            .hero-slider-content-2 p {
+                font-size: 16px !important;
+                line-height: 24px !important;
+                width: 100% !important;
+                margin: 10px 0 15px !important;
+            }
+
+            /* Adjust button */
+            .hero-slider-content-2 .btn {
+                font-size: 14px !important;
+            }
+
+            /* Fix button brush background overflow */
+            .hero-slider-content-2 .btn-brush {
+                overflow: visible !important;
+                margin: 10px 0 20px !important;
+                display: inline-block;
+            }
+
+            /* Center align text on mobile */
+            .hero-slider-content-2 {
+                text-align: center;
+                padding: 15px !important;
+                overflow: visible !important;
+            }
+
+            /* Image container */
+            .single-slider-img {
+                text-align: center;
+                margin-top: 20px;
+            }
+
+            .single-slider-img img {
+                max-width: 90% !important;
+                height: auto !important;
+                margin: 0 auto;
+            }
+
+            /* Adjust slider height */
+            .single-hero-slider {
+                min-height: auto !important;
+                padding: 30px 0 !important;
+            }
+
+            /* Slider arrows adjustment */
+            .slider-arrow .slider-btn.slider-prev {
+                left: 5px !important;
+            }
+
+            .slider-arrow .slider-btn.slider-next {
+                right: 5px !important;
+            }
+
+            .slider-arrow .slider-btn {
+                width: 35px !important;
+                height: 35px !important;
+                line-height: 35px !important;
+            }
+        }
+      
+        @media only screen and (max-width: 575px) {
+            .hero-slider-content-2 h2 {
+                font-size: 28px !important;
+                line-height: 34px !important;
+            }
+
+            .hero-slider-content-2 h3 {
+                font-size: 22px !important;
+            }
+
+            .hero-slider-content-2 h4 {
+                font-size: 16px !important;
+            }
+
+            .hero-slider-content-2 p {
+                font-size: 14px !important;
+                line-height: 22px !important;
+            }
+        }
+   
+        @media only screen and (min-width: 768px) and (max-width: 991px) {
+
+            /* Reduce heights for tablet */
+            .hero-slider-1,
+            .hero-slider-1 .single-slider-img-1 {
+                height: 400px !important;
+            }
+
+            .hero-slider-1 img {
+                max-height: 380px !important;
+            }
+
+            /* Adjust text sizes */
+            .hero-slider-content-2 h2 {
+                font-size: 36px !important;
+                line-height: 42px !important;
+            }
+
+            .hero-slider-content-2 h3 {
+                font-size: 28px !important;
+            }
+
+            .hero-slider-content-2 h4 {
+                font-size: 20px !important;
+            }
+
+            .hero-slider-content-2 p {
+                font-size: 16px !important;
+                width: 90% !important;
+            }
+
+            /* Adjust image positioning */
+            .hero-slider-1 .single-slider-img-1 .slider-1-1,
+            .hero-slider-1 .single-slider-img-1 .slider-1-2,
+            .hero-slider-1 .single-slider-img-1 .slider-1-3 {
+                max-width: 350px !important;
+            }
+        }
+       
+        @media only screen and (min-width: 992px) and (max-width: 1199px) {
+            .hero-slider-content-2 h2 {
+                font-size: 40px !important;
+                line-height: 46px !important;
+            }
+
+            .hero-slider-content-2 h3 {
+                font-size: 30px !important;
+            }
+
+            .hero-slider-content-2 p {
+                width: 85% !important;
+            }
+
+            .hero-slider-1 .single-slider-img-1 .slider-1-2,
+            .hero-slider-1 .single-slider-img-1 .slider-1-3 {
+                right: 100px !important;
+            }
+
+            .hero-slider-1 .single-slider-img-1 .slider-1-3 {
+                top: 1px !important;
+            }
+        }
+
+        @media only screen and (min-width: 1200px) {
+
+            .hero-slider-1 .single-slider-img-1 .slider-1-2,
+            .hero-slider-1 .single-slider-img-1 .slider-1-3 {
+                right: 100px !important;
+            }
+
+            .hero-slider-1 .single-slider-img-1 .slider-1-3 {
+                top: 1px !important;
+            }
+        }
+
         .footer-logo {
             width: 180px;
             min-width: 120px;
@@ -183,7 +395,6 @@
             }
         }
 
-        /* BRAND LOGOS */
         .brand-logo {
             transition: all 0.3s ease;
             border-radius: 15px;

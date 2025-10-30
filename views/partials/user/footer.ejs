@@ -165,7 +165,9 @@
 <script>
     document.getElementById('clear-search').addEventListener('click', function (e) {
         e.preventDefault();
-        window.location = '/shop';
+        e.stopPropagation();
+        document.getElementById('searchInput').value = '';
+        document.getElementById('searchInput').focus();
     });
 </script>
 
