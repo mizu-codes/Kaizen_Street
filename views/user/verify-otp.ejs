@@ -198,6 +198,57 @@
                 padding: 30px 20px;
             }
         }
+
+          .swal2-popup.swal-responsive {
+            color: #333 !important;
+            border: 2px solid rgba(0, 0, 0, 0.1) !important;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+            backdrop-filter: blur(10px) !important;
+        }
+
+        .swal2-title {
+            color: #e74c3c !important;
+            font-weight: 600 !important;
+            text-shadow: none !important;
+        }
+
+        .swal2-content {
+            color: #666 !important;
+        }
+
+        .swal2-confirm {
+            background: #3BB77E !important;
+            border: none !important;
+            border-radius: 8px !important;
+            padding: 12px 30px !important;
+            font-weight: 600 !important;
+            color: white !important;
+            box-shadow: 0 4px 15px rgba(59, 183, 126, 0.3) !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .swal2-confirm:hover {
+            background: #2a9d5f !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 6px 20px rgba(59, 183, 126, 0.4) !important;
+        }
+
+        .swal2-icon.swal2-error {
+            border-color: #e74c3c !important;
+            color: #e74c3c !important;
+        }
+
+        .swal2-icon.swal2-error .swal2-x-mark {
+            color: #e74c3c !important;
+        }
+
+        .swal-responsive {
+            width: 90% !important;
+            max-width: 320px !important;
+            padding: 1.2rem !important;
+            border-radius: 10px;
+            font-size: 0.95rem;
+        }
     </style>
 </head>
 
@@ -238,107 +289,116 @@
             Already verified? <a href="/login">Login now</a>
         </div>
     </div>
+    
+<script>
+    const otpForm = document.getElementById('otpForm');
+    const otpInput = document.getElementById('otp');
+    const timerEl = document.getElementById('timerValue');
+    const resendBtn = document.getElementById('resendBtn');
 
-    <script>
-        const otpForm = document.getElementById('otpForm');
-        const otpInput = document.getElementById('otp');
-        const timerEl = document.getElementById('timerValue');
-        const resendBtn = document.getElementById('resendBtn');
+    let timer = 60;
+    let timerInterval;
 
-        let timer = 60;
-        let timerInterval;
+    function startTimer() {
+        clearInterval(timerInterval);
+        timer = 60;
+        timerEl.textContent = timer;
+        timerEl.classList.remove('expired');
+        otpInput.disabled = false;
+        resendBtn.disabled = true;
 
-        function startTimer() {
-            clearInterval(timerInterval);
-            timer = 60;
-            timerEl.textContent = timer;
-            timerEl.classList.remove('expired');
-            otpInput.disabled = false;
-            resendBtn.disabled = true;
-
-            timerInterval = setInterval(() => {
-                timerEl.textContent = --timer;
-                if (timer <= 0) {
-                    clearInterval(timerInterval);
-                    timerEl.textContent = 'Exp';
-                    timerEl.classList.add('expired');
-                    otpInput.disabled = true;
-                    resendBtn.disabled = false;
-                }
-            }, 1000);
-        }
-
-
-        otpInput.focus();
-        startTimer();
-
-
-        resendBtn.addEventListener('click', async () => {
-            resendBtn.disabled = true;
-            try {
-                const res = await fetch('/resend-otp', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ resend: true })
-                });
-                const data = await res.json();
-
-                if (!res.ok || !data.success) {
-                    throw new Error(data.message || 'Resend failed');
-                }
-
-                Swal.fire({
-                    icon: 'success',
-                    title: 'OTP Resent!',
-                    text: 'Check your email.',
-                    timer: 1500,
-                    showConfirmButton: false
-                });
-                startTimer();
-            } catch (err) {
-                console.error(err);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Could not resend OTP. Please try again.'
-                });
+        timerInterval = setInterval(() => {
+            timerEl.textContent = --timer;
+            if (timer <= 0) {
+                clearInterval(timerInterval);
+                timerEl.textContent = 'Exp';
+                timerEl.classList.add('expired');
+                otpInput.disabled = true;
                 resendBtn.disabled = false;
             }
-        });
+        }, 1000);
+    }
 
-        otpForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const otp = otpInput.value.trim();
-            if (!otp) {
-                return Swal.fire('Error', 'Please enter the OTP', 'warning');
+
+    otpInput.focus();
+    startTimer();
+
+
+    resendBtn.addEventListener('click', async () => {
+        resendBtn.disabled = true;
+        try {
+            const res = await fetch('/resend-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ resend: true })
+            });
+            const data = await res.json();
+
+            if (!res.ok || !data.success) {
+                throw new Error(data.message || 'Resend failed');
             }
 
-            try {
-                const res = await fetch('/verify-otp', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ otp })
-                });
-                const data = await res.json();
-
-                if (res.ok && data.success) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Verified!',
-                        timer: 1200,
-                        showConfirmButton: false
-                    }).then(() => {
-                        window.location.href = data.redirectUrl || '/';
-                    });
-                } else {
-                    throw new Error(data.message || 'Invalid OTP');
+            Swal.fire({
+                icon: 'success',
+                title: 'OTP Resent!',
+                text: 'Check your email.',
+                timer: 1500,
+                showConfirmButton: false,
+                customClass: {
+                    popup: 'swal-responsive',
                 }
-            } catch (err) {
-                console.error('Verify error:', err);
-                Swal.fire('Invalid OTP', err.message, 'error');
+            });
+            startTimer();
+        } catch (err) {
+            console.error(err);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Could not resend OTP. Please try again.',
+                customClass: {
+                    popup: 'swal-responsive',
+                }
+            });
+            resendBtn.disabled = false;
+        }
+    });
+
+    otpForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const otp = otpInput.value.trim();
+        if (!otp) {
+            return Swal.fire('Error', 'Please enter the OTP', 'warning');
+        }
+
+        try {
+            const res = await fetch('/verify-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ otp })
+            });
+            const data = await res.json();
+
+            if (res.ok && data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Verified!',
+                    timer: 1200,
+                    showConfirmButton: false,
+                    customClass: {
+                        popup: 'swal-responsive',
+                    }
+                }).then(() => {
+                    window.location.href = data.redirectUrl || '/';
+                });
+            } else {
+                throw new Error(data.message || 'Invalid OTP');
             }
-        });
-    </script>
+        } catch (err) {
+            console.error('Verify error:', err);
+            Swal.fire('Invalid OTP', err.message, 'error');
+        }
+    });
+</script>
 
 </body>
 

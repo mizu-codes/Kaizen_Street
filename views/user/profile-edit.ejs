@@ -1220,6 +1220,13 @@
             let timeLeft = 60;
             let userClosedModal = false;
 
+            const nameInput = document.querySelector('input[name="name"]');
+            if (nameInput) {
+                nameInput.addEventListener('input', function (e) {
+                    this.value = this.value.replace(/[^A-Za-z\s]/g, '').slice(0, 20);
+                });
+            }
+
             function showOtpModal() {
                 if (userClosedModal) return;
                 otpModal.style.display = 'flex';
@@ -1247,6 +1254,28 @@
             }
 
             form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const nameValue = document.querySelector('input[name="name"]').value.trim();
+                if (!nameValue) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Validation Error',
+                        text: 'Name is required',
+                        customClass: { popup: 'swal-responsive' }
+                    });
+                    return;
+                }
+
+                if (!/^[A-Za-z\s]{1,20}$/.test(nameValue)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Validation Error',
+                        text: 'Name must be only letters and spaces, max 20 characters',
+                        customClass: { popup: 'swal-responsive' }
+                    });
+                    return;
+                }
                 const newEmail = emailInput.value.trim();
 
                 if (newEmail !== originalEmail && !otpVerified) {

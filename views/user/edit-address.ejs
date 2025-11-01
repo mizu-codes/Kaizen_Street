@@ -901,6 +901,15 @@
             this.value = this.value.replace(/\D/g, '').slice(0, 6);
         });
 
+        document.querySelector('input[name="userName"]').addEventListener('input', function (e) {
+            this.value = this.value.replace(/[^A-Za-z\s]/g, '').slice(0, 20);
+
+            const errorSpan = document.getElementById('userNameError');
+            if (this.value.trim().length > 0) {
+                errorSpan.textContent = '';
+            }
+        });
+
         document.querySelectorAll('input[type="tel"]').forEach(input => {
             input.addEventListener('input', function (e) {
                 this.value = this.value.replace(/\D/g, '').slice(0, 10);
@@ -929,6 +938,24 @@
             const data = Object.fromEntries(new FormData(this).entries());
             const id = '<%= address._id %>';
             const from = '<%= from === "checkout" ? "checkout" : "profile" %>';
+
+
+            let valid = true;
+            function setError(field, msg) {
+                const span = document.getElementById(field + 'Error');
+                if (span) span.textContent = msg;
+                valid = false;
+            }
+
+            if (!data.userName.trim()) {
+                setError('userName', 'Name is required.');
+            } else if (!/^[A-Za-z\s]{1,20}$/.test(data.userName)) {
+                setError('userName', 'Only letters and spaces allowed, max 20 characters.');
+            }
+
+            if (!valid) {
+                return;
+            }
 
             spinner.classList.remove('hidden');
             textSpan.textContent = 'Saving...';
@@ -983,8 +1010,6 @@
                 btn.disabled = false;
             }
         });
-
     </script>
 </body>
-
 </html>

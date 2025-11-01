@@ -71,6 +71,13 @@ const saveProfile = async (req, res) => {
       });
     }
 
+    if (!/^[A-Za-z\s]{1,20}$/.test(name.trim())) {
+      return res.status(400).json({
+        success: false,
+        message: 'Name must be only letters and spaces, max 20 characters.'
+      });
+    }
+
     if (!email || !email.trim()) {
       return res.status(400).json({
         success: false,
@@ -107,7 +114,7 @@ const saveProfile = async (req, res) => {
       const otp = otpGenerator();
 
       const emailSent = await sendVerificationEmail(email, otp);
-      
+
       if (!emailSent) {
         return res.status(500).json({ success: false, message: 'Failed to send verification email' });
       }

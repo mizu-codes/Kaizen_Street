@@ -12,7 +12,6 @@ const loadSignup = async (req, res) => {
         return res.render('signup')
     }
     catch (error) {
-        console.log('Signup page not loading', error);
         res.status(500).send('Server error')
     }
 }
@@ -42,7 +41,6 @@ const loadLogin = (req, res) => {
         });
     }
     catch (error) {
-        console.log('Login page not loading', error);
         return res.status(500).send('Server error');
     }
 }
@@ -341,11 +339,9 @@ const signup = async (req, res) => {
                 return res.status(500).send('Session error');
             }
             res.render('verify-otp');
-            console.log('OTP sent', otp);
         });
 
     } catch (error) {
-        console.log('signup error', error);
         res.redirect('/pageNotFound');
     }
 }
@@ -361,7 +357,6 @@ const createWalletWithReferralCredit = async (newUserId, referrerUserId) => {
         if (existingWallet) {
             await session.abortTransaction();
             session.endSession();
-            console.log('Wallet already exists for user');
             return existingWallet;
         }
 
@@ -411,7 +406,6 @@ const createWalletWithReferralCredit = async (newUserId, referrerUserId) => {
         await session.commitTransaction();
         session.endSession();
 
-        console.log(`Referral credit processed: ₹${creditAmount} added to wallet for user ${newUserId}`);
         return savedWallet;
 
     } catch (error) {
@@ -425,8 +419,6 @@ const createWalletWithReferralCredit = async (newUserId, referrerUserId) => {
 const verifyOtp = async (req, res) => {
     try {
         const { otp } = req.body;
-
-        console.log("Entered OTP:", otp);
 
         if (otp === req.session.userOtp) {
             const userData = req.session.userData;
@@ -469,7 +461,6 @@ const verifyOtp = async (req, res) => {
                         console.log('Self-referral attempt blocked');
                     } else {
                         await createWalletWithReferralCredit(savedUser._id, referrer._id);
-                        console.log(`Referral successful: ${userData.email} referred by ${referrer.email}`);
                     }
                 } catch (walletError) {
                     console.error('Error processing referral wallet credit:', walletError);
@@ -574,7 +565,6 @@ const logout = async (req, res) => {
         } else {
             req.session.destroy((err) => {
                 if (err) {
-                    console.log('Session destruction error', err.message);
                     return res.redirect('/pageNotFound');
                 }
                 res.clearCookie('kaizen.sid');
@@ -582,7 +572,6 @@ const logout = async (req, res) => {
             });
         }
     } catch (error) {
-        console.log('logout error', error);
         res.redirect('/pageNotFound');
     }
 };

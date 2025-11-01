@@ -104,7 +104,6 @@ const loadHomepage = async (req, res) => {
 
         return res.render('home', { products: productsWithOffers, categories, wishlistIds });
     } catch (error) {
-        console.log('Home page load error:', error);
         return res.status(500).send('Server error');
     }
 };

@@ -1,9 +1,7 @@
 const User = require('../../../models/userSchema');
 const Address = require('../../../models/addressSchema');
 
-
 const addressPage = async (req, res) => {
-
   try {
     const userId = req.session.userId;
     const addresses = await Address.find({ userId });
@@ -20,7 +18,6 @@ const addressPage = async (req, res) => {
 
 const addAddress = async (req, res) => {
   try {
-
     const userId = req.session.userId;
     const from = req.query.from || 'profile';
 
@@ -58,7 +55,11 @@ const createAddress = async (req, res) => {
     } = req.body;
 
     const errors = {};
-    if (!userName?.trim()) errors.userName = 'Name is required';
+    if (!userName?.trim()) {
+      errors.userName = 'Name is required';
+    } else if (!/^[A-Za-z\s]{1,20}$/.test(userName.trim())) {
+      errors.userName = 'Name must be only letters and spaces, max 20 characters';
+    }
     if (!/^\d{10}$/.test(phoneNumber)) errors.phoneNumber = '10 digits required';
     if (!/^\d{6}$/.test(pincode)) errors.pincode = '6 digits required';
     if (!houseNo?.trim()) errors.houseNo = 'House/flat info is required';
@@ -140,7 +141,6 @@ const deleteAddress = async (req, res) => {
 
 const editAddressPage = async (req, res) => {
   try {
-
     const userId = req.session.userId;
     const addr = await Address.findOne({ _id: req.params.id, userId });
     if (!addr) return res.redirect('/profile/addresses');
@@ -167,8 +167,11 @@ const updateAddress = async (req, res) => {
     const from = req.query.from;
 
     const errors = {};
-    if (!req.body.userName?.trim()) errors.userName = 'Name is required';
-
+    if (!req.body.userName?.trim()) {
+      errors.userName = 'Name is required';
+    } else if (!/^[A-Za-z\s]{1,20}$/.test(req.body.userName.trim())) {
+      errors.userName = 'Name must be only letters and spaces, max 20 characters';
+    }
     if (Object.keys(errors).length) {
       return res.status(400).render('edit-address', {
         address: await Address.findById(id),
@@ -202,8 +205,6 @@ const updateAddress = async (req, res) => {
     res.redirect('/pageNotFound');
   }
 };
-
-
 
 module.exports = {
   addressPage,
