@@ -10,6 +10,9 @@
     <link href="/css/responsiveUser.css" rel="stylesheet" type="text/css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
+        .align-items-center {
+            padding: 8px;
+        }
         .swal2-popup.swal-responsive {
             color: #333 !important;
             border: 2px solid rgba(0, 0, 0, 0.1) !important;
@@ -241,7 +244,9 @@
             }
 
             .buttons {
-                flex-direction: column;
+                position: relative;
+                z-index: 998;
+                pointer-events: auto;
             }
         }
     </style>

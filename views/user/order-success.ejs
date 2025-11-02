@@ -10,6 +10,10 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
     <link href="/css/responsiveUser.css" rel="stylesheet" type="text/css">
     <style>
+        .align-items-center {
+            padding: 8px;
+        }
+    
         .confetti-container {
             position: fixed;
             top: 0;
@@ -19,7 +23,7 @@
             pointer-events: none;
             z-index: 1000;
         }
-
+    
         .confetti {
             position: absolute;
             width: 4px;
@@ -28,12 +32,12 @@
             opacity: 0;
             animation: confetti-fall 2s ease-out forwards;
         }
-
+    
         /* Circle shape */
         .confetti.circle {
             border-radius: 50%;
         }
-
+    
         /* Triangle shape */
         .confetti.triangle {
             width: 0;
@@ -44,109 +48,109 @@
             border-bottom: 10px solid;
             border-bottom-color: inherit;
         }
-
+    
         .confetti.triangle::before {
             content: '';
             border-bottom-color: var(--confetti-color);
         }
-
+    
         /* Line shape */
         .confetti.line {
             width: 3px;
             height: 12px;
             border-radius: 2px;
         }
-
+    
         @keyframes confetti-fall {
             0% {
                 transform: translateY(-100vh) rotate(0deg);
                 opacity: 1;
             }
-
+    
             100% {
                 transform: translateY(100vh) rotate(720deg);
                 opacity: 1;
             }
         }
-
+    
         .success-container {
             opacity: 0;
             animation: fadeInUp 0.8s ease-out 0.5s forwards;
         }
-
+    
         @keyframes fadeInUp {
             from {
                 opacity: 0;
                 transform: translateY(30px);
             }
-
+    
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-
+    
         .status-title {
             opacity: 0;
             animation: fadeInUp 0.6s ease-out 1s forwards;
         }
-
+    
         .congratulations {
             opacity: 0;
             animation: fadeInUp 0.6s ease-out 1.2s forwards;
         }
-
+    
         .order-info {
             opacity: 0;
             animation: fadeInUp 0.6s ease-out 1.4s forwards;
         }
-
+    
         .buttons {
             opacity: 0;
             animation: fadeInUp 0.6s ease-out 1.6s forwards;
         }
-
+    
         .image-section {
             opacity: 0;
             animation: fadeInRight 0.8s ease-out 1s forwards;
         }
-
+    
         @keyframes fadeInRight {
             from {
                 opacity: 0;
                 transform: translateX(30px);
             }
-
+    
             to {
                 opacity: 1;
                 transform: translateX(0);
             }
         }
-
+    
         .image-section img {
             animation: float 3s ease-in-out infinite 1.8s;
             margin-top: -110px;
         }
-
-
+    
+    
         @keyframes float {
-
+    
             0%,
             100% {
                 transform: translateY(0px);
             }
-
+    
             50% {
                 transform: translateY(-10px);
             }
         }
-
+    
         .success-btn-primary,
         .success-btn-secondary {
             position: relative;
             overflow: hidden;
         }
-
+    
         .success-btn-primary::before,
         .success-btn-secondary::before {
             content: '';
@@ -160,13 +164,13 @@
             transform: translate(-50%, -50%);
             transition: width 0.6s, height 0.6s;
         }
-
+    
         .success-btn-primary:hover::before,
         .success-btn-secondary:hover::before {
             width: 300px;
             height: 300px;
         }
-
+    
         .success-container {
             max-width: 1000px;
             width: 100%;
@@ -177,13 +181,13 @@
             padding: 60px 20px;
             margin: 0 auto;
         }
-
+    
         .content {
             display: flex;
             flex-direction: column;
             gap: 24px;
         }
-
+    
         .status-title {
             font-size: 14px;
             font-weight: 500;
@@ -192,7 +196,7 @@
             letter-spacing: 0.5px;
             margin-bottom: 8px;
         }
-
+    
         .congratulations {
             font-size: 32px;
             font-weight: 700;
@@ -202,30 +206,30 @@
             background-clip: text;
             margin-bottom: 20px;
         }
-
+    
         .order-info {
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
-
+    
         .order-status {
             font-size: 18px;
             font-weight: 500;
             color: #333;
         }
-
+    
         .delivery-date {
             font-size: 16px;
             color: #666;
         }
-
+    
         .buttons {
             display: flex;
             gap: 16px;
             margin-top: 8px;
         }
-
+    
         .btn {
             padding: 10px 20px;
             border-radius: 6px;
@@ -239,7 +243,7 @@
             text-align: center;
             min-width: 120px;
         }
-
+    
         .success-btn-primary {
             background: linear-gradient(135deg, #ff1744 0%, #f50057 50%, #c51162 100%);
             color: white;
@@ -255,14 +259,14 @@
             text-align: center;
             min-width: 140px;
         }
-
+    
         .success-btn-primary:hover {
             background: linear-gradient(135deg, #e91e63 0%, #ad1457 50%, #880e4f 100%);
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(255, 23, 68, 0.3);
             color: white;
         }
-
+    
         .success-btn-secondary {
             background-color: transparent;
             color: #ff1744;
@@ -278,20 +282,20 @@
             text-align: center;
             min-width: 140px;
         }
-
+    
         .success-btn-secondary:hover {
             background: linear-gradient(135deg, #ff1744 0%, #f50057 50%, #c51162 100%);
             color: white;
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(255, 23, 68, 0.3);
         }
-
+    
         .image-section {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-
+    
         .main-content {
             display: flex;
             align-items: center;
@@ -299,20 +303,22 @@
             min-height: calc(100vh - 200px);
             padding: 40px 0;
         }
-
+    
         @media (max-width: 768px) {
             .success-container {
                 grid-template-columns: 1fr;
                 gap: 40px;
                 padding: 40px 20px;
             }
-
+    
             .congratulations {
                 font-size: 28px;
             }
-
+    
             .buttons {
-                flex-direction: column;
+                position: relative;
+                z-index: 998;
+                pointer-events: auto;
             }
         }
     </style>
@@ -461,7 +467,7 @@
 
                 <div class="order-info">
                     <div class="order-status">Your order is placed</div>
-                    <div class="delivery-date">Item will be delivered on 30th October 2025</div>
+                    <div class="delivery-date">Item will be delivered on 30th November 2025</div>
                 </div>
 
                 <div class="buttons">
