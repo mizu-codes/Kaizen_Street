@@ -1142,13 +1142,11 @@
                     <div class="summary-item">
                       <span>Order Date:</span>
                       <span>
+                       <span>
                         <% if (order.createdAt) { %>
-                          <%= (order.createdAt.toLocaleString ? order.createdAt : new
-                            Date(order.createdAt)).toLocaleString('en-US', { weekday: 'short' , year: 'numeric' ,
-                            month: 'short' , day: '2-digit' , hour: '2-digit' , minute: '2-digit' }) %>
-                            <% } else { %>
-                              Recently
-                              <% } %>
+                        <%= order.createdAt %>
+                            <% } else { %> Recently <% } %>
+                          </span>
                       </span>
                     </div>
                     <div class="summary-item">

@@ -9,6 +9,19 @@ const Address = require('../../models/addressSchema');
 const returnAndRefund = require('../../models/returnAndRefundSchema');
 const PDFDocument = require('pdfkit');
 
+const toIST = (date) => {
+    if (!date) return null;
+    return new Date(date).toLocaleString('en-IN', { 
+        timeZone: 'Asia/Kolkata',
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric', 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        hour12: true 
+    });
+};
+
 const loadOrderPage = async (req, res) => {
     try {
         const userId = req.session.userId;
@@ -47,6 +60,10 @@ const loadOrderPage = async (req, res) => {
             });
 
             order.displayOrderId = order._id.toString().slice(-8).toUpperCase();
+            
+            order.createdAt = toIST(order.createdAt);
+            order.updatedAt = toIST(order.updatedAt);
+            order.placedAt = order.placedAt ? toIST(order.placedAt) : null;
 
             return order;
         });
@@ -101,6 +118,10 @@ const loadOrderDetailsPage = async (req, res) => {
                 status: item.status || order.status
             };
         });
+        
+        order.createdAt = toIST(order.createdAt);
+        order.updatedAt = toIST(order.updatedAt);
+        order.placedAt = order.placedAt ? toIST(order.placedAt) : null;
 
         res.render('profile-order-details', { order });
     } catch (error) {
