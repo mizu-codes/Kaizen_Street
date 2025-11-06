@@ -35,8 +35,8 @@ app.use('/login', authLimiter);
 app.use('/signup', authLimiter);
 
 
-app.use(express.json({ limit: '10mb' }))
-app.use(express.urlencoded({ extended: true, limit: '10mb' }))
+app.use(express.json({ limit: '50mb' }))
+app.use(express.urlencoded({ extended: true, limit: '50mb' }))
 
 app.use(cookieParser(process.env.SESSION_SECRET));
 
