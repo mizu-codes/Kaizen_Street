@@ -54,12 +54,19 @@ app.use(session({
   saveUninitialized: false,
   store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
   cookie: {
-    secure: process.env.NODE_ENV === 'production',
+    secure: true,
     httpOnly: true,
     maxAge: 72 * 60 * 60 * 1000,
     sameSite: 'lax'
   }
 }))
+
+app.use((req, res, next) => {
+  if (req.hostname !== "kaizenstreet.store") {
+    return res.redirect(301, "https://kaizenstreet.store" + req.url);
+  }
+  next();
+});
 
 app.use(flash());
 app.use(passport.initialize());
