@@ -61,9 +61,6 @@ const sendVerificationEmail = async (email, otp) => {
             from: 'Kaizen Street <support@kaizenstreet.store>', 
             to: email,
             subject: 'Verify your email',
-            headers: {
-    'Reply-To': 'mizhanmichu9966@gmail.com'
-  },
             html: `
 <!DOCTYPE html>
 <html lang="en">

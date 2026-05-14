@@ -12,11 +12,7 @@ const sendVerificationEmail = async (email, otp) => {
         const response = await resend.emails.send({
             from: 'Kaizen Street <support@kaizenstreet.store>',
             to: email,
-            reply_to: 'mizhanmichu9966@gmail.com',
             subject: 'Reset your password', 
-            headers: {
-    'Reply-To': 'mizhanmichu9966@gmail.com'
-  },
             html: `
 <!DOCTYPE html>
 <html lang="en">
