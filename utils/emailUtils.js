@@ -161,7 +161,7 @@ const sendVerificationEmail = async (email, otp) => {
         }
 
         const response = await resend.emails.send({
-            from: 'onboarding@resend.dev', // temporary sender
+            from: 'Kaizen Street <support@kaizenstreet.store>', // temporary sender
             to: email,
             subject: 'Reset your password',
 
