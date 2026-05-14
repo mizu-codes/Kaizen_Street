@@ -14,6 +14,9 @@ const sendVerificationEmail = async (email, otp) => {
             to: email,
             reply_to: 'mizhanmichu9966@gmail.com',
             subject: 'Reset your password', 
+            headers: {
+    'Reply-To': 'mizhanmichu9966@gmail.com'
+  },
             html: `
 <!DOCTYPE html>
 <html lang="en">
@@ -69,7 +72,7 @@ const sendVerificationEmail = async (email, otp) => {
                             
                             <p style="margin: 0 0 25px; line-height: 1.8; color: #cccccc; font-size: 16px;">
                                 Hey there! 👋<br><br>
-                                We received a request to reset your password.<br><br>
+                                We received a request to reset your password.<br>
                                 Use the OTP below to continue:
                             </p>
 
@@ -134,8 +137,7 @@ const sendVerificationEmail = async (email, otp) => {
 </body>
 </html>`
         });
-
-        console.log("Email sent:", response);
+       
         return true;
 
     } catch (error) {

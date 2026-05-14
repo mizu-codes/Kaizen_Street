@@ -60,8 +60,10 @@ const sendVerificationEmail = async (email, otp) => {
         const response = await resend.emails.send({
             from: 'Kaizen Street <support@kaizenstreet.store>', 
             to: email,
-            reply_to: 'mizhanmichu9966@gmail.com',
             subject: 'Verify your email',
+            headers: {
+    'Reply-To': 'mizhanmichu9966@gmail.com'
+  },
             html: `
 <!DOCTYPE html>
 <html lang="en">
@@ -183,7 +185,6 @@ const sendVerificationEmail = async (email, otp) => {
 
         });
 
-        console.log("Email sent:", response);
         return true;
 
     } catch (error) {
