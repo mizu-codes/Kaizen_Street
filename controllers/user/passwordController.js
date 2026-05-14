@@ -2,7 +2,6 @@ const User = require('../../models/userSchema');
 const bcrypt = require('bcrypt');
 const { securePassword } = require('../../utils/passwordUtils');
 const { sendVerificationEmail } = require('../../utils/emailUtils');
-// const nodemailer = require('nodemailer');
 
 const loadForgotPassword = (req, res) => {
     return res.render('forgot-password')
