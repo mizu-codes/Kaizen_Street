@@ -62,8 +62,10 @@ app.use(session({
 }))
 
 app.use((req, res, next) => {
-  if (req.hostname !== "kaizenstreet.store") {
-    return res.redirect(301, "https://kaizenstreet.store" + req.url);
+  if (process.env.NODE_ENV === 'production') {
+    if (req.hostname !== "kaizenstreet.store") {
+      return res.redirect(301, "https://kaizenstreet.store" + req.url);
+    }
   }
   next();
 });

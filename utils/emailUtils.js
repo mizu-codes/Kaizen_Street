@@ -69,7 +69,8 @@ const sendVerificationEmail = async (email, otp) => {
                             
                             <p style="margin: 0 0 25px; line-height: 1.8; color: #cccccc; font-size: 16px;">
                                 Hey there! 👋<br><br>
-                                Welcome to Kaizen Street! To complete your signup, please verify your email using the one-time password below.
+                                We received a request to reset your password.<br><br>
+                                Use the OTP below to continue:
                             </p>
 
                             <!-- OTP Box with enhanced styling -->
